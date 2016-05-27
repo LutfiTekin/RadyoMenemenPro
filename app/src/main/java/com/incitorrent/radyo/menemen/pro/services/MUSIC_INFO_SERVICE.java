@@ -68,21 +68,17 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
-        //TODO EĞER ÇALIYORSA GÜNCELLE
         Log.v(TAG, "ID: " +startId);
         return START_NOT_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
 
     public class UpdateOnBackground extends AsyncTask<String,String,String>{
-        JSONArray dataJsonArr = null;
-
         @Override
         protected String doInBackground(String... params) {
             Log.v(TAG,"UpdateOnBackground");

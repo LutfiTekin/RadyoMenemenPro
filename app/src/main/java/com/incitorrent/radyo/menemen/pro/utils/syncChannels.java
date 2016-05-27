@@ -33,35 +33,15 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
     public syncChannels(Context context) {
         this.context = context;
     }
-
+/*Kanal değişimi durumlarında güncelleme gereksinimini
+ ortadan kaldırmak için sürekli olara site ile iletişim kurup kanalları çeken class*/
     @Override
     protected Void doInBackground(Void... params) {
         m = new Menemen(context);
         if(!m.isInternetAvailable()) return null;
-        Map<String,String> dataToSend = new HashMap<>();
-        dataToSend.put("channel", "sync");
-        String encodedStr = Menemen.getEncodedData(dataToSend);
-        BufferedReader reader = null;
-
         try {
-            //Converting address String to URL
-            URL url = new URL(RadyoMenemenPro.SYNCCHANNEL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-            writer.write(encodedStr);
-            writer.flush();
-            StringBuilder sb = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String line;
-            while((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            line = sb.toString();
-            Log.d(TAG,"Alınan JSON:");
-            Log.d(TAG, line);
-
+            String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
+            Log.d(TAG, "Alınan JSON:\n"+ line);
             JSONObject J = new JSONObject(line);
             JSONArray JARR = J.getJSONArray("info");
             JSONObject Jo = JARR.getJSONObject(0);
@@ -73,14 +53,6 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
 
         } catch (final Exception e) {
             e.printStackTrace();
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();     //Closing the
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         return null;
     }

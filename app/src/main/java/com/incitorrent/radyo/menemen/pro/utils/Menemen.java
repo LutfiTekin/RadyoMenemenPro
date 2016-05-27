@@ -45,11 +45,13 @@ public class Menemen {
         this.context = context;
     }
     public void kaydet(String title,String content){
+        //Küçük bilgileri hızlıca kaydetmek için sharedpref metodu
         final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         kaydet.edit().putString(title,content).apply();
         Log.v("Kayıt", "yazılıyor " + title + " " + content);
     }
     public String oku(String title){
+        //Kaydedilen bilgileri okumak için sharedpref metodu
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         Log.v("Kayıt", "okunuyor " + title);
         return oku.getString(title, "yok"); //Değer boş ise "yok"
@@ -100,6 +102,7 @@ public class Menemen {
     }
 
     public static String decodefix(String s){
+        //TR karakter sorununa merdiven altı çözüm :)
         String search[] = new String[] {"Ã\u0087","Ã§","Ä","Ä\u009F","Ä±","Ä°","Ã\u0096","Ã¶","Å\u009E","Å\u009F","Ã\u009C","Ã¼"};
         String replace[] = new String[] {"Ç","ç","Ğ","ğ","ı","İ","Ö","ö","Ş","ş","Ü","ü"};
 
@@ -144,8 +147,7 @@ public class Menemen {
     }
 
     public void downloadImageIfNecessary(String songid,String url){
-        //Resimi indir
-        //Dosya işlemleri
+        //Eğer resim hali hazırda kayıtlı değilse indirir
         try {
             String root = Environment.getExternalStorageDirectory().toString();
             File myDir = new File(root + "/Satbax/Radio/artworks");
@@ -175,7 +177,6 @@ public class Menemen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//Resimi indir
     }
 
     public String getElapsed(String Sdate){
@@ -216,6 +217,7 @@ public class Menemen {
     }
 
     public static String getMenemenData(String url){
+        //Json datası döndür
         String line = null;
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
