@@ -1,0 +1,70 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.login">
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/colorBackgroundF">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Üyeliğin varsa gir \n
+Yoksa kayıt ol!"
+          android:id="@+id/textView"
+          android:layout_marginTop="79dp"
+          android:gravity="center_horizontal"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:textColor="#f5f5f5" />
+
+      <EditText
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:inputType="textPersonName"
+          android:hint="Kullanıcı Adı"
+          android:ems="10"
+          android:id="@+id/usernameET"
+          android:layout_below="@+id/textView"
+          android:layout_centerHorizontal="true"
+          android:textColor="#f5f5f5"
+          android:textColorHint="#eeeeee" />
+
+      <EditText
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:inputType="textPassword"
+          android:ems="10"
+          android:hint="Şifre"
+          android:id="@+id/passET"
+          android:layout_below="@+id/usernameET"
+          android:layout_alignStart="@+id/usernameET"
+          android:textColorHint="#eeeeee" />
+
+      <Button
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Gir &amp; Kayıt Ol"
+          android:id="@+id/submit"
+          android:layout_below="@+id/passET"
+          android:layout_centerHorizontal="true" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Eğer ilk girişinse seni siteye kayıt edeceğiz \n
+Daha sonraki girişlerinde şifreni unutmamaya çalış güzel kardeşim"
+          android:id="@+id/textView2"
+          android:layout_alignParentBottom="true"
+          android:layout_centerHorizontal="true"
+          android:layout_marginBottom="120dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:gravity="center_horizontal"
+          android:textColor="#ffffff" />
+
+  </RelativeLayout>
+</FrameLayout>

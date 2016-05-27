@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@mipmap/ic_login"
+            android:title="@string/nav_login" />
+        <item
+            android:id="@+id/nav_radio"
+            android:icon="@mipmap/ic_radio"
+            android:title="@string/nav_radio" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@mipmap/ic_chat"
+            android:title="@string/nav_sohbet" />
+
+        <item
+            android:id="@+id/nav_shout"
+            android:icon="@mipmap/ic_shout"
+            android:title="@string/nav_haykir" />
+        <item
+            android:id="@+id/nav_podcast"
+            android:icon="@mipmap/ic_podcast"
+            android:title="@string/podcast" />
+        <item
+            android:id="@+id/nav_olanbiten"
+            android:icon="@drawable/announce"
+            android:title="@string/news" />
+    </group>
+
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/about"
+                android:title="@string/about" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@mipmap/ic_logout"
+                android:title="Çıkış Yap"
+                android:visible="false"/>
+        </menu>
+    </item>
+
+</menu>

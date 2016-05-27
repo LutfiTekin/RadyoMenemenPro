@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.podcast">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@color/colorBackgroundsoft">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/podcastR"
+            android:layout_below="@+id/imageView"
+            android:layout_alignParentStart="true"
+            android:layout_margin="16dp" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageView"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/podcast_subtitle"
+            android:id="@+id/description_podcast"
+            android:textSize="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_alignBottom="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView"
+            android:textColor="@color/softGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="MenemenCast"
+            android:id="@+id/textView3"
+            android:layout_above="@+id/description_podcast"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_margin="16dp"
+            android:textColor="@color/softGrey"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</FrameLayout>

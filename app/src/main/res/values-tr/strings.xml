@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Radyo Menemen Pro</string>
+    <string name="action_settings">Ayarlar</string>
+    <string name="nav_haykir">Haykır</string>
+    <string name="nav_radio">Son Çalanlar</string>
+    <string name="nav_sohbet">Sohbet</string>
+    <string name="navigation_drawer_close">Nav Barı kapat</string>
+    <string name="pref_header_general">Genel</string>
+    <string name="pref_header_notifications">Bildirimler</string>
+    <string name="pref_ringtone_silent">Sessiz</string>
+    <string name="pref_title_vibrate">Titreşim</string>
+    <string name="title_activity_ayarlar">Setting</string>
+    <string name="pref_title_ringtone">Zil sesi</string>
+    <string name="nav_login">Giriş Yap</string>
+    <string name="news">Olan Biten</string>
+    <string name="share">Paylaş</string>
+    <string name="about">Hakkında</string>
+    <string name="navigation_drawer_open">Nav Barı Aç</string>
+    <string name="pref_title_select_channel">Kanal Seç</string>
+    <string name="pref_title_new_message_notifications">Yayın başladığında bana bildir</string>
+    <string name="pref_header_radio">Radyo Ayarları</string>
+    <string name="error_occured">Bir hata oluştu</string>
+    <string name="other">Diğer</string>
+    <string name="toast_error_account">Hesap bulunamadı</string>
+    <string name="toast_error_password_incorrect">Şifre yanlış</string>
+    <string name="toast_logged_in">Giriş yapıldı</string>
+    <string name="toast_signed_up">Kayıt olundu</string>
+    <string name="time_ago">önce</string>
+    <string name="time_days">" gün"</string>
+    <string name="time_hrs">" saat"</string>
+    <string name="time_mins">" dakika"</string>
+    <string name="time_moment">Az önce</string>
+    <string name="time_moments">Biraz önce</string>
+    <string name="podcast_updating_list">Liste Güncelleniyor… \n Lütfen Bekleyiniz.</string>
+    <string name="podcast_subtitle">Burdan Radyo Menemendeki yayınların podcastlerine ulaşabilir, indirebilirsin</string>
+    <string name="toast_connecting">Sunucuya bağlanılıyor</string>
+    <string name="news_descr">Radyo Menemen de neler olmuş, kim ne yapmış bütün dedikodular burda...</string>
+    <string name="media_pause">Duraklat</string>
+    <string name="media_resume">Devam Et</string>
+    <string name="media_stop">Durdur</string>
+    <string name="download_file">Dosyayı indirmek istiyor musun?</string>
+    <string name="cd_artwork">Albüm kapağı</string>
+    <string-array name="pref_artworks">
+        <item>Herzaman</item>
+        <item>Asla</item>
+    </string-array>
+    <string-array name="pref_artworks_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+    <string name="downloading_file">Dosya indiriliyor</string>
+    <string name="music_not_found">Müzik bulunamadı</string>
+    <string name="askperm">Android sürümün 6.0 veya üzeri. Bu durumda değişen izin protokolleri dahilinde sana bir iki izin sorucam, eğer uygulamanın düzgün çalışmasını istiyorsan, izin verebilirsin.</string>
+    <string name="permissions">İzinler</string>
+    <string name="toast_logged_out">Çıkış Yapıldı</string>
+</resources>
