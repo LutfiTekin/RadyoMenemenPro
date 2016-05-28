@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:id="@+id/lastplayed"
         android:layout_gravity="start|top"
-        android:layout_margin="16dp" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 
 </FrameLayout>
