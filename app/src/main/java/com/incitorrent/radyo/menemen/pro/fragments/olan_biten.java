@@ -36,9 +36,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class olan_biten extends Fragment {
 
     private static final String TAG = "OLANBITEN";
@@ -47,6 +45,7 @@ public class olan_biten extends Fragment {
     TextView title,content,time,author;
     List<ob_objs> OBList;
     Menemen m;
+
     public olan_biten() {
         // Required empty public constructor
     }

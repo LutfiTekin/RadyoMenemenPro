@@ -39,24 +39,24 @@ import java.util.Map;
  */
 public class Menemen {
     Context context;
-    public static final String TAG = "MenemenHelper";
+    public static final String TAG = "MenemenHelperClass";
 
     public Menemen(Context context) {
         this.context = context;
     }
+    //Küçük bilgileri hızlıca kaydetmek için sharedpref metodu
     public void kaydet(String title,String content){
-        //Küçük bilgileri hızlıca kaydetmek için sharedpref metodu
         final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         kaydet.edit().putString(title,content).apply();
         Log.v("Kayıt", "yazılıyor " + title + " " + content);
     }
+    //Kaydedilen bilgileri okumak için sharedpref metodu
     public String oku(String title){
-        //Kaydedilen bilgileri okumak için sharedpref metodu
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         Log.v("Kayıt", "okunuyor " + title);
         return oku.getString(title, "yok"); //Değer boş ise "yok"
     }
-
+    //İnternet var mı?
     public boolean isInternetAvailable(){
         try {
             ConnectivityManager nInfo = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -145,9 +145,8 @@ public class Menemen {
         }
         return "";
     }
-
+    //Eğer resim hali hazırda resim kayıtlı değilse indirir
     public void downloadImageIfNecessary(String songid,String url){
-        //Eğer resim hali hazırda kayıtlı değilse indirir
         try {
             String root = Environment.getExternalStorageDirectory().toString();
             File myDir = new File(root + "/Satbax/Radio/artworks");
@@ -208,14 +207,14 @@ public class Menemen {
             mesaj = context.getString(R.string.time_moments); //Biraz önce (Belli değil)
         return mesaj;
     }
-
+    //site kullanılan smileylerın BBcode karşılıkları
     public static String getIncitorrentSmileys(String post){
         String smileys[] = {"gmansmile","YSB",":arap:","\\(gc\\)","SBH",":lan\\!","aygötüm","\\(S\\)",":cahil",":NS:","lan\\!\\?",":ypm:","\\[i\\]","\\[b\\]","\\[\\/i\\]","\\[\\/b\\]",":\\)",":D","\n"};
         String smileyres[] = {"<img src='gmansmile'/>","<img src='YSB'/>","<img src='arap'/>","<img src='gc'/>","<img src='SBH'/>","<img src='lann0lebowski'/>","<img src='ayg'/>","<img src='<sikimizdedegil>'/>","<img src='<cahil>'/>","<img src='<nereyeS>'/>","<img src='000lan000'/>","<img src='<ypm>'/>","<i>","<b>","</i>","</b>","<img src='olumlu'/>","<img src='lol'/>","<br>"};
         for(int i = 0; i< smileys.length; i++) post =  post.replaceAll(smileys[i],smileyres[i]);
         return post;
     }
-
+    //Json stringi döndür
     public static String getMenemenData(String url){
         //Json datası döndür
         String line = null;
@@ -235,10 +234,9 @@ public class Menemen {
         }
         return line;
     }
-
+//Bildirim, son çalanlar, ve kilit ekranı için şarkı albüm kapağını hafızadan çek
     public Bitmap getMenemenArt(String songhash,Boolean locksreen){
         //Artwork indirilme ayarı açık değilse varsayılan resim döndür
-
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), (locksreen) ? R.mipmap.ic_header_background : R.mipmap.album_placeholder);
         if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             return bitmap;
@@ -248,11 +246,7 @@ public class Menemen {
             myDir.mkdirs();
             String fname = songhash + ".jpg";
             File file = new File(myDir, fname);
-            if(file.exists())
-            {
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-              bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
-            }
+            if(file.exists()) bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), null);
         }catch (Exception e) {
             Log.v("BITMAPERROR",e.getMessage());
 

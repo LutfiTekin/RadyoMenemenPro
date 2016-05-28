@@ -36,12 +36,7 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link podcast.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
+
 public class podcast extends Fragment {
     private ProgressDialog pDialog;
 

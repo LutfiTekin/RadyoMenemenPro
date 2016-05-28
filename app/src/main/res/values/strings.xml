@@ -89,5 +89,5 @@
     <string name="askperm">Apparently your phone has android 6.0 or higher version. Due to changes of permission protocol we must ask you a couple of permission in order to run properly.</string>
     <string name="permissions">Permissions</string>
     <string name="toast_logged_out">Logged out</string>
-    <string name="descr_login_logout">Üyeliğin varsa gir \n Yoksa kayıt ol!</string>
+    <string name="descr_login_logout">If you have an account sign in \n if you don\'t sign up</string>
 </resources>
