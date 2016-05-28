@@ -11,6 +11,7 @@ public class RadyoMenemenPro {
     public final static String RADIO_SERVER = "serverR";
     public final static int MUSIC_SERVICE_INFO_INTERVAL = 40;
     public final static int NOW_PLAYING_NOTIFICATION = 20032016; //Notification idsi bi özelliği yok rastgele
+    public final static int ON_AIR_NOTIFICATION = 28052016; //Notification idsi bi özelliği yok rastgele
 
     public static String HAYKIRURL    =   "http://radyo.incitorrent.com/haykir.php";
     public static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
@@ -28,6 +29,7 @@ public class RadyoMenemenPro {
     public final static String SOHBETCACHE = "sohbetcache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
+    public final static String SAVED_DJ = "saveddj";
 
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";

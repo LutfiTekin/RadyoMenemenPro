@@ -90,4 +90,6 @@
     <string name="permissions">Permissions</string>
     <string name="toast_logged_out">Logged out</string>
     <string name="descr_login_logout">If you have an account sign in \n if you don\'t sign up</string>
+    <string name="notification_onair_title">Yayın Başladı</string>
+    <string name="notification_onair_content">" yayına girdi"</string>
 </resources>

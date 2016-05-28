@@ -1,16 +1,21 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
@@ -43,6 +48,8 @@ public class MUSIC_INFO_SERVICE extends Service {
     final Context context = this;
     Menemen inf;
     radioDB sql;
+    NotificationCompat.Builder notification;
+    NotificationManager nm;
     public MUSIC_INFO_SERVICE() {
     }
 
@@ -139,6 +146,24 @@ public class MUSIC_INFO_SERVICE extends Service {
                     e.printStackTrace();
                 }
             }
+            //TODO yayın başlayınca bildirim at
+            //Bildirim ayarı açık mı? , Yayında Oto Dj mi var ?
+
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_onair", true) && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj"))) {
+                //TODO bildirimi oluştur
+
+                notification.setContentTitle(getString(R.string.notification_onair_title))
+                .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
+                .setSubText(inf.oku("djnotu"))
+                .setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone",null)));
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate",true))notification.setVibrate(new long[]{500,500,500});
+               notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                inf.kaydet(RadyoMenemenPro.SAVED_DJ,inf.oku("dj")); //önceki djyi kaydet
+                nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
+                Log.v(TAG, " Notification built");
+            }
+
             return null;
         }
     }
