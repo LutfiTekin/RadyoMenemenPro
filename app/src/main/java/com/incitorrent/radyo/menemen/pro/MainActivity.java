@@ -76,14 +76,16 @@ public class MainActivity extends AppCompatActivity
         if(fab!=null) fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Umarım birgün bu aşağıdaki satırların ne işe yaradığını unutmam
                  Intent  radyoservis = new Intent(MainActivity.this, MUSIC_PLAY_SERVICE.class);
+                //Ayarlardan seçilmiş kanalı bul
                 String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
                 String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
+                //Oluşturulan servis intentine datasource ekle
                 radyoservis.putExtra("dataSource",dataSource);
+                //data source ile servisi başlat
                 startService(radyoservis);
                 FloatingActionButton b = (FloatingActionButton) view;
-                b.setImageResource(!m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+//                b.setImageResource(!m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
             }
         });
 

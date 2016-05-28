@@ -192,7 +192,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
-                    broadcastToUi(true);
                 } catch (IOException e) {
                     Log.e(TAG,"HATA IO "+ e.toString());
                 } catch (IllegalStateException e){
@@ -213,6 +212,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
                     nowPlayingNotification();
+                    broadcastToUi(true);
                 } catch (IllegalStateException e) {
                     Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 }
