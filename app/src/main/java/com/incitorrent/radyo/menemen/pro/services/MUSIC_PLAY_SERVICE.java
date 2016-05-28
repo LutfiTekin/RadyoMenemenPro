@@ -188,6 +188,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    broadcastToUi(true);
                     mediaPlayer.setDataSource(dataSource);
                     mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);
@@ -212,7 +213,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
                     nowPlayingNotification();
-                    broadcastToUi(true);
                 } catch (IllegalStateException e) {
                     Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 }
@@ -235,7 +235,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             nm.cancel(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION);
             broadcastToUi(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.v(TAG, "onDestroy "+ e.toString());
         }
         m.kaydet("caliyor","hayır");
         super.onDestroy();
