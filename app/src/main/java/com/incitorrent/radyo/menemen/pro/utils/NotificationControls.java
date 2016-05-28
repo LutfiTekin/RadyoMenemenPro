@@ -17,6 +17,5 @@ public class NotificationControls extends BroadcastReceiver {
         if(intent.getExtras()!=null && intent.getExtras().getBoolean("stop"))
             i.putExtra("dataSource","stop");
         context.startService(i);
-
     }
 }

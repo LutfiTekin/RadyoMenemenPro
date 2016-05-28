@@ -30,6 +30,7 @@ public class RadyoMenemenPro {
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
 
     public final static String OTO_DJ = "Oto Dj";
+    public final static String PLAY = "play";
 
 
 }

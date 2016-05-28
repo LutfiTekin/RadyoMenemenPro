@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MUSIC_PLAY_SERVICE extends Service {
     private static final String TAG = "MUSIC_PLAY_SERVICE";
+    final public static String MUSIC_PLAY_FILTER = "com.incitorrent.radyo.menemen.UICHANGE";
     Menemen m;
     AudioManager audioManager;
     int amgr_result;
@@ -48,12 +50,13 @@ public class MUSIC_PLAY_SERVICE extends Service {
     ScheduledThreadPoolExecutor exec;
     NotificationCompat.Builder notification;
     NotificationManager nm;
+    LocalBroadcastManager broadcasterForUi;
     public MUSIC_PLAY_SERVICE() {
     }
 
     @Override
     public void onCreate() {
-
+        broadcasterForUi = LocalBroadcastManager.getInstance(this);
         exec = new ScheduledThreadPoolExecutor(1);
         mdBuilder = new MediaMetadataCompat.Builder();
         mediaSessionCompat = new MediaSessionCompat(this,TAG);
@@ -130,6 +133,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             nowPlayingNotification();
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
+            broadcastToUi(false);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -143,6 +147,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             mediaSessionCompat.setActive(true);
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
+            broadcastToUi(true);
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }catch (Exception e){
@@ -155,6 +160,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         String dataSource =null;
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
+            Log.v(TAG,"STOP");
             stopService(new Intent(this, MUSIC_PLAY_SERVICE.class)); //DURDUR
             return START_NOT_STICKY;
         }
@@ -167,6 +173,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
     private void setMusicMeta() {
+        Log.v(TAG,"Music Meta Set");
         Boolean showartwork = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("download_artwork",true);
         Bitmap defaultbitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_header_background);
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,m.oku("calan"));
@@ -185,13 +192,14 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
+                    broadcastToUi(true);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG,"HATA IO "+ e.toString());
                 } catch (IllegalStateException e){
-                    //İllegal durum
-                    e.printStackTrace();
+                    Log.e(TAG,"HATA IllegalState "+ e.toString());
                 }catch (NullPointerException e){
                     //Houston we have a problem
+                    e.printStackTrace();
                 }
                 return null;
             }
@@ -206,7 +214,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
                     nowPlayingNotification();
                 } catch (IllegalStateException e) {
-                    e.printStackTrace();
+                    Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 }
                 super.onPostExecute(aVoid);
             }
@@ -225,6 +233,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             mediaSessionCompat.release();
             exec.shutdown();
             nm.cancel(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION);
+            broadcastToUi(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -235,7 +244,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
     void nowPlayingNotification(){
         //Şarkı albüm kapağı
         if(m.oku("calan").equals("yok")) return; //ilk açılışta boş bildirim atma
-        Boolean showartwork = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("download_artwork",true);
         String contentTitle = (m.oku("dj").equals(RadyoMenemenPro.OTO_DJ)) ? "Radyo Menemen" : m.oku("dj");
         notification = new NotificationCompat.Builder(this);
         notification
@@ -251,16 +259,21 @@ public class MUSIC_PLAY_SERVICE extends Service {
         stop.putExtra("stop",true);
         PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
-       if(m.oku("caliyor").equals("evet")) notification.addAction(android.R.drawable.ic_media_pause,getString(R.string.media_pause),ppIntent);
+        if(m.oku("caliyor").equals("evet")) notification.addAction(android.R.drawable.ic_media_pause,getString(R.string.media_pause),ppIntent);
         else notification.addAction(android.R.drawable.ic_media_play,getString(R.string.media_resume),ppIntent);
         notification.addAction(R.mipmap.ic_media_stop,getString(R.string.media_stop),stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-     nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
+        nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
+        Log.v(TAG, " Notification built");
     }
-
+    //Activity de şimdi çalıyor butonunu değiştir
+    public void broadcastToUi(Boolean play) {
+        Intent intent = new Intent(MUSIC_PLAY_FILTER);
+        intent.putExtra(RadyoMenemenPro.PLAY,play);
+        broadcasterForUi.sendBroadcast(intent);
+    }
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
     private BroadcastReceiver PlugReceiver = new BroadcastReceiver() {

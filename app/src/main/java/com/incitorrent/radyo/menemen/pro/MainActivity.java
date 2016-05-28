@@ -3,8 +3,11 @@ package com.incitorrent.radyo.menemen.pro;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -44,17 +48,29 @@ public class MainActivity extends AppCompatActivity
     private Menemen m;
     Fragment fragment;
     FragmentManager fragmentManager;
+    BroadcastReceiver receiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        //Menemen yardımcı sınıfı
         m= new Menemen(this);
         fragmentManager = getFragmentManager();
-
+        //Music info servisini başlat
         startService(new Intent(MainActivity.this,MUSIC_INFO_SERVICE.class));
+        //Radyo durumunu buton ile senkronize tut
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Boolean play;
+              if(intent!=null) {
+                  play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
+                fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+              }
+            }
+        };
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if(fab!=null) fab.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +122,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         askperms();
     }
 
+
     private void askperms() {
         //Android M için izinler
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) { //SDK versiyonu android M ise
@@ -130,6 +147,19 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         }
     }
 
+    @Override
+    protected void onStart() {
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)
+        );
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
+    }
 
     @Override
     public void onBackPressed() {
