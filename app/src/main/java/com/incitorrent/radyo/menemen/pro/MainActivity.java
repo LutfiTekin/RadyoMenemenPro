@@ -220,8 +220,8 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             fragmentManager.beginTransaction().addToBackStack("podcast").replace(R.id.Fcontent,new podcast()).commit();
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_about) {
+        startActivity(new Intent(this,About.class));
         } else if(id == R.id.nav_logout){
             //TODO dialog ekranı göster
             m.kaydet("username","yok");

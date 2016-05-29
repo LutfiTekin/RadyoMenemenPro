@@ -57,4 +57,5 @@
     <string name="descr_login_logout">Üyeliğin varsa gir \n Yoksa kayıt ol!</string>
     <string name="notification_onair_content">" yayına girdi"</string>
     <string name="notification_onair_title">Radyo Menemende yayın başladı</string>
+    <string name="licence_title">Uygulamada kullanılan grafik öğelerinin lisanları</string>
 </resources>

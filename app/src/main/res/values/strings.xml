@@ -92,4 +92,5 @@
     <string name="descr_login_logout">If you have an account sign in \n if you don\'t sign up</string>
     <string name="notification_onair_title">Radyo Menemen is Live</string>
     <string name="notification_onair_content">" is on air"</string>
+    <string name="licence_title">Licences of graphics that used in this app</string>
 </resources>
