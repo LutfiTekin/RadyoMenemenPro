@@ -59,4 +59,8 @@
     <string name="notification_onair_title">Radyo Menemende yayın başladı</string>
     <string name="licence_title">Uygulamada kullanılan grafik öğelerinin lisanları</string>
     <string name="version">Versiyon</string>
+    <string name="caps_uploaded">Caps yüklendi</string>
+    <string name="caps_uploaded_sub">Caps başarıyla yüklendi</string>
+    <string name="caps_uploading">Caps yükleniyor</string>
+    <string name="caps_uploading_in_progress">Caps yüklemesi sürüyor</string>
 </resources>

@@ -94,4 +94,8 @@
     <string name="notification_onair_content">" is on air"</string>
     <string name="licence_title">Licences of graphics that used in this app</string>
     <string name="version">Versiyon</string>
+    <string name="caps_uploading_in_progress">Caps upload in progress</string>
+    <string name="caps_uploaded">Caps uploaded</string>
+    <string name="caps_uploaded_sub">Caps uploaded successfully</string>
+    <string name="caps_uploading">Uploading caps</string>
 </resources>
