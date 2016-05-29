@@ -215,6 +215,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     nowPlayingNotification();
                 } catch (IllegalStateException e) {
                     Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
                 super.onPostExecute(aVoid);
             }

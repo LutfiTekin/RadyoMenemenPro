@@ -246,10 +246,14 @@ public class Menemen {
             myDir.mkdirs();
             String fname = songhash + ".jpg";
             File file = new File(myDir, fname);
-            if(file.exists()) bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), null);
+            if(file.exists()) {
+                //Hafıza kullanımı optimizasyonu
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+            }
         }catch (Exception e) {
             Log.v("BITMAPERROR",e.getMessage());
-
         } catch (OutOfMemoryError e){
             e.printStackTrace();
         }
