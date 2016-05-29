@@ -55,4 +55,6 @@
     <string name="permissions">İzinler</string>
     <string name="toast_logged_out">Çıkış Yapıldı</string>
     <string name="descr_login_logout">Üyeliğin varsa gir \n Yoksa kayıt ol!</string>
+    <string name="notification_onair_content">" yayına girdi"</string>
+    <string name="notification_onair_title">Radyo Menemende yayın başladı</string>
 </resources>
