@@ -17,7 +17,9 @@
             android:id="@+id/podcastR"
             android:layout_below="@+id/imageView"
             android:layout_alignParentStart="true"
-            android:layout_margin="16dp" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp" />
 
         <ImageView
             android:layout_width="100dp"

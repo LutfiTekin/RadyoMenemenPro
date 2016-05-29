@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.XMLParser;
 
@@ -207,7 +208,7 @@ public class podcast extends Fragment {
         List<podcast_objs> RList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder {
+        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView title, duration, descr;
             CardView cv;
             RelativeLayout rel;
@@ -219,7 +220,17 @@ public class podcast extends Fragment {
                 descr = (TextView) itemView.findViewById(R.id.descr);
                 cv = (CardView) itemView.findViewById(R.id.cvP);
                 rel = (RelativeLayout) itemView.findViewById(R.id.Pitem);
+                title.setOnClickListener(this);
+            }
 
+            @Override
+            public void onClick(View v) {
+                if(getActivity()!=null) {
+                    Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
+                        playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
+                    playservice.putExtra("podcast",RList.get(getAdapterPosition()).title);
+                    getActivity().getApplicationContext().startService(playservice);
+                }
             }
         }
 
@@ -248,21 +259,12 @@ public class podcast extends Fragment {
             personViewHolder.title.setText(RList.get(i).title);
             personViewHolder.descr.setText(Html.fromHtml(RList.get(i).description));
             personViewHolder.duration.setText(RList.get(i).duration);
-            personViewHolder.title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
             personViewHolder.title.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     Boolean result = false;
-
                     Log.i("Downloadurl", RList.get(i).url + RList.get(i).title);
-
-
-
                     return true;
                 }
             });
