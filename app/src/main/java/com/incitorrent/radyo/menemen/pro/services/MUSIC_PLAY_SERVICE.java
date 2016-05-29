@@ -193,6 +193,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             // çalan şey podcast
             title = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
             artist = getString(R.string.app_name) + " Podcast";
+            mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,BitmapFactory.decodeResource(getResources(),R.mipmap.locksreen_podcast_art));
         }
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST,artist);
