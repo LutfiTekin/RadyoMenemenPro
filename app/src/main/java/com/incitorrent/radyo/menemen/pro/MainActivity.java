@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity
         if(fab!=null) fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Podcast çalmıyor
+                m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
                  Intent  radyoservis = new Intent(MainActivity.this, MUSIC_PLAY_SERVICE.class);
                 //Ayarlardan seçilmiş kanalı bul
                 String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));

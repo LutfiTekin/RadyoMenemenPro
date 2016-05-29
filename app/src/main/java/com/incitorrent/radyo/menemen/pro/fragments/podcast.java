@@ -221,14 +221,19 @@ public class podcast extends Fragment {
                 cv = (CardView) itemView.findViewById(R.id.cvP);
                 rel = (RelativeLayout) itemView.findViewById(R.id.Pitem);
                 title.setOnClickListener(this);
+                rel.setOnClickListener(this);
+                descr.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View v) {
                 if(getActivity()!=null) {
                     Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
+                    getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
+                    inf.kaydet("caliyor","hayır");
                         playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
-                    playservice.putExtra("podcast",RList.get(getAdapterPosition()).title);
+                    inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
+                    inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
                 }
             }

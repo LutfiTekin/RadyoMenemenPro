@@ -13,6 +13,7 @@ public class RadyoMenemenPro {
     public final static int NOW_PLAYING_NOTIFICATION = 20032016; //Notification idsi bi özelliği yok rastgele
     public final static int ON_AIR_NOTIFICATION = 28052016; //Notification idsi bi özelliği yok rastgele
 
+
     public static String HAYKIRURL    =   "http://radyo.incitorrent.com/haykir.php";
     public static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
     public static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
@@ -30,6 +31,8 @@ public class RadyoMenemenPro {
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
     public final static String SAVED_DJ = "saveddj";
+    public final static String PLAYING_PODCAST = "playingpodcast";
+    public static final String IS_PODCAST = "podcastmicaliyor";
 
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
