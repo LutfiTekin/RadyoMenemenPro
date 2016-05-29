@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.incitorrent.radyo.menemen.pro.About">
+    tools:context="com.incitorrent.radyo.menemen.pro.About"
+    android:background="@color/colorBackgroundF">
 
 
 
@@ -18,7 +19,8 @@
         android:text="@string/licence_title"
         android:id="@+id/licence_title"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/softGrey" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +33,17 @@
         android:id="@+id/text_about"
 
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp" /></ScrollView>
+        android:layout_marginTop="15dp"
+        android:textColor="@color/softGrey" /></ScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Version"
+        android:id="@+id/version"
+        android:layout_below="@+id/scrollView"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/softGrey" />
 
 </RelativeLayout>
