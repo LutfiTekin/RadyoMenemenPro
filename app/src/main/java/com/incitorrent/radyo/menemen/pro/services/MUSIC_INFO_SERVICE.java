@@ -91,14 +91,20 @@ public class MUSIC_INFO_SERVICE extends Service {
     public class UpdateOnBackground extends AsyncTask<String,String,String>{
         @Override
         protected String doInBackground(String... params) {
-            Log.v(TAG,"UpdateOnBackground");
-            if(!inf.isInternetAvailable()) return null;
+            Log.v(TAG, "UpdateOnBackground");
+            if (!inf.isInternetAvailable()) return null;
             BufferedReader reader = null;
-            //Şarkı bilgisi kontrolü
+            final Boolean notify_when_onair = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
+            final Boolean isPlaying = inf.oku("caliyor").equals("evet");
 
+            //yayın bildirimi ayar kapalı olduğunda şarkı kontrolünü radyo çaldığı sırada yap
+            Boolean shouldcheck = isPlaying || notify_when_onair;
+            //Log.v(TAG, " Should check " + shouldcheck + " isPlaying " + isPlaying + " notify " + notify_when_onair );
+            if (shouldcheck) {
+                //Şarkı bilgisi kontrolü
                 try {
-                 String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
-                    Log.v(TAG,line);
+                    String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
+                    Log.v(TAG, line);
                     JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
                     String calan = c.getString("calan");
                     inf.kaydet("calan", Menemen.radiodecodefix(calan));
@@ -107,7 +113,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     String songid = c.getString("songid");
                     String download = c.getString("download");
                     inf.kaydet("LASTsongid", songid);
-                    if (inf.oku("caliyor").equals("evet") && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
+                    if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true))
                             inf.downloadImageIfNecessary(songid, c.getString("artwork"));
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download)); // Şarkıyı kaydet
@@ -119,9 +125,10 @@ public class MUSIC_INFO_SERVICE extends Service {
                 } catch (NullPointerException e) {
                     Log.wtf("Null", e.toString());
                 }
+            }
 
             //DJ cevabını kontrol et
-            if(!inf.oku("logged").equals("yok")) {
+            if (!inf.oku("logged").equals("yok")) {
                 Map<String, String> dataToSend = new HashMap<>();
                 dataToSend.put("nick", inf.oku("username"));
                 dataToSend.put("mkey", inf.oku("mkey"));
@@ -149,22 +156,23 @@ public class MUSIC_INFO_SERVICE extends Service {
                     e.printStackTrace();
                 }
             }
-            //TODO yayın başlayınca bildirim at
+            //yayın başlayınca bildirim at
             //Bildirim ayarı açık mı? , Yayında Oto Dj mi var ?, Radyo zaten çalmıyor mu?
-            Boolean isOnair = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_onair", true) && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !inf.oku("caliyor").equals("evet");
+            Boolean isOnair = notify_when_onair && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !isPlaying;
             if (isOnair) {
                 notification = new NotificationCompat.Builder(context);
                 notification.setContentTitle(getString(R.string.notification_onair_title))
-                .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
-                .setSubText(inf.oku("djnotu"))
-                .setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone",null))).setSmallIcon(R.drawable.ic_on_air);
+                        .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
+                        .setSubText(inf.oku("djnotu"))
+                        .setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null))).setSmallIcon(R.drawable.ic_on_air);
                 //Main activity yi aç
                 notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate",true))notification.setVibrate(new long[]{500,500,500});
-               notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+                    notification.setVibrate(new long[]{500, 500, 500});
+                notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
                 nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
-                inf.kaydet(RadyoMenemenPro.SAVED_DJ,inf.oku("dj")); //önceki djyi kaydet
+                inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
                 Log.v(TAG, " Notification built");
             }
 
