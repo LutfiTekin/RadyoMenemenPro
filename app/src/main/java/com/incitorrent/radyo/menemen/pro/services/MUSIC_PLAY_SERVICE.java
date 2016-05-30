@@ -206,11 +206,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
             protected Void doInBackground(Void... params) {
                 try {
                     broadcastToUi(true);
-                    if(m.oku("caliyor").equals("evet")) mediaPlayer.stop(); //Eğer çalıyorsa durdur
-
                         mediaPlayer.setDataSource(dataSource);
                         mediaPlayer.prepare();
-
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
                 } catch (IOException e) {
