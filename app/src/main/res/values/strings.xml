@@ -99,4 +99,5 @@
     <string name="caps_uploaded_sub">Caps uploaded successfully</string>
     <string name="caps_uploading">Uploading caps</string>
     <string name="app_share_text">"Download Radio Menemen app: "</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
