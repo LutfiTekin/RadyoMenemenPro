@@ -212,10 +212,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     setMusicMeta();
                 } catch (IOException e) {
                     Log.e(TAG,"HATA IO "+ e.toString());
-                    stopSelf();
+//                    stopSelf();
                 } catch (IllegalStateException e){
                     Log.e(TAG,"HATA IllegalState "+ e.toString());
-                    stopSelf();
+//                    stopSelf();
                 }catch (NullPointerException e){
                     //Houston we have a problem
                     e.printStackTrace();
