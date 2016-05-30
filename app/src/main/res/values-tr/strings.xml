@@ -63,4 +63,5 @@
     <string name="caps_uploaded_sub">Caps başarıyla yüklendi</string>
     <string name="caps_uploading">Caps yükleniyor</string>
     <string name="caps_uploading_in_progress">Caps yüklemesi sürüyor</string>
+    <string name="app_share_text">"Radyo Menemen uygulasını indir: "</string>
 </resources>
