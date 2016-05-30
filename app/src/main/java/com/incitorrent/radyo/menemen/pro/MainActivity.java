@@ -238,6 +238,8 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
             fragmentManager.beginTransaction().replace(R.id.Fcontent,new login()).commit();
            this.recreate();
+        } else if(id == R.id.nav_settings){
+            startActivity(new Intent(this,Ayarlar.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
