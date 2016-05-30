@@ -62,10 +62,6 @@ public class podcast extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-           if(fab!=null) fab.setVisibility(View.INVISIBLE);
-        }
        View podcastview = inflater.inflate(R.layout.fragment_podcast, container, false);
         context = getActivity();
         inf = new Menemen(context);
@@ -105,6 +101,15 @@ public class podcast extends Fragment {
             if(fab!=null) fab.setVisibility(View.VISIBLE);
         }
         super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        if(getActivity()!=null) {
+            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(fab!=null) fab.setVisibility(View.INVISIBLE);
+        }
+        super.onResume();
     }
 
     @Override
