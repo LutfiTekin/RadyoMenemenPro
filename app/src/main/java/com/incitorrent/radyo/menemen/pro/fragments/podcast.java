@@ -305,14 +305,6 @@ public class podcast extends Fragment {
             personViewHolder.descr.setText(Html.fromHtml(RList.get(i).description));
             personViewHolder.duration.setText(RList.get(i).duration);
 
-            personViewHolder.title.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Boolean result = false;
-                    Log.i("Downloadurl", RList.get(i).url + RList.get(i).title);
-                    return true;
-                }
-            });
 
 
         }
