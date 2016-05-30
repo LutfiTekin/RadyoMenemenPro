@@ -231,13 +231,29 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         } else if (id == R.id.nav_about) {
         startActivity(new Intent(this,About.class));
         } else if(id == R.id.nav_logout){
-            //TODO dialog ekranı göster
-            m.kaydet("username","yok");
-            m.kaydet("mkey","yok");
-            m.kaydet("logged", "yok");
-            Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
-            fragmentManager.beginTransaction().replace(R.id.Fcontent,new login()).commit();
-           this.recreate();
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Çıkmak mı istiyorsun?")
+                    .setMessage("Sohbet ve Haykır özelliklerini giriş yapmadan kullanamayacaksın")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            m.kaydet("username","yok");
+                            m.kaydet("mkey","yok");
+                            m.kaydet("logged", "yok");
+                            Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
+                            fragmentManager.beginTransaction().replace(R.id.Fcontent,new login()).commit();
+                            MainActivity.this.recreate();
+                        }
+                    }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            })
+            .setIcon(R.mipmap.ic_launcher)
+            .show();
+
         } else if(id == R.id.nav_settings){
             startActivity(new Intent(this,Ayarlar.class));
         }
