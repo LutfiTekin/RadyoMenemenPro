@@ -125,11 +125,15 @@ public class podcast extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage(getString(R.string.podcast_updating_list));
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+            try {
+                pDialog = new ProgressDialog(getActivity());
+                pDialog.setMessage(getString(R.string.podcast_updating_list));
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -190,7 +194,11 @@ public class podcast extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            pDialog.dismiss();
+            try {
+                pDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if(!result) {
                 Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                 return;
