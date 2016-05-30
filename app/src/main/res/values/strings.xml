@@ -100,4 +100,7 @@
     <string name="caps_uploading">Uploading caps</string>
     <string name="app_share_text">"Download Radio Menemen app: "</string>
     <string name="sign_out">Sign Out</string>
+    <string name="toast_internet_warn">There is a problem with the internet connection</string>
+    <string name="old_podcast_descr">Old incitorrent podcasts are listed below</string>
+    <string name="old_podcast_toast">"Click %d times to see old podcasts"</string>
 </resources>

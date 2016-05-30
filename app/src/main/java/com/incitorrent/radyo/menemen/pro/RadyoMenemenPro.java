@@ -18,6 +18,8 @@ public class RadyoMenemenPro {
     public static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
     public static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
     public static String PODCASTLINK = "http://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
+    public static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
+    public static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
     public final static String SYNCCHANNEL = "http://radyomenemen.com/inc/appinfo.php?channels";

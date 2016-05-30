@@ -27,7 +27,7 @@
             android:id="@+id/imageView"
             android:src="@mipmap/ic_launcher"
             android:layout_alignParentTop="true"
-            android:layout_alignEnd="@+id/textView3"
+            android:layout_alignEnd="@+id/title_podcast"
             android:layout_margin="16dp" />
 
         <TextView
@@ -37,8 +37,8 @@
             android:id="@+id/description_podcast"
             android:textSize="16dp"
             android:textColor="@color/softGrey"
-            android:layout_below="@+id/textView3"
-            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/title_podcast"
+            android:layout_alignStart="@+id/title_podcast"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp" />
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="MenemenCast"
-            android:id="@+id/textView3"
+            android:id="@+id/title_podcast"
             android:textColor="@color/softGrey"
             android:textStyle="bold"
             android:layout_marginLeft="16dp"

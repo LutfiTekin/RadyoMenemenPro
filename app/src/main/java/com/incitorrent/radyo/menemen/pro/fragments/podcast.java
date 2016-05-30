@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class podcast extends Fragment {
     RecyclerView PR;
     Context context;
     Menemen inf;
+    int switchToOldPodcast = 1;
     private OnFragmentInteractionListener mListener;
 
     public podcast() {
@@ -65,14 +67,35 @@ public class podcast extends Fragment {
        View podcastview = inflater.inflate(R.layout.fragment_podcast, container, false);
         context = getActivity();
         inf = new Menemen(context);
+        final ImageView imageview = (ImageView) podcastview.findViewById(R.id.imageView);
+        final TextView titlepodcast = (TextView) podcastview.findViewById(R.id.title_podcast);
+        final TextView descrpodcast = (TextView) podcastview.findViewById(R.id.description_podcast);
+
+        imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToOldPodcast++;
+                if(switchToOldPodcast<10 && switchToOldPodcast>4){
+                    int i = 10-switchToOldPodcast;
+                   if(getActivity()!=null) Toast.makeText(getActivity().getApplicationContext(), String.format(context.getString(R.string.old_podcast_toast), i), Toast.LENGTH_SHORT).show();
+
+                }else if(switchToOldPodcast == 10){
+                    titlepodcast.setText("Incitorrent");
+                    descrpodcast.setText(R.string.old_podcast_descr);
+                    imageview.setImageResource(R.mipmap.incitorrent);
+                    if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.OLD_PODCASTFEED,RadyoMenemenPro.OLD_PODCASTLINK).execute();
+                    else
+                        Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         PR = (RecyclerView) podcastview.findViewById(R.id.podcastR);
         PR.setHasFixedSize(true);
-
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         PR.setLayoutManager(llm);
-        if(inf.isInternetAvailable())  new LoadXML().execute();
+        if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.PODCASTFEED,RadyoMenemenPro.PODCASTLINK).execute();
         else
-            Toast.makeText(context, "internet yok", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
         return podcastview;
     }
 
@@ -126,6 +149,12 @@ public class podcast extends Fragment {
 
 
     public class LoadXML extends AsyncTask<Void, Void, Boolean> {
+    String podcast,podcastlink;
+
+        public LoadXML(String podcast, String podcastlink) {
+            this.podcast = podcast;
+            this.podcastlink = podcastlink;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -145,7 +174,7 @@ public class podcast extends Fragment {
         @Override
         protected Boolean doInBackground(Void... arg0) {
             XMLParser parser = new XMLParser();
-            xml = parser.getXmlFromUrl(RadyoMenemenPro.PODCASTFEED); // getting XML
+            xml = parser.getXmlFromUrl(podcast); // getting XML
             if(xml==null) return false;
             if (xml.isEmpty()) {
                 Log.v("tag", "xml de sorun var");
@@ -171,7 +200,7 @@ public class podcast extends Fragment {
                         String phrase = parser.getValue(e, KEY_LINK).toString();
                         String delims = "=";
                         String[] tokens = phrase.split(delims);
-                        String real_mp3_link = RadyoMenemenPro.PODCASTLINK + tokens[1];
+                        String real_mp3_link = podcastlink + tokens[1];
                         Log.e("tag", real_mp3_link);
 
                         //StringEntity entity = new UrlEncodedFormEntity(parser,"UTF-8");

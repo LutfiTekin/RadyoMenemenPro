@@ -10,7 +10,6 @@
     <string name="pref_header_notifications">Bildirimler</string>
     <string name="pref_ringtone_silent">Sessiz</string>
     <string name="pref_title_vibrate">Titreşim</string>
-
     <string name="pref_title_ringtone">Zil sesi</string>
     <string name="nav_login">Giriş Yap</string>
     <string name="news">Olan Biten</string>
@@ -65,4 +64,7 @@
     <string name="caps_uploading_in_progress">Caps yüklemesi sürüyor</string>
     <string name="app_share_text">"Radyo Menemen uygulasını indir: "</string>
     <string name="sign_out">Çıkış Yap</string>
+    <string name="toast_internet_warn">İnternet Bağlantısında bir sorun var</string>
+    <string name="old_podcast_descr">Eski inci torrent podcastleri senin için aşağıda listelendi</string>
+    <string name="old_podcast_toast">"Eski podcastleri görmek için %d kere daha tıkla "</string>
 </resources>
