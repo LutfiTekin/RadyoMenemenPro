@@ -185,7 +185,7 @@ public class podcast extends Fragment {
                 NodeList nl = doc.getElementsByTagName(KEY_ITEM);
                 // looping through all item nodes <item>
                 int maxlength = nl.getLength();
-                if (maxlength > 10) maxlength = 10;
+
                 RList = new ArrayList<>();
                 for (int i = 0; i < maxlength; i++) {
 //                for (int i = 0; i < 21; i++) {
@@ -301,8 +301,6 @@ public class podcast extends Fragment {
         @Override
         public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
             personViewHolder.cv.setCardElevation(10);
-
-
             personViewHolder.title.setText(RList.get(i).title);
             personViewHolder.descr.setText(Html.fromHtml(RList.get(i).description));
             personViewHolder.duration.setText(RList.get(i).duration);
