@@ -164,7 +164,8 @@ public class MUSIC_INFO_SERVICE extends Service {
                 notification.setContentTitle(getString(R.string.notification_onair_title))
                         .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
                         .setSubText(inf.oku("djnotu"))
-                        .setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null))).setSmallIcon(R.drawable.ic_on_air);
+                        .setSmallIcon(R.drawable.ic_on_air);
+                      if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
                 //Main activity yi aç
                 notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
                 if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
