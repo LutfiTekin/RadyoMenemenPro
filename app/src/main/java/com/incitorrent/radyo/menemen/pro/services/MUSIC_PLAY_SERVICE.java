@@ -249,12 +249,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
         m.kaydet("caliyor","hayır");
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
+            nm.cancel(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION);
             mediaPlayer.stop();
             mediaPlayer.release();
+            broadcastToUi(false);
             mediaSessionCompat.release();
             exec.shutdown();
-            nm.cancel(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION);
-            broadcastToUi(false);
             unregisterReceiver(PlugReceiver);
         } catch (Exception e) {
             Log.v(TAG, "onDestroy "+ e.toString());
