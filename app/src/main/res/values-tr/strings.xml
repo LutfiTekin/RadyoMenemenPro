@@ -50,8 +50,6 @@
     </string-array>
     <string name="downloading_file">Dosya indiriliyor</string>
     <string name="music_not_found">Müzik bulunamadı</string>
-    <string name="askperm">Android sürümün 6.0 veya üzeri. Bu durumda değişen izin protokolleri dahilinde sana bir iki izin sorucam, eğer uygulamanın düzgün çalışmasını istiyorsan, izin verebilirsin.</string>
-    <string name="permissions">İzinler</string>
     <string name="toast_logged_out">Çıkış Yapıldı</string>
     <string name="descr_login_logout">Üyeliğin varsa gir \n Yoksa kayıt ol!</string>
     <string name="notification_onair_content">" yayına girdi"</string>
@@ -67,4 +65,8 @@
     <string name="toast_internet_warn">İnternet Bağlantısında bir sorun var</string>
     <string name="old_podcast_descr">Eski inci torrent podcastleri senin için aşağıda listelendi</string>
     <string name="old_podcast_toast">"Eski podcastleri görmek için %d kere daha tıkla "</string>
+    <string name="askperm">Android sürümün 6.0 veya üzeri. Bu durumda değişen izin protokolleri dahilinde, galeriden resim seçebilmen için, dosya okuma izni gerekiyor.</string>
+    <string name="permissions">İzinler</string>
+    <string name="toast_permission_read_storage_granted">İşleme izin verildi artık resim seçebilirsin.</string>
+    <string name="toast_permission_read_storage_denied">İşleme izin verilmediği için resim seçilemiyor.</string>
 </resources>

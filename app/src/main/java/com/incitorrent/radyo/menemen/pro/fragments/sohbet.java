@@ -1,13 +1,17 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -19,6 +23,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,6 +81,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "SOHBETFRAG";
     private static final int RESULT_LOAD_IMAGE = 2064;
+    private static final int PERMISSION_REQUEST_ID = 2065;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -200,12 +206,51 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
-                Intent resimsec = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        .setType("image/*");
-                startActivityForResult(resimsec, RESULT_LOAD_IMAGE);
-                //TODO caps yükle
+if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    //Dosya okuma izni yok izin iste
+    AskReadPerm();
+    break;
+}
+    Intent resimsec = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            .setType("image/*");
+    startActivityForResult(resimsec, RESULT_LOAD_IMAGE);
+
                 break;
         }
+    }
+
+    private void AskReadPerm() {
+        if(getActivity()!=null)new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.permissions))
+                .setMessage(getString(R.string.askperm))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @TargetApi(Build.VERSION_CODES.M)
+                    public void onClick(DialogInterface dialog, int which) {
+                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                PERMISSION_REQUEST_ID);
+                    }
+                })
+                .setIcon(R.mipmap.album_placeholder)
+                .show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_ID) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission Granted
+                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_granted, Toast.LENGTH_SHORT)
+                        .show();
+            } else {
+                // Permission Denied
+                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_denied, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void postToMenemen(final String mesaj) {

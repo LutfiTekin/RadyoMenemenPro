@@ -86,8 +86,7 @@
     <string name="cd_artwork">Album artwork</string>
     <string name="downloading_file">Downloading file</string>
     <string name="music_not_found">Music not found</string>
-    <string name="askperm">Apparently your phone has android 6.0 or higher version. Due to changes of permission protocol we must ask you a couple of permission in order to run properly.</string>
-    <string name="permissions">Permissions</string>
+
     <string name="toast_logged_out">Logged out</string>
     <string name="descr_login_logout">If you have an account sign in \n if you don\'t sign up</string>
     <string name="notification_onair_title">Radyo Menemen is Live</string>
@@ -103,4 +102,8 @@
     <string name="toast_internet_warn">There is a problem with the internet connection</string>
     <string name="old_podcast_descr">Old incitorrent podcasts are listed below</string>
     <string name="old_podcast_toast">"Click %d times to see old podcasts"</string>
+    <string name="askperm">Apparently your phone has android 6.0 or higher version. Due to changes of permission protocol we must ask you a couple of permission in order to select an image from gallery.</string>
+    <string name="permissions">Permissions</string>
+    <string name="toast_permission_read_storage_denied">Image cannot be picked due to permission denial.</string>
+    <string name="toast_permission_read_storage_granted">Permission granted now you can pick an image.</string>
 </resources>

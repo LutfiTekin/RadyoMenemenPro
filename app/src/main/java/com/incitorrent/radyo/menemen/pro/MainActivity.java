@@ -123,33 +123,11 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
 
         new syncChannels(this).execute();
-        askperms();
+
     }
 
 
-    private void askperms() {
-        //Android M için izinler
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) { //SDK versiyonu android M ise
-            int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
 
-            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED ) {
-                new AlertDialog.Builder(this)
-                        .setTitle(getString(R.string.permissions))
-                        .setMessage(getString(R.string.askperm))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @TargetApi(Build.VERSION_CODES.M)
-                            public void onClick(DialogInterface dialog, int which) {
-                                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        123);
-
-                            }
-                        })
-                        .setIcon(R.mipmap.album_placeholder)
-                        .show();
-
-            }
-        }
-    }
 
     @Override
     protected void onStart() {
