@@ -11,7 +11,7 @@ import android.util.Log;
  * Created by lutfi on 21.05.2016.
  */
 public class radioDB extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "radyomenemenproCalan.db";
 
     public static final String TABLE_NAME = "radyo";
@@ -19,6 +19,7 @@ public class radioDB extends SQLiteOpenHelper {
     public static final String _SONGNAME = "song";
     public static final String _SONGHASH = "hash";
     public static final String _URL = "url";
+    public static final String _ARTURL = "arturl";
 
     public radioDB(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -30,6 +31,7 @@ public class radioDB extends SQLiteOpenHelper {
                 _SONGID + " INTEGER PRIMARY KEY," +
                 _SONGNAME + " TEXT, " +
                 _URL + " TEXT, " +
+                _ARTURL + " TEXT, " +
                 _SONGHASH + " TEXT " +
                 ");";
         db.execSQL(query);
@@ -47,6 +49,7 @@ public class radioDB extends SQLiteOpenHelper {
         values.put(_SONGNAME, s.get_SONGNAME());
         values.put(_URL, s.get_URL());
         values.put(_SONGHASH, s.get_SONGHASH());
+        values.put(_ARTURL, s.get_ARTURL());
         SQLiteDatabase db = getWritableDatabase();
         try {
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -64,51 +67,54 @@ public class radioDB extends SQLiteOpenHelper {
 
 
     public static class Songs{
-        public String _SONGID;
-        public String _SONGNAME;
-        public String _URL;
-        public String _SONGHASH;
+        public String _SONGID,_SONGNAME,_URL,_SONGHASH,_ARTURL;
 
-    public Songs( String _SONGHASH, String _SONGID, String _SONGNAME, String _URL) {
+        public Songs(String _SONGID, String _SONGNAME, String _URL, String _SONGHASH, String _ARTURL) {
+            this._SONGID = _SONGID;
+            this._SONGNAME = _SONGNAME;
+            this._URL = _URL;
+            this._SONGHASH = _SONGHASH;
+            this._ARTURL = _ARTURL;
+        }
 
+        public String get_SONGID() {
+            return _SONGID;
+        }
 
-        this._SONGHASH = _SONGHASH;
-        this._SONGID = _SONGID;
-        this._SONGNAME = _SONGNAME;
-        this._URL = _URL;
+        public String get_SONGNAME() {
+            return _SONGNAME;
+        }
+
+        public String get_URL() {
+            return _URL;
+        }
+
+        public String get_SONGHASH() {
+            return _SONGHASH;
+        }
+
+        public String get_ARTURL() {
+            return _ARTURL;
+        }
+
+        public void set_SONGID(String _SONGID) {
+            this._SONGID = _SONGID;
+        }
+
+        public void set_SONGNAME(String _SONGNAME) {
+            this._SONGNAME = _SONGNAME;
+        }
+
+        public void set_URL(String _URL) {
+            this._URL = _URL;
+        }
+
+        public void set_SONGHASH(String _SONGHASH) {
+            this._SONGHASH = _SONGHASH;
+        }
+
+        public void set_ARTURL(String _ARTURL) {
+            this._ARTURL = _ARTURL;
+        }
     }
-
-
-    public String get_URL() {
-        return _URL;
-    }
-
-    public void set_URL(String _URL) {
-        this._URL = _URL;
-    }
-
-    public String get_SONGHASH() {
-        return _SONGHASH;
-    }
-
-    public void set_SONGHASH(String _SONGHASH) {
-        this._SONGHASH = _SONGHASH;
-    }
-
-    public String get_SONGID() {
-        return _SONGID;
-    }
-
-    public void set_SONGID(String _SONGID) {
-        this._SONGID = _SONGID;
-    }
-
-    public String get_SONGNAME() {
-        return _SONGNAME;
-    }
-
-    public void set_SONGNAME(String _SONGNAME) {
-        this._SONGNAME = _SONGNAME;
-    }
-}
 }
