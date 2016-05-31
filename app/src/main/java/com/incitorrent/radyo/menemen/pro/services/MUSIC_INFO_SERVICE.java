@@ -110,15 +110,15 @@ public class MUSIC_INFO_SERVICE extends Service {
                     inf.kaydet("calan", Menemen.radiodecodefix(calan));
                     inf.kaydet("dj", c.getString("name"));
                     inf.kaydet("djnotu", c.getString("djnotu"));
-                    String songid = c.getString("songid");
+                    String songid = c.getString("artwork");
                     String download = c.getString("download");
                     inf.kaydet("LASTsongid", songid);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
-                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true))
-                            inf.downloadImageIfNecessary(songid, c.getString("artwork"));
+//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true))
+//                            inf.downloadImageIfNecessary(songid, c.getString("artwork"));
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download)); // Şarkıyı kaydet
                         inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
-                        Log.v(TAG, "Artwork downloaded" + c.getString("artwork"));
+//                        Log.v(TAG, "Artwork downloaded" + c.getString("artwork"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
