@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class MUSIC_INFO_SERVICE extends Service {
 
     final String TAG = "MUSIC_INFO_SERVICE";
+    public static final String LAST_ARTWORK_URL = "lastartwork";
     final Context context = this;
     Menemen inf;
     radioDB sql;
@@ -114,6 +115,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     String download = c.getString("download");
                     String artwork = c.getString("artwork");
                     inf.kaydet("LASTsongid", songid);
+                    inf.kaydet(LAST_ARTWORK_URL, artwork);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
 //                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true))
 //                            inf.downloadImageIfNecessary(songid, c.getString("artwork"));

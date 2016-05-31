@@ -187,7 +187,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             Bitmap defaultbitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_header_background);
             title = m.oku("calan");
             artist = m.oku("dj");
-            if(showartwork) mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,m.getMenemenArt(m.oku("LASTsongid"),true));
+            if(showartwork) mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),true));
                 else mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,defaultbitmap);
         } else {
             // çalan şey podcast
@@ -277,7 +277,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setContentTitle(contentTitle)
         .setContentText(calan)
         .setSmallIcon((isPodcast) ? R.mipmap.ic_podcast : R.mipmap.ic_equlizer)
-        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_podcast) : m.getMenemenArt(m.oku("LASTsongid"),false))
+        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
         .setOngoing(m.oku("caliyor").equals("evet"))
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));

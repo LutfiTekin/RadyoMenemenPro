@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
@@ -33,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by lutfi on 20.05.2016.
@@ -235,26 +238,21 @@ public class Menemen {
         return line;
     }
 //Bildirim, son çalanlar, ve kilit ekranı için şarkı albüm kapağını hafızadan çek
-    public Bitmap getMenemenArt(String songhash,Boolean locksreen){
+    public Bitmap getMenemenArt(String songurl,Boolean locksreen){
         //Artwork indirilme ayarı açık değilse varsayılan resim döndür
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), (locksreen) ? R.mipmap.ic_header_background : R.mipmap.album_placeholder);
         if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             return bitmap;
         try {
-            String root = Environment.getExternalStorageDirectory().toString();
-            File myDir = new File(root + "/Satbax/Radio/artworks");
-            myDir.mkdirs();
-            String fname = songhash + ".jpg";
-            File file = new File(myDir, fname);
-            if(file.exists()) {
-                //Hafıza kullanımı optimizasyonu
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+           int dim = 48; //Bildirim için resim boyutu (yükseklik & genişlik)
+            int fallback = R.mipmap.album_placeholder;
+            if(locksreen) {
+                dim = 500;
+                fallback = R.mipmap.ic_header_background;
             }
-        }catch (Exception e) {
-            Log.v("BITMAPERROR",e.getMessage());
-        } catch (OutOfMemoryError e){
+            return Glide.with(context).load(songurl).asBitmap().error(fallback).into(dim,dim).get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return bitmap;

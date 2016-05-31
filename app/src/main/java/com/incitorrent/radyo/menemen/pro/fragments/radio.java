@@ -129,7 +129,9 @@ public class radio extends Fragment {
                 String song = cursor.getString(cursor.getColumnIndex("song"));
                 String songhash = cursor.getString(cursor.getColumnIndex("hash"));
                 String url = cursor.getString(cursor.getColumnIndex("url"));
-                RList.add(new history_objs(song,songhash,url));
+                String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                Log.v("ARTURL",cursor.getString(cursor.getColumnIndex("arturl")));
+                RList.add(new history_objs(song,songhash,url,arturl));
             }
             cursor.moveToNext();
         }
@@ -234,7 +236,8 @@ public class radio extends Fragment {
         @Override
         public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
             personViewHolder.song.setText(RList.get(i).song);
-          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false));
+//          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
+            if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).into(personViewHolder.art);
         }
 
 
@@ -247,12 +250,13 @@ public class radio extends Fragment {
     }
 
     public class history_objs{
-        String song,songhash,url;
-        public history_objs(String song, String songhash, String url) {
+        String song,songhash,url,arturl;
+
+        public history_objs(String song, String songhash, String url, String arturl) {
             this.song = song;
             this.songhash = songhash;
             this.url = url;
-
+            this.arturl = arturl;
         }
     }
 

@@ -69,7 +69,7 @@ public class radioDB extends SQLiteOpenHelper {
     public static class Songs{
         public String _SONGID,_SONGNAME,_URL,_SONGHASH,_ARTURL;
 
-        public Songs(String _SONGID, String _SONGNAME, String _URL, String _SONGHASH, String _ARTURL) {
+        public Songs(String _SONGHASH, String _SONGID, String _SONGNAME, String _URL, String _ARTURL) {
             this._SONGID = _SONGID;
             this._SONGNAME = _SONGNAME;
             this._URL = _URL;
