@@ -27,6 +27,7 @@ public class RadyoMenemenPro {
     public final static String MESAJLAR = "http://radyomenemen.com/inc/appinfo.php?mesajlar";
     public final static String OLAN_BITEN = "http://radyomenemen.com/inc/appinfo.php?olanbiten";
     public final static String MESAJ_GONDER = "http://radyomenemen.com/inc/appinfo.php?postmessage";
+    public final static String MESAJ_SIL = "http://radyomenemen.com/inc/appinfo.php?deletemessage";
 
     public final static String SHAREDPREF = "Menemen";
     public final static String SOHBETCACHE = "sohbetcache";

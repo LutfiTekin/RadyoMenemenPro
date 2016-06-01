@@ -107,4 +107,7 @@
     <string name="toast_permission_read_storage_denied">Image cannot be picked due to permission denial.</string>
     <string name="toast_permission_read_storage_granted">Permission granted now you can pick an image.</string>
     <string name="lastplayed_emptyview">Recently played list is empty</string>
+    <string name="message_deleted">Message deleted</string>
+    <string name="toast_only_your_message_deleted">You can delete only your own messages</string>
+    <string name="snackbar_undo">Undo</string>
 </resources>

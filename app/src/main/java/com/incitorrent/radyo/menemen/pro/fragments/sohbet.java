@@ -22,12 +22,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Base64;
@@ -46,6 +48,7 @@ import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -167,7 +170,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         for(int i = 0; i< smileys.length; i++) satbaxSmileList.add(new Satbax_Smiley_Objects(smileys[i], smileyids[i]));
         Smileadapter = new SatbaxSmileAdapter(satbaxSmileList);
         smileRV.setAdapter(Smileadapter);
-
         //SMILEY END
         //SOHBET
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
@@ -176,6 +178,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
         SohbetAdapter = new SohbetAdapter(sohbetList);
+        itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //SOHBETEND
         new initsohbet().execute();
         exec = new ScheduledThreadPoolExecutor(1);
@@ -657,5 +660,54 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
             super.onPostExecute(aVoid);
         }
     }
+    //RecyclerView callback methods for swipe to delete effects
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return super.isItemViewSwipeEnabled();
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            final  int position = viewHolder.getAdapterPosition();
+
+            if(sohbetList.get(viewHolder.getAdapterPosition()).nick.equals(m.oku("username"))) { //Kendi mesajı, silebilir
+                    Snackbar sn = Snackbar.make(smilegoster, R.string.message_deleted,Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
+                        //siteyi güncelle
+                        new deletePost(sohbetList.get(position).id).execute();
+                        sohbetList.remove(position);
+                        if(sohbetRV!=null) sohbetRV.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
+                    }
+                    super.onDismissed(snackbar, event);
+                }
+            });
+            sn.setAction(R.string.snackbar_undo, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(sohbetRV!=null)  sohbetRV.getAdapter().notifyItemChanged(position);
+                }
+            });
+
+            sn.show();
+        } else{
+            sohbetRV.getAdapter().notifyItemChanged(position);
+        if(getActivity()!=null)    Toast.makeText(getActivity().getApplicationContext(), R.string.toast_only_your_message_deleted,Toast.LENGTH_SHORT).show();
+        }
+
+        //Remove swiped item from list and notify the RecyclerView
+
+    }
+};
+
+ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 
 }

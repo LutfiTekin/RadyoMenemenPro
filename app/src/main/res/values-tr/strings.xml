@@ -70,4 +70,7 @@
     <string name="toast_permission_read_storage_granted">İşleme izin verildi artık resim seçebilirsin.</string>
     <string name="toast_permission_read_storage_denied">İşleme izin verilmediği için resim seçilemiyor.</string>
     <string name="lastplayed_emptyview">Son çalanlar listesi boş</string>
+    <string name="message_deleted">Mesaj silindi</string>
+    <string name="toast_only_your_message_deleted">Sadece kendi mesajını silebilirsin</string>
+    <string name="snackbar_undo">Geri Al</string>
 </resources>
