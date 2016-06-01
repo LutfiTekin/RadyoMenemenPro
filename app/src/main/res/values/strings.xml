@@ -106,4 +106,5 @@
     <string name="permissions">Permissions</string>
     <string name="toast_permission_read_storage_denied">Image cannot be picked due to permission denial.</string>
     <string name="toast_permission_read_storage_granted">Permission granted now you can pick an image.</string>
+    <string name="lastplayed_emptyview">Recently played list is empty</string>
 </resources>
