@@ -121,7 +121,13 @@ public class MUSIC_PLAY_SERVICE extends Service {
             public void run() {
                if(m.oku("caliyor").equals("evet")) {
                    setMusicMeta();
-                   nowPlayingNotification();
+                   new Thread(new Runnable() {
+                       @Override
+                       public void run() {
+                           nowPlayingNotification();
+                       }
+                   }).start();
+
                }
                 Log.v(TAG, "COMPLETED TASK COUNT " + exec.getCompletedTaskCount());
             }
@@ -134,7 +140,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
         try {
             mediaPlayer.pause();
             m.kaydet("caliyor","hayır");
-            nowPlayingNotification();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    nowPlayingNotification();
+                }
+            }).start();
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
             broadcastToUi(false);
@@ -147,7 +158,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
         try {
             mediaPlayer.start();
             m.kaydet("caliyor","evet");
-            nowPlayingNotification();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    nowPlayingNotification();
+                }
+            }).start();
             mediaSessionCompat.setActive(true);
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
@@ -231,7 +247,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
-                    nowPlayingNotification();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nowPlayingNotification();
+                        }
+                    }).start();
                 } catch (IllegalStateException e) {
                     Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 } catch (Exception e){
