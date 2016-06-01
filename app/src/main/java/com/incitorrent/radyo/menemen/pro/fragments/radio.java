@@ -41,6 +41,7 @@ public class radio extends Fragment {
     Cursor cursor;
     RadioAdapter adapter;
     List<history_objs> RList;
+    TextView emptyview;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -87,6 +88,7 @@ public class radio extends Fragment {
         View radioview = inflater.inflate(R.layout.fragment_radio,container,false);
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
+        emptyview = (TextView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(context);
@@ -139,6 +141,7 @@ public class radio extends Fragment {
         cursor.close();
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
+        if(adapter.getItemCount() < 1) emptyview.setVisibility(View.VISIBLE);
         super.onResume();
     }
 
