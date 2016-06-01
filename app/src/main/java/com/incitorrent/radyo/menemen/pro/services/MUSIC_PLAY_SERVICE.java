@@ -73,10 +73,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     case AudioManager.AUDIOFOCUS_LOSS:
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        pause();
+                        pause(false);
                         break;
                     case AudioManager.AUDIOFOCUS_GAIN:
-                        resume();
+                        resume(false);
                         break;
                 }
             }
@@ -91,21 +91,21 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
             @Override
             public void onPlay() {
-                resume();
+                resume(true);
                 Log.v(TAG,"MediaSession callback onPlay");
                 super.onPlay();
             }
 
             @Override
             public void onPause() {
-                pause();
+                pause(true);
                 Log.v(TAG,"MediaSession callback onPause");
                 super.onPause();
             }
 
             @Override
             public void onStop() {
-                pause();
+                pause(true);
                 Log.v(TAG,"MediaSession callback onStop");
                 super.onStop();
             }
@@ -136,7 +136,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         super.onCreate();
     }
 
-    private void pause() {
+    private void pause(Boolean abandonfocus) {
         try {
             mediaPlayer.pause();
             m.kaydet("caliyor","hayır");
@@ -149,12 +149,18 @@ public class MUSIC_PLAY_SERVICE extends Service {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
             broadcastToUi(false);
+            if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if puased by user
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void resume() {
+    private void resume(Boolean regainfocus) {
+        if(regainfocus) {
+        int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN); //resumed by user
+       Log.v(TAG,"AUDIOFOCUS " + res);
+        if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
+        }
         try {
             mediaPlayer.start();
             m.kaydet("caliyor","evet");
@@ -187,9 +193,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
         }
         if(!m.oku("caliyor").equals("evet")){
            if(dataSource!=null)  play(dataSource);
-            else resume();
+            else resume(true);
             Log.v(TAG,"DATA SOURCE " +dataSource);
-        }else if(m.oku("caliyor").equals("evet")) pause();
+        }else if(m.oku("caliyor").equals("evet")) pause(true);
 
         return START_NOT_STICKY;
     }
@@ -253,6 +259,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                             nowPlayingNotification();
                         }
                     }).start();
+                    audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
                 } catch (IllegalStateException e) {
                     Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 } catch (Exception e){
