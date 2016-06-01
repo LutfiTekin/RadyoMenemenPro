@@ -187,8 +187,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_radio)
+        if(id== R.id.nav_login){
+            fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
+        }else if (id == R.id.nav_radio)
             fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
         else if (id == R.id.nav_chat)
             fragmentManager.beginTransaction().addToBackStack("sohbet").replace(R.id.Fcontent,new sohbet()).commit();
