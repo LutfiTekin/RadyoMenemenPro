@@ -4,12 +4,14 @@ import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -91,8 +93,10 @@ public class radio extends Fragment {
         emptyview = (TextView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(context);
-        lastplayed.setLayoutManager(llm);
+
+        if(getResources().getBoolean(R.bool.landscape_mode))
+            lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
+        else lastplayed.setLayoutManager(new LinearLayoutManager(context));
 
 //        lastplayed.addOnScrollListener(new EndlessRecyclerViewScrollListener(llm) {
 //            @Override
