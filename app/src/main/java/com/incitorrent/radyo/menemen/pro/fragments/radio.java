@@ -240,7 +240,7 @@ public class radio extends Fragment {
         public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
             personViewHolder.song.setText(RList.get(i).song);
 //          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
-            if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).into(personViewHolder.art);
+            if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
         }
 
 
