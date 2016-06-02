@@ -1,0 +1,5 @@
+<resources>
+    
+
+    <bool name="landscape_mode" translatable='false'>true</bool>
+</resources>
