@@ -257,6 +257,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         @Override
                         public void run() {
                             nowPlayingNotification();
+                            startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
                         }
                     }).start();
                     audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -277,7 +278,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         m.kaydet("caliyor","hayır");
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
-            nm.cancel(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION);
+            stopForeground(false);
             mediaPlayer.stop();
             mediaPlayer.release();
             broadcastToUi(false);
