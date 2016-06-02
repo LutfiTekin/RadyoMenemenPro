@@ -29,13 +29,11 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
     private static final String TAG = "deletePost";
     private Context context;
     private Menemen m;
-
-    public deletePost(Context context) {
-        this.context = context;
-    }
     String postid;
 
-    public deletePost(String postid) {
+
+    public deletePost(Context context, String postid) {
+        this.context = context;
         this.postid = postid;
     }
 
