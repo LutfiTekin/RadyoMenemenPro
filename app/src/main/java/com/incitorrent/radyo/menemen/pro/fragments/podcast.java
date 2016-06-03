@@ -267,8 +267,11 @@ public class podcast extends Fragment {
                 cv = (CardView) itemView.findViewById(R.id.cvP);
                 rel = (RelativeLayout) itemView.findViewById(R.id.Pitem);
                 title.setOnClickListener(this);
+                title.setOnLongClickListener(this);
                 rel.setOnClickListener(this);
+                rel.setOnLongClickListener(this);
                 descr.setOnClickListener(this);
+                descr.setOnLongClickListener(this);
             }
 
             @Override
