@@ -383,127 +383,7 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
             super.onAttachedToRecyclerView(recyclerView);
         }
     }
-//CAPS YUKLE
-class CapsYukle extends AsyncTask<Void, Void, String> {
-    NotificationCompat.Builder notification;
-    private static final String TAG = "CAPSYUKLE";
-    private static final int unid = 600613;
 
-    Bitmap bit;
-
-    Context context;
-    public CapsYukle(Bitmap bit, Context context) {
-        this.bit = bit;
-        this.context = context;
-    }
-
-
-    @Override
-    protected String doInBackground(Void... params) {
-//        int compressratio = 80;
-//            Log.i("CapsYukle", String.valueOf(byteSizeOf(bit)));
-//            if(byteSizeOf(bit)>440000){
-//                bit = resizeBitmap(bit,720);
-////            compressratio = 30;
-//            }
-        uploadingimg();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bit.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-        String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-//            Log.i("CapsYukle", "Sıkıştırmadan sonra"+String.valueOf(byteSizeOf(bit)));
-
-        Map<String,String> dataToSend = new HashMap<>();
-        dataToSend.put("source", encodedImage);
-        dataToSend.put("key", m.oku(RadyoMenemenPro.CAPS_API_KEY));
-        String encodedStr = Menemen.getEncodedData(dataToSend);
-
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(RadyoMenemenPro.CAPS_API_URL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-            writer.write(encodedStr);
-            writer.flush();
-            StringBuilder sb = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String line;
-            while((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            line = sb.toString();
-            JSONObject J = new JSONObject(line);
-            JSONObject Jo = J.getJSONObject("image");
-            if(!J.getString("status_code").equals("200")) throw new Exception("Yüklenemedi");
-            Log.v(TAG,"JSON" + Jo.getString("date") + " " + Jo.getString("url"));
-            bit.recycle();
-            bit= null;
-            System.gc();
-            return Jo.getString("url");
-        } catch (Exception e) {
-            notification = new NotificationCompat.Builder(context)
-                    .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_upload);
-            notification.setContentTitle(getString(android.R.string.dialog_alert_title));
-            notification.setContentText(getString(R.string.error_occured));
-            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify(unid, notification.build());
-            e.printStackTrace();
-        } finally {
-            if(reader != null) {
-                try {
-                    reader.close();     //Closing the
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(final String s) {
-     postToMenemen(s);
-        if(s!=null) uploadedimg();
-    }
-
-    public void uploadedimg() {
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        notification = new NotificationCompat.Builder(context);
-        notification.setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_upload)
-                .setLargeIcon(bitmap)
-                .setOngoing(false)
-                .setTicker(context.getString(R.string.caps_uploaded))
-                .setWhen(System.currentTimeMillis())
-                .setContentTitle(context.getString(R.string.caps_uploaded))
-                .setContentText(context.getString(R.string.caps_uploaded_sub))
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(unid, notification.build());
-
-    }
-
-    public void uploadingimg() {
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        notification = new NotificationCompat.Builder(context)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_upload)
-                .setLargeIcon(bitmap)
-                .setProgress(0,0,true)
-                .setOngoing(true)
-                .setWhen(System.currentTimeMillis())
-                .setContentTitle(context.getString(R.string.caps_uploading))
-                .setContentText(context.getString(R.string.caps_uploading_in_progress))
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(unid, notification.build());
-    }
-
-}
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data) {
@@ -512,7 +392,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
             try {
                 Uri selectedimage = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), selectedimage);
-                    new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                    new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             }catch (Exception e){e.printStackTrace();}
         }
