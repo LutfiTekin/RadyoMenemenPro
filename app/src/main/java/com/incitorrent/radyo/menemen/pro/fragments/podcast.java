@@ -2,16 +2,20 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -250,7 +254,7 @@ public class podcast extends Fragment {
         List<podcast_objs> RList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
             TextView title, duration, descr;
             CardView cv;
             RelativeLayout rel;
@@ -278,6 +282,41 @@ public class podcast extends Fragment {
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
                 }
+            }
+
+            @Override
+            public boolean onLongClick(View v) {
+
+
+                new AlertDialog.Builder(context)
+                        .setTitle(RList.get(getAdapterPosition()).title)
+                        .setMessage(getString(R.string.download_file))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RList.get(getAdapterPosition()).url));
+                                    request.setDescription(context.getString(R.string.downloading_file))
+                                            .setTitle(RList.get(getAdapterPosition()).title)
+                                            .allowScanningByMediaScanner();
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, RList.get(getAdapterPosition()).title + ".mp3");
+                                    DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                                    manager.enqueue(request);
+                                    Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
+                                } catch (Exception e) {
+                                    Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setIcon(R.mipmap.ic_podcast)
+                        .show();
+                return false;
             }
         }
 
