@@ -34,7 +34,7 @@ import java.util.Random;
  * Radyo Menemen Pro Created by lutfi on 3.06.2016.
  */
 //CAPS YUKLE
-class CapsYukle extends AsyncTask<Void, Void, String> {
+public class CapsYukle extends AsyncTask<Void, Void, String> {
     NotificationCompat.Builder notification;
     private static final String TAG = "CAPSYUKLE";
     private static final int unid = 600613;
