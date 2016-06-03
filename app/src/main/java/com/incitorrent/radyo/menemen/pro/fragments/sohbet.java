@@ -580,9 +580,13 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
         @Override
         protected Boolean doInBackground(Void... params) {
             String line;
-            sohbetList = new ArrayList<>();
+            String lastmsg;
+
             if(m.isInternetAvailable()) {
-                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsj=1");
+                if(sohbetList.get(0).id.equals(Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR+ "&print_last_msg")))
+                    return false;
+                else lastmsg = sohbetList.get(0).id;
+                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + lastmsg);
                 if(line.equals(m.oku(RadyoMenemenPro.SOHBETCACHE))) return false;
             }
                 else line = m.oku(RadyoMenemenPro.SOHBETCACHE);
@@ -599,9 +603,9 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
                     nick = c.getString("nick");
                     mesaj = c.getString("post");
                     zaman = c.getString("time");
-                    sohbetList.add(new Sohbet_Objects(id,nick,mesaj,zaman));
+                    sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
-               if(m.isInternetAvailable()) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
+
                 if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen","İnternet bağlantını kontrol et",null));
                 Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
@@ -626,7 +630,9 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
         protected Void doInBackground(Void... params) {
             String line;
 
-
+            if(m.isInternetAvailable()) {
+                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
+            }else
             line = m.oku(RadyoMenemenPro.SOHBETCACHE);
             if(line.equals("yok")) return null;
             try {
@@ -643,7 +649,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
                     zaman = c.getString("time");
                     sohbetList.add(new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
-
+                if(m.isInternetAvailable()) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
                 if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen","İnternet bağlantını kontrol et",null));
                 Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
