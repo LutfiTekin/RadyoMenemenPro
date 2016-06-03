@@ -583,6 +583,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
             String lastmsg;
 
             if(m.isInternetAvailable()) {
+                if(sohbetList.size()<1) return false;
                 if(sohbetList.get(0).id.equals(Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR+ "&print_last_msg")))
                     return false;
                 else lastmsg = sohbetList.get(0).id;
@@ -606,8 +607,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
                     sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
 
-                if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen","İnternet bağlantını kontrol et",null));
-                Log.v(TAG, " SOHBETLIST" + line);
+                 Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
                 e.printStackTrace();
             }
@@ -619,7 +619,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
         protected void onPostExecute(Boolean ok) {
             if(!ok) return;
        if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
-            sohbetRV.setAdapter(SohbetAdapter);
+            sohbetRV.getAdapter().notifyDataSetChanged();
             super.onPostExecute(true);
         }
     }
@@ -650,7 +650,7 @@ class CapsYukle extends AsyncTask<Void, Void, String> {
                     sohbetList.add(new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
                 if(m.isInternetAvailable()) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
-                if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen","İnternet bağlantını kontrol et",null));
+                if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen",getString(R.string.toast_check_your_connection),null));
                 Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
                 e.printStackTrace();
