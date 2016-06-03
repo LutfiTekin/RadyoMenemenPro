@@ -9,10 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,8 +39,11 @@ import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
+import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
+
+import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity
@@ -116,6 +121,8 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
             }
         }
+
+
         if (m.oku("logged").equals("evet") && navigationView != null) {
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
