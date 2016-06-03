@@ -1,6 +1,7 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -27,15 +28,27 @@ public class get_image extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
                 try {
-
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        Uri image = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    Log.v("GET IMAGE"," PARCELABLE " + getRealPathFromURI(image) );
+                   if(getRealPathFromURI(image)!=null) {
+                       Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse("file://" + getRealPathFromURI(image)));
                     new CapsYukle(bitmap,this).execute();
+                   }else Toast.makeText(get_image.this, R.string.error_occured, Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
-                    Toast.makeText(get_image.this, R.string.error_occured + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(get_image.this, getString(R.string.error_occured) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.v("GET IMAGE", e.getMessage() + " PARCELABLE " + getRealPathFromURI((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM)) );
                     e.printStackTrace();
                 }
             }
         }
         startActivity(new Intent(this,MainActivity.class));
+    }
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if(cursor!=null)cursor.moveToFirst(); else return null;
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        String realpath = cursor.getString(idx);
+        cursor.close();
+        return realpath;
     }
 }
