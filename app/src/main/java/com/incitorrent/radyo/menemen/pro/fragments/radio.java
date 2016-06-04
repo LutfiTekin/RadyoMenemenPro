@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -242,7 +243,7 @@ public class radio extends Fragment {
         }
         @Override
         public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
-            personViewHolder.song.setText(RList.get(i).song);
+            personViewHolder.song.setText(Html.fromHtml(RList.get(i).song));
 //          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
             if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
         }
