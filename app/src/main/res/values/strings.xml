@@ -113,4 +113,7 @@
 
     <bool name="landscape_mode" translatable='false'>false</bool>
     <string name="toast_check_your_connection">Check your internet connection</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
