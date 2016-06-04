@@ -74,4 +74,6 @@
     <string name="toast_only_your_message_deleted">Sadece kendi mesajını silebilirsin</string>
     <string name="snackbar_undo">Geri Al</string>
     <string name="toast_check_your_connection">İnternet bağlantını kontrol et</string>
+    <string name="cd_send_button">Send Button</string>
+    <string name="ET_hint_write_something">Bir şeyler yaz</string>
 </resources>
