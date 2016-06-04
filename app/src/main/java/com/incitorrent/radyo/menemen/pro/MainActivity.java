@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
+import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
@@ -201,7 +202,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         else if (id == R.id.nav_chat)
             fragmentManager.beginTransaction().addToBackStack("sohbet").replace(R.id.Fcontent,new sohbet()).commit();
         else if (id == R.id.nav_shout) {
-
+            fragmentManager.beginTransaction().addToBackStack("haykir").replace(R.id.Fcontent,new haykir()).commit();
         }else if(id == R.id.nav_olanbiten){
             fragmentManager.beginTransaction().addToBackStack("ob").replace(R.id.Fcontent,new olan_biten()).commit();
         }else if (id == R.id.nav_podcast) {

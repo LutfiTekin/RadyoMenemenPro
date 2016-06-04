@@ -14,23 +14,27 @@ public class RadyoMenemenPro {
     public final static int ON_AIR_NOTIFICATION = 28052016; //Notification idsi bi özelliği yok rastgele
 
 
-    public static String HAYKIRURL    =   "http://radyo.incitorrent.com/haykir.php";
+
     public static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
     public static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
     public static String PODCASTLINK = "http://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
     public static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
     public static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
 
+
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
     public final static String SYNCCHANNEL = "http://radyomenemen.com/inc/appinfo.php?channels";
     public final static String DJRESPONSE = "http://radyomenemen.com/inc/appinfo.php?djresponse";
     public final static String MESAJLAR = "http://radyomenemen.com/inc/appinfo.php?mesajlar";
+    public final static String HAYKIRMALAR = "http://radyomenemen.com/inc/appinfo.php?haykirmalarim";
     public final static String OLAN_BITEN = "http://radyomenemen.com/inc/appinfo.php?olanbiten";
     public final static String MESAJ_GONDER = "http://radyomenemen.com/inc/appinfo.php?postmessage";
     public final static String MESAJ_SIL = "http://radyomenemen.com/inc/appinfo.php?deletemessage";
 
+    //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
     public final static String SOHBETCACHE = "sohbetcache";
+    public final static String HAYKIRCACHE = "hkcache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
     public final static String SAVED_DJ = "saveddj";

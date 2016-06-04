@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -232,6 +233,30 @@ public class Menemen {
                 sb.append(line + "\n");
             }
            line = sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return line;
+    }
+
+    //POST methodu ile veri gönder ve JSON döndür
+    public static String postMenemenData(String url,String encodedstr){
+        //Json datası döndür
+        String line = null;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(encodedstr);
+            writer.flush();
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    con.getInputStream(), "iso-8859-9"), 8);
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            line = sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
