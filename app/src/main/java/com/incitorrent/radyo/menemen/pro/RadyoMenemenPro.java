@@ -15,11 +15,12 @@ public class RadyoMenemenPro {
 
 
 
-    public static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
-    public static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
-    public static String PODCASTLINK = "http://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
-    public static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
-    public static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
+    public final static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo.php";
+    public final static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
+    public final static String PODCASTLINK = "http://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
+    public final static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
+    public final static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
+    public final static String HAYKIR_LINK = "http://radyomenemen.com/haykir.php";
 
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
