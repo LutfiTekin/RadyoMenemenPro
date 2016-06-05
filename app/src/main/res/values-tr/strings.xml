@@ -76,4 +76,5 @@
     <string name="toast_check_your_connection">İnternet bağlantını kontrol et</string>
     <string name="cd_send_button">Send Button</string>
     <string name="ET_hint_write_something">Bir şeyler yaz</string>
+    <string name="me">Ben</string>
 </resources>
