@@ -1,20 +1,27 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
+import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -67,6 +74,29 @@ public class haykir extends Fragment implements View.OnClickListener {
         shoutRV.setHasFixedSize(true);
         shoutRV.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         ShoutAdapter = new ShoutAdapter(ShoutList);
+
+        editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if(editText.getText().length()>0) {
+                        if (Build.VERSION.SDK_INT >= 11)
+                            postHaykir(editText.getText().toString());
+                        editText.setText("");
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+            send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    postHaykir(editText.getText().toString());
+                    editText.setText("");
+                }
+            });
         ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -75,6 +105,36 @@ public class haykir extends Fragment implements View.OnClickListener {
             }
         },0,RadyoMenemenPro.MUSIC_SERVICE_INFO_INTERVAL/4, TimeUnit.SECONDS);
         return haykirview;
+    }
+
+    private void postHaykir(final String mesaj) {
+        new AsyncTask<Void,Void,Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                Map<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.oku("username"));
+                dataToSend.put("haykir", mesaj);
+                String encodedStr = Menemen.getEncodedData(dataToSend);
+                try {
+                    String line = Menemen.postMenemenData(RadyoMenemenPro.HAYKIR_LINK,encodedStr);
+                    Log.v(TAG,"POST "+ line);
+                    JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
+
+                    if(j.get("status").equals("ok")) return true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean success) {
+                if (!success) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                }
+                super.onPostExecute(success);
+            }
+        }.execute();
     }
 
     @Override
@@ -142,11 +202,13 @@ public class haykir extends Fragment implements View.OnClickListener {
 
         public class PersonViewHolder extends RecyclerView.ViewHolder{
             TextView nick,shout,zaman;
+            CardView shoutcard;
             PersonViewHolder(View itemView) {
                 super(itemView);
                 nick = (TextView) itemView.findViewById(R.id.username);
                 shout = (TextView) itemView.findViewById(R.id.shout);
                 zaman = (TextView) itemView.findViewById(R.id.zaman);
+                shoutcard = (CardView) itemView.findViewById(R.id.shoutcard);
 
             }
 
@@ -168,8 +230,9 @@ public class haykir extends Fragment implements View.OnClickListener {
         }
 
         @Override
-        public void onBindViewHolder(PersonViewHolder personViewHolder, final int i) {
-
+        public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
+            if(ShoutList.get(i).nick.equals("Dj")) personViewHolder.shoutcard.setCardBackgroundColor(ContextCompat.getColor(context,R.color.blueAccent));
+            else personViewHolder.shoutcard.setCardBackgroundColor(Color.WHITE);
             personViewHolder.nick.setText((ShoutList.get(i).nick.equals("Dj")) ? ShoutList.get(i).nick : context.getString(R.string.me));
             personViewHolder.shout.setText(Html.fromHtml(ShoutList.get(i).shout));
             personViewHolder.zaman.setText(m.getElapsed(ShoutList.get(i).zaman));
