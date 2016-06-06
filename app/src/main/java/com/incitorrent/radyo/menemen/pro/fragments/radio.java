@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -119,7 +120,6 @@ public class radio extends Fragment {
 //            }
 //
 //        });
-
 
         return radioview;
     }
@@ -244,7 +244,8 @@ public class radio extends Fragment {
         public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
             personViewHolder.song.setText(Html.fromHtml(RList.get(i).song));
 //          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
-            if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
+            if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+                Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
             int delay = i*100;
           m.runEnterAnimation(personViewHolder.card,delay);
         }
