@@ -48,23 +48,18 @@ public class haykir extends Fragment implements View.OnClickListener {
     RecyclerView shoutRV;
 
     Menemen m;
-    Context mcontext;
+    
     List<Shout_Objects> ShoutList;
     ShoutAdapter ShoutAdapter;
     public haykir() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(Context context) {
-        mcontext = context;
-        super.onAttach(context);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        m = new Menemen(mcontext);
+        m = new Menemen(getActivity().getApplicationContext());
         View haykirview = inflater.inflate(R.layout.fragment_haykir, container, false);
         editText = (EditText) haykirview.findViewById(R.id.ETmesaj);
         send = (FloatingActionButton) haykirview.findViewById(R.id.mesaj_gonder_button);
