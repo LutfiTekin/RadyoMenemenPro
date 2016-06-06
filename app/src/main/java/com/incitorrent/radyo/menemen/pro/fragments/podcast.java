@@ -1,7 +1,5 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -10,9 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -346,9 +342,7 @@ public class podcast extends Fragment {
             personViewHolder.title.setText(RList.get(i).title);
             personViewHolder.descr.setText(Html.fromHtml(RList.get(i).description));
             personViewHolder.duration.setText(RList.get(i).duration);
-
-
-
+            inf.runEnterAnimation(personViewHolder.cv,i*180);
         }
 
 

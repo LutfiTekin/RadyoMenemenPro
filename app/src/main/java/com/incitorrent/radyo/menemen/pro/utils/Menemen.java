@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
@@ -18,7 +21,6 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -281,5 +283,19 @@ public class Menemen {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    public void runEnterAnimation(View view, int delay) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        view.setTranslationY(height);
+        view.animate()
+                .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(700 + delay)
+                .start();
     }
 }

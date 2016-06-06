@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -127,14 +128,14 @@ public class olan_biten extends Fragment {
 
         public class PersonViewHolder extends RecyclerView.ViewHolder {
             TextView title,content,author,time;
-
+            CardView obcard;
             PersonViewHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.ob_title);
                 content = (TextView) itemView.findViewById(R.id.ob_content);
                 author = (TextView) itemView.findViewById(R.id.ob_yazan);
                 time = (TextView) itemView.findViewById(R.id.ob_zaman);
-
+                obcard = (CardView) itemView.findViewById(R.id.obC);
             }
         }
 
@@ -191,7 +192,7 @@ public class olan_biten extends Fragment {
         },null)));
 
         personViewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
-
+        m.runEnterAnimation(personViewHolder.obcard,i*250);
         }
 
 

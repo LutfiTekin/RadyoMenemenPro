@@ -4,13 +4,12 @@ import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,11 +158,12 @@ public class radio extends Fragment {
         public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnClickListener{
             TextView song;
             ImageView art;
-            RelativeLayout rel;
+            CardView card;
             PersonViewHolder(View itemView) {
                 super(itemView);
                 song = (TextView)itemView.findViewById(R.id.song);
                 art = (ImageView)itemView.findViewById(R.id.art);
+                card = (CardView) itemView.findViewById(R.id.radiocard);
                 song.setOnLongClickListener(this);
                 art.setOnClickListener(this);
             }
@@ -242,10 +241,12 @@ public class radio extends Fragment {
             return RList.size();
         }
         @Override
-        public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
+        public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
             personViewHolder.song.setText(Html.fromHtml(RList.get(i).song));
 //          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
             if(getActivity()!=null && !RList.get(i).arturl.equals("default")) Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
+            int delay = i*100;
+          m.runEnterAnimation(personViewHolder.card,delay);
         }
 
 
