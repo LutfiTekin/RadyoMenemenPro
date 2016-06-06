@@ -37,9 +37,9 @@ import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
-import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -486,7 +486,7 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
         protected void onPostExecute(Boolean ok) {
             if(!ok) return;
        if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
-            sohbetRV.getAdapter().notifyDataSetChanged();
+         if(sohbetRV.getAdapter()!=null)   sohbetRV.getAdapter().notifyDataSetChanged();
             super.onPostExecute(true);
         }
     }
