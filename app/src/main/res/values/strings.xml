@@ -117,4 +117,5 @@
     <string name="cd_send_button">Send Button</string>
     <string name="ET_hint_write_something">Bir şeyler yaz</string>
     <string name="me">Me</string>
+    <string name="shoutlist_empty">No shouts here</string>
 </resources>

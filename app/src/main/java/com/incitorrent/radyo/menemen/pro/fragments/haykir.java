@@ -46,7 +46,7 @@ public class haykir extends Fragment implements View.OnClickListener {
     EditText editText;
     FloatingActionButton send;
     RecyclerView shoutRV;
-
+    TextView emptyview;
     Menemen m;
 
     List<Shout_Objects> ShoutList;
@@ -69,7 +69,7 @@ public class haykir extends Fragment implements View.OnClickListener {
         shoutRV.setHasFixedSize(true);
         shoutRV.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         ShoutAdapter = new ShoutAdapter(ShoutList);
-
+        emptyview = (TextView) haykirview.findViewById(R.id.haykir_emptyview);
         editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
             @Override
@@ -179,6 +179,7 @@ public class haykir extends Fragment implements View.OnClickListener {
         protected void onPostExecute(Void aVoid) {
             if(ShoutList!=null) ShoutAdapter = new ShoutAdapter(ShoutList);
             shoutRV.setAdapter(ShoutAdapter);
+            emptyview.setVisibility((ShoutAdapter.getItemCount()<1) ? View.VISIBLE : View.GONE);
             super.onPostExecute(aVoid);
         }
     }
