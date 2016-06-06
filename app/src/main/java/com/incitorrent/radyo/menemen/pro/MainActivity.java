@@ -1,36 +1,29 @@
 package com.incitorrent.radyo.menemen.pro;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
-
 
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
@@ -40,11 +33,8 @@ import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
-import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
-
-import java.io.IOException;
 
 
 public class MainActivity extends AppCompatActivity
@@ -228,6 +218,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                             m.kaydet("username","yok");
                             m.kaydet("mkey","yok");
                             m.kaydet("logged", "yok");
+                            m.kaydet(RadyoMenemenPro.HAYKIRCACHE,"yok");
                             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
                             fragmentManager.beginTransaction().replace(R.id.Fcontent,new login()).commit();
                             MainActivity.this.recreate();

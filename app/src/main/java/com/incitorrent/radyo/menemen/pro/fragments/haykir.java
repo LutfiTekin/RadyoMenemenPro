@@ -48,7 +48,7 @@ public class haykir extends Fragment implements View.OnClickListener {
     RecyclerView shoutRV;
 
     Menemen m;
-    
+
     List<Shout_Objects> ShoutList;
     ShoutAdapter ShoutAdapter;
     public haykir() {
