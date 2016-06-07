@@ -11,8 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-
-
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -336,7 +334,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG,intent.getAction());
-        stopSelf(); //kulaklık çıkınca durdur
+//        stopSelf(); //kulaklık çıkınca durdur
+            pause(true);
         }
     };
 
