@@ -288,6 +288,7 @@ public class Menemen {
     }
 
     public void runEnterAnimation(View view, int delay) {
+        view.setVisibility(View.VISIBLE);
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -296,6 +297,20 @@ public class Menemen {
         view.setTranslationY(height);
         view.animate()
                 .translationY(0)
+                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setDuration(700 + delay)
+                .start();
+    }
+
+    public void runExitAnimation(View view, int delay) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        view.setTranslationY(0);
+        view.animate()
+                .translationY(height)
                 .setInterpolator(new DecelerateInterpolator(3.f))
                 .setDuration(700 + delay)
                 .start();

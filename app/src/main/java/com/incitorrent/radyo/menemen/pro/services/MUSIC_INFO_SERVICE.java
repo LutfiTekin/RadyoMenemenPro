@@ -5,15 +5,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -22,18 +19,12 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -48,12 +39,14 @@ import java.util.concurrent.TimeUnit;
 public class MUSIC_INFO_SERVICE extends Service {
 
     final String TAG = "MUSIC_INFO_SERVICE";
+    final public static String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
     public static final String LAST_ARTWORK_URL = "lastartwork";
     final Context context = this;
     Menemen inf;
     radioDB sql;
     NotificationCompat.Builder notification;
     NotificationManager nm;
+    LocalBroadcastManager broadcasterForUi;
     public MUSIC_INFO_SERVICE() {
     }
 
@@ -65,6 +58,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     @Override
     public void onCreate() {
+        broadcasterForUi = LocalBroadcastManager.getInstance(this);
         inf = new Menemen(context);
         sql = new radioDB(context,null,null,1);
         final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
@@ -117,11 +111,10 @@ public class MUSIC_INFO_SERVICE extends Service {
                     inf.kaydet("LASTsongid", songid);
                     inf.kaydet(LAST_ARTWORK_URL, artwork);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
-//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true))
-//                            inf.downloadImageIfNecessary(songid, c.getString("artwork"));
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
                         inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
-//                        Log.v(TAG, "Artwork downloaded" + c.getString("artwork"));
+                        //TODO arayüze bildir
+                        notifyNP();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -184,5 +177,8 @@ public class MUSIC_INFO_SERVICE extends Service {
         }
     }
 
-
+    public void notifyNP() {
+        Intent intent = new Intent(NP_FILTER);
+        broadcasterForUi.sendBroadcast(intent);
+    }
 }

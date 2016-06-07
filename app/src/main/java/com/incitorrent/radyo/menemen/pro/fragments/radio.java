@@ -2,13 +2,17 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,11 +24,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
@@ -43,8 +51,14 @@ public class radio extends Fragment {
     Cursor cursor;
     RadioAdapter adapter;
     List<history_objs> RList;
-    TextView emptyview;
-    // TODO: Rename and change types of parameters
+    TextView emptyview,NPtrack,NPdjnote,NPdj;
+    ImageView NPart;
+    CardView NPcard;
+    LinearLayout nowplayingbox;
+    BroadcastReceiver NPreceiver;
+    BroadcastReceiver NPUpdatereceiver;
+
+
     private String mParam1;
     private String mParam2;
 
@@ -97,35 +111,81 @@ public class radio extends Fragment {
         if(getResources().getBoolean(R.bool.landscape_mode))
             lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
         else lastplayed.setLayoutManager(new LinearLayoutManager(context));
+        nowplayingbox = (LinearLayout) radioview.findViewById(R.id.nowplaying_box);
+        NPtrack = (TextView) radioview.findViewById(R.id.nowplaying_track);
+        NPdjnote = (TextView) radioview.findViewById(R.id.nowplaying_djnote);
+        NPdj = (TextView) radioview.findViewById(R.id.nowplaying_dj);
+        NPart = (ImageView) radioview.findViewById(R.id.nowplaying_art);
+        NPcard = (CardView) radioview.findViewById(R.id.cardviewart);
+        lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState){
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        m.runExitAnimation(nowplayingbox,400);
+//                        nowplayingbox.setVisibility(View.INVISIBLE);
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+//                        nowplayingbox.setVisibility(View.VISIBLE);
+                        m.runEnterAnimation(nowplayingbox,200);
 
-//        lastplayed.addOnScrollListener(new EndlessRecyclerViewScrollListener(llm) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount) {
-//                Log.v("RADIOFRAG","TOTALITEM" + totalItemsCount + " " +  page);
-//                cursor = sql.getHistory(totalItemsCount*2);
-//                cursor.moveToFirst();
-//
-//                while(cursor!=null && !cursor.isAfterLast()) {
-//                    if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
-//                        String song = cursor.getString(cursor.getColumnIndex("song"));
-//                        String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-//                        String url = cursor.getString(cursor.getColumnIndex("url"));
-//                        RList.add(new history_objs(song,songhash,url));
-//                    }
-//                    cursor.moveToNext();
-//                }
-//                cursor.close();
-//                adapter = new RadioAdapter(RList);
-//                lastplayed.setAdapter(adapter);
-//            }
-//
-//        });
+                        break;
+
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        //Şimdi çalıyor kısmını göster
+        NPreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getExtras()!=null) {
+                    if(intent.getBooleanExtra(RadyoMenemenPro.PLAY, true)) {
+                        m.runEnterAnimation(nowplayingbox, 200);
+                        m.runEnterAnimation(NPtrack,400);
+                        m.runEnterAnimation(NPcard,400);
+                        m.runEnterAnimation(NPdjnote,600);
+                        m.runEnterAnimation(NPdj,600);
+                    }
+                    else m.runExitAnimation(nowplayingbox,500);
+                }
+                setNP();
+            }
+        };
+
 
         return radioview;
     }
 
+    private void setNP() {
+        NPtrack.setText(Html.fromHtml(m.oku("calan")));
+        NPdjnote.setText(m.oku("djnotu"));
+        NPdj.setText(m.oku("dj"));
+        if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+            Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
+
+    }
+
+    @Override
+    public void onStart() {
+      if(getActivity()!=null) {
+          IntentFilter filter = new IntentFilter();
+          filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
+          filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
+          LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((NPreceiver),filter);
+      }
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(NPreceiver);
+        super.onStop();
+    }
+
     @Override
     public void onResume() {
+        setNP();
         RList = new ArrayList<>();
         cursor = sql.getHistory(20);
         cursor.moveToFirst();
@@ -136,6 +196,7 @@ public class radio extends Fragment {
                 String url = cursor.getString(cursor.getColumnIndex("url"));
                 String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
                 Log.v("ARTURL",cursor.getString(cursor.getColumnIndex("arturl")));
+                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku("calan"))) //Son çalanlarda son çalanı gösterme :)
                 RList.add(new history_objs(song,songhash,url,arturl));
             }
             cursor.moveToNext();
@@ -145,6 +206,11 @@ public class radio extends Fragment {
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) emptyview.setVisibility(View.VISIBLE);
+        if(m.oku("caliyor").equals("evet")) {
+            setNP();
+            m.runEnterAnimation(nowplayingbox, 200);
+        }
+
         super.onResume();
     }
 

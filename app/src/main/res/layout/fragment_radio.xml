@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.incitorrent.radyo.menemen.pro.fragments.radio"
     android:background="@color/colorBackgroundsoft">
 
@@ -24,5 +25,81 @@
         android:layout_gravity="center_horizontal|top"
         android:visibility="gone"
         android:layout_margin="16dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/colorBackgroundsoft"
+        android:id="@+id/nowplaying_box"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/cardviewart"
+            app:cardCornerRadius="4dp">
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:id="@+id/nowplaying_art"
+                android:src="@mipmap/album_placeholder"
+                android:contentDescription="Song Artwork" />
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Oto Dj"
+            android:id="@+id/nowplaying_dj"
+            android:layout_gravity="center_horizontal"
+            android:maxLines="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/music_not_found"
+                android:id="@+id/nowplaying_track"
+                android:maxLines="2"
+                android:minLines="2"
+                android:gravity="center_horizontal"
+                android:textColor="@color/primary_dark_material_dark"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="74dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="DJ NOTU"
+                android:id="@+id/nowplaying_djnote"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="74dp"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
