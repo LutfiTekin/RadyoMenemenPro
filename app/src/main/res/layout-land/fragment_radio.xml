@@ -43,7 +43,10 @@
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/cardviewart"
             app:cardCornerRadius="4dp">
             <ImageView
@@ -85,7 +88,7 @@
                 android:textColor="@color/primary_dark_material_dark"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginRight="74dp"
                 android:textSize="30sp" />
 

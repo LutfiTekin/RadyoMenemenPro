@@ -123,7 +123,6 @@ public class radio extends Fragment {
               if(m.oku("caliyor").equals("evet") && !m.oku("calan").equals("yok")) {
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
-                      case RecyclerView.SCROLL_STATE_IDLE:
                           m.runExitAnimation(nowplayingbox, 400);
                           break;
                       case RecyclerView.SCROLL_STATE_SETTLING:
