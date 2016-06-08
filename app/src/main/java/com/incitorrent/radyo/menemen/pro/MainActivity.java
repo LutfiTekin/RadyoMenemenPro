@@ -72,6 +72,10 @@ public class MainActivity extends AppCompatActivity
         if(fab!=null) fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!m.isInternetAvailable()){
+                    Toast.makeText(MainActivity.this, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //Podcast çalmıyor
                 m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
                  Intent  radyoservis = new Intent(MainActivity.this, MUSIC_PLAY_SERVICE.class);
@@ -82,15 +86,13 @@ public class MainActivity extends AppCompatActivity
                 radyoservis.putExtra("dataSource",dataSource);
                 //data source ile servisi başlat
                 startService(radyoservis);
-                FloatingActionButton b = (FloatingActionButton) view;
-//                b.setImageResource(!m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
             }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+       if(drawer!=null) drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -105,11 +107,9 @@ public class MainActivity extends AppCompatActivity
 Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         if(savedInstanceState == null) {
             if (m.oku("logged").equals("yok")) {
-                //TODO giriş fragmentini göster
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
             } else {
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-
             }
         }
 
@@ -144,6 +144,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(drawer==null) return;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -161,7 +162,6 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     @Override
     protected void onResume() {
         fab.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-
         super.onResume();
     }
 
@@ -237,7 +237,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+       if(drawer!=null) drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
