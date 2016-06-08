@@ -52,7 +52,8 @@
         <activity
             android:name=".About"
             android:label="@string/about" />
-        <activity android:name=".get_image">
+        <activity android:name=".get_image"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
