@@ -55,6 +55,7 @@
             android:text="@string/shoutlist_empty"
             android:id="@+id/haykir_emptyview"
             android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:visibility="gone"
             android:layout_margin="16dp" />
 

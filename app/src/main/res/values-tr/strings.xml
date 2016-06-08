@@ -77,5 +77,6 @@
     <string name="cd_send_button">Send Button</string>
     <string name="ET_hint_write_something">Bir şeyler yaz</string>
     <string name="me">Ben</string>
-    <string name="shoutlist_empty">Burda hiç haykırma yok</string>
+    <string name="shoutlist_empty">Burda hiç haykırma yok\n
+Üsteki metin kutusunu kullanarak yayındaki dj ile özel olarak iletişim kurabilirsin. \n Burdan gönderdiklerini sadece yayıncı kadrosundakiler görebilir.</string>
 </resources>
