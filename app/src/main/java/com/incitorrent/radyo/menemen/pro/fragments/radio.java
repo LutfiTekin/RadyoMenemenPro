@@ -120,18 +120,18 @@ public class radio extends Fragment {
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                switch (newState){
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        m.runExitAnimation(nowplayingbox,400);
+              if(m.oku("caliyor").equals("evet")) {
+                  switch (newState) {
+                      case RecyclerView.SCROLL_STATE_DRAGGING:
+                          m.runExitAnimation(nowplayingbox, 400);
 //                        nowplayingbox.setVisibility(View.INVISIBLE);
-                        break;
-                    case RecyclerView.SCROLL_STATE_SETTLING:
+                          break;
+                      case RecyclerView.SCROLL_STATE_SETTLING:
 //                        nowplayingbox.setVisibility(View.VISIBLE);
-                        m.runEnterAnimation(nowplayingbox,200);
-
-                        break;
-
-                }
+                          m.runEnterAnimation(nowplayingbox, 200);
+                          break;
+                  }
+              }
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
