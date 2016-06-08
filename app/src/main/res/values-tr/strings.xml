@@ -81,4 +81,5 @@
 Üsteki metin kutusunu kullanarak yayındaki dj ile özel olarak iletişim kurabilirsin. \n Burdan gönderdiklerini sadece yayıncı kadrosundakiler görebilir.</string>
     <string name="ph_np_track">Şimdi Çalıyor</string>
     <string name="ph_np_fetching_dj_note">Dj Notu Çekiliyor</string>
+    <string name="cd_song_artwork">Albüm Resmi</string>
 </resources>
