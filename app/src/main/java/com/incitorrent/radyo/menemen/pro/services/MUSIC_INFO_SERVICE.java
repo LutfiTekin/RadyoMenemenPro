@@ -23,12 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -123,35 +117,35 @@ public class MUSIC_INFO_SERVICE extends Service {
                 }
             }
 
-            //DJ cevabını kontrol et
-            if (!inf.oku("logged").equals("yok")) {
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", inf.oku("username"));
-                dataToSend.put("mkey", inf.oku("mkey"));
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                try {
-                    HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.DJRESPONSE).openConnection();
-                    connection.setRequestMethod("POST");
-
-                    connection.setDoOutput(true);
-                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                    writer.write(encodedStr);
-                    writer.flush();
-                    StringBuilder sb = new StringBuilder();
-                    reader = new BufferedReader(new InputStreamReader(
-                            connection.getInputStream(), "iso-8859-9"), 8);
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
-                    }
-                    line = sb.toString();
-                    JSONObject j = new JSONObject(line).getJSONArray("djresp").getJSONObject(0);
+            //TODO DJ cevabını kontrol et
+//            if (!inf.oku("logged").equals("yok")) {
+//                Map<String, String> dataToSend = new HashMap<>();
+//                dataToSend.put("nick", inf.oku("username"));
+//                dataToSend.put("mkey", inf.oku("mkey"));
+//                String encodedStr = Menemen.getEncodedData(dataToSend);
+//                try {
+//                    HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.DJRESPONSE).openConnection();
+//                    connection.setRequestMethod("POST");
+//
+//                    connection.setDoOutput(true);
+//                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+//                    writer.write(encodedStr);
+//                    writer.flush();
+//                    StringBuilder sb = new StringBuilder();
+//                    reader = new BufferedReader(new InputStreamReader(
+//                            connection.getInputStream(), "iso-8859-9"), 8);
+//                    String line;
+//                    while ((line = reader.readLine()) != null) {
+//                        sb.append(line + "\n");
+//                    }
+//                    line = sb.toString();
+//                    JSONObject j = new JSONObject(line).getJSONArray("djresp").getJSONObject(0);
 
 //                    Log.v(TAG, "DJRESP \n" + j.getString("id")+ "\n" + j.getString("cevap"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
             //yayın başlayınca bildirim at
             //Bildirim ayarı açık mı? , Yayında Oto Dj mi var ?, Radyo zaten çalmıyor mu?
             Boolean isOnair = notify_when_onair && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !isPlaying;
