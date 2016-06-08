@@ -119,4 +119,8 @@
     <string name="me">Me</string>
     <string name="shoutlist_empty">No shouts here\n
 You can send a direct message to dj, who currently on air.\n Messages that sent from here only can read by authorized broadcaster.</string>
+    <string name="cd_song_artwork">Song Artwork</string>
+    <!--Placeholder-->
+    <string name="ph_np_track">Now Playing</string>
+    <string name="ph_np_fetching_dj_note">Fetching Dj Note</string>
 </resources>

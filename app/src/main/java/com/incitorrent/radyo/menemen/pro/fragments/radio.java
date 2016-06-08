@@ -120,7 +120,7 @@ public class radio extends Fragment {
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-              if(m.oku("caliyor").equals("evet")) {
+              if(m.oku("caliyor").equals("evet") && !m.oku("calan").equals("yok")) {
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                       case RecyclerView.SCROLL_STATE_IDLE:
