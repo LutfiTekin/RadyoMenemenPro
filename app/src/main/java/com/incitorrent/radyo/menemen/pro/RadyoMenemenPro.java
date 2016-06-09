@@ -45,7 +45,7 @@ public class RadyoMenemenPro {
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
 
-    public final static String CAPS_API_URL    =   "http://caps.incitorrent.com/api/1/upload";
+    public final static String CAPS_API_URL    =   "http://caps.radyomenemen.com/api/1/upload";
     public final static String CAPS_API_KEY    =   "capsapi";
 
 
