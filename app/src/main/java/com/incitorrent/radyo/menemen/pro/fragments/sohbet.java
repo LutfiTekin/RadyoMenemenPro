@@ -115,6 +115,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -131,8 +132,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(mesaj.getText().length()>0) {
-                        if (Build.VERSION.SDK_INT >= 11)
+                    if(mesaj.getText().toString().trim().length()>0) {
                         postToMenemen(mesaj.getText().toString());
                         mesaj.setText("");
                     }
@@ -192,7 +192,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 smileRV.setVisibility(smileRV.getVisibility() != View.VISIBLE ? View.VISIBLE : View.GONE);
                 break;
             case R.id.mesaj_gonder_button:
-                postToMenemen(mesaj.getText().toString());
+                if(mesaj.getText().toString().trim().length()>0)postToMenemen(mesaj.getText().toString());
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
@@ -455,6 +455,7 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
                     return false;
                 else lastmsg = sohbetList.get(0).id;
                 line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + lastmsg);
+                if(line==null) return false;
                 if(line.equals(m.oku(RadyoMenemenPro.SOHBETCACHE))) return false;
             }
                 else line = m.oku(RadyoMenemenPro.SOHBETCACHE);
