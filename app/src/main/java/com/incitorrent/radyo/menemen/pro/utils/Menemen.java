@@ -215,8 +215,8 @@ public class Menemen {
     }
     //site kullanılan smileylerın BBcode karşılıkları
     public static String getIncitorrentSmileys(String post){
-        String smileys[] = {"gmansmile","YSB",":arap:","\\(gc\\)","SBH",":lan\\!","aygötüm","\\(S\\)",":cahil",":NS:","lan\\!\\?",":ypm:","\\[i\\]","\\[b\\]","\\[\\/i\\]","\\[\\/b\\]",":\\)",":D","\n"};
-        String smileyres[] = {"<img src='gmansmile'/>","<img src='YSB'/>","<img src='arap'/>","<img src='gc'/>","<img src='SBH'/>","<img src='lann0lebowski'/>","<img src='ayg'/>","<img src='<sikimizdedegil>'/>","<img src='<cahil>'/>","<img src='<nereyeS>'/>","<img src='000lan000'/>","<img src='<ypm>'/>","<i>","<b>","</i>","</b>","<img src='olumlu'/>","<img src='lol'/>","<br>"};
+        String smileys[] = {"gmansmile","YSB",":arap:","\\(gc\\)","SBH",":lan\\!","aygötüm","\\(S\\)",":cahil",":NS:","lan\\!\\?",":ypm:","\\[i\\]","\\[b\\]","\\[\\/i\\]","\\[\\/b\\]",":\\)",":D","\n","(hl\\?)","\\*nopanic","\\:V\\:","demeya\\!\\?","\\:hmm"};
+        String smileyres[] = {"<img src='gmansmile'/>","<img src='YSB'/>","<img src='arap'/>","<img src='gc'/>","<img src='SBH'/>","<img src='lann0lebowski'/>","<img src='ayg'/>","<img src='<sikimizdedegil>'/>","<img src='<cahil>'/>","<img src='<nereyeS>'/>","<img src='000lan000'/>","<img src='<ypm>'/>","<i>","<b>","</i>","</b>","<img src='olumlu'/>","<img src='lol'/>","<br>","<img src='hl'/>","<img src='nopanic'/>","<img src='v'/>","<img src='yds'/>","<img src='eizen'/>"};
         for(int i = 0; i< smileys.length; i++) post =  post.replaceAll(smileys[i],smileyres[i]);
         return post;
     }

@@ -82,4 +82,5 @@
     <string name="ph_np_track">Şimdi Çalıyor</string>
     <string name="ph_np_fetching_dj_note">Dj Notu Çekiliyor</string>
     <string name="cd_song_artwork">Albüm Resmi</string>
+    <string name="cd_smiley">İfade</string>
 </resources>

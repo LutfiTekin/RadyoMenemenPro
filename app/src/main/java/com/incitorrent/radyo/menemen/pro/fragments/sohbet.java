@@ -150,10 +150,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
         satbaxSmileList = new ArrayList<>();
         smileRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager
-                = new GridLayoutManager(getActivity().getApplicationContext(),4);
+                = new GridLayoutManager(getActivity().getApplicationContext(),(getResources().getBoolean(R.bool.landscape_mode))? 10 : 6);
         smileRV.setLayoutManager(layoutManager);
-        String smileys[] = {"gmansmile","YSB",":arap:","(gc)","SBH","lan!?","aygötüm","(S)",":cahil",":NS:",":lan!",":ypm:"};
-        String smileyids[] = {"smile_gman","ysb","smile_arap","smile_keci","smile_sbh","smile_lan","smile_ayg","smile_sd","smile_cahil","smile_ns","smile_lann","ypm"};
+        String smileys[] = {"gmansmile","YSB",":arap:","(gc)","SBH","lan!?","aygötüm","(S)",":cahil",":NS:",":lan!",":ypm:","(hl?)","*nopanic",":V:","demeya!?",":hmm"};
+        String smileyids[] = {"smile_gman","ysb","smile_arap","smile_keci","smile_sbh","smile_lan","smile_ayg","smile_sd","smile_cahil","smile_ns","smile_lann","ypm","smile_harbimi","smile_panikyok","v","yds","eizen"};
         for(int i = 0; i< smileys.length; i++) satbaxSmileList.add(new Satbax_Smiley_Objects(smileys[i], smileyids[i]));
         Smileadapter = new SatbaxSmileAdapter(satbaxSmileList);
         smileRV.setAdapter(Smileadapter);
@@ -353,6 +353,11 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
                         case "<cahil>": id = R.mipmap.smile_cahil; break;
                         case "<nereyeS>": id = R.mipmap.smile_ns; break;
                         case "<ypm>": id = R.mipmap.ypm; break;
+                        case "hl": id = R.mipmap.smile_harbimi; break;
+                        case "nopanic": id = R.mipmap.smile_panikyok; break;
+                        case "v": id = R.mipmap.v; break;
+                        case "yds": id = R.mipmap.yds; break;
+                        case "eizen": id = R.mipmap.eizen; break;
                     }
 
 

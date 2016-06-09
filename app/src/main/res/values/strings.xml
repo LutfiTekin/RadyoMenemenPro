@@ -113,7 +113,7 @@
 
     <bool name="landscape_mode" translatable='false'>false</bool>
     <string name="toast_check_your_connection">Check your internet connection</string>
-
+    <string name="cd_smiley">Smiley</string>
     <string name="cd_send_button">Send Button</string>
     <string name="ET_hint_write_something">Bir şeyler yaz</string>
     <string name="me">Me</string>
@@ -123,4 +123,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <!--Placeholder-->
     <string name="ph_np_track">Now Playing</string>
     <string name="ph_np_fetching_dj_note">Fetching Dj Note</string>
+
 </resources>
