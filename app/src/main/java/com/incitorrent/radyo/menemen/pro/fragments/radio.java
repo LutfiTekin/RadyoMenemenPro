@@ -277,15 +277,10 @@ public class radio extends Fragment {
 
             @Override
             public void onClick(View v) {
-                //TODO şarkıyı çal
-
-                if(!RList.get(getAdapterPosition()).url.contains(".mp3")) {
-                    Toast.makeText(context, R.string.music_not_found, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                final int i = getAdapterPosition();
-
+//                      if(!RList.get(getAdapterPosition()).url.contains(".mp3")) {
+//                    Toast.makeText(context, R.string.music_not_found, Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
             }
         }
         RadioAdapter(List<history_objs> RList){
@@ -307,7 +302,6 @@ public class radio extends Fragment {
         @Override
         public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
             personViewHolder.song.setText(Html.fromHtml(RList.get(i).song));
-//          personViewHolder.art.setImageBitmap(m.getMenemenArt(RList.get(i).songhash,false)); //Eski resim alma metodu
             if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
                 Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
             int delay = i*100;

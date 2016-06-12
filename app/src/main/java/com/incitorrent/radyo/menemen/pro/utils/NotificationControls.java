@@ -12,7 +12,7 @@ public class NotificationControls extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//TODO bazı buglar var
+
         Intent i = new Intent(context,MUSIC_PLAY_SERVICE.class);
         if(intent.getExtras()!=null && intent.getExtras().getBoolean("stop"))
             i.putExtra("dataSource","stop");

@@ -107,7 +107,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
                         inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
-                        //TODO arayüze bildir
+
                         notifyNP();
                     }
                 } catch (JSONException e) {

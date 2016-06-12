@@ -62,7 +62,7 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
+2
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="image/*" />
