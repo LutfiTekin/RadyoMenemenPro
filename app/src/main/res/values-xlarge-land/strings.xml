@@ -1,0 +1,3 @@
+<resources>
+    <bool name="xlarge_landscape_mode" translatable='false'>true</bool>
+</resources>

@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -82,6 +83,11 @@ public class olan_biten extends Fragment {
         time = (TextView) obview.findViewById(R.id.ob_zaman);
         author = (TextView) obview.findViewById(R.id.ob_yazan);
         recyclerView.setHasFixedSize(true);
+        if(getResources().getBoolean(R.bool.xlarge_landscape_mode))
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+        else  if(getResources().getBoolean(R.bool.landscape_mode))
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        else
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         m = new Menemen(context);
         new olanBiten().execute();
