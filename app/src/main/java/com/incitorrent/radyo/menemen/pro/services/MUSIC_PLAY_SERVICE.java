@@ -142,6 +142,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 @Override
                 public void run() {
                     nowPlayingNotification();
+                    stopForeground(false);
                 }
             }).start();
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -166,6 +167,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 @Override
                 public void run() {
                     nowPlayingNotification();
+                    startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
                 }
             }).start();
             mediaSessionCompat.setActive(true);
@@ -305,7 +307,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setContentText(calan)
         .setSmallIcon((isPodcast) ? R.mipmap.ic_podcast : R.mipmap.ic_equlizer)
         .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
-        .setOngoing(m.oku("caliyor").equals("evet"))
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
         Intent playpause = new Intent(this,NotificationControls.class);
@@ -316,6 +317,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         if(m.oku("caliyor").equals("evet")) notification.addAction(android.R.drawable.ic_media_pause,getString(R.string.media_pause),ppIntent);
         else notification.addAction(android.R.drawable.ic_media_play,getString(R.string.media_resume),ppIntent);
         notification.addAction(R.mipmap.ic_media_stop,getString(R.string.media_stop),stopIntent);
+        notification.setDeleteIntent(stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
         Log.v(TAG, " Notification built");
