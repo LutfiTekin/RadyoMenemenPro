@@ -120,7 +120,7 @@ public class radio extends Fragment {
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-              if(m.oku("caliyor").equals("evet") && !m.oku("calan").equals("yok")) {
+              if(m.oku("caliyor").equals("evet") && !m.oku("calan").equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           m.runExitAnimation(nowplayingbox, 400);
@@ -139,13 +139,14 @@ public class radio extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 if(intent.getExtras()!=null) {
                     if(intent.getBooleanExtra(RadyoMenemenPro.PLAY, true)) {
-                        m.runEnterAnimation(nowplayingbox, 200);
+                      if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
                         m.runEnterAnimation(NPtrack,400);
                         m.runEnterAnimation(NPcard,400);
                         m.runEnterAnimation(NPdjnote,600);
                         m.runEnterAnimation(NPdj,600);
                     }
-                    else m.runExitAnimation(nowplayingbox,500);
+                    else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                        m.runExitAnimation(nowplayingbox, 500);
                 }
                 setNP();
             }
@@ -204,7 +205,7 @@ public class radio extends Fragment {
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) emptyview.setVisibility(View.VISIBLE);
-        if(m.oku("caliyor").equals("evet")) {
+        if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             setNP();
             m.runEnterAnimation(nowplayingbox, 200);
         }
