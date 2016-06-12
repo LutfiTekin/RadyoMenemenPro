@@ -115,13 +115,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
         m = new Menemen(getActivity().getApplicationContext());
         resimekle = (ImageView) sohbetView.findViewById(R.id.resim_ekle);

@@ -1,13 +1,10 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.content.pm.PackageInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 public class About extends AppCompatActivity {
 
@@ -51,6 +48,7 @@ public class About extends AppCompatActivity {
             if (version != null)
                 version.setText(String.format("%s%s", getString(R.string.version), versions));//Version bilgisi yazdır
         }catch (Exception e){e.printStackTrace();}
+
     }
 
 }
