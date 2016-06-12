@@ -23,6 +23,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,25 +48,34 @@
         <receiver
             android:name=".utils.NotificationControls"
             android:enabled="true"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".About"
             android:label="@string/about" />
-        <activity android:name=".get_image"
+        <activity
+            android:name=".get_image"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
-
-
+        </activity>
+        <activity android:name=".Browsable"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:host="radyomenemen.com" />
+            </intent-filter>
         </activity>
     </application>
 
