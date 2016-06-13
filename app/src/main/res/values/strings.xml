@@ -113,6 +113,7 @@
     <!--Booleans-->
     <bool name="landscape_mode" translatable='false'>false</bool>
     <bool name="xlarge_landscape_mode" translatable='false'>false</bool>
+    <bool name="xlarge_portrait_mode" translatable='false'>false</bool>
     <!--Booleans End-->
     <string name="toast_check_your_connection">Check your internet connection</string>
     <string name="cd_smiley">Smiley</string>

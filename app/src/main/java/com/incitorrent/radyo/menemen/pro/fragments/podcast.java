@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,8 +92,12 @@ public class podcast extends Fragment {
         });
         PR = (RecyclerView) podcastview.findViewById(R.id.podcastR);
         PR.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        PR.setLayoutManager(llm);
+        if(getResources().getBoolean(R.bool.xlarge_landscape_mode))
+            PR.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+        else if(getResources().getBoolean(R.bool.landscape_mode))
+            PR.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        else
+            PR.setLayoutManager(new LinearLayoutManager(getActivity()));
         if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.PODCASTFEED,RadyoMenemenPro.PODCASTLINK).execute();
         else
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
