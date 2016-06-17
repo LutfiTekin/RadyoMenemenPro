@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,9 +53,10 @@ public class radio extends Fragment {
     RadioAdapter adapter;
     List<history_objs> RList;
     TextView emptyview,NPtrack,NPdjnote,NPdj;
-    ImageView NPart;
+    ImageView NPart,NPequ;
     CardView NPcard;
     LinearLayout nowplayingbox;
+    AnimationDrawable frameAnimation;
     BroadcastReceiver NPreceiver;
     BroadcastReceiver NPUpdatereceiver;
 
@@ -116,7 +118,15 @@ public class radio extends Fragment {
         NPdjnote = (TextView) radioview.findViewById(R.id.nowplaying_djnote);
         NPdj = (TextView) radioview.findViewById(R.id.nowplaying_dj);
         NPart = (ImageView) radioview.findViewById(R.id.nowplaying_art);
+        NPequ = (ImageView) radioview.findViewById(R.id.nowplaying_equ);
         NPcard = (CardView) radioview.findViewById(R.id.cardviewart);
+        if (NPequ != null) {
+            NPequ.setVisibility(View.VISIBLE);
+            frameAnimation = (AnimationDrawable)NPequ.getDrawable();
+            frameAnimation.setCallback(NPequ);
+            frameAnimation.setVisible(true, true);
+        }
+
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -144,6 +154,7 @@ public class radio extends Fragment {
                         m.runEnterAnimation(NPcard,400);
                         m.runEnterAnimation(NPdjnote,600);
                         m.runEnterAnimation(NPdj,600);
+                        frameAnimation.start();
                     }
                     else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                         m.runExitAnimation(nowplayingbox, 500);
@@ -208,7 +219,8 @@ public class radio extends Fragment {
         if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             setNP();
             m.runEnterAnimation(nowplayingbox, 200);
-        }
+            frameAnimation.start();
+        }else nowplayingbox.setVisibility(View.GONE);
 
         super.onResume();
     }
