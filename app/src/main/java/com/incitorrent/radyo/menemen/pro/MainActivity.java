@@ -109,6 +109,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             if (m.oku("logged").equals("yok")) {
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
             } else {
+               if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
+                   fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+                else
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
             }
         }
