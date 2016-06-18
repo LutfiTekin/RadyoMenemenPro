@@ -477,10 +477,11 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
                     zaman = c.getString("time");
                     sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
-
+                if(arr.getJSONArray(0).length()<1) return false;
                  Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
                 e.printStackTrace();
+                return false;
             }
 
             return true;
