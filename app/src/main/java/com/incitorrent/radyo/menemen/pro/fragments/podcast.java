@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,7 +79,9 @@ public class podcast extends Fragment {
                 switchToOldPodcast++;
                 if(switchToOldPodcast<10 && switchToOldPodcast>4){
                     int i = 10-switchToOldPodcast;
-                   if(getActivity()!=null) Toast.makeText(getActivity().getApplicationContext(), String.format(context.getString(R.string.old_podcast_toast), i), Toast.LENGTH_SHORT).show();
+                   if(getActivity()!=null)
+                       Snackbar.make(imageview,String.format(context.getString(R.string.old_podcast_toast), i),Snackbar.LENGTH_SHORT).show();
+//                     Toast.makeText(getActivity().getApplicationContext(), String.format(context.getString(R.string.old_podcast_toast), i), Toast.LENGTH_SHORT).show();
 
                 }else if(switchToOldPodcast == 10){
                     titlepodcast.setText("Incitorrent");
