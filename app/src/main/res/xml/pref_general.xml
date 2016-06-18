@@ -5,14 +5,14 @@
     <SwitchPreference
         android:defaultValue="true"
         android:key="download_artwork"
-        android:summary="Çalan şarkıların albüm kapaklarını indir(Mobil veri kullanımını arttırabilir) "
-        android:title="Albüm resimlerini indir" />
+        android:summary="@string/settings_artwork_summary"
+        android:title="@string/settings_artwork_title" />
 
     <SwitchPreference
         android:defaultValue="true"
         android:key="onstart_chat"
-        android:summary="Uygulama açıldığında ilk gelen ekranı sohbet olarak ayarla"
-        android:title="Açılışta sohbeti göster" />
+        android:summary="@string/settings_onstart_chat_summary"
+        android:title="@string/settings_onstart_chat_title" />
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->

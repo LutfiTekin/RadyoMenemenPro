@@ -126,5 +126,9 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <!--Placeholder-->
     <string name="ph_np_track">Now Playing</string>
     <string name="ph_np_fetching_dj_note">Fetching Dj Note</string>
+    <string name="settings_artwork_summary">Download album art of playing track (May increase mobile-data consumption)</string>
+    <string name="settings_artwork_title">Download Artwork</string>
+    <string name="settings_onstart_chat_title">Open Chat on startup</string>
+    <string name="settings_onstart_chat_summary">Set on if you want to land on chat screen on app start</string>
 
 </resources>

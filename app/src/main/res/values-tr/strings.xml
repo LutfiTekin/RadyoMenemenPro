@@ -83,4 +83,8 @@
     <string name="ph_np_fetching_dj_note">Dj Notu Çekiliyor</string>
     <string name="cd_song_artwork">Albüm Resmi</string>
     <string name="cd_smiley">İfade</string>
+    <string name="settings_artwork_summary">Çalan şarkıların albüm kapaklarını indir(Mobil veri kullanımını arttırabilir)</string>
+    <string name="settings_artwork_title">Albüm resimlerini indir</string>
+    <string name="settings_onstart_chat_summary">Uygulama açıldığında ilk gelen ekranı sohbet olarak ayarla</string>
+    <string name="settings_onstart_chat_title">Açılışta sohbeti göster</string>
 </resources>
