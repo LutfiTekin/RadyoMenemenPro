@@ -80,7 +80,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
             line = sb.toString();
             JSONObject J = new JSONObject(line);
             JSONObject Jo = J.getJSONObject("image");
-            if(!J.getString("status_code").equals("200")) throw new Exception("Yüklenemedi");
+            if(!J.getString("status_code").equals("200")) throw new Exception(context.getString(R.string.image_not_uploaded));
             Log.v(TAG,"JSON" + Jo.getString("date") + " " + Jo.getString("url"));
             bit.recycle();
             bit= null;

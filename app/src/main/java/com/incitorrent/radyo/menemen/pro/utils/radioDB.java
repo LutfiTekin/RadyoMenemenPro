@@ -13,7 +13,6 @@ import android.util.Log;
 public class radioDB extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "radyomenemenproCalan.db";
-
     public static final String TABLE_NAME = "radyo";
     public static final String _SONGID = "songid";
     public static final String _SONGNAME = "song";

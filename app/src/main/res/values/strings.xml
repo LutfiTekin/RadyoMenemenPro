@@ -130,5 +130,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="settings_artwork_title">Download Artwork</string>
     <string name="settings_onstart_chat_title">Open Chat on startup</string>
     <string name="settings_onstart_chat_summary">Set on if you want to land on chat screen on app start</string>
+    <string name="image_not_uploaded">Not Uploaded</string>
 
 </resources>

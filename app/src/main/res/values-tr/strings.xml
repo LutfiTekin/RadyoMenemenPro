@@ -87,4 +87,5 @@
     <string name="settings_artwork_title">Albüm resimlerini indir</string>
     <string name="settings_onstart_chat_summary">Uygulama açıldığında ilk gelen ekranı sohbet olarak ayarla</string>
     <string name="settings_onstart_chat_title">Açılışta sohbeti göster</string>
+    <string name="image_not_uploaded">Yüklenemedi</string>
 </resources>

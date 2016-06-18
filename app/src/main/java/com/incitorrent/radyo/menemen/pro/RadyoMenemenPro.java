@@ -3,7 +3,7 @@ package com.incitorrent.radyo.menemen.pro;
 /**
  * Radyo Menemen Pro Created by lutfi on 19.05.2016.
  */
-public class RadyoMenemenPro {
+public final class RadyoMenemenPro {
 
     public final static String LOW_CHANNEL = "Hercules";//64 kbps yayın
     public final static String MID_CHANNEL = "Pegasus";//128 kbps yayın

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,7 +29,6 @@ public class get_image extends AppCompatActivity {
             if (type.startsWith("image/")) {
                 try {
         Uri image = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                    Log.v("GET IMAGE"," PARCELABLE " + getRealPathFromURI(image) );
                    if(getRealPathFromURI(image)!=null) {
                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse("file://" + getRealPathFromURI(image)));
                     new CapsYukle(bitmap,this).execute();

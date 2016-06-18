@@ -182,49 +182,32 @@ public class podcast extends Fragment {
             xml = parser.getXmlFromUrl(podcast); // getting XML
             if(xml==null) return false;
             if (xml.isEmpty()) {
-                Log.v("tag", "xml de sorun var");
+                return false;
             } else {
-                Log.i("tag", "xml de sorun yok");
                 Document doc = parser.getDomElement(xml); // getting DOM element
-                Log.i("tag", "dom element aldii");
                 NodeList nl = doc.getElementsByTagName(KEY_ITEM);
                 // looping through all item nodes <item>
                 int maxlength = nl.getLength();
-
                 RList = new ArrayList<>();
                 for (int i = 0; i < maxlength; i++) {
-//                for (int i = 0; i < 21; i++) {
-                    // creating new HashMap
-                    //HashMap<String, String> map = new HashMap<String, String>();
                     Element e = (Element) nl.item(i);
-                    // adding each child node to HashMap key => value
-                    //map.put(KEY_TITLE, parser.getValue(e, KEY_TITLE));
-
-
                     try {
                         String phrase = parser.getValue(e, KEY_LINK).toString();
                         String delims = "=";
                         String[] tokens = phrase.split(delims);
                         String real_mp3_link = podcastlink + tokens[1];
                         Log.e("tag", real_mp3_link);
-
                         //StringEntity entity = new UrlEncodedFormEntity(parser,"UTF-8");
                         String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
                         String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
                         String duration = parser.getValue(e, KEY_DURATION);
-
-
-                        Log.i("tag", desc);
-
                         RList.add(i, new podcast_objs(title, desc, duration, real_mp3_link));
-
                     } catch (NullPointerException e1) {
                         e1.printStackTrace();
                     }
 
                 }
             }
-//			pDialog.dismiss();
             return true;
 
         }
@@ -242,19 +225,14 @@ public class podcast extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                 return;
             }
-
             adapter = new PodcastAdapter(RList);
             PR.setAdapter(adapter);
-            //updateList();
-
         }
     }// load xml son
 
     public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PersonViewHolder> {
         Context context;
         List<podcast_objs> RList;
-
-
         public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
             TextView title, duration, descr;
             CardView cv;
@@ -353,19 +331,12 @@ public class podcast extends Fragment {
 
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
             super.onAttachedToRecyclerView(recyclerView);
         }
-
-
     }
 
     public class podcast_objs {
-        String title;
-        String description;
-        String duration;
-        String url;
-
+        String title,description,duration,url;
         public podcast_objs(String title, String description, String duration, String url) {
             this.title = title;
             this.description = description;
