@@ -60,7 +60,7 @@
     <string name="caps_uploaded_sub">Caps başarıyla yüklendi</string>
     <string name="caps_uploading">Caps yükleniyor</string>
     <string name="caps_uploading_in_progress">Caps yüklemesi sürüyor</string>
-    <string name="app_share_text">"Radyo Menemen uygulasını indir: "</string>
+    <string name="app_share_text">"Radyo Menemen uygulamasını indir: "</string>
     <string name="sign_out">Çıkış Yap</string>
     <string name="toast_internet_warn">İnternet Bağlantısında bir sorun var</string>
     <string name="old_podcast_descr">Eski inci torrent podcastleri senin için aşağıda listelendi</string>
