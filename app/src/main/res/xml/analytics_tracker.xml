@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resouces>
+    <string name='ga_trackingId'>UA-10983386-5</string>
+    <bool name='ga_autoActivityTracking'>true</bool>
+    <screenName name='com.incitorrent.radyo.menemen.pro.MainActivity'>Main</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.About'>About</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.get_image'>Share Image</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.fragments.radio'>Recently Played</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.fragments.olan_biten'>News</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.fragments.sohbet'>Chat</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.fragments.podcast'>Podcast</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.fragments.haykir'>Haykir</screenName>
+</resouces>

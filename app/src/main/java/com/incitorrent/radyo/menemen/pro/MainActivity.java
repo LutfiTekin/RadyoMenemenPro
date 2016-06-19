@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //Google analytis subclass
+        ((RMPRO) getApplication()).startTracking();
+
+
         //Menemen yardımcı sınıfı
         m= new Menemen(this);
         fragmentManager = getFragmentManager();
