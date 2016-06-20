@@ -110,7 +110,16 @@ public class MainActivity extends AppCompatActivity
 
 Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         if(savedInstanceState == null) {
-            if (m.oku("logged").equals("yok")) {
+            if(m.oku("logged").equals("yok") && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
+            //Sadece müzik modu açık ve giriş yapılmamış
+                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+                //sohbet haykır giriş çıkış butonlarını gizle
+                if (navigationView != null){
+                    navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
+                }
+            }else if (m.oku("logged").equals("yok")) {
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
             } else {
                if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
@@ -215,10 +224,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         } else if (id == R.id.nav_about) {
         startActivity(new Intent(this,About.class));
         } else if(id == R.id.nav_logout){
-
             new AlertDialog.Builder(this)
-                    .setTitle("Çıkmak mı istiyorsun?")
-                    .setMessage("Sohbet ve Haykır özelliklerini giriş yapmadan kullanamayacaksın")
+                    .setTitle(getString(R.string.dialog_logout_title))
+                    .setMessage(getString(R.string.dialog_logout_descr))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

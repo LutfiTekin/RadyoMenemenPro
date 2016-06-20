@@ -9,10 +9,21 @@
         android:title="@string/settings_artwork_title" />
 
     <SwitchPreference
+        android:defaultValue="false"
+        android:key="music_only"
+        android:title="@string/settings_music_only_title"
+        android:summary="@string/settings_music_only_summary"
+        android:disableDependentsState="true"
+        />
+
+    <SwitchPreference
         android:defaultValue="true"
         android:key="onstart_chat"
+        android:dependency="music_only"
         android:summary="@string/settings_onstart_chat_summary"
         android:title="@string/settings_onstart_chat_title" />
+
+
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->

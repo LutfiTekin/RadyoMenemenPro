@@ -1,8 +1,8 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -50,7 +51,6 @@ public class login extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "Login Fragment";
     private EditText username,password;
-    private Button submit;
     private TextView infotext;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -97,8 +97,43 @@ public class login extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_login,container,false);
         username = (EditText) rootview.findViewById(R.id.usernameET);
         password = (EditText) rootview.findViewById(R.id.passET);
-        submit= (Button) rootview.findViewById(R.id.submit);
+        final Button submit = (Button) rootview.findViewById(R.id.submit);
+        final Button nologin = (Button) rootview.findViewById(R.id.no_login);
         infotext = (TextView) rootview.findViewById(R.id.textView2);
+
+      if(nologin!=null)  nologin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+        if(getActivity()!=null){
+                final Context context = getActivity().getApplicationContext();
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(context.getString(R.string.dialog_nologin_title))
+                        .setMessage(context.getString(R.string.dialog_nologin_descr))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                m.kaydet(RadyoMenemenPro.HAYKIRCACHE, "yok");
+                                PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("music_only",true).apply();
+                                Toast.makeText(context, R.string.music_only_mode_is_active, Toast.LENGTH_SHORT).show();
+                                Intent intent = getActivity().getIntent();
+                                getActivity().overridePendingTransition(0, 0);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                getActivity().finish();
+                                getActivity().overridePendingTransition(0, 0);
+                                startActivity(intent);
+                            }
+                        }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                        .setIcon(R.mipmap.ic_launcher)
+                        .show();
+            }
+            }
+        });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +146,7 @@ public class login extends Fragment {
                     infotext.setText("Bir hata oluştu \n Kullanıcı adın 16 karakterden fazla olamaz \n Şifren 6 karakterden az olamaz");
                     return;
                 }
+
                 new AsyncTask<Void,Void,String>(){
                     @Override
                     protected void onPreExecute() {

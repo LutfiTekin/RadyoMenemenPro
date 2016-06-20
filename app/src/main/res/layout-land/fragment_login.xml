@@ -49,8 +49,11 @@
           android:layout_height="wrap_content"
           android:text="Gir &amp; Kayıt Ol"
           android:id="@+id/submit"
-          android:layout_below="@+id/passET"
-          android:layout_centerHorizontal="true" />
+          android:layout_marginLeft="124dp"
+          android:layout_marginStart="124dp"
+          android:layout_alignTop="@+id/no_login"
+          android:layout_alignLeft="@+id/textView2"
+          android:layout_alignStart="@+id/textView2" />
 
       <TextView
           android:layout_width="wrap_content"
@@ -58,12 +61,24 @@
           android:text="Eğer ilk girişinse seni siteye kayıt edeceğiz \n
 Daha sonraki girişlerinde şifreni unutmamaya çalış güzel kardeşim"
           android:id="@+id/textView2"
-          android:layout_marginLeft="16dp"
-          android:layout_marginRight="16dp"
           android:gravity="center_horizontal"
           android:textColor="#ffffff"
           android:layout_alignParentBottom="true"
-          android:layout_centerHorizontal="true" />
+          android:layout_alignParentRight="true"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@+id/button"
+          android:layout_margin="16dp" />
+
+      <Button
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Giriş Yapmak İstemiyorum"
+          android:id="@+id/no_login"
+          android:layout_below="@+id/passET"
+          android:layout_toRightOf="@+id/submit"
+          android:layout_toEndOf="@+id/submit" />
 
   </RelativeLayout>
 </FrameLayout>
