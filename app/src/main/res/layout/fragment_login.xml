@@ -69,7 +69,7 @@ Yoksa kayıt ol!"
       <Button
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Giriş Yapmak İstemiyorum"
+          android:text="@string/button_no_login"
           android:id="@+id/no_login"
           android:layout_below="@+id/submit"
 
