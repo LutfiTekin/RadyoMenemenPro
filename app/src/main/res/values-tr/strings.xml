@@ -88,4 +88,15 @@
     <string name="settings_onstart_chat_summary">Uygulama açıldığında ilk gelen ekranı sohbet olarak ayarla</string>
     <string name="settings_onstart_chat_title">Açılışta sohbeti göster</string>
     <string name="image_not_uploaded">Yüklenemedi</string>
+    <string name="settings_music_only_title">Sadece Müzik Modu</string>
+    <string name="settings_music_only_summary">Eğer giriş yapmak istemiyorsanız ve uygulamayı sadece müzik dinlemek için kullanıyorsanız açın. Eğer giriş yaptıysanız bu ayar geçersizdir.</string>
+    <string name="music_only_mode_is_active">Sadece Müzik modu etkin</string>
+    <string name="login_screen_descr">Eğer ilk girişinse seni siteye kayıt edeceğiz \n Daha sonraki girişlerinde şifreni unutmamaya çalış güzel kardeşim</string>
+    <string name="hint_password">Şifre</string>
+    <string name="hint_username">Kullanıcı Adı</string>
+    <string name="dialog_nologin_title">Giriş yapmak istemiyor musun?</string>
+    <string name="dialog_nologin_descr">Uygulama "Sadece Müzik" modunda açılacak. Bunu daha sonra ayarlardan değiştirebilirsin.</string>
+    <string name="dialog_logout_title">Çıkmak mı istiyorsun?</string>
+    <string name="dialog_logout_descr">Sohbet ve Haykır özelliklerini giriş yapmadan kullanamayacaksın</string>
+    <string name="button_login_signup"><![CDATA[Gir & Kayıt Ol]]></string>
 </resources>
