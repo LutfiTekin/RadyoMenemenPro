@@ -143,6 +143,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="dialog_logout_descr">Chat and Shout features will be disabled</string>
     <string name="button_login_signup"><![CDATA[Login & Signup]]></string>
     <string name="button_no_login">I don\'t want to login</string>
-    <string name="fresh">Yeni</string>
+    <string name="fresh">New</string>
 
 </resources>

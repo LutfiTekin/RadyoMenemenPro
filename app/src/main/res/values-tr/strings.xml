@@ -100,4 +100,5 @@
     <string name="dialog_logout_descr">Sohbet ve Haykır özelliklerini giriş yapmadan kullanamayacaksın</string>
     <string name="button_login_signup"><![CDATA[Gir & Kayıt Ol]]></string>
     <string name="button_no_login">Giriş Yapmak İstemiyorum</string>
+    <string name="fresh">Yeni</string>
 </resources>
