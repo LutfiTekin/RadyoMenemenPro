@@ -37,6 +37,8 @@ public final class RadyoMenemenPro {
     public final static String SOHBETCACHE = "sohbetcache";
     public final static String HAYKIRCACHE = "hkcache";
     public final static String OBCACHE = "olanbitencache";
+    public final static String SAVEDOB = "kayitliolabiten";
+    public final static String LASTOB = "sonolabiten";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
     public final static String SAVED_DJ = "saveddj";
     public final static String PLAYING_PODCAST = "playingpodcast";

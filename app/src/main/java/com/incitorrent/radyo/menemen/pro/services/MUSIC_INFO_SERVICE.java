@@ -116,7 +116,15 @@ public class MUSIC_INFO_SERVICE extends Service {
                     Log.wtf("Null", e.toString());
                 }
             }
-
+                //Son olan biteni al
+            try {
+                String lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
+                inf.kaydet(RadyoMenemenPro.LASTOB,lastob);
+                Log.v(TAG,"LASTOB" + lastob);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //Son olan biteni al END
             //TODO DJ cevabını kontrol et
 //            if (!inf.oku("logged").equals("yok")) {
 //                Map<String, String> dataToSend = new HashMap<>();

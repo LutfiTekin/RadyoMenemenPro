@@ -5,15 +5,19 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
@@ -315,4 +319,14 @@ public class Menemen {
                 .setDuration(700 + delay)
                 .start();
     }
+
+    public void setBadge(TextView view, String badge) {
+        view.setGravity(Gravity.CENTER_VERTICAL);
+        view.setTypeface(null, Typeface.BOLD);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            view.setTextColor(context.getColor(R.color.colorAccent));
+        else view.setTextColor(context.getResources().getColor(R.color.colorAccent));
+        view.setText(badge);
+    }
+
 }

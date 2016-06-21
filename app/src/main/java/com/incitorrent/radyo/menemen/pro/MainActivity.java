@@ -14,6 +14,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
@@ -106,6 +108,11 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);//TODO giriş yapınca aktif
                 navigationView.getMenu().findItem(R.id.nav_shout).setEnabled(false);
             }
+
+            final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                    findItem(R.id.nav_olanbiten));
+           if(!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB)))
+            m.setBadge(badge,getString(R.string.fresh));
         }
 
 Log.v(TAG,"FRA"+ " "+ m.oku("logged"));

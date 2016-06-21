@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -112,7 +114,10 @@ public class olan_biten extends Fragment {
                     c = innerJarr.getJSONObject(i);
                     OBList.add(new ob_objs(c.getString("title"),c.getString("content"),c.getString("author"),c.getString("time")));
                 }
-                if(m.isInternetAvailable()) m.kaydet(RadyoMenemenPro.OBCACHE,json);
+                if(m.isInternetAvailable()) {
+                    m.kaydet(RadyoMenemenPro.SAVEDOB, arr.getJSONArray(0).getJSONObject(0).getString("time"));
+                    m.kaydet(RadyoMenemenPro.OBCACHE, json);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -121,6 +126,13 @@ public class olan_biten extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            //Menü düğmesini güncelle
+            if(getActivity()!=null) {
+                final NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                        findItem(R.id.nav_olanbiten));
+                    m.setBadge(badge, "");
+            }
             recyclerView.setAdapter(new OBAdapter(OBList));
             super.onPostExecute(aVoid);
         }
