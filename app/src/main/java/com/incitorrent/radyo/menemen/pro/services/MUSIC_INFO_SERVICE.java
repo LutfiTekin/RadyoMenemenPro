@@ -102,7 +102,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     String songid = c.getString("songid");
                     String download = c.getString("download");
                     String artwork = c.getString("artwork");
-                    inf.kaydet("LASTsongid", songid);
+//                    inf.kaydet("LASTsongid", songid);
                     inf.kaydet(LAST_ARTWORK_URL, artwork);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet

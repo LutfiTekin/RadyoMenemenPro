@@ -135,27 +135,28 @@ public class MUSIC_PLAY_SERVICE extends Service {
         super.onCreate();
     }
 
-    private void pause(Boolean abandonfocus) {
-        try {
-            mediaPlayer.pause();
-            m.kaydet("caliyor","hayır");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+    private void pause(final Boolean abandonfocus) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mediaPlayer.pause();
+                    broadcastToUi(false);
+                    m.kaydet("caliyor","hayır");
                     nowPlayingNotification();
                     stopForeground(false);
-                }
-            }).start();
-            stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
-            mediaSessionCompat.setPlaybackState(stateBuilder.build());
-            broadcastToUi(false);
-            if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if puased by user
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+                    stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
+                    mediaSessionCompat.setPlaybackState(stateBuilder.build());
+                    if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if puased by user
+                } catch (Exception e){ e.printStackTrace(); }
+            }
+        }).start();
     }
 
-    private void resume(Boolean regainfocus) {
+    private void resume(final Boolean regainfocus) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
         if(regainfocus) {
         int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN); //resumed by user
        Log.v(TAG,"AUDIOFOCUS " + res);
@@ -164,13 +165,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         try {
             mediaPlayer.start();
             m.kaydet("caliyor","evet");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
                     nowPlayingNotification();
                     startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
-                }
-            }).start();
             mediaSessionCompat.setActive(true);
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
@@ -180,6 +176,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         }catch (Exception e){
             Log.v(TAG, "ERROR  " + e.getMessage());
         }
+            }
+        }).start();
     }
 
     @Override
@@ -244,11 +242,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     //Houston we have a problem
                     e.printStackTrace();
                 }
-                return null;
-            }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
+                //ONPOST
                 try {
                     mediaPlayer.start();
                     m.kaydet("caliyor","evet");
@@ -268,8 +263,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                super.onPostExecute(aVoid);
+                //ONPOST
+                return null;
             }
+
         }.execute();
 
     }
@@ -280,7 +277,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         m.kaydet("caliyor","hayır");
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
-            stopForeground(false);
+            stopForeground(true);
             mediaPlayer.stop();
             mediaPlayer.release();
             broadcastToUi(false);
