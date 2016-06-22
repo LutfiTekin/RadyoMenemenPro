@@ -121,8 +121,10 @@ public class MUSIC_INFO_SERVICE extends Service {
                 String lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
                 inf.kaydet(RadyoMenemenPro.LASTOB,lastob);
                 Log.v(TAG,"LASTOB" + lastob);
-            } catch (JSONException e) {
+            } catch (JSONException | NullPointerException e) {
                 e.printStackTrace();
+            } catch (Exception e){
+                Log.wtf(TAG,e.toString());
             }
             //Son olan biteni al END
             //TODO DJ cevabını kontrol et
