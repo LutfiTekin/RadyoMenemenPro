@@ -7,8 +7,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 
 public class MusicInfoReceiver extends BroadcastReceiver {
+    private static final String TAG = "MusicInfoReceiver" ;
     //internet bağlantısı değiştiğinde veya telefon başlatıldığında MUSIC_INFO_SERVICE i başlat
 
     public MusicInfoReceiver() {
@@ -19,6 +21,11 @@ public class MusicInfoReceiver extends BroadcastReceiver {
         m = new Menemen(context);
         final Boolean notify_when_onair = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
      if(m.isInternetAvailable() && notify_when_onair) context.startService(new Intent(context, MUSIC_INFO_SERVICE.class));
-        Log.v("MusicInfoReceiver","onReceive isInternetAvailable" + m.isInternetAvailable());
+     if(!m.isInternetAvailable() && m.oku("caliyor").equals("evet")) {
+         //internet bağlantısı kopunca duraklat
+         context.startService(new Intent(context, MUSIC_PLAY_SERVICE.class));
+         Log.v(TAG,"Radyo Çalarken bağlantı gitti");
+     }
+        Log.v(TAG,"onReceive isInternetAvailable" + m.isInternetAvailable());
     }
 }
