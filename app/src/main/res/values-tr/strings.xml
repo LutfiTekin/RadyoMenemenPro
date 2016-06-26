@@ -101,4 +101,7 @@
     <string name="button_login_signup"><![CDATA[Gir & Kayıt Ol]]></string>
     <string name="button_no_login">Giriş Yapmak İstemiyorum</string>
     <string name="fresh">Yeni</string>
+    <string name="search_on_spotify">Spotify\'da bul</string>
+    <string name="search_on_youtube">Youtube\'da ara</string>
+    <string name="search_lyrics">Şarkı Sözü ara</string>
 </resources>

@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class radio extends Fragment {
+public class radio extends Fragment implements View.OnClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -52,9 +53,10 @@ public class radio extends Fragment {
     Cursor cursor;
     RadioAdapter adapter;
     List<history_objs> RList;
-    TextView emptyview,NPtrack,NPdjnote,NPdj;
+    TextView emptyview,NPtrack,NPdj;
     ImageView NPart,NPequ;
     CardView NPcard;
+    ImageButton NPspotify,NPyoutube,NPlyric;
     LinearLayout nowplayingbox;
     AnimationDrawable frameAnimation;
     BroadcastReceiver NPreceiver;
@@ -114,12 +116,15 @@ public class radio extends Fragment {
             lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
         else lastplayed.setLayoutManager(new LinearLayoutManager(context));
         nowplayingbox = (LinearLayout) radioview.findViewById(R.id.nowplaying_box);
+        nowplayingbox.setVisibility(View.GONE); //initialy hidden
         NPtrack = (TextView) radioview.findViewById(R.id.nowplaying_track);
-        NPdjnote = (TextView) radioview.findViewById(R.id.nowplaying_djnote);
         NPdj = (TextView) radioview.findViewById(R.id.nowplaying_dj);
         NPart = (ImageView) radioview.findViewById(R.id.nowplaying_art);
         NPequ = (ImageView) radioview.findViewById(R.id.nowplaying_equ);
         NPcard = (CardView) radioview.findViewById(R.id.cardviewart);
+        NPlyric = (ImageButton) radioview.findViewById(R.id.lyric);
+        NPspotify = (ImageButton) radioview.findViewById(R.id.spotify);
+        NPyoutube = (ImageButton) radioview.findViewById(R.id.youtube);
         if (NPequ != null) {
             NPequ.setVisibility(View.VISIBLE);
             frameAnimation = (AnimationDrawable)NPequ.getDrawable();
@@ -152,8 +157,10 @@ public class radio extends Fragment {
                       if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
                         m.runEnterAnimation(NPtrack,400);
                         m.runEnterAnimation(NPcard,400);
-                        m.runEnterAnimation(NPdjnote,600);
                         m.runEnterAnimation(NPdj,600);
+                        m.runEnterAnimation(NPspotify,700);
+                        m.runEnterAnimation(NPyoutube,800);
+                        m.runEnterAnimation(NPlyric,900);
                         frameAnimation.start();
                     }
                     else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
@@ -169,7 +176,6 @@ public class radio extends Fragment {
 
     private void setNP() {
         NPtrack.setText(Html.fromHtml(m.oku("calan")));
-        NPdjnote.setText(m.oku("djnotu"));
         NPdj.setText(m.oku("dj"));
         if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
@@ -225,6 +231,10 @@ public class radio extends Fragment {
         super.onResume();
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 
 
     public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.PersonViewHolder>{

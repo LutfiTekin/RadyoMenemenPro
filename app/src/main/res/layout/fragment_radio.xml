@@ -35,7 +35,7 @@
         android:id="@+id/nowplaying_box"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:visibility="gone">
+        android:visibility="visible">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -99,21 +99,44 @@
                     android:textColor="@color/primary_dark_material_dark"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginRight="74dp"
                     android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginRight="74dp"
+                android:paddingTop="16dp">
+                <ImageButton
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/ph_np_fetching_dj_note"
-                    android:id="@+id/nowplaying_djnote"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="74dp"
-                    android:gravity="center_horizontal"
-                    android:maxLines="2"
-                    android:textSize="12sp" />
+                    android:id="@+id/spotify"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/spotify"
+                    android:background="#00ffffff"
+                    android:contentDescription="@string/search_on_spotify" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/youtube"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/youtube"
+                    android:background="#00ffffff"
+                    android:contentDescription="@string/search_on_youtube" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lyric"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="#00ffffff"
+                    android:src="@drawable/lyrics"
+                    android:contentDescription="@string/search_lyrics" />
+            </LinearLayout>
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

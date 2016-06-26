@@ -30,12 +30,11 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="128dp"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_gravity="start|bottom"
         android:background="@color/colorBackgroundsoft"
         android:id="@+id/nowplaying_box"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:visibility="gone">
+        android:layout_marginRight="74dp"
+       >
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -70,11 +69,13 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:gravity="center_horizontal"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
     </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            >
             <ImageView
                 android:layout_width="@dimen/now_playing_anim_dim"
                 android:layout_height="@dimen/now_playing_anim_dim"
@@ -97,23 +98,90 @@
                 android:minLines="2"
                 android:gravity="center_horizontal"
                 android:textColor="@color/primary_dark_material_dark"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="74dp"
-                android:textSize="30sp" />
-
-            <TextView
+                android:textSize="20sp"
+                android:layout_marginRight="32dp" />
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/ph_np_fetching_dj_note"
-                android:id="@+id/nowplaying_djnote"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="74dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:gravity="center_horizontal"
-                android:maxLines="2"
-                android:textSize="16sp" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp">
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spotify"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/spotify"
+                        android:background="#00ffffff"
+                        android:contentDescription="@string/search_on_spotify"
+                        android:layout_gravity="center_horizontal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_on_spotify"
+                        android:textSize="12sp"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    >
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/youtube"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/youtube"
+                        android:background="#00ffffff"
+                        android:contentDescription="@string/search_on_youtube"
+                        android:layout_gravity="center_horizontal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_on_youtube"
+                        android:textSize="12sp"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    >
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lyric"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/lyrics"
+                        android:background="#00ffffff"
+                        android:contentDescription="@string/search_lyrics"
+                        android:layout_gravity="center_horizontal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_lyrics"
+                        android:textSize="12sp"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
         </FrameLayout>
     </LinearLayout>
