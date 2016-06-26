@@ -147,5 +147,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="search_on_spotify">Find on Spotify</string>
     <string name="search_on_youtube">Search on Youtube</string>
     <string name="search_lyrics">Search Lyrics</string>
-
+    <string name="lyrics">Lyrics</string>
 </resources>

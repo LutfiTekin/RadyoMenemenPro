@@ -104,4 +104,5 @@
     <string name="search_on_spotify">Spotify\'da bul</string>
     <string name="search_on_youtube">Youtube\'da ara</string>
     <string name="search_lyrics">Şarkı Sözü ara</string>
+    <string name="lyrics">Şarkı Sözleri</string>
 </resources>

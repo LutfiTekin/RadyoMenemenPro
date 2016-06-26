@@ -2,7 +2,9 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -42,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class radio extends Fragment implements View.OnClickListener{
+public class radio extends Fragment implements View.OnClickListener,View.OnLongClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -111,7 +114,6 @@ public class radio extends Fragment implements View.OnClickListener{
         emptyview = (TextView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
-
         if(getResources().getBoolean(R.bool.landscape_mode))
             lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
         else lastplayed.setLayoutManager(new LinearLayoutManager(context));
@@ -125,6 +127,13 @@ public class radio extends Fragment implements View.OnClickListener{
         NPlyric = (ImageButton) radioview.findViewById(R.id.lyric);
         NPspotify = (ImageButton) radioview.findViewById(R.id.spotify);
         NPyoutube = (ImageButton) radioview.findViewById(R.id.youtube);
+        NPlyric.setOnClickListener(this);
+        NPlyric.setOnLongClickListener(this);
+        NPspotify.setOnClickListener(this);
+        NPspotify.setOnLongClickListener(this);
+        NPyoutube.setOnClickListener(this);
+        NPyoutube.setOnLongClickListener(this);
+
         if (NPequ != null) {
             NPequ.setVisibility(View.VISIBLE);
             frameAnimation = (AnimationDrawable)NPequ.getDrawable();
@@ -233,7 +242,42 @@ public class radio extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        final String track = NPtrack.getText().toString();
+        try {
+            if(v == NPyoutube) {
+                Intent intent = new Intent(Intent.ACTION_SEARCH);
+                intent.setPackage("com.google.android.youtube");
+                intent.putExtra(SearchManager.QUERY, track);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }else if(v == NPspotify){
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+                intent.setComponent(new ComponentName(
+                        "com.spotify.music",
+                        "com.spotify.music.MainActivity"));
+                intent.putExtra(SearchManager.QUERY, track);
+                this.startActivity(intent);
+            }else if(v == NPlyric){
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                intent.putExtra(SearchManager.QUERY, track + " " + getString(R.string.lyrics)); // query contains search string
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+           if(getActivity()!=null) Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
+        }
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if(v == NPyoutube || v == NPspotify || v == NPlyric){
+            ImageButton ib = (ImageButton)v;
+           if(getActivity()!=null) Toast.makeText(context, ib.getContentDescription().toString(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
 
