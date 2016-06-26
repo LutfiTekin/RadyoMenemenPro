@@ -148,4 +148,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="search_on_youtube">Search on Youtube</string>
     <string name="search_lyrics">Search Lyrics</string>
     <string name="lyrics">Lyrics</string>
+    <string name="settings_show_full_error_title">Show full error message</string>
+    <string name="settings_show_full_error_summary">Expand the error message that says \'An error occurred\'</string>
 </resources>

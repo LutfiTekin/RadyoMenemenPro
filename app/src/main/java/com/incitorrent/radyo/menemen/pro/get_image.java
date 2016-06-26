@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,7 +35,10 @@ public class get_image extends AppCompatActivity {
                     new CapsYukle(bitmap,this).execute();
                    }else Toast.makeText(get_image.this, R.string.error_occured, Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
-                    Toast.makeText(get_image.this, getString(R.string.error_occured) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String toastmsg = getString(R.string.error_occured);
+                    if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_full_error",false))
+                        toastmsg = getString(R.string.error_occured) + " " + e.toString();
+                    Toast.makeText(get_image.this, toastmsg, Toast.LENGTH_SHORT).show();
                     Log.v("GET IMAGE", e.getMessage() + " PARCELABLE " + getRealPathFromURI((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM)) );
                     e.printStackTrace();
                 }

@@ -23,6 +23,12 @@
         android:summary="@string/settings_onstart_chat_summary"
         android:title="@string/settings_onstart_chat_title" />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="show_full_error"
+        android:summary="@string/settings_show_full_error_summary"
+        android:title="@string/settings_show_full_error_title" />
+
 
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->

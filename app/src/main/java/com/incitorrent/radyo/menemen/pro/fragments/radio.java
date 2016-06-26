@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
@@ -265,7 +266,10 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }
         } catch (Exception e) {
             e.printStackTrace();
-           if(getActivity()!=null) Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
+            String toastmsg = getString(R.string.error_occured);
+            if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_full_error",false))
+                toastmsg = getString(R.string.error_occured) + " " + e.toString();
+           if(getActivity()!=null) Toast.makeText(context, toastmsg, Toast.LENGTH_LONG).show();
         }
 
     }

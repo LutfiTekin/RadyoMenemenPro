@@ -105,4 +105,6 @@
     <string name="search_on_youtube">Youtube\'da ara</string>
     <string name="search_lyrics">Şarkı Sözü ara</string>
     <string name="lyrics">Şarkı Sözleri</string>
+    <string name="settings_show_full_error_title">Tam hata mesajı göster</string>
+    <string name="settings_show_full_error_summary">\'Bir hata oluştu\' hata mesajının tam içeriğini göster</string>
 </resources>
