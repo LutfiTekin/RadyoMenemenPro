@@ -11,12 +11,25 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BaseInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.PathInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -299,11 +312,48 @@ public class Menemen {
         display.getSize(size);
         int height = size.y;
         view.setTranslationY(height);
+        int anim_id = 0;
+        try {
+            anim_id = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("enter_anim","0"));
+        }catch (Exception e){
+            anim_id = 1;
+            e.printStackTrace();
+        }
         view.animate()
                 .translationY(0)
-                .setInterpolator(new DecelerateInterpolator(3.f))
+//                .setInterpolator(new DecelerateInterpolator(3.f))
+                .setInterpolator(enter_anim(anim_id))
                 .setDuration(700 + delay)
                 .start();
+    }
+
+    public Interpolator enter_anim(int anim_id){
+        switch (anim_id){
+            case 1:
+                return new AccelerateDecelerateInterpolator();
+            case 2:
+                return new AccelerateInterpolator();
+            case 3:
+                return new AnticipateInterpolator();
+            case 4:
+                return new AnticipateOvershootInterpolator();
+            case 5:
+                return new BounceInterpolator();
+            case 6:
+                return new DecelerateInterpolator(3.f);
+            case 7:
+                return new FastOutLinearInInterpolator();
+            case 8:
+                return new FastOutSlowInInterpolator();
+            case 9:
+                return new LinearInterpolator();
+            case 10:
+                return new LinearOutSlowInInterpolator();
+            case 11:
+                return new OvershootInterpolator();
+            default:
+                return new DecelerateInterpolator(3.f);
+        }
     }
 
     public void runExitAnimation(View view, int delay) {

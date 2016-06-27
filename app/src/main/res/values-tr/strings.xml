@@ -107,4 +107,15 @@
     <string name="lyrics">Şarkı Sözleri</string>
     <string name="settings_show_full_error_title">Tam hata mesajı göster</string>
     <string name="settings_show_full_error_summary">\'Bir hata oluştu\' hata mesajının tam içeriğini göster</string>
+    <string name="ip_acc">Hızlandır</string>
+    <string name="ip_accdec">Hızlan ve Yavaşla</string>
+    <string name="ip_anticipate">Sezgisel</string>
+    <string name="ip_anticipate_overshoot">Sezgisel ileri</string>
+    <string name="ip_bounce">Zıpla</string>
+    <string name="ip_dec">Yavaşlat</string>
+    <string name="ip_foutlin">Hızlı çık Doğrusal gir</string>
+    <string name="ip_foutsin">Hızlı çık Yavaş gir</string>
+    <string name="ip_lin">Doğrusal</string>
+    <string name="ip_loutsin">Doğrusal çık Yavaş gir</string>
+    <string name="settings_list_populate_anim">Liste oluşturma animasyonunu seç</string>
 </resources>

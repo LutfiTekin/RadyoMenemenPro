@@ -187,7 +187,7 @@ public class Ayarlar extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
 
-
+            bindPreferenceSummaryToValue(findPreference("enter_anim"));
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }

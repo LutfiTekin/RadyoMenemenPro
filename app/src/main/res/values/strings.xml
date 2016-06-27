@@ -37,6 +37,44 @@
         <item>Zeus</item>
     </string-array>
 
+    <string-array name="anims" translatable="false">
+    <item>@string/ip_accdec</item>
+    <item>@string/ip_acc</item>
+    <item>@string/ip_anticipate</item>
+    <item>@string/ip_anticipate_overshoot</item>
+    <item>@string/ip_bounce</item>
+    <item>@string/ip_dec</item>
+    <item>@string/ip_foutlin</item>
+    <item>@string/ip_foutsin</item>
+    <item>@string/ip_lin</item>
+    <item>@string/ip_loutsin</item>
+    <item>@string/ip_overshoot</item>
+    </string-array>
+    <string-array name="anim_values" translateble="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+    <!--Animasyon isimleri-->
+    <string name="ip_accdec">Accelerate Decelerate</string>
+    <string name="ip_acc">Accelerate</string>
+    <string name="ip_anticipate">Anticipate</string>
+    <string name="ip_anticipate_overshoot">Anticipate Overshoot</string>
+    <string name="ip_bounce">Bounce</string>
+    <string name="ip_dec">Decelerate</string>
+    <string name="ip_foutlin">Fast out Linear in</string>
+    <string name="ip_foutsin">Fast out Slow in</string>
+    <string name="ip_lin">Linear</string>
+    <string name="ip_loutsin">Linear out Slow in</string>
+    <string name="ip_overshoot" translatable="false">Overshoot</string>
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
@@ -150,4 +188,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="lyrics">Lyrics</string>
     <string name="settings_show_full_error_title">Show full error message</string>
     <string name="settings_show_full_error_summary">Expand the error message that says \'An error occurred\'</string>
+    <string name="settings_list_populate_anim">Select list animation</string>
 </resources>
