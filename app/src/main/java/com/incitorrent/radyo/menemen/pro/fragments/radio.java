@@ -57,7 +57,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     Cursor cursor;
     RadioAdapter adapter;
     List<history_objs> RList;
-    TextView emptyview,NPtrack,NPdj;
+    CardView emptyview;
+    TextView NPtrack;
+    TextView NPdj;
     ImageView NPart,NPequ;
     CardView NPcard;
     ImageButton NPspotify,NPyoutube,NPlyric;
@@ -112,7 +114,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         View radioview = inflater.inflate(R.layout.fragment_radio,container,false);
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
-        emptyview = (TextView) radioview.findViewById(R.id.emptyview);
+        emptyview = (CardView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
         if(getResources().getBoolean(R.bool.landscape_mode))
@@ -231,7 +233,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         cursor.close();
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
-        if(adapter.getItemCount() < 1) emptyview.setVisibility(View.VISIBLE);
+        if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
         if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             setNP();
             m.runEnterAnimation(nowplayingbox, 200);
