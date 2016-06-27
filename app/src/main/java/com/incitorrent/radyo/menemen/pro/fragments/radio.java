@@ -268,7 +268,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             e.printStackTrace();
             String toastmsg = getString(R.string.error_occured);
             if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_full_error",false))
-                toastmsg = getString(R.string.error_occured) + " " + e.toString();
+                toastmsg = getString(R.string.error_occured) + "\n" + e.toString();
            if(getActivity()!=null) Toast.makeText(context, toastmsg, Toast.LENGTH_LONG).show();
         }
 

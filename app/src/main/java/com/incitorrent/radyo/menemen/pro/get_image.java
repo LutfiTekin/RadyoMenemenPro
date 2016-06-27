@@ -37,7 +37,7 @@ public class get_image extends AppCompatActivity {
                 } catch (IOException e) {
                     String toastmsg = getString(R.string.error_occured);
                     if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_full_error",false))
-                        toastmsg = getString(R.string.error_occured) + " " + e.toString();
+                        toastmsg = getString(R.string.error_occured) + "\n" + e.toString();
                     Toast.makeText(get_image.this, toastmsg, Toast.LENGTH_SHORT).show();
                     Log.v("GET IMAGE", e.getMessage() + " PARCELABLE " + getRealPathFromURI((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM)) );
                     e.printStackTrace();
