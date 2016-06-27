@@ -9,4 +9,5 @@
     <color name="hintGrey">#eeeeee</color>
     <color name="softGrey">#f5f5f5</color>
     <color name="blueAccent">#00e5ff</color>
+    <color name="transparentBackground">#43ffffff</color>
 </resources>
