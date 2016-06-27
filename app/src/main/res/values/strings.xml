@@ -50,7 +50,7 @@
     <item>@string/ip_loutsin</item>
     <item>@string/ip_overshoot</item>
     </string-array>
-    <string-array name="anim_values" translateble="false">
+    <string-array name="anim_values" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
