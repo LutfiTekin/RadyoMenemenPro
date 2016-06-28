@@ -1,6 +1,8 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -11,7 +13,11 @@ import com.google.android.gms.analytics.Tracker;
 public class RMPRO extends Application {
     //Google Analytics için gerekli subclass
     Tracker mTracker;
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     public void startTracking() {
         if (mTracker == null) {

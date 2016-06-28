@@ -7,10 +7,14 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!--  The property id associated with this analytics tracker -->
-    <string name="ga_trackingId">UA-10983386-4</string>
+    <string name="ga_trackingId">UA-10983386-5</string>
 
     <!--
       See Project Structure -> Analytics -> Google Analytics -> Learn More
       to learn more about configuring this file.
     -->
+
+    <screenName name='com.incitorrent.radyo.menemen.pro.MainActivity'>Main</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.About'>About</screenName>
+    <screenName name='com.incitorrent.radyo.menemen.pro.get_image'>Share Image</screenName>
 </resources>
