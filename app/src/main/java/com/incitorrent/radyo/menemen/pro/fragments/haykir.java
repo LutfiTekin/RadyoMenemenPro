@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -130,6 +131,13 @@ public class haykir extends Fragment implements View.OnClickListener {
                 super.onPostExecute(success);
             }
         }.execute();
+    }
+
+    @Override
+    public void onResume() {
+        //Analytics track
+        RMPRO.getInstance().trackScreenView("Sohbet Fragment");
+        super.onResume();
     }
 
     @Override

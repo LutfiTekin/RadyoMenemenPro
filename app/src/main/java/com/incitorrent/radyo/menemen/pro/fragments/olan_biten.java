@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -72,6 +73,8 @@ public class olan_biten extends Fragment {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null) fab.setVisibility(View.INVISIBLE);
         }
+        //Analytics track
+        RMPRO.getInstance().trackScreenView("Sohbet Fragment");
         super.onResume();
     }
 

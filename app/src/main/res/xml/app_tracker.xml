@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- End current session if app sleeps for a period of time -->
-    <integer name="ga_sessionTimeout">300</integer>
+
 
     <!-- Enable automatic Activity measurement -->
     <bool name="ga_autoActivityTracking">true</bool>
@@ -13,8 +12,4 @@
       See Project Structure -> Analytics -> Google Analytics -> Learn More
       to learn more about configuring this file.
     -->
-
-    <screenName name='com.incitorrent.radyo.menemen.pro.MainActivity'>Main</screenName>
-    <screenName name='com.incitorrent.radyo.menemen.pro.About'>About</screenName>
-    <screenName name='com.incitorrent.radyo.menemen.pro.get_image'>Share Image</screenName>
 </resources>

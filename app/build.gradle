@@ -21,8 +21,8 @@ android {
         applicationId "com.incitorrent.radyo.menemen.pro"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 40
-        versionName '1.0.40'
+        versionCode 42
+        versionName '1.0.42'
         multiDexEnabled true
     }
     buildTypes {
@@ -47,6 +47,14 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.0.2'
     compile 'com.android.support:multidex:1.0.1'
 }
+
+
+
+
+
+
+
+
 
 
 

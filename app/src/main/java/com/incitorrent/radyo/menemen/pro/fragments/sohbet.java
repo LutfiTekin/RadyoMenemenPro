@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -175,6 +176,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
         },0,2, TimeUnit.SECONDS);
         return sohbetView;
 
+    }
+
+    @Override
+    public void onResume() {
+        //Analytics track
+        RMPRO.getInstance().trackScreenView("Sohbet Fragment");
+        super.onResume();
     }
 
     @Override

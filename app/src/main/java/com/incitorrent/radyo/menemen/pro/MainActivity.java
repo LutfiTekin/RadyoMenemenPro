@@ -53,10 +53,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //Google analytis subclass
-        ((RMPRO) getApplication()).startTracking();
-
-
         //Menemen yardımcı sınıfı
         m= new Menemen(this);
         fragmentManager = getFragmentManager();
@@ -141,10 +137,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
-
-
         new syncChannels(this).execute();
-
     }
 
 
@@ -228,9 +221,11 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                     getString(R.string.app_share_text) + googleplaylink);
             shareIntent.setType("text/plain");
             startActivity(shareIntent);
+            RMPRO.getInstance().trackEvent("share","share","app shared");
         } else if (id == R.id.nav_about) {
         startActivity(new Intent(this,About.class));
         } else if(id == R.id.nav_logout){
+            RMPRO.getInstance().trackEvent("Main","logout",m.oku("username") + " logged out");
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.dialog_logout_title))
                     .setMessage(getString(R.string.dialog_logout_descr))

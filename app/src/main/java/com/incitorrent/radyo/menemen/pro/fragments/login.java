@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -241,6 +242,13 @@ public class login extends Fragment {
             }
         });
         return rootview;
+    }
+
+    @Override
+    public void onResume() {
+        //Analytics track
+        RMPRO.getInstance().trackScreenView("Login Fragment");
+        super.onResume();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

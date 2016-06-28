@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
@@ -36,6 +35,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
@@ -179,6 +179,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         m.runExitAnimation(nowplayingbox, 500);
                 }
                 setNP();
+                //Analytics track event
+                RMPRO.getInstance().trackEvent("radio","listening",NPtrack.getText().toString());
             }
         };
 
@@ -191,7 +193,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         NPdj.setText(m.oku("dj"));
         if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
-
     }
 
     @Override
@@ -239,7 +240,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);
-
+        //Analytics track
+        RMPRO.getInstance().trackScreenView("Radio Fragment");
         super.onResume();
     }
 
@@ -253,6 +255,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 intent.putExtra(SearchManager.QUERY, track);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                //Analytics track event
+                RMPRO.getInstance().trackEvent("radio","search on youtube",track);
             }else if(v == NPspotify){
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
@@ -261,10 +265,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         "com.spotify.music.MainActivity"));
                 intent.putExtra(SearchManager.QUERY, track);
                 this.startActivity(intent);
+                //Analytics track event
+                RMPRO.getInstance().trackEvent("radio","search on spotify",track);
             }else if(v == NPlyric){
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 intent.putExtra(SearchManager.QUERY, track + " " + getString(R.string.lyrics)); // query contains search string
                 startActivity(intent);
+                //Analytics track event
+                RMPRO.getInstance().trackEvent("radio","search lyrics",track);
             }
         } catch (Exception e) {
             e.printStackTrace();
