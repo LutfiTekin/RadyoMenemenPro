@@ -34,8 +34,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class MUSIC_INFO_SERVICE extends Service {
 
-    final String TAG = "MUSIC_INFO_SERVICE";
-    final public static String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
+    public static final String TAG = "MUSIC_INFO_SERVICE";
+    public static final  String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
     public static final String LAST_ARTWORK_URL = "lastartwork";
     final Context context = this;
     Menemen inf;
@@ -100,22 +100,19 @@ public class MUSIC_INFO_SERVICE extends Service {
                     String calan = c.getString("calan");
                     inf.kaydet("calan", Menemen.radiodecodefix(calan));
                     inf.kaydet("dj", c.getString("name"));
-                    inf.kaydet("djnotu", c.getString("djnotu"));
                     String songid = c.getString("songid");
-                    String download = c.getString("download");
+                    String download = "no url";//artık indirme yok
                     String artwork = c.getString("artwork");
-//                    inf.kaydet("LASTsongid", songid);
                     inf.kaydet(LAST_ARTWORK_URL, artwork);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
                         inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
-
                         notifyNP();
                     }
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     e.printStackTrace();
-                } catch (NullPointerException e) {
-                    Log.wtf("Null", e.toString());
+                } catch (Exception e) {
+                    Log.wtf(TAG, e.toString());
                 }
             }
                 //Son olan biteni al
@@ -166,7 +163,6 @@ public class MUSIC_INFO_SERVICE extends Service {
                 try {
                     notification.setContentTitle(getString(R.string.notification_onair_title))
                             .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
-                            .setSubText(inf.oku("djnotu"))
                             .setSmallIcon(R.drawable.ic_on_air)
                             .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
                 if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
