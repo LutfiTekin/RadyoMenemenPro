@@ -29,6 +29,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+
 /**
  * Created by lutfi on 22.05.2016.
  */
@@ -97,12 +99,12 @@ public class MUSIC_INFO_SERVICE extends Service {
                     String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
                     Log.v(TAG, line);
                     JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
-                    String calan = c.getString("calan");
-                    inf.kaydet("calan", Menemen.radiodecodefix(calan));
-                    inf.kaydet("dj", c.getString("name"));
+                    String calan = c.getString(CALAN);
+                    inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
+                    inf.kaydet(DJ, c.getString(DJ));
                     String songid = c.getString("songid");
                     String download = "no url";//artık indirme yok
-                    String artwork = c.getString("artwork");
+                    String artwork = c.getString(ARTWORK);
                     inf.kaydet(LAST_ARTWORK_URL, artwork);
                     if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                         sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
@@ -162,7 +164,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                 notification = new NotificationCompat.Builder(context);
                 try {
                     notification.setContentTitle(getString(R.string.notification_onair_title))
-                            .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
+                            .setContentText(inf.oku(DJ) + getString(R.string.notification_onair_content))
                             .setSmallIcon(R.drawable.ic_on_air)
                             .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
                 if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));

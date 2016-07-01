@@ -33,6 +33,8 @@ import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+
 
 public class MUSIC_PLAY_SERVICE extends Service {
     private static final String TAG = "MUSIC_PLAY_SERVICE";
@@ -200,14 +202,13 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
     private void setMusicMeta() {
-        Log.v(TAG,"Music Meta Set");
         String title,artist;
         if (!isPodcast) {
             //Normal radyo çalıyor
             Boolean showartwork = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("download_artwork",true);
             Bitmap defaultbitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_header_background);
-            title = m.oku("calan");
-            artist = m.oku("dj");
+            title = m.oku(CALAN);
+            artist = m.oku(DJ);
             if(showartwork) mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),true));
                 else mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,defaultbitmap);
         } else {
@@ -232,11 +233,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
-                } catch (IOException e) {
-                    Log.e(TAG,"HATA IO "+ e.toString());
-//                    stopSelf();
-                } catch (IllegalStateException e){
-                    Log.e(TAG,"HATA IllegalState "+ e.toString());
+                } catch (IOException | IllegalStateException e) {
+                    Log.e(TAG, e.toString());
 //                    stopSelf();
                 }catch (NullPointerException e){
                     //Houston we have a problem
@@ -293,9 +291,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     void nowPlayingNotification(){
         //Şarkı albüm kapağı
-        if(m.oku("calan").equals("yok")) return; //ilk açılışta boş bildirim atma
+        if(m.oku(CALAN).equals("yok")) return; //ilk açılışta boş bildirim atma
         String contentTitle = (m.oku("dj").equals(RadyoMenemenPro.OTO_DJ)) ? "Radyo Menemen" : m.oku("dj");
-        String calan = m.oku("calan");
+        String calan = m.oku(CALAN);
         if(isPodcast){
             contentTitle = getString(R.string.app_name) + " Podcast";
             calan = m.oku(RadyoMenemenPro.PLAYING_PODCAST);

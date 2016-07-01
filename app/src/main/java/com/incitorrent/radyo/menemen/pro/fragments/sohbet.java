@@ -278,10 +278,8 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
                     JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
 
             if(j.get("status").equals("ok")) return true;
-            }catch (IOException e){
+            }catch (IOException | JSONException e){
                 e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
                 return false;
             }

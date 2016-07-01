@@ -45,6 +45,8 @@ import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+
 
 public class radio extends Fragment implements View.OnClickListener,View.OnLongClickListener{
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -147,7 +149,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-              if(m.oku("caliyor").equals("evet") && !m.oku("calan").equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+              if(m.oku("caliyor").equals("evet") && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           m.runExitAnimation(nowplayingbox, 400);
@@ -189,8 +191,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNP() {
-        NPtrack.setText(Html.fromHtml(m.oku("calan")));
-        NPdj.setText(m.oku("dj"));
+        NPtrack.setText(Html.fromHtml(m.oku(CALAN)));
+        NPdj.setText(m.oku(DJ));
         if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
     }
@@ -225,12 +227,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 String url = cursor.getString(cursor.getColumnIndex("url"));
                 String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
                 Log.v("ARTURL",cursor.getString(cursor.getColumnIndex("arturl")));
-                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku("calan"))) //Son çalanlarda son çalanı gösterme :)
+                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
                 RList.add(new history_objs(song,songhash,url,arturl));
             }
             cursor.moveToNext();
         }
-        Log.v("RADIOFRAG","CURSORLOADED");
         cursor.close();
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
@@ -300,7 +301,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         List<history_objs> RList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnClickListener{
+        public class PersonViewHolder extends RecyclerView.ViewHolder {
             TextView song;
             ImageView art;
             CardView card;
@@ -309,60 +310,54 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 song = (TextView)itemView.findViewById(R.id.song);
                 art = (ImageView)itemView.findViewById(R.id.art);
                 card = (CardView) itemView.findViewById(R.id.radiocard);
-                song.setOnLongClickListener(this);
-                art.setOnClickListener(this);
+//                song.setOnLongClickListener(this);
+//                art.setOnClickListener(this);
             }
 
-
-            @Override
-            public boolean onLongClick(View v) {
-                final int i = getAdapterPosition();
-                if(!RList.get(i).url.contains(".mp3")) return false;
-                else {
-                    if (!m.oku("logged").equals("yok")){
-                        Log.i("Downloadurl", RList.get(i).url + RList.get(i).song + RList.get(i).url.contains(".mp3"));
-                        new AlertDialog.Builder(context)
-                                .setTitle(RList.get(i).song)
-                                .setMessage(getString(R.string.download_file))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try {
-                                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RList.get(i).url));
-                                            request.setDescription(context.getString(R.string.downloading_file))
-                                                    .setTitle(RList.get(i).song)
-                                                    .allowScanningByMediaScanner();
-                                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, RList.get(i).song + ".mp3");
-                                            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-                                            manager.enqueue(request);
-                                            Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
-                                              } catch (Exception e) {
-                                            Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .setIcon(R.mipmap.album_placeholder)
-                                .show();
-
-                    }
-                    return true;
-                }
-
-            }
-
-            @Override
-            public void onClick(View v) {
-//                      if(!RList.get(getAdapterPosition()).url.contains(".mp3")) {
-//                    Toast.makeText(context, R.string.music_not_found, Toast.LENGTH_SHORT).show();
-//                    return;
+//
+//            @Override
+//            public boolean onLongClick(View v) {
+//                final int i = getAdapterPosition();
+//                if(!RList.get(i).url.contains(".mp3")) return false;
+//                else {
+//                    if (!m.oku("logged").equals("yok")){
+//                        Log.i("Downloadurl", RList.get(i).url + RList.get(i).song + RList.get(i).url.contains(".mp3"));
+//                        new AlertDialog.Builder(context)
+//                                .setTitle(RList.get(i).song)
+//                                .setMessage(getString(R.string.download_file))
+//                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        try {
+//                                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RList.get(i).url));
+//                                            request.setDescription(context.getString(R.string.downloading_file))
+//                                                    .setTitle(RList.get(i).song)
+//                                                    .allowScanningByMediaScanner();
+//                                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//                                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, RList.get(i).song + ".mp3");
+//                                            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+//                                            manager.enqueue(request);
+//                                            Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
+//                                              } catch (Exception e) {
+//                                            Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                })
+//                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        dialog.cancel();
+//                                    }
+//                                })
+//                                .setIcon(R.mipmap.album_placeholder)
+//                                .show();
+//
+//                    }
+//                    return true;
 //                }
-            }
+//
+//            }
+
+
         }
         RadioAdapter(List<history_objs> RList){
             this.RList = RList;
