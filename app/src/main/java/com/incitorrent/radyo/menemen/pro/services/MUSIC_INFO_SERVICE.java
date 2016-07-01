@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -161,11 +163,13 @@ public class MUSIC_INFO_SERVICE extends Service {
             Boolean isOnair = notify_when_onair && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !isPlaying;
             if (isOnair) {
                 notification = new NotificationCompat.Builder(context);
-                notification.setContentTitle(getString(R.string.notification_onair_title))
-                        .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
-                        .setSubText(inf.oku("djnotu"))
-                        .setSmallIcon(R.drawable.ic_on_air);
-                      if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+                try {
+                    notification.setContentTitle(getString(R.string.notification_onair_title))
+                            .setContentText(inf.oku("dj") + getString(R.string.notification_onair_content))
+                            .setSubText(inf.oku("djnotu"))
+                            .setSmallIcon(R.drawable.ic_on_air)
+                            .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
+                if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
                 //Main activity yi aç
                 notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
                 if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
@@ -175,6 +179,9 @@ public class MUSIC_INFO_SERVICE extends Service {
                 nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
                 inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
                 Log.v(TAG, " Notification built");
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
 
             return null;
