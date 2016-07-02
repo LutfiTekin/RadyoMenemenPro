@@ -191,7 +191,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNP() {
-        NPtrack.setText(Html.fromHtml(m.oku(CALAN)));
+        String title = m.oku(CALAN);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+            title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+        else title = Html.fromHtml(title).toString();
+        NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
         if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
@@ -377,7 +381,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         }
         @Override
         public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-            personViewHolder.song.setText(Html.fromHtml(RList.get(i).song));
+            String title = RList.get(i).song;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+                title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+            else title = Html.fromHtml(title).toString();
+            personViewHolder.song.setText(title);
             if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
                 Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
             int delay = i*100;

@@ -338,38 +338,74 @@ if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getAct
         @Override
         public void onBindViewHolder(PersonViewHolder personViewHolder, final int i) {
     personViewHolder.nick.setText(sohbetList.get(i).nick);
-    personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),new Html.ImageGetter() {
-                @Override
-                public Drawable getDrawable(String source) {
-                    int id = 0;
-                    switch (source){
-                        case "gmansmile": id= R.mipmap.smile_gman;  break;
-                        case "YSB": id= R.mipmap.ysb;  break;
-                        case "arap": id= R.mipmap.smile_arap;  break;
-                        case "gc": id= R.mipmap.smile_keci;  break;
-                        case "SBH": id= R.mipmap.smile_sbh;  break;
-                        case "000lan000": id= R.mipmap.smile_lan;  break;
-                        case "lann0lebowski": id= R.mipmap.smile_lann;  break;
-                        case "olumlu": id= R.mipmap.smile_olumlu;  break;
-                        case "lol": id= R.mipmap.smile_gulme;  break;
-                        case "ayg": id= R.mipmap.smile_ayg;  break;
-                        case "<sikimizdedegil>": id= R.mipmap.smile_sd;  break;
-                        case "<cahil>": id = R.mipmap.smile_cahil; break;
-                        case "<nereyeS>": id = R.mipmap.smile_ns; break;
-                        case "<ypm>": id = R.mipmap.ypm; break;
-                        case "hl": id = R.mipmap.smile_harbimi; break;
-                        case "nopanic": id = R.mipmap.smile_panikyok; break;
-                        case "v": id = R.mipmap.v; break;
-                        case "yds": id = R.mipmap.yds; break;
-                        case "eizen": id = R.mipmap.eizen; break;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),Html.FROM_HTML_MODE_LEGACY,new Html.ImageGetter() {
+                            @Override
+                            public Drawable getDrawable(String source) {
+                                int id = 0;
+                                switch (source){
+                                    case "gmansmile": id= R.mipmap.smile_gman;  break;
+                                    case "YSB": id= R.mipmap.ysb;  break;
+                                    case "arap": id= R.mipmap.smile_arap;  break;
+                                    case "gc": id= R.mipmap.smile_keci;  break;
+                                    case "SBH": id= R.mipmap.smile_sbh;  break;
+                                    case "000lan000": id= R.mipmap.smile_lan;  break;
+                                    case "lann0lebowski": id= R.mipmap.smile_lann;  break;
+                                    case "olumlu": id= R.mipmap.smile_olumlu;  break;
+                                    case "lol": id= R.mipmap.smile_gulme;  break;
+                                    case "ayg": id= R.mipmap.smile_ayg;  break;
+                                    case "<sikimizdedegil>": id= R.mipmap.smile_sd;  break;
+                                    case "<cahil>": id = R.mipmap.smile_cahil; break;
+                                    case "<nereyeS>": id = R.mipmap.smile_ns; break;
+                                    case "<ypm>": id = R.mipmap.ypm; break;
+                                    case "hl": id = R.mipmap.smile_harbimi; break;
+                                    case "nopanic": id = R.mipmap.smile_panikyok; break;
+                                    case "v": id = R.mipmap.v; break;
+                                    case "yds": id = R.mipmap.yds; break;
+                                    case "eizen": id = R.mipmap.eizen; break;
+                                }
+
+
+                                Drawable d = context.getResources().getDrawable(id);
+                                d.setBounds(0,0,d.getIntrinsicWidth(),d.getIntrinsicHeight());
+                                return d;
+                            }
+                        },null)));
+            }else{
+                personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+                        int id = 0;
+                        switch (source){
+                            case "gmansmile": id= R.mipmap.smile_gman;  break;
+                            case "YSB": id= R.mipmap.ysb;  break;
+                            case "arap": id= R.mipmap.smile_arap;  break;
+                            case "gc": id= R.mipmap.smile_keci;  break;
+                            case "SBH": id= R.mipmap.smile_sbh;  break;
+                            case "000lan000": id= R.mipmap.smile_lan;  break;
+                            case "lann0lebowski": id= R.mipmap.smile_lann;  break;
+                            case "olumlu": id= R.mipmap.smile_olumlu;  break;
+                            case "lol": id= R.mipmap.smile_gulme;  break;
+                            case "ayg": id= R.mipmap.smile_ayg;  break;
+                            case "<sikimizdedegil>": id= R.mipmap.smile_sd;  break;
+                            case "<cahil>": id = R.mipmap.smile_cahil; break;
+                            case "<nereyeS>": id = R.mipmap.smile_ns; break;
+                            case "<ypm>": id = R.mipmap.ypm; break;
+                            case "hl": id = R.mipmap.smile_harbimi; break;
+                            case "nopanic": id = R.mipmap.smile_panikyok; break;
+                            case "v": id = R.mipmap.v; break;
+                            case "yds": id = R.mipmap.yds; break;
+                            case "eizen": id = R.mipmap.eizen; break;
+                        }
+
+
+                        Drawable d = context.getResources().getDrawable(id);
+                        d.setBounds(0,0,d.getIntrinsicWidth(),d.getIntrinsicHeight());
+                        return d;
                     }
+                },null)));
 
-
-                    Drawable d = context.getResources().getDrawable(id);
-                    d.setBounds(0,0,d.getIntrinsicWidth(),d.getIntrinsicHeight());
-                    return d;
-                }
-            },null)));
+            }
             personViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
     personViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
         }

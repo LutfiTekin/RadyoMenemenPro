@@ -217,7 +217,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
             artist = getString(R.string.app_name) + " Podcast";
             mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,BitmapFactory.decodeResource(getResources(),R.mipmap.locksreen_podcast_art));
         }
-        title = Html.fromHtml(title).toString();
+        //fromHtml method is depracated in android N
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+            title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+        else title = Html.fromHtml(title).toString();
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST,artist);
         mediaSessionCompat.setMetadata(mdBuilder.build());
@@ -298,7 +301,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
             contentTitle = getString(R.string.app_name) + " Podcast";
             calan = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
         }
-        calan = Html.fromHtml(calan).toString();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+            calan = Html.fromHtml(calan, Html.FROM_HTML_MODE_LEGACY).toString();
+        else calan = Html.fromHtml(calan).toString();
         notification = new NotificationCompat.Builder(this);
         notification
         .setContentTitle(contentTitle)

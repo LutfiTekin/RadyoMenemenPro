@@ -333,7 +333,11 @@ public class podcast extends Fragment {
         public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
             personViewHolder.cv.setCardElevation(10);
             personViewHolder.title.setText(RList.get(i).title);
-            personViewHolder.descr.setText(Html.fromHtml(RList.get(i).description));
+            String title = RList.get(i).description;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+                title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+            else title = Html.fromHtml(title).toString();
+            personViewHolder.descr.setText(title);
             personViewHolder.duration.setText(RList.get(i).duration);
             inf.runEnterAnimation(personViewHolder.cv,i*180);
         }
