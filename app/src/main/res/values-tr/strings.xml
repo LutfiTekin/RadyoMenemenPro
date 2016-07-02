@@ -118,4 +118,5 @@
     <string name="ip_lin">Doğrusal</string>
     <string name="ip_loutsin">Doğrusal çık Yavaş gir</string>
     <string name="settings_list_populate_anim">Liste oluşturma animasyonunu seç</string>
+    <string name="skip">Geç</string>
 </resources>
