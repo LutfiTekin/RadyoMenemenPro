@@ -31,7 +31,7 @@ public class Intro extends AppIntro {
         setVibrate(true);
         setVibrateIntensity(30);
         setSkipText(getString(R.string.skip));
-        setDoneText(getString(android.R.string.ok));
+        setDoneText(getString(R.string.done));
         setZoomAnimation();
 
 

@@ -190,11 +190,12 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="settings_show_full_error_summary">Expand the error message that says \'An error occurred\'</string>
     <string name="settings_list_populate_anim">Select list animation</string>
     <string name="skip">Skip</string>
-    <string name="intro_slide_music_title">Kesintisiz Müzik Deneyimi</string>
-    <string name="intro_slide_music_descr">Radyo Menemen Pro sahip olduğu 3 kanal seçeniği ile her yerde her zaman kesintisiz müzik deneyimi yaşatıyor.</string>
-    <string name="intro_slide_chat_title">Sohbete Katılın</string>
-    <string name="intro_slide_chat_descr">Sadece Müzik* dinlemekle olmaz, gelin biraz muhabbet edelim</string>
-    <string name="intro_slide_podcast_descr">Radyo Menemen podcastlerini ister indirin ister anında dinleyin</string>
-    <string name="intro_slide_news_descr">Radyo Menemende olan bitende haberdar olun</string>
-    <string name="intro_slide_haykir_descr">Yayındaki dj ile direk temas kur</string>
+    <string name="done">Done</string>
+    <string name="intro_slide_chat_descr">Only Music* is not enough, you should come join our chat</string>
+    <string name="intro_slide_chat_title">Join Chat</string>
+    <string name="intro_slide_haykir_descr">Contact with the broadcaster directly</string>
+    <string name="intro_slide_music_descr">You will be experiencing seamless music whereever and whenever you are</string>
+    <string name="intro_slide_music_title">Seamless Music Experience</string>
+    <string name="intro_slide_news_descr">Get notified with what happend in Radio Menemen</string>
+    <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
 </resources>
