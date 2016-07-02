@@ -49,7 +49,7 @@ public class haykir extends Fragment implements View.OnClickListener {
     RecyclerView shoutRV;
     TextView emptyview;
     Menemen m;
-
+    ScheduledThreadPoolExecutor exec;
     List<Shout_Objects> ShoutList;
     ShoutAdapter ShoutAdapter;
     public haykir() {
@@ -93,7 +93,8 @@ public class haykir extends Fragment implements View.OnClickListener {
                     editText.setText("");
                 }
             });
-        ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+        exec = new ScheduledThreadPoolExecutor(1);
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -248,4 +249,9 @@ public class haykir extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        exec.shutdown();
+        super.onDestroyView();
+    }
 }
