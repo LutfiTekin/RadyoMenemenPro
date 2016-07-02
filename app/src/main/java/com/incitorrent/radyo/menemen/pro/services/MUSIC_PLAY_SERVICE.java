@@ -308,8 +308,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         notification
         .setContentTitle(contentTitle)
         .setContentText(calan)
-        .setSmallIcon((isPodcast) ? R.mipmap.ic_podcast : R.mipmap.ic_equlizer)
-        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
+        .setSmallIcon((isPodcast) ? R.drawable.podcast : R.mipmap.ic_equlizer)
+        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
         Intent playpause = new Intent(this,NotificationControls.class);

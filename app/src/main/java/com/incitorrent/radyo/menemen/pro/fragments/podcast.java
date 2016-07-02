@@ -306,7 +306,7 @@ public class podcast extends Fragment {
                                 dialog.cancel();
                             }
                         })
-                        .setIcon(R.mipmap.ic_podcast)
+                        .setIcon(R.drawable.podcast)
                         .show();
                 return false;
             }

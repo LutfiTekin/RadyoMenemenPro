@@ -38,17 +38,17 @@
     </string-array>
 
     <string-array name="anims" translatable="false">
-    <item>@string/ip_accdec</item>
-    <item>@string/ip_acc</item>
-    <item>@string/ip_anticipate</item>
-    <item>@string/ip_anticipate_overshoot</item>
-    <item>@string/ip_bounce</item>
-    <item>@string/ip_dec</item>
-    <item>@string/ip_foutlin</item>
-    <item>@string/ip_foutsin</item>
-    <item>@string/ip_lin</item>
-    <item>@string/ip_loutsin</item>
-    <item>@string/ip_overshoot</item>
+        <item>@string/ip_accdec</item>
+        <item>@string/ip_acc</item>
+        <item>@string/ip_anticipate</item>
+        <item>@string/ip_anticipate_overshoot</item>
+        <item>@string/ip_bounce</item>
+        <item>@string/ip_dec</item>
+        <item>@string/ip_foutlin</item>
+        <item>@string/ip_foutsin</item>
+        <item>@string/ip_lin</item>
+        <item>@string/ip_loutsin</item>
+        <item>@string/ip_overshoot</item>
     </string-array>
     <string-array name="anim_values" translatable="false">
         <item>1</item>
@@ -189,4 +189,13 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="settings_show_full_error_title">Show full error message</string>
     <string name="settings_show_full_error_summary">Expand the error message that says \'An error occurred\'</string>
     <string name="settings_list_populate_anim">Select list animation</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
+    <string name="intro_slide_chat_descr">Only Music* is not enough, you should come join our chat</string>
+    <string name="intro_slide_chat_title">Join Chat</string>
+    <string name="intro_slide_haykir_descr">Contact with the broadcaster directly</string>
+    <string name="intro_slide_music_descr">You will be experiencing seamless music whereever and whenever you are</string>
+    <string name="intro_slide_music_title">Seamless Music Experience</string>
+    <string name="intro_slide_news_descr">Get notified with what happend in Radio Menemen</string>
+    <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
 </resources>

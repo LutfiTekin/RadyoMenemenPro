@@ -118,4 +118,13 @@
     <string name="ip_lin">Doğrusal</string>
     <string name="ip_loutsin">Doğrusal çık Yavaş gir</string>
     <string name="settings_list_populate_anim">Liste oluşturma animasyonunu seç</string>
+    <string name="skip">Geç</string>
+    <string name="done">Tamam</string>
+    <string name="intro_slide_chat_descr">Sadece Müzik* dinlemekle olmaz, gelin biraz muhabbet edelim</string>
+    <string name="intro_slide_chat_title">Sohbete Katılın</string>
+    <string name="intro_slide_haykir_descr">Yayındaki dj ile direk temas kur</string>
+    <string name="intro_slide_music_descr">Radyo Menemen Pro sahip olduğu 3 kanal seçeniği ile her yerde her zaman kesintisiz müzik deneyimi yaşatıyor.</string>
+    <string name="intro_slide_music_title">Kesintisiz Müzik Deneyimi</string>
+    <string name="intro_slide_news_descr">Radyo Menemende olan bitende haberdar olun</string>
+    <string name="intro_slide_podcast_descr">Radyo Menemen podcastlerini ister indirin ister anında dinleyin</string>
 </resources>

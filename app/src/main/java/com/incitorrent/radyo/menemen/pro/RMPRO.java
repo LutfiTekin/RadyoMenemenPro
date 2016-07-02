@@ -14,6 +14,7 @@ import com.google.android.gms.analytics.Tracker;
  */
 public class RMPRO extends Application {
     //Google Servisleri için gerekli subclass
+    public static Context context;
     public static final String TAG = RMPRO.class
             .getSimpleName();
 
@@ -26,14 +27,18 @@ public class RMPRO extends Application {
     }
 
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         AnalyticsTrackers.initialize(this);
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+        RMPRO.context = getApplicationContext();
     }
+
+    public static Context getContext(){
+        return RMPRO.context;
+    };
 
     public static synchronized RMPRO getInstance() {
         return mInstance;

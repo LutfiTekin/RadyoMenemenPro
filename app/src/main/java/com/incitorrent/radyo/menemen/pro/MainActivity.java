@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //Menemen yardımcı sınıfı
         m= new Menemen(this);
+        //İlk açılışta intro göster
+        if(m.oku("first_launch_intro").equals("yok")) {
+            startActivity(new Intent(this, Intro.class));
+            m.kaydet("first_launch_intro","var"); //intro ilk açılışta görüldü sonraki açılışta gösterme
+        }
+
         fragmentManager = getFragmentManager();
         //Music info servisini başlat
         startService(new Intent(MainActivity.this,MUSIC_INFO_SERVICE.class));
