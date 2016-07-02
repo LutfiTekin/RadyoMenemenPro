@@ -62,5 +62,7 @@
         <!--android:negativeButtonText="@null"-->
         <!--android:positiveButtonText="@null"-->
         <!--android:title="Şarkı Resimlerini Göster" />-->
-
+    <Preference android:title="Introyu Göster"
+        android:key="show_intro"
+        android:summary="İlk açılışta çıkan introyu göster"/>
 </PreferenceScreen>

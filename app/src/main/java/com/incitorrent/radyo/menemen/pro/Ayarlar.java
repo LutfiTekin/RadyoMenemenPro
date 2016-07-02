@@ -35,6 +35,7 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class Ayarlar extends AppCompatPreferenceActivity {
+    final Context context = Ayarlar.this;
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -189,6 +190,16 @@ public class Ayarlar extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("enter_anim"));
+
+//           if(RMPRO.context!=null)
+               Preference button = findPreference("show_intro");
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(RMPRO.context, Intro.class));
+                    return true;
+                }
+            });
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }

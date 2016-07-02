@@ -3,9 +3,12 @@ package com.incitorrent.radyo.menemen.pro;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
@@ -15,14 +18,23 @@ public class Intro extends AppIntro {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addSlide(AppIntroFragment.newInstance("Deneme", "açıklama deneme", R.drawable.ic_menu_settings, Color.parseColor("#757575")));
-        addSlide(AppIntroFragment.newInstance("Deneme", "açıklama deneme", R.drawable.powered_by_google_dark, Color.parseColor("#757575")));
+
+       final int background_color = ContextCompat.getColor(this,R.color.colorBackgroundsoft);
+       final int accent_color = ContextCompat.getColor(this,R.color.colorAccent);
+
+        addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide_music_title), getString(R.string.intro_slide_music_descr), R.drawable.intro_slide_play, background_color));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide_chat_title),getString(R.string.intro_slide_chat_descr),R.drawable.intro_slide_chat,accent_color));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.podcast), getString(R.string.intro_slide_podcast_descr), R.drawable.podcast, background_color));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.news), getString(R.string.intro_slide_news_descr),R.drawable.announce,accent_color));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.nav_haykir), getString(R.string.intro_slide_haykir_descr),R.drawable.intro_slide_haykir,background_color));
 
         setVibrate(true);
         setVibrateIntensity(30);
-        setDepthAnimation();
-        setDoneText(getString(android.R.string.ok));
         setSkipText(getString(R.string.skip));
+        setDoneText(getString(android.R.string.ok));
+        setZoomAnimation();
+
+
     }
     @Override
     public void onSkipPressed(Fragment currentFragment) {
@@ -41,4 +53,5 @@ public class Intro extends AppIntro {
         super.onSlideChanged(oldFragment, newFragment);
         // Do something when the slide changes.
     }
+
 }
