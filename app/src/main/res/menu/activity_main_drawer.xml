@@ -21,7 +21,7 @@
             android:title="@string/nav_haykir" />
         <item
             android:id="@+id/nav_podcast"
-            android:icon="@mipmap/ic_podcast"
+            android:icon="@drawable/podcast"
             android:title="@string/podcast" />
         <item
             android:id="@+id/nav_olanbiten"
