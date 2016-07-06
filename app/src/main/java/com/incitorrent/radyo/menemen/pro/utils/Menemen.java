@@ -81,7 +81,7 @@ public class Menemen {
     }
 
     //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
-    public boolean first_time(String action){
+    public boolean isFirstTime(String action){
         final SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.FIRST_TIME, Context.MODE_PRIVATE);
         if(sharedPreferences.getBoolean(action,true)){
             sharedPreferences.edit().putBoolean(action,false).apply();
