@@ -54,12 +54,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Menemen yardımcı sınıfı
-        m= new Menemen(this);
+        m = new Menemen(this);
         //İlk açılışta intro göster
-        if(m.oku("first_launch_intro").equals("yok")) {
-            startActivity(new Intent(this, Intro.class));
-            m.kaydet("first_launch_intro","var"); //intro ilk açılışta görüldü sonraki açılışta gösterme
-        }
+        if(m.isFirstTime("intro")) startActivity(new Intent(this, Intro.class));
 
         fragmentManager = getFragmentManager();
         //Music info servisini başlat
@@ -70,7 +67,7 @@ public class MainActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 Boolean play;
               if(intent!=null) {
-                  play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
+                play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                 fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
               }
             }
