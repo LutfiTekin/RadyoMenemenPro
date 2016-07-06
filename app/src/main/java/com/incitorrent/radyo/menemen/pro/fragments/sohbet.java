@@ -9,11 +9,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -47,6 +49,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -64,15 +69,17 @@ import java.util.concurrent.TimeUnit;
  * Use the {@link sohbet#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class sohbet extends Fragment implements View.OnClickListener{
+public class sohbet extends Fragment implements View.OnClickListener,View.OnLongClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "SOHBETFRAG";
+    private static final int RESULT_LOAD_IMAGE_CAM = 2063;
     private static final int RESULT_LOAD_IMAGE = 2064;
     private static final int PERMISSION_REQUEST_ID = 2065;
+    private static final int CAM_PERMISSION_REQUEST_ID = 2066;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -142,6 +149,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         });
         mesaj_gonder = (FloatingActionButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
         resimekle.setOnClickListener(this);
+        resimekle.setOnLongClickListener(this);
         smilegoster.setOnClickListener(this);
         mesaj_gonder.setOnClickListener(this);
         //SMILEY
@@ -202,7 +210,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
-              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_SHORT).show();
+              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_LONG).show();
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
     //Dosya okuma izni yok izin iste
     AskReadPerm();
@@ -234,16 +242,20 @@ public class sohbet extends Fragment implements View.OnClickListener{
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_ID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission Granted
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(getActivity(), R.string.toast_permission_read_storage_granted, Toast.LENGTH_SHORT)
-                        .show();
-            } else {
-                // Permission Denied
+                        .show();// Permission Granted
+            else
                 Toast.makeText(getActivity(), R.string.toast_permission_read_storage_denied, Toast.LENGTH_SHORT)
-                        .show();
-            }
+                        .show(); // Permission Denied
 
+        }else if(requestCode == CAM_PERMISSION_REQUEST_ID){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_granted, Toast.LENGTH_SHORT)
+                        .show();// Permission Granted
+            else
+                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_denied, Toast.LENGTH_SHORT)
+                        .show(); // Permission Denied
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -293,6 +305,25 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 super.onPostExecute(success);
             }
         }.execute();
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if(view == resimekle){
+            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        CAM_PERMISSION_REQUEST_ID);
+                return false;
+            }
+            //TODO kamerayı aç
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File f = new File(android.os.Environment
+                    .getExternalStorageDirectory(), "temp.jpg");
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            startActivityForResult(intent,RESULT_LOAD_IMAGE_CAM);
+            return true;
+        }
+        return false;
     }
 
     //SOHBET adaptör ve sınıfı
@@ -420,14 +451,38 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data) {
+        Toast.makeText(getActivity().getApplicationContext(), "onActivityResult" + requestCode + " result " + resultCode, Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_LOAD_IMAGE && data != null){
+
+        if(requestCode == RESULT_LOAD_IMAGE && data!=null){
             try {
                 Uri selectedimage = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), selectedimage);
                    new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             }catch (Exception e){e.printStackTrace();}
+        }else if(requestCode == RESULT_LOAD_IMAGE_CAM){
+            try {
+                File f = new File(Environment.getExternalStorageDirectory()
+                        .toString());
+                for (File temp : f.listFiles()) {
+                    if (temp.getName().equals("temp.jpg")) {
+                        f = temp;
+                        break;
+                    }
+                }
+                Bitmap bitmap;
+                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
+                        bitmapOptions);
+                new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
+                f.delete();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
