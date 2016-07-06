@@ -202,7 +202,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
-if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_SHORT).show();
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
     //Dosya okuma izni yok izin iste
     AskReadPerm();
     break;

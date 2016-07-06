@@ -127,4 +127,5 @@
     <string name="intro_slide_music_title">Kesintisiz Müzik Deneyimi</string>
     <string name="intro_slide_news_descr">Radyo Menemende olan bitende haberdar olun</string>
     <string name="intro_slide_podcast_descr">Radyo Menemen podcastlerini ister indirin ister anında dinleyin</string>
+    <string name="toast_caps_upload_cam">Eğer kamera uygulamasından resim seçme istiyorsanız uzun basın.</string>
 </resources>
