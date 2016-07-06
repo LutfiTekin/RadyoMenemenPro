@@ -79,6 +79,19 @@ public class Menemen {
         Log.v("Kayıt", "okunuyor " + title);
         return oku.getString(title, "yok"); //Değer boş ise "yok"
     }
+
+    //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
+    public boolean first_time(String action){
+        final SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.FIRST_TIME, Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean(action,true)){
+            sharedPreferences.edit().putBoolean(action,false).apply();
+            return true;
+        }
+        return false;
+    }
+
+
+
     //İnternet var mı?
     public boolean isInternetAvailable(){
         try {
