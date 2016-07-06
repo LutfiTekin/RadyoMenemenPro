@@ -451,9 +451,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data) {
-        Toast.makeText(getActivity().getApplicationContext(), "onActivityResult" + requestCode + " result " + resultCode, Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == RESULT_LOAD_IMAGE && data!=null){
             try {
                 Uri selectedimage = data.getData();
