@@ -25,9 +25,9 @@ android {
         versionName '1.0.44'
         multiDexEnabled true
     }
-    buildTypes.release{
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    buildTypes.release {
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
     productFlavors {
     }
@@ -47,6 +47,10 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.paolorotolo:appintro:4.0.0'
+    compile 'com.google.android.gms:play-services-ads:9.2.0'
+    compile 'com.google.android.gms:play-services-analytics:9.2.0'
+    compile 'com.google.android.gms:play-services-auth:9.2.0'
+    compile 'com.google.android.gms:play-services-gcm:9.2.0'
 }
 
 
