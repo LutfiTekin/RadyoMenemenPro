@@ -199,4 +199,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="intro_slide_news_descr">Get notified with what happend in Radio Menemen</string>
     <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
     <string name="toast_caps_upload_cam">Hold the button if you want to select image from camera</string>
+
 </resources>
