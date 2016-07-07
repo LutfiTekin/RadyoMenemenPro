@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left|top"
-        android:background="@color/colorBackgroundsoft">
+        android:background="@color/colorBackgroundsoft"
+        android:id="@+id/rel_track_info">
 
         <ImageView
             android:layout_width="match_parent"
@@ -31,8 +32,8 @@
             android:layout_alignParentStart="true"
             android:layout_margin="16dp"
             android:maxLines="2"
-            android:minLines="2"
-            android:textSize="26sp" />
+            android:textSize="26sp"
+            android:textColor="@android:color/black" />
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +61,8 @@
                     android:textStyle="bold"
                     android:gravity="left|center"
                     android:paddingStart="16dp"
-                    android:id="@+id/tv_spotify" />
+                    android:id="@+id/tv_spotify"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -90,7 +92,8 @@
             android:textStyle="bold"
             android:gravity="left|center"
             android:paddingStart="16dp"
-            android:id="@+id/tv_youtube" />
+            android:id="@+id/tv_youtube"
+            android:textColor="@android:color/black" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -119,7 +122,8 @@
                     android:textStyle="bold"
                     android:gravity="left|center"
                     android:paddingStart="16dp"
-                    android:id="@+id/tv_lyric" />
+                    android:id="@+id/tv_lyric"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
