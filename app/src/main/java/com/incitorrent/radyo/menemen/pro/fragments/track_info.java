@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -54,7 +55,13 @@ public class track_info extends Fragment implements View.OnClickListener{
         tv_spotify.setOnClickListener(this);
         tv_youtube.setOnClickListener(this);
         tv_lyric.setOnClickListener(this);
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            final String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
+            track.setText(trackName);
+            final String arturl = bundle.getString("arturl", null);
+            if(arturl != null && getActivity() != null) Glide.with(getActivity()).load(arturl).error(R.mipmap.album_placeholder).into(art);
+        }
         return trackview;
     }
 

@@ -1,5 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.SearchManager;
@@ -12,6 +13,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -23,6 +25,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.BaseMovementMethod;
+import android.transition.ArcMotion;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -305,7 +316,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         List<history_objs> RList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder {
+        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView song;
             ImageView art;
             CardView card;
@@ -314,8 +325,55 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 song = (TextView)itemView.findViewById(R.id.song);
                 art = (ImageView)itemView.findViewById(R.id.art);
                 card = (CardView) itemView.findViewById(R.id.radiocard);
-//                song.setOnLongClickListener(this);
-//                art.setOnClickListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    art.setTransitionName(RadyoMenemenPro.transitionname.ART);
+                    song.setTransitionName(RadyoMenemenPro.transitionname.CALAN);
+                }
+
+                art.setOnClickListener(this);
+                song.setOnClickListener(this);
+                card.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View view) {
+                final String trackName = RList.get(getAdapterPosition()).song;
+                final String artUrl = RList.get(getAdapterPosition()).arturl;
+                Fragment track_info = new track_info();
+                Bundle bundle = new Bundle();
+                bundle.putString("trackname", trackName);
+                bundle.putString("arturl",artUrl);
+                track_info.setArguments(bundle);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    track_info.setSharedElementEnterTransition(new DetailsTransition());
+                    track_info.setEnterTransition(new Slide());
+                    setExitTransition(new Fade());
+                    track_info.setSharedElementReturnTransition(new DetailsTransition());
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getFragmentManager()
+                            .beginTransaction()
+                            .addSharedElement(art, art.getTransitionName())
+                            .addSharedElement(song, song.getTransitionName())
+                            .replace(R.id.Fcontent, track_info)
+                            .addToBackStack(null)
+                            .commit();
+                }else {
+                    getFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.Fcontent, track_info)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            }
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            public class DetailsTransition extends TransitionSet {
+                public DetailsTransition() {
+                    setOrdering(ORDERING_TOGETHER);
+                    addTransition(new ChangeBounds()).
+                            addTransition(new ChangeTransform()).
+                            addTransition(new ChangeImageTransform());
+                }
             }
 
 //
