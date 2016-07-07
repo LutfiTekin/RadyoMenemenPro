@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:id="@+id/art"
+            android:contentDescription="@string/cd_song_artwork"
             android:src="@mipmap/album_placeholder"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
@@ -52,6 +53,7 @@
                 android:layout_height="36dp"
                 android:layout_margin="16dp"
                 android:src="@drawable/spotify"
+                android:contentDescription="@string/search_on_spotify"
                 android:id="@+id/iv_spotify" />
                 <TextView
                     android:layout_width="match_parent"
@@ -83,7 +85,8 @@
             android:layout_height="36dp"
             android:layout_margin="16dp"
             android:src="@drawable/youtube"
-                android:id="@+id/iv_youtube" />
+            android:id="@+id/iv_youtube"
+            android:contentDescription="@string/search_on_youtube"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -113,7 +116,8 @@
                 android:layout_height="36dp"
                 android:layout_margin="16dp"
                 android:src="@drawable/lyrics"
-                android:id="@+id/iv_lyric" />
+                android:id="@+id/iv_lyric"
+                android:contentDescription="@string/search_lyrics"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

@@ -18,6 +18,7 @@
             android:id="@+id/art"
             android:src="@mipmap/album_placeholder"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/cd_song_artwork"
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/track"
             android:layout_alignStart="@+id/track"
@@ -54,7 +55,8 @@
                 android:layout_height="36dp"
                 android:layout_margin="16dp"
                 android:src="@drawable/spotify"
-                android:id="@+id/iv_spotify" />
+                android:id="@+id/iv_spotify"
+                android:contentDescription="@string/search_on_spotify"   />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -85,7 +87,8 @@
             android:layout_height="36dp"
             android:layout_margin="16dp"
             android:src="@drawable/youtube"
-                android:id="@+id/iv_youtube" />
+            android:id="@+id/iv_youtube"
+            android:contentDescription="@string/search_on_youtube"        />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -115,7 +118,8 @@
                 android:layout_height="36dp"
                 android:layout_margin="16dp"
                 android:src="@drawable/lyrics"
-                android:id="@+id/iv_lyric" />
+                android:id="@+id/iv_lyric"
+                android:contentDescription="@string/search_lyrics"    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
