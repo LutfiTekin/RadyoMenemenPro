@@ -94,4 +94,16 @@ public class track_info extends Fragment implements View.OnClickListener{
         RMPRO.getInstance().trackEvent("radio","search lyrics",trackName);
     }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        RMPRO.getInstance().trackScreenView("Track Info");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 }
