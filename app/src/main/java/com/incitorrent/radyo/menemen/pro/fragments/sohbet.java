@@ -459,7 +459,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                    new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             }catch (Exception e){e.printStackTrace();}
-        }else if(requestCode == RESULT_LOAD_IMAGE_CAM){
+        }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
             try {
                 File f = new File(Environment.getExternalStorageDirectory()
                         .toString());
