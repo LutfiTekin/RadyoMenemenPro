@@ -27,11 +27,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.BaseMovementMethod;
 import android.transition.ArcMotion;
+import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.util.Log;
@@ -353,8 +355,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getFragmentManager()
                             .beginTransaction()
-                            .addSharedElement(art, art.getTransitionName())
-                            .addSharedElement(song, song.getTransitionName())
+                            .addSharedElement(art, RadyoMenemenPro.transitionname.ART)
+                            .addSharedElement(song, RadyoMenemenPro.transitionname.CALAN)
                             .replace(R.id.Fcontent, track_info)
                             .addToBackStack(null)
                             .commit();
