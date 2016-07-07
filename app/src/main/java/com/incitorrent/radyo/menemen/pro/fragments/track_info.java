@@ -4,20 +4,35 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.os.AsyncTaskCompat;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
+import android.text.Html;
+import android.transition.AutoTransition;
+import android.transition.ChangeBounds;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+
+import java.util.concurrent.ExecutionException;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.*;
 
@@ -27,6 +42,8 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.*
 public class track_info extends Fragment implements View.OnClickListener{
     private ImageView art,iv_spotify,iv_youtube,iv_lyric;
     private TextView track,tv_spotify,tv_youtube,tv_lyric;
+    private CardView card_spotify,card_youtube,card_lyric;
+
 
     public track_info() {
         // Required empty public constructor
@@ -38,11 +55,11 @@ public class track_info extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         View trackview = inflater.inflate(R.layout.fragment_track_info, container, false);
         art = (ImageView) trackview.findViewById(R.id.art);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            art.setTransitionName(ART);
         track = (TextView) trackview.findViewById(R.id.track);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            art.setTransitionName(ART);
             track.setTransitionName(CALAN);
+        }
         iv_spotify = (ImageView) trackview.findViewById(R.id.iv_spotify);
         iv_youtube = (ImageView) trackview.findViewById(R.id.iv_youtube);
         iv_lyric = (ImageView) trackview.findViewById(R.id.iv_lyric);
@@ -55,13 +72,58 @@ public class track_info extends Fragment implements View.OnClickListener{
         tv_spotify.setOnClickListener(this);
         tv_youtube.setOnClickListener(this);
         tv_lyric.setOnClickListener(this);
+        card_spotify = (CardView) trackview.findViewById(R.id.spotify_card);
+        card_youtube = (CardView) trackview.findViewById(R.id.youtube_card);
+        card_lyric = (CardView) trackview.findViewById(R.id.lyric_card);
+        if(getActivity() != null){
+            Menemen m = new Menemen(getActivity().getApplicationContext());
+            m.runEnterAnimation(card_spotify,200);
+            m.runEnterAnimation(card_youtube,300);
+            m.runEnterAnimation(card_lyric,400);
+        }
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            final String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
+            String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+                trackName = Html.fromHtml(trackName, Html.FROM_HTML_MODE_LEGACY).toString();
+            else trackName = Html.fromHtml(trackName).toString();
             track.setText(trackName);
             final String arturl = bundle.getString("arturl", null);
-            if(arturl != null && getActivity() != null) Glide.with(getActivity()).load(arturl).error(R.mipmap.album_placeholder).into(art);
+            if(arturl != null && getActivity() != null) {
+                Glide.with(getActivity()).load(arturl).error(R.mipmap.album_placeholder).into(art);
+                //Arkaplan rengini artworkten al
+                final RelativeLayout relativeLayout = (RelativeLayout) trackview.findViewById(R.id.rel_track_info);
+                new AsyncTask<Void,Void,Integer>() {
+                    Bitmap resim = null;
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+                    @Override
+                    protected Integer doInBackground(Void... voids) {
+                        try {
+                      resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(120,120).get();
+                            Palette palette = Palette.from(resim).generate();
+                            int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
+                            return palette.getVibrantColor(backgroundcolor);
+                        } catch (InterruptedException | ExecutionException | NullPointerException e) {
+                            e.printStackTrace();
+                        }
+                        return 0;
+                    }
+                    @Override
+                    protected void onPostExecute(Integer backgroundcolor) {
+                        if(backgroundcolor != 0)relativeLayout.setBackgroundColor(backgroundcolor);
+                        super.onPostExecute(backgroundcolor);
+                    }
+                }.execute();
+            }
+
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSharedElementEnterTransition(new AutoTransition());
+        }
+
         return trackview;
     }
 
@@ -98,12 +160,20 @@ public class track_info extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        if(getActivity()!=null) {
+            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(fab!=null) fab.setVisibility(View.INVISIBLE);
+        }
         RMPRO.getInstance().trackScreenView("Track Info");
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
+        if(getActivity()!=null) {
+            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(fab!=null)  fab.setVisibility(View.VISIBLE);
+        }
     }
 
 }
