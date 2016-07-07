@@ -1,9 +1,13 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.*;
@@ -55,6 +60,31 @@ public class track_info extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-
+        final String trackName = track.getText().toString();
+    if(view == iv_spotify || view == tv_spotify){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+        intent.setComponent(new ComponentName(
+                "com.spotify.music",
+                "com.spotify.music.MainActivity"));
+        intent.putExtra(SearchManager.QUERY, trackName);
+        this.startActivity(intent);
+        //Analytics track event
+        RMPRO.getInstance().trackEvent("radio","search on spotify",trackName);
+    }else if(view == iv_youtube || view == tv_youtube){
+        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        intent.setPackage("com.google.android.youtube");
+        intent.putExtra(SearchManager.QUERY, trackName);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        //Analytics track event
+        RMPRO.getInstance().trackEvent("radio","search on youtube",trackName);
+    }else if(view == iv_lyric || view == tv_lyric){
+        Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+        intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
+        startActivity(intent);
+        //Analytics track event
+        RMPRO.getInstance().trackEvent("radio","search lyrics",trackName);
+    }
     }
 }
