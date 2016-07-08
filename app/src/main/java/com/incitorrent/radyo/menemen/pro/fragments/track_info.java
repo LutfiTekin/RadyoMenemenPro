@@ -98,7 +98,6 @@ public class track_info extends Fragment implements View.OnClickListener{
             track.setText(trackName);
             final String arturl = bundle.getString("arturl", null);
             if(arturl != null && getActivity() != null) {
-                Glide.with(getActivity()).load(arturl).error(R.mipmap.album_placeholder).into(art);
                 //Arkaplan rengini artworkten al
                 final RelativeLayout relativeLayout = (RelativeLayout) trackview.findViewById(R.id.rel_track_info);
                 final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -111,7 +110,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                     @Override
                     protected Integer doInBackground(Void... voids) {
                         try {
-                      resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(120,120).get();
+                      resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(300,300).get();
                             Palette palette = Palette.from(resim).generate();
                             int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
                             return palette.getMutedColor(backgroundcolor);
@@ -126,6 +125,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                             relativeLayout.setBackgroundColor(backgroundcolor);
                             toolbar.setBackgroundColor(backgroundcolor);
                         }
+                        if(resim != null)art.setImageBitmap(resim);
                         super.onPostExecute(backgroundcolor);
                     }
                 }.execute();
