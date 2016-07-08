@@ -1,6 +1,9 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -16,12 +19,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -93,6 +101,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                 Glide.with(getActivity()).load(arturl).error(R.mipmap.album_placeholder).into(art);
                 //Arkaplan rengini artworkten al
                 final RelativeLayout relativeLayout = (RelativeLayout) trackview.findViewById(R.id.rel_track_info);
+                final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
                 new AsyncTask<Void,Void,Integer>() {
                     Bitmap resim = null;
                     @Override
@@ -105,7 +114,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                       resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(120,120).get();
                             Palette palette = Palette.from(resim).generate();
                             int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
-                            return palette.getVibrantColor(backgroundcolor);
+                            return palette.getMutedColor(backgroundcolor);
                         } catch (InterruptedException | ExecutionException | NullPointerException e) {
                             e.printStackTrace();
                         }
@@ -113,7 +122,10 @@ public class track_info extends Fragment implements View.OnClickListener{
                     }
                     @Override
                     protected void onPostExecute(Integer backgroundcolor) {
-                        if(backgroundcolor != 0)relativeLayout.setBackgroundColor(backgroundcolor);
+                        if(backgroundcolor != 0) {
+                            relativeLayout.setBackgroundColor(backgroundcolor);
+                            toolbar.setBackgroundColor(backgroundcolor);
+                        }
                         super.onPostExecute(backgroundcolor);
                     }
                 }.execute();
@@ -161,19 +173,48 @@ public class track_info extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.INVISIBLE);
+            //track info ekranına geçince oynatma tuşunu animastonla gizle
+            final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+//            if(fab!=null) fab.setVisibility(View.INVISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                fab.animate().alpha(1).setDuration(1000).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void run() {
+                        fab.animate().alpha(0).setDuration(1000).setInterpolator(new AccelerateInterpolator()).withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+                                fab.setVisibility(View.GONE);
+                            }
+                        }).start();
+
+                    }
+                }).start();
+            }else fab.setVisibility(View.INVISIBLE);
         }
         RMPRO.getInstance().trackScreenView("Track Info");
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)  fab.setVisibility(View.VISIBLE);
+            //track info ekranına geçince oynatma tuşunu animastonla göster
+            final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+//            if(fab!=null)  fab.setVisibility(View.VISIBLE);
+            if(fab!=null)  {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    fab.animate().alpha(0).setDuration(500).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            fab.setVisibility(View.VISIBLE);
+                            fab.animate().alpha(1).setDuration(500).setInterpolator(new AccelerateInterpolator()).start();
+                        }
+                    }).start();
+                }else fab.setVisibility(View.VISIBLE);
+            }
+            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));
         }
     }
-
 }
