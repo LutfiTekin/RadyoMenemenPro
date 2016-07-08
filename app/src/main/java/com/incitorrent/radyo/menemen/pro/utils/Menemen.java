@@ -81,6 +81,11 @@ public class Menemen {
     }
 
     //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
+    /**
+     * Returns true for spesific action only once
+     * @param action String key for action
+     * @return boolean true if not called before, false afterwards
+     */
     public boolean isFirstTime(String action){
         final SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.FIRST_TIME, Context.MODE_PRIVATE);
         if(sharedPreferences.getBoolean(action,true)){
@@ -93,6 +98,10 @@ public class Menemen {
 
 
     //İnternet var mı?
+    /**
+     * Internet check
+     * @return true if is device connected
+     */
     public boolean isInternetAvailable(){
         try {
             ConnectivityManager nInfo = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -272,6 +281,12 @@ public class Menemen {
     }
 
     //POST methodu ile veri gönder ve JSON döndür
+    /**
+     * Posts data to server using post method with httpurlconnection
+     * @param url server url
+     * @param encodedstr data to send
+     * @return json string
+     */
     public static String postMenemenData(String url,String encodedstr){
         //Json datası döndür
         String line = null;
