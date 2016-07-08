@@ -117,15 +117,17 @@ public class track_info extends Fragment implements View.OnClickListener{
                             Palette palette = Palette.from(resim).generate();
                             int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
                             int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
+                            int accentcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorAccent);
 //                            return palette.getMutedColor(backgroundcolor);
                             int color_1 = palette.getMutedColor(backgroundcolor);
                             int color_2 = palette.getDarkMutedColor(statusbarcolor);
+                            int color_3 = palette.getLightVibrantColor(accentcolor);
                             if(color_1 == backgroundcolor && color_2 == statusbarcolor){
                                 //Muted renk bulunamadı vibrant renk ata
                                 color_1 = palette.getVibrantColor(backgroundcolor);
                                 color_2 = palette.getDarkVibrantColor(statusbarcolor);
                             }
-                            return new Integer[]{color_1,color_2};
+                            return new Integer[]{color_1,color_2,color_3};
                         } catch (InterruptedException | ExecutionException | NullPointerException e) {
                             e.printStackTrace();
                         }
@@ -141,6 +143,9 @@ public class track_info extends Fragment implements View.OnClickListener{
                                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                                 window.setStatusBarColor(color[1]);
                             }
+                            card_spotify.setCardBackgroundColor(color[2]);
+                            card_youtube.setCardBackgroundColor(color[2]);
+                            card_lyric.setCardBackgroundColor(color[2]);
                         }
                         if(resim != null)art.setImageBitmap(resim);
                         super.onPostExecute(color);
