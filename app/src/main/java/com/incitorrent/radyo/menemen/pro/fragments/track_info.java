@@ -23,9 +23,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -101,32 +104,46 @@ public class track_info extends Fragment implements View.OnClickListener{
                 //Arkaplan rengini artworkten al
                 final RelativeLayout relativeLayout = (RelativeLayout) trackview.findViewById(R.id.rel_track_info);
                 final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-                new AsyncTask<Void,Void,Integer>() {
+                new AsyncTask<Void,Void,Integer[]>() {
                     Bitmap resim = null;
                     @Override
                     protected void onPreExecute() {
                         super.onPreExecute();
                     }
                     @Override
-                    protected Integer doInBackground(Void... voids) {
+                    protected Integer[] doInBackground(Void... voids) {
                         try {
-                      resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(300,300).get();
+                            resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(300,300).get();
                             Palette palette = Palette.from(resim).generate();
                             int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
-                            return palette.getMutedColor(backgroundcolor);
+                            int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
+//                            return palette.getMutedColor(backgroundcolor);
+                            int color_1 = palette.getMutedColor(backgroundcolor);
+                            int color_2 = palette.getDarkMutedColor(statusbarcolor);
+                            if(color_1 == backgroundcolor && color_2 == statusbarcolor){
+                                //Muted renk bulunamadı vibrant renk ata
+                                color_1 = palette.getVibrantColor(backgroundcolor);
+                                color_2 = palette.getDarkVibrantColor(statusbarcolor);
+                            }
+                            return new Integer[]{color_1,color_2};
                         } catch (InterruptedException | ExecutionException | NullPointerException e) {
                             e.printStackTrace();
                         }
-                        return 0;
+                        return null;
                     }
                     @Override
-                    protected void onPostExecute(Integer backgroundcolor) {
-                        if(backgroundcolor != 0) {
-                            relativeLayout.setBackgroundColor(backgroundcolor);
-                            toolbar.setBackgroundColor(backgroundcolor);
+                    protected void onPostExecute(Integer[] color) {
+                        if(color != null) {
+                            relativeLayout.setBackgroundColor(color[0]);
+                            toolbar.setBackgroundColor(color[0]);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
+                                Window window = getActivity().getWindow();
+                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                window.setStatusBarColor(color[1]);
+                            }
                         }
                         if(resim != null)art.setImageBitmap(resim);
-                        super.onPostExecute(backgroundcolor);
+                        super.onPostExecute(color);
                     }
                 }.execute();
             }
@@ -199,9 +216,8 @@ public class track_info extends Fragment implements View.OnClickListener{
     public void onDestroy() {
         super.onDestroy();
         if(getActivity()!=null) {
-            //track info ekranına geçince oynatma tuşunu animastonla göster
+            //track info ekranına geçince oynatma tuşunu animasyonla göster
             final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-//            if(fab!=null)  fab.setVisibility(View.VISIBLE);
             if(fab!=null)  {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     fab.animate().alpha(0).setDuration(500).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
@@ -213,8 +229,14 @@ public class track_info extends Fragment implements View.OnClickListener{
                     }).start();
                 }else fab.setVisibility(View.VISIBLE);
             }
+            //Renkleri eski haline getir
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
+                Window window = getActivity().getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark));
+            }
         }
     }
 }
