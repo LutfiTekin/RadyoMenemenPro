@@ -151,7 +151,12 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         NPspotify.setOnLongClickListener(this);
         NPyoutube.setOnClickListener(this);
         NPyoutube.setOnLongClickListener(this);
-
+        NPart.setOnClickListener(this);
+        NPtrack.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            NPart.setTransitionName(RadyoMenemenPro.transitionname.ART);
+            NPtrack.setTransitionName(RadyoMenemenPro.transitionname.CALAN);
+        }
         if (NPequ != null) {
             NPequ.setVisibility(View.VISIBLE);
             frameAnimation = (AnimationDrawable)NPequ.getDrawable();
@@ -291,6 +296,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 startActivity(intent);
                 //Analytics track event
                 RMPRO.getInstance().trackEvent("radio","search lyrics",track);
+            }else if(v == NPart || v == NPtrack){
+                String title = m.oku(CALAN);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+                    title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+                else title = Html.fromHtml(title).toString();
+               String arturl = m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL);
+                openTrackInfo(title,arturl,NPart,NPtrack);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -341,42 +353,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             public void onClick(View view) {
                 final String trackName = RList.get(getAdapterPosition()).song;
                 final String artUrl = RList.get(getAdapterPosition()).arturl;
-                Fragment track_info = new track_info();
-                Bundle bundle = new Bundle();
-                bundle.putString("trackname", trackName);
-                bundle.putString("arturl",artUrl);
-                track_info.setArguments(bundle);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    track_info.setSharedElementEnterTransition(new DetailsTransition());
-                    track_info.setEnterTransition(new Slide());
-                    setExitTransition(new Fade());
-                    track_info.setSharedElementReturnTransition(new DetailsTransition());
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getFragmentManager()
-                            .beginTransaction()
-                            .addSharedElement(art, RadyoMenemenPro.transitionname.ART)
-                            .addSharedElement(song, RadyoMenemenPro.transitionname.CALAN)
-                            .replace(R.id.Fcontent, track_info)
-                            .addToBackStack(null)
-                            .commit();
-                }else {
-                    getFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.Fcontent, track_info)
-                            .addToBackStack(null)
-                            .commit();
-                }
+               openTrackInfo(trackName,artUrl,art,song);
             }
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            public class DetailsTransition extends TransitionSet {
-                public DetailsTransition() {
-                    setOrdering(ORDERING_TOGETHER);
-                    addTransition(new ChangeBounds()).
-                            addTransition(new ChangeTransform()).
-                            addTransition(new ChangeImageTransform());
-                }
-            }
+
 
 //
 //            @Override
@@ -461,6 +440,43 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     }
 
+    private void openTrackInfo(String trackName, String artUrl, ImageView art, TextView song) {
+        Fragment track_info = new track_info();
+        Bundle bundle = new Bundle();
+        bundle.putString("trackname", trackName);
+        bundle.putString("arturl",artUrl);
+        track_info.setArguments(bundle);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            track_info.setSharedElementEnterTransition(new DetailsTransition());
+            track_info.setEnterTransition(new Slide());
+            setExitTransition(new Fade());
+            track_info.setSharedElementReturnTransition(new DetailsTransition());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .addSharedElement(art, art.getTransitionName())
+                    .addSharedElement(song, song.getTransitionName())
+                    .replace(R.id.Fcontent, track_info)
+                    .addToBackStack(null)
+                    .commit();
+        }else {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.Fcontent, track_info)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public class DetailsTransition extends TransitionSet {
+        public DetailsTransition() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new ChangeBounds()).
+                    addTransition(new ChangeTransform()).
+                    addTransition(new ChangeImageTransform());
+        }
+    }
     public class history_objs{
         String song,songhash,url,arturl;
 
