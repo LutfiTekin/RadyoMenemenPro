@@ -218,8 +218,8 @@ public class track_info extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
         if(getActivity()!=null) {
             //track info ekranına geçince oynatma tuşunu animasyonla göster
             final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
@@ -244,4 +244,5 @@ public class track_info extends Fragment implements View.OnClickListener{
             }
         }
     }
+
 }
