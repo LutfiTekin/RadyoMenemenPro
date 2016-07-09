@@ -62,6 +62,7 @@ public class haykir extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         m = new Menemen(getActivity().getApplicationContext());
         View haykirview = inflater.inflate(R.layout.fragment_haykir, container, false);
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_haykir)); //Toolbar title
         editText = (EditText) haykirview.findViewById(R.id.ETmesaj);
         send = (FloatingActionButton) haykirview.findViewById(R.id.mesaj_gonder_button);
         shoutRV = (RecyclerView) haykirview.findViewById(R.id.shoutRV);

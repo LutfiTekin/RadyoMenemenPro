@@ -127,6 +127,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                              Bundle savedInstanceState) {
 
         View radioview = inflater.inflate(R.layout.fragment_radio,container,false);
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
         emptyview = (CardView) radioview.findViewById(R.id.emptyview);

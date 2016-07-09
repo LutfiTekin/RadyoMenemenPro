@@ -65,6 +65,7 @@ public class track_info extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View trackview = inflater.inflate(R.layout.fragment_track_info, container, false);
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
         art = (ImageView) trackview.findViewById(R.id.art);
         track = (TextView) trackview.findViewById(R.id.track);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

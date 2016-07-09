@@ -83,6 +83,7 @@ public class olan_biten extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     View obview =  inflater.inflate(R.layout.fragment_olan_biten, container, false);
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.news)); //Toolbar title
         recyclerView = (RecyclerView) obview.findViewById(R.id.obR);
         title = (TextView) obview.findViewById(R.id.ob_title);
         content = (TextView) obview.findViewById(R.id.ob_content);

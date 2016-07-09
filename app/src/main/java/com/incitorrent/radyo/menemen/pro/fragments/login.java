@@ -96,12 +96,12 @@ public class login extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_login,container,false);
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_login)); //Toolbar title
         username = (EditText) rootview.findViewById(R.id.usernameET);
         password = (EditText) rootview.findViewById(R.id.passET);
         final Button submit = (Button) rootview.findViewById(R.id.submit);
         final Button nologin = (Button) rootview.findViewById(R.id.no_login);
         infotext = (TextView) rootview.findViewById(R.id.textView2);
-
       if(nologin!=null)  nologin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

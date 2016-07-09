@@ -69,6 +69,7 @@ public class podcast extends Fragment {
                              Bundle savedInstanceState) {
        View podcastview = inflater.inflate(R.layout.fragment_podcast, container, false);
         context = getActivity();
+        if(getActivity()!=null) getActivity().setTitle(getString(R.string.podcast)); //Toolbar title
         inf = new Menemen(context);
         final ImageView imageview = (ImageView) podcastview.findViewById(R.id.imageView);
         final TextView titlepodcast = (TextView) podcastview.findViewById(R.id.title_podcast);
