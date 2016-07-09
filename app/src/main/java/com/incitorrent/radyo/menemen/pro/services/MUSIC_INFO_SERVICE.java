@@ -248,6 +248,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notififcation_intent, PendingIntent.FLAG_CANCEL_CURRENT));
                     builder.setGroup(GROUP_KEY_CHAT);
                     builder.setGroupSummary(true);
+                    builder.setAutoCancel(true);
                     Notification summaryNotification = builder.build();
 
                     nm.notify(CHAT_NOTIFICATON, summaryNotification);
