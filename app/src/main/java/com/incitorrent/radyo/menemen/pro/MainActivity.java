@@ -134,6 +134,11 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
             }
         }
+        //Yeni mesaj Bildirimnden gelenleri chate gönder
+       if(getIntent().getAction()!=null){
+           Log.v("ACTION",getIntent().getAction());
+           if(getIntent().getAction().equals("radyo.menemen.chat")) fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+       }
 
 
         if (m.oku("logged").equals("evet") && navigationView != null) {

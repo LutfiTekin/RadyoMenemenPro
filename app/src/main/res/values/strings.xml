@@ -78,7 +78,8 @@
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
-    <string name="pref_title_new_message_notifications">Notify me when broadcast begins</string>
+    <string name="pref_title_new_message_notifications">Notify me when there is a new message on chat</string>
+    <string name="pref_title_on_air_notifications">Notify me when broadcast begins</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
@@ -199,5 +200,8 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="intro_slide_news_descr">Get notified with what happend in Radio Menemen</string>
     <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
     <string name="toast_caps_upload_cam">Hold the button if you want to select image from camera</string>
+    <string name="notifications">Notifications</string>
+    <string name="pref_summary_new_message_notifications">Warning: notifications are not instant</string>
+    <string name="notification_new_message">%d new messages</string>
 
 </resources>

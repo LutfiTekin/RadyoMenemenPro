@@ -80,6 +80,19 @@ public class Menemen {
         return oku.getString(title, "yok"); //Değer boş ise "yok"
     }
 
+
+    public void bool_kaydet(String title,Boolean content){
+        final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
+        kaydet.edit().putBoolean(title,content).apply();
+        Log.v("Kayıt", "yazılıyor " + title + " " + content);
+    }
+
+    public Boolean bool_oku(String title){
+        final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
+        Log.v("Kayıt", "okunuyor " + title);
+        return oku.getBoolean(title, false); //Değer boş ise "yok"
+    }
+
     //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
     /**
      * Returns true for spesific action only once

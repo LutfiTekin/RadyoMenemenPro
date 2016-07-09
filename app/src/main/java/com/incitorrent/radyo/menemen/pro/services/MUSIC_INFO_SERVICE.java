@@ -1,5 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,6 +12,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +22,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,10 +42,14 @@ public class MUSIC_INFO_SERVICE extends Service {
     public static final String TAG = "MUSIC_INFO_SERVICE";
     public static final  String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
     public static final String LAST_ARTWORK_URL = "lastartwork";
+    public static final String LAST_MSG = "&print_last_msg";
+    public static final String LAST_USER = "&print_last_user";
+    public static final int CHAT_NOTIFICATON = 8888;
     final Context context = this;
     Menemen inf;
     radioDB sql;
     NotificationCompat.Builder notification;
+    Intent notififcation_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcasterForUi;
     public MUSIC_INFO_SERVICE() {
@@ -56,6 +63,9 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     @Override
     public void onCreate() {
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notififcation_intent = new Intent(context, MainActivity.class);
+        notififcation_intent.setAction("radyo.menemen.chat");
         broadcasterForUi = LocalBroadcastManager.getInstance(this);
         inf = new Menemen(context);
         sql = new radioDB(context,null,null,1);
@@ -87,12 +97,13 @@ public class MUSIC_INFO_SERVICE extends Service {
             Log.v(TAG, "UpdateOnBackground");
             if (!inf.isInternetAvailable()) return null;
             BufferedReader reader = null;
+            final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
             final Boolean notify_when_onair = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
             final Boolean isPlaying = inf.oku("caliyor").equals("evet");
 
             //yayın bildirimi ayar kapalı olduğunda şarkı kontrolünü radyo çaldığı sırada yap
-            Boolean shouldcheck = isPlaying || notify_when_onair;
-            //Log.v(TAG, " Should check " + shouldcheck + " isPlaying " + isPlaying + " notify " + notify_when_onair );
+            Boolean shouldcheck = isPlaying || (notify_when_onair && notify);
+            Log.v(TAG, " Should check " + shouldcheck + " isPlaying " + isPlaying + " notifyonair " + notify_when_onair + " notify " + notify );
             if (shouldcheck) {
                 //Şarkı bilgisi kontrolü
                 try {
@@ -117,7 +128,8 @@ public class MUSIC_INFO_SERVICE extends Service {
                     Log.wtf(TAG, e.toString());
                 }
             }
-                //Son olan biteni al
+
+            //Son olan biteni al
             try {
                 String lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
                 inf.kaydet(RadyoMenemenPro.LASTOB,lastob);
@@ -167,13 +179,13 @@ public class MUSIC_INFO_SERVICE extends Service {
                             .setContentText(inf.oku(DJ) + getString(R.string.notification_onair_content))
                             .setSmallIcon(R.drawable.ic_on_air)
                             .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
+                    //Main activity yi aç
+                    notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200),notififcation_intent, PendingIntent.FLAG_CANCEL_CURRENT));
                 if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-                //Main activity yi aç
-                notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
                 if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
                     notification.setVibrate(new long[]{500, 500, 500});
                 notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
                 nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
                 inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
                 Log.v(TAG, " Notification built");
@@ -181,6 +193,70 @@ public class MUSIC_INFO_SERVICE extends Service {
                     e.printStackTrace();
                 }
             }
+
+            //Mesaj bildirimi
+            final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
+            final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
+            final Boolean is_chat_foreground = inf.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
+            Log.v(RadyoMenemenPro.IS_CHAT_FOREGROUND,"?? " + is_chat_foreground + " notify " + (notify_new_post && !music_only && notify && !is_chat_foreground));
+            if(notify_new_post && !music_only && notify && !is_chat_foreground){
+                //TODO sohbete yeni mesaj gelince bildir
+                final String GROUP_KEY_CHAT = "group_key_chat";
+
+                //Kendi mesajına bildirim gösterme
+                String local_user = inf.oku("username").trim();
+                String remote_user = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + LAST_USER).trim();
+               if(local_user.equals(remote_user))
+                    return null;
+                String line;
+                String lastmsg = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + LAST_MSG);
+                String saved_lastmsg = inf.oku("last_msg_not");
+                if(lastmsg.equals(saved_lastmsg)) return null;
+
+                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + saved_lastmsg + "&orderasc");
+                inf.kaydet("last_msg_not",lastmsg);
+                Log.v(TAG, "LINE " + line + " lastmsg" + lastmsg + " savedlast " + saved_lastmsg);
+                if(line==null) return null;
+                if(line.equals("yok")) return null;
+                try {
+                    JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
+                    JSONObject c;
+                    if(arr.getJSONArray(0).length()<1) return null;
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                    builder.setContentTitle(String.format(getString(R.string.notification_new_message), arr.getJSONArray(0).length()));
+                    builder.setSmallIcon(R.mipmap.ic_chat);
+                    NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+
+                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                        String nick,mesaj;
+                        JSONArray innerJarr = arr.getJSONArray(0);
+                        c = innerJarr.getJSONObject(i);
+                        nick = c.getString("nick");
+                        mesaj = c.getString("post");
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+                            mesaj = Html.fromHtml(mesaj, Html.FROM_HTML_MODE_LEGACY).toString();
+                        else mesaj = Html.fromHtml(mesaj).toString();
+                        //TODO stack notification
+                        style.addLine(String.format("%s: %s", nick, mesaj));
+
+                    }
+                    if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)                            builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+                    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+                        builder.setVibrate(new long[]{500, 500, 500});
+                    style.setBigContentTitle(String.format(getString(R.string.notification_new_message), arr.getJSONArray(0).length()));
+                    builder.setStyle(style);
+                    builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notififcation_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+                    builder.setGroup(GROUP_KEY_CHAT);
+                    builder.setGroupSummary(true);
+                    Notification summaryNotification = builder.build();
+
+                    nm.notify(CHAT_NOTIFICATON, summaryNotification);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+            //Mesaj bildirimi END
+
 
             return null;
         }

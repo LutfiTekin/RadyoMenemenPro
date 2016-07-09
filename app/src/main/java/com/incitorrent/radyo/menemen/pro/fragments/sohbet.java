@@ -190,7 +190,14 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     public void onResume() {
         //Analytics track
         RMPRO.getInstance().trackScreenView("Sohbet Fragment");
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
+        super.onStop();
     }
 
     @Override

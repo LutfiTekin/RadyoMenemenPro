@@ -44,7 +44,7 @@ public final class RadyoMenemenPro {
     public final static String PLAYING_PODCAST = "playingpodcast";
     public static final String IS_PODCAST = "podcastmicaliyor";
     public static final String FIRST_TIME = "f_t";
-
+    public static final String IS_CHAT_FOREGROUND = "icf";
 
     public final static class broadcastinfo{
         public final static String DJ = "dj";
