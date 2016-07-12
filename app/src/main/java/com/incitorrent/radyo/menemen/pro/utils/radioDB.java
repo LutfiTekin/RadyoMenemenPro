@@ -64,6 +64,11 @@ public class radioDB extends SQLiteOpenHelper {
         return db.query(TABLE_NAME,null,null,null,null,null,_SONGID+" DESC", String.valueOf(limit));
     }
 
+    public void deleteTrack(String songhash){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME,_SONGHASH + "=\'"+ songhash + "\'",null);
+        db.close();
+    }
 
     public static class Songs{
         public String _SONGID,_SONGNAME,_URL,_SONGHASH,_ARTURL;

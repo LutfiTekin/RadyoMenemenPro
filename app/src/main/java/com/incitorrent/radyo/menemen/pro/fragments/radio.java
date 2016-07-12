@@ -554,8 +554,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
-                            //siteyi güncelle
-                            //TODO sqlden sil
+                            sql.deleteTrack(RList.get(position).songhash);
                              RList.remove(position);
                             if(lastplayed!=null) lastplayed.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
                         }
