@@ -18,12 +18,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.text.method.BaseMovementMethod;
 import android.transition.ArcMotion;
@@ -53,6 +55,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import java.util.ArrayList;
@@ -136,6 +139,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         if(getResources().getBoolean(R.bool.landscape_mode))
             lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
         else lastplayed.setLayoutManager(new LinearLayoutManager(context));
+        itemTouchHelper.attachToRecyclerView(lastplayed); //Swipe to remove itemtouchhelper
         nowplayingbox = (LinearLayout) radioview.findViewById(R.id.nowplaying_box);
         nowplayingbox.setVisibility(View.GONE); //initialy hidden
         NPtrack = (TextView) radioview.findViewById(R.id.nowplaying_track);
@@ -528,4 +532,50 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    //RecyclerView callback methods for swipe to delete effects
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean isItemViewSwipeEnabled() {
+            return super.isItemViewSwipeEnabled();
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            final  int position = viewHolder.getAdapterPosition();
+
+                Snackbar sn = Snackbar.make(lastplayed, R.string.track_deleted,Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
+                            //siteyi güncelle
+                            //TODO sqlden sil
+                             RList.remove(position);
+                            if(lastplayed!=null) lastplayed.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
+                        }
+                        super.onDismissed(snackbar, event);
+                    }
+                });
+                sn.setAction(R.string.snackbar_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(lastplayed!=null)  lastplayed.getAdapter().notifyItemChanged(position);
+                    }
+                });
+
+                sn.show();
+
+
+            //Remove swiped item from list and notify the RecyclerView
+
+        }
+    };
+
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 }
