@@ -30,11 +30,15 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
     private Context context;
     private Menemen m;
 
+    /**
+     * Kanal değişimi durumlarında güncelleme gereksinimini
+     *ortadan kaldırmak için sürekli olara site ile iletişim kurup kanalları çeken class
+     * @param context
+     */
     public syncChannels(Context context) {
         this.context = context;
     }
-/*Kanal değişimi durumlarında güncelleme gereksinimini
- ortadan kaldırmak için sürekli olara site ile iletişim kurup kanalları çeken class*/
+
     @Override
     protected Void doInBackground(Void... params) {
         m = new Menemen(context);
