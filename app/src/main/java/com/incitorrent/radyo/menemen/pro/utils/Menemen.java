@@ -302,7 +302,7 @@ public class Menemen {
                 sb.append(line + "\n");
             }
            line = sb.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return line;
@@ -332,7 +332,7 @@ public class Menemen {
                 sb.append(line + "\n");
             }
             line = sb.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return line;
