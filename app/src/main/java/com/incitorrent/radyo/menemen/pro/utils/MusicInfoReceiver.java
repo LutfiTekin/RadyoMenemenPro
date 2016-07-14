@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro.utils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 
@@ -25,5 +26,6 @@ public class MusicInfoReceiver extends BroadcastReceiver {
 //     }
 //        Log.v(TAG,"onReceive isInternetAvailable" + m.isInternetAvailable());
         if(m.isInternetAvailable()) context.startService(new Intent(context, MUSIC_INFO_SERVICE.class));
+        if(m.isConnectedWifi()) new syncChannels(context).execute(); //Güç kablosu bağlı ve wifi açık-> senkronize et
     }
 }
