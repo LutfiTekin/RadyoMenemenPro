@@ -119,8 +119,6 @@ public class Menemen {
         try {
             ConnectivityManager nInfo = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             nInfo.getActiveNetworkInfo().isConnectedOrConnecting();
-            Log.v(TAG, "Network:"
-                    + nInfo.getActiveNetworkInfo().isConnectedOrConnecting());
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
             if (netInfo != null && netInfo.isConnectedOrConnecting()) return true;
@@ -128,6 +126,23 @@ public class Menemen {
                 Log.e(TAG, "Network yok");
                 return false;
             }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @return true if device connected to wifi
+     */
+
+    public boolean isConnectedWifi(){
+        try {
+            ConnectivityManager nInfo = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            nInfo.getActiveNetworkInfo().isConnectedOrConnecting();
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            return (netInfo!=null && netInfo.isConnected() && netInfo.getType() == ConnectivityManager.TYPE_WIFI);
         } catch (Exception e) {
             return false;
         }
