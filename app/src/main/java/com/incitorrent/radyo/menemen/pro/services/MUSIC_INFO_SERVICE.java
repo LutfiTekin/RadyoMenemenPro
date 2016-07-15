@@ -178,6 +178,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                     if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
                         notification.setVibrate(new long[]{500, 500, 500});
                     notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                    notification.setAutoCancel(true);
 
                     nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
                     inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
@@ -216,6 +217,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
                         builder.setContentTitle(String.format(getString(R.string.notification_new_message), arr.getJSONArray(0).length()));
                         builder.setSmallIcon(R.mipmap.ic_chat);
+                        builder.setAutoCancel(true);
                         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
 
                         for(int i = 0;i<arr.getJSONArray(0).length();i++){
