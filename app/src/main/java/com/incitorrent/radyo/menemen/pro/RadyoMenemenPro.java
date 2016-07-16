@@ -57,6 +57,15 @@ public final class RadyoMenemenPro {
         public final static String CALAN = "calan";
     }
 
+    public final static class AnalyticEvents{
+        public final static String LISTENING_RADIO = "listening radio";
+        public final static String LISTENING_PODCAST = "listening podcast";
+        public final static String DOWNLOADING_PODCAST = "downloading podcast";
+        public final static String SEARCH_ON_Y = "searching track on youtube";
+        public final static String SEARCH_ON_S = "searching track on spotify";
+        public final static String SEARCH_L = "searching track lyrics";
+    }
+
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
 
