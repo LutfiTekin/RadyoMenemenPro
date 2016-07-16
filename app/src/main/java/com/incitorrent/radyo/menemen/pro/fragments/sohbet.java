@@ -4,9 +4,11 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +21,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,8 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
@@ -50,8 +53,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -62,7 +63,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,6 +94,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     SatbaxSmileAdapter Smileadapter;
     SohbetAdapter SohbetAdapter;
     ScheduledThreadPoolExecutor exec;
+    BroadcastReceiver Chatreceiver;
     public sohbet() {
         // Required empty public constructor
     }
@@ -176,15 +177,31 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //SOHBETEND
         new initsohbet().execute();
-        exec = new ScheduledThreadPoolExecutor(1);
-        exec.scheduleAtFixedRate(new Runnable() {
+//        exec = new ScheduledThreadPoolExecutor(1);
+//        exec.scheduleAtFixedRate(new Runnable() {
+//            @Override
+//            public void run() {
+//                new sohbetPopulate().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            }
+//        },0,2, TimeUnit.SECONDS);
+        Chatreceiver = new BroadcastReceiver() {
             @Override
-            public void run() {
+            public void onReceive(Context context, Intent intent) {
                 new sohbetPopulate().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
-        },0,2, TimeUnit.SECONDS);
+        };
         return sohbetView;
 
+    }
+
+    @Override
+    public void onStart() {
+        if(getActivity()!=null) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
+            LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((Chatreceiver),filter);
+        }
+        super.onStart();
     }
 
     @Override
@@ -196,12 +213,13 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     @Override
     public void onStop() {
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
+        if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        exec.shutdown();
+//        exec.shutdown();
         super.onDestroyView();
     }
 

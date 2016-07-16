@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 
@@ -15,10 +16,12 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -27,11 +30,18 @@ import java.util.Random;
  * Radyo Menemen Pro Created by lutfi on 16.07.2016.
  */
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
-final Context context = FIREBASE_CM_SERVICE.this;
+    private static final String TAG = "FCM_SERVICE";
+    final Context context = RMPRO.getContext();
     private NotificationManager notificationManager;
     private final static String GROUP_KEY_CHAT = "group_key_chat";
     private final static int CHAT_NOTIFICATION =  111;
-
+    Menemen m = new Menemen(context);
+    final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
+    final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
+    final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
+    final Boolean is_chat_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
+    public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
+    LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -39,19 +49,33 @@ final Context context = FIREBASE_CM_SERVICE.this;
         String topic = remoteMessage.getFrom();
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
             //CHAT mesajı geldi
+            //notify sohbet fragment
+            broadcasterForChat.sendBroadcast(new Intent(CHAT_BROADCAST_FILTER));
+            if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
+
             String nick = getDATA(remoteMessage,"nick");
             String msg = getDATA(remoteMessage,"msg");
             Log.v("onMessageReceived", "message received"+ nick + " " + msg);
             buildNotification(nick,msg);
-            //TODO notify sohbet fragment
+
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
+            //Son olan biteni al
+            //TODO bildirim oluştur
+            String lastob = null;
+            try {
+                lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
+                m.kaydet(RadyoMenemenPro.LASTOB,lastob);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
         super.onMessageReceived(remoteMessage);
     }
 
     private void buildNotification(String nick, String mesaj) {
- 
+
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);

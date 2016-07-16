@@ -126,11 +126,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
                 }
 
-                //Son olan biteni al
 
-                String lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
-                inf.kaydet(RadyoMenemenPro.LASTOB,lastob);
-                Log.v(TAG,"LASTOB" + lastob);
 
                 //Son olan biteni al END
                 //TODO DJ cevabını kontrol et
@@ -185,14 +181,13 @@ public class MUSIC_INFO_SERVICE extends Service {
                     Log.v(TAG, " Notification built");
 
                 }
-
+                /*
                 //Mesaj bildirimi
                 final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
                 final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
                 final Boolean is_chat_foreground = inf.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
                 Log.v(RadyoMenemenPro.IS_CHAT_FOREGROUND,"?? " + is_chat_foreground + " notify " + (notify_new_post && !music_only && notify && !is_chat_foreground));
                 if(notify_new_post && !music_only && notify && !is_chat_foreground){
-                    //TODO sohbete yeni mesaj gelince bildir
                     final String GROUP_KEY_CHAT = "group_key_chat";
 
                     //Kendi mesajına bildirim gösterme
@@ -248,6 +243,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
                 }
                 //Mesaj bildirimi END
+                */
             } catch (JSONException | InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }catch (Exception e){
