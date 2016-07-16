@@ -176,7 +176,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //SOHBETEND
-
+        new initsohbet(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        exec = new ScheduledThreadPoolExecutor(1);
 //        exec.scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -214,7 +214,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
-        new initsohbet().execute();
+        new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         super.onResume();
     }
@@ -627,18 +627,23 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{
+    Boolean loadFromCache;
+
+        public initsohbet(Boolean loadFromCache) {
+            this.loadFromCache = loadFromCache;
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
             String line;
-
-            if(m.isInternetAvailable()) {
+            if(loadFromCache)
+                line = m.oku(RadyoMenemenPro.SOHBETCACHE);
+            else if(m.isInternetAvailable())
                 line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
-            }else
-            line = m.oku(RadyoMenemenPro.SOHBETCACHE);
+            else
+                line = m.oku(RadyoMenemenPro.SOHBETCACHE);
             if(line.equals("yok")) return null;
             try {
-
                 JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
                 JSONObject c;
                 for(int i = 0;i<arr.getJSONArray(0).length();i++){
@@ -651,13 +656,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                     zaman = c.getString("time");
                     sohbetList.add(new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
-                if(m.isInternetAvailable()) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
-                if(!m.isInternetAvailable()) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen",getString(R.string.toast_check_your_connection),null));
+                if(m.isInternetAvailable() && !loadFromCache) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
+                if(!m.isInternetAvailable() && !loadFromCache) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen",getString(R.string.toast_check_your_connection),null));
                 Log.v(TAG, " SOHBETLIST" + line);
             }catch (JSONException e){
                 e.printStackTrace();
             }
-
             return null;
         }
 
