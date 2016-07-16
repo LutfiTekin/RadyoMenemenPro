@@ -176,7 +176,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //SOHBETEND
-        new initsohbet().execute();
+
 //        exec = new ScheduledThreadPoolExecutor(1);
 //        exec.scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -206,6 +206,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
+        new initsohbet().execute();
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         super.onResume();
     }
@@ -288,6 +289,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     private void postToMenemen(final String mesaj) {
         new AsyncTask<Void,Void,Boolean>(){
+            @Override
+            protected void onPreExecute() {
+                sohbetList.add(0,new Sohbet_Objects("0",m.oku("username"),mesaj,getString(R.string.time_moment)));
+                super.onPreExecute();
+            }
+
             @Override
             protected Boolean doInBackground(Void... params) {
                 Map<String, String> dataToSend = new HashMap<>();
@@ -595,7 +602,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                     nick = c.getString("nick");
                     mesaj = c.getString("post");
                     zaman = c.getString("time");
-                    sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
+                   if(!sohbetList.get(0).mesaj.equals(mesaj)) sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
                 if(arr.getJSONArray(0).length()<1) return false;
                  Log.v(TAG, " SOHBETLIST" + line);
