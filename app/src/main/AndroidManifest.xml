@@ -85,8 +85,6 @@
             </intent-filter>
         </activity>
 
-
-
         <receiver
             android:name=".utils.MusicInfoReceiver"
             android:enabled="true"
@@ -98,6 +96,13 @@
         </receiver>
 
         <activity android:name=".Intro" />
+
+        <service android:name=".services.FIREBASE_CM_SERVICE">
+            <intent-filter>
+                action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
