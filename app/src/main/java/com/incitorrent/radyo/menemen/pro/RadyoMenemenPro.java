@@ -31,6 +31,7 @@ public final class RadyoMenemenPro {
     public final static String OLAN_BITEN = "http://radyomenemen.com/inc/appinfo.php?olanbiten";
     public final static String MESAJ_GONDER = "http://radyomenemen.com/inc/appinfo.php?postmessage";
     public final static String MESAJ_SIL = "http://radyomenemen.com/inc/appinfo.php?deletemessage";
+    public final static String TOKEN_ADD = "http://radyomenemen.com/inc/appinfo.php?fcm_tokenadd";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
