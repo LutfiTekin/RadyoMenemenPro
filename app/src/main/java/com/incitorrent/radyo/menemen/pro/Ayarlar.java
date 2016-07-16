@@ -122,8 +122,6 @@ public class Ayarlar extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Ayarlar");
     }
 
     /**

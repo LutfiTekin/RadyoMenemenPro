@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
@@ -186,6 +187,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     @Override
     protected void onResume() {
         fab.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main");
+        RMPRO.getInstance().getFireBase().logEvent("MainTest",bundle);
         super.onResume();
     }
 

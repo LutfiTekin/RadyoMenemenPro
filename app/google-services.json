@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "1090140394930",
-    "firebase_url": "https://radyomenemenpro.firebaseio.com",
-    "project_id": "radyomenemenpro",
-    "storage_bucket": "radyomenemenpro.appspot.com"
+    "project_number": "303355351712",
+    "firebase_url": "https://radyo-menemen-pro-f43a9.firebaseio.com",
+    "project_id": "radyo-menemen-pro-f43a9",
+    "storage_bucket": "radyo-menemen-pro-f43a9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1090140394930:android:ac1abbaa3d0858bd",
+        "mobilesdk_app_id": "1:303355351712:android:ac1abbaa3d0858bd",
         "android_client_info": {
           "package_name": "com.incitorrent.radyo.menemen.pro"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1090140394930-8qsc0plsl45cvhogmos4d92s0g5tabg3.apps.googleusercontent.com",
+          "client_id": "303355351712-apog5fqnuuqvpbvkju86eogfnrl2g6g6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbmEFDDmobFjnrNS7TXNtIdT7MFODr-ZU"
+          "current_key": "AIzaSyAEKE4PlZOdEy9mqXTLUeBsoVxRtsfDilo"
         }
       ],
       "services": {
