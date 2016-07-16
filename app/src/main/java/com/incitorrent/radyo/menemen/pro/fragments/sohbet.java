@@ -187,7 +187,15 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         Chatreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+              if(intent.getExtras()==null)
                 new sohbetPopulate().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                else {
+                  String nick = intent.getExtras().getString("nick");
+                  String mesaj = intent.getExtras().getString("msg");
+                  if(sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null) return;
+                  sohbetList.add(0,new Sohbet_Objects("0",nick,mesaj,null));
+                  sohbetRV.getAdapter().notifyDataSetChanged();
+              }
             }
         };
         return sohbetView;
