@@ -57,8 +57,7 @@ public class About extends AppCompatActivity {
             if (version != null)
                 version.setText(String.format("%s%s", getString(R.string.version), versions));//Version bilgisi yazdır
         }catch (Exception e){e.printStackTrace();}
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("About");
+
     }
 
 }

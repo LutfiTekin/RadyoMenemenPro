@@ -229,11 +229,11 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                     getString(R.string.app_share_text) + googleplaylink);
             shareIntent.setType("text/plain");
             startActivity(shareIntent);
-            RMPRO.getInstance().trackEvent("share","share","app shared");
+
         } else if (id == R.id.nav_about) {
         startActivity(new Intent(this,About.class));
         } else if(id == R.id.nav_logout){
-            RMPRO.getInstance().trackEvent("Main","logout",m.oku("username") + " logged out");
+
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.dialog_logout_title))
                     .setMessage(getString(R.string.dialog_logout_descr))

@@ -74,8 +74,6 @@ public class olan_biten extends Fragment {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null) fab.setVisibility(View.INVISIBLE);
         }
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Sohbet Fragment");
         super.onResume();
     }
 

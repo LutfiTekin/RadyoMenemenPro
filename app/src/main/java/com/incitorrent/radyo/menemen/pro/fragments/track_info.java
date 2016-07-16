@@ -173,22 +173,19 @@ public class track_info extends Fragment implements View.OnClickListener{
                 "com.spotify.music.MainActivity"));
         intent.putExtra(SearchManager.QUERY, trackName);
         this.startActivity(intent);
-        //Analytics track event
-        RMPRO.getInstance().trackEvent("radio","search on spotify",trackName);
+
     }else if(view == iv_youtube || view == tv_youtube){
         Intent intent = new Intent(Intent.ACTION_SEARCH);
         intent.setPackage("com.google.android.youtube");
         intent.putExtra(SearchManager.QUERY, trackName);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        //Analytics track event
-        RMPRO.getInstance().trackEvent("radio","search on youtube",trackName);
+
     }else if(view == iv_lyric || view == tv_lyric){
         Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
         intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
         startActivity(intent);
-        //Analytics track event
-        RMPRO.getInstance().trackEvent("radio","search lyrics",trackName);
+
     }
     }
 
@@ -215,7 +212,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                 }).start();
             }else fab.setVisibility(View.INVISIBLE);
         }
-        RMPRO.getInstance().trackScreenView("Track Info");
+
     }
 
     @Override

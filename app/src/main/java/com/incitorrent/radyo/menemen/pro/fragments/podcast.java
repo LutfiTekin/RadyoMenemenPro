@@ -142,8 +142,7 @@ public class podcast extends Fragment {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null) fab.setVisibility(View.INVISIBLE);
         }
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Podcast Fragment");
+
         super.onResume();
     }
 
@@ -270,8 +269,6 @@ public class podcast extends Fragment {
                     inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
-                    //Analytics track event
-                    RMPRO.getInstance().trackEvent("podcast","listening",RList.get(getAdapterPosition()).title);
                 }
             }
 
@@ -294,8 +291,6 @@ public class podcast extends Fragment {
                                     DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
                                     manager.enqueue(request);
                                     Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
-                                    //Analytics track event
-                                    RMPRO.getInstance().trackEvent("podcast","download",RList.get(getAdapterPosition()).title);
                                 } catch (Exception e) {
                                     Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();

@@ -44,8 +44,7 @@ public class get_image extends AppCompatActivity {
                 }
             }
         }
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Share Image");
+
         startActivity(new Intent(this,MainActivity.class));
     }
     public String getRealPathFromURI(Uri uri) {

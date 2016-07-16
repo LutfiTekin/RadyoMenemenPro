@@ -246,8 +246,7 @@ public class login extends Fragment {
 
     @Override
     public void onResume() {
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Login Fragment");
+
         super.onResume();
     }
 

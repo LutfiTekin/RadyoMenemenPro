@@ -204,8 +204,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         m.runExitAnimation(nowplayingbox, 500);
                 }
                 setNP();
-                //Analytics track event
-                RMPRO.getInstance().trackEvent("radio","listening",NPtrack.getText().toString());
+
             }
         };
 
@@ -268,8 +267,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Radio Fragment");
+
         super.onResume();
     }
 
@@ -283,8 +281,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 intent.putExtra(SearchManager.QUERY, track);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                //Analytics track event
-                RMPRO.getInstance().trackEvent("radio","search on youtube",track);
             }else if(v == NPspotify){
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
@@ -293,14 +289,10 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         "com.spotify.music.MainActivity"));
                 intent.putExtra(SearchManager.QUERY, track);
                 this.startActivity(intent);
-                //Analytics track event
-                RMPRO.getInstance().trackEvent("radio","search on spotify",track);
             }else if(v == NPlyric){
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 intent.putExtra(SearchManager.QUERY, track + " " + getString(R.string.lyrics)); // query contains search string
                 startActivity(intent);
-                //Analytics track event
-                RMPRO.getInstance().trackEvent("radio","search lyrics",track);
             }else if(v == NPart || v == NPtrack){
                 String title = m.oku(CALAN);
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)

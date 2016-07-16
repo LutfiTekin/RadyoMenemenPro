@@ -137,8 +137,7 @@ public class haykir extends Fragment implements View.OnClickListener {
 
     @Override
     public void onResume() {
-        //Analytics track
-        RMPRO.getInstance().trackScreenView("Sohbet Fragment");
+
         super.onResume();
     }
 
