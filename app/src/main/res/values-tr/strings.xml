@@ -133,4 +133,6 @@
     <string name="pref_summary_new_message_notifications">Uyarı: bildirimler anlık değildir.</string>
     <string name="notification_new_message">%d yeni mesaj</string>
     <string name="track_deleted">Şarkı listeden silindi</string>
+    <string name="notification_new_msg">Yeni Mesajlar Var</string>
+    <string name="notification_new_messages_text">Sohbette yeni mesajlar var</string>
 </resources>

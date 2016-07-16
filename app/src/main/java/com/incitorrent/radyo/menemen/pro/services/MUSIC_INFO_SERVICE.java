@@ -49,7 +49,7 @@ public class MUSIC_INFO_SERVICE extends Service {
     Menemen inf;
     radioDB sql;
     NotificationCompat.Builder notification;
-    Intent notififcation_intent;
+    Intent notification_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcasterForUi;
     public MUSIC_INFO_SERVICE() {
@@ -64,8 +64,8 @@ public class MUSIC_INFO_SERVICE extends Service {
     @Override
     public void onCreate() {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notififcation_intent = new Intent(context, MainActivity.class);
-        notififcation_intent.setAction("radyo.menemen.chat");
+        notification_intent = new Intent(context, MainActivity.class);
+        notification_intent.setAction("radyo.menemen.chat");
         broadcasterForUi = LocalBroadcastManager.getInstance(this);
         inf = new Menemen(context);
         sql = new radioDB(context,null,null,1);
@@ -173,7 +173,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                                 .setSmallIcon(R.drawable.ic_on_air)
                                 .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
                         //Main activity yi aç
-                        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200),notififcation_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+                        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
                     if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
                     if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
                         notification.setVibrate(new long[]{500, 500, 500});
@@ -238,7 +238,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                             builder.setVibrate(new long[]{500, 500, 500});
                         style.setBigContentTitle(String.format(getString(R.string.notification_new_message), arr.getJSONArray(0).length()));
                         builder.setStyle(style);
-                        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notififcation_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+                        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
                         builder.setGroup(GROUP_KEY_CHAT);
                         builder.setGroupSummary(true);
                         builder.setAutoCancel(true);

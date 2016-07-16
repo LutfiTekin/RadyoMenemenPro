@@ -204,5 +204,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="pref_summary_new_message_notifications">Warning: notifications are not instant</string>
     <string name="notification_new_message">%d new messages</string>
     <string name="track_deleted">Track deleted from the list</string>
+    <string name="notification_new_msg">There are new messages</string>
+    <string name="notification_new_messages_text">New messages in chat.</string>
 
 </resources>
