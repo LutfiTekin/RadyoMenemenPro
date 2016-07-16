@@ -332,6 +332,7 @@ public class Menemen {
                 sb.append(line + "\n");
             }
             line = sb.toString();
+            Log.v("POSTMENEMENDATA",line);
         } catch (Exception e) {
             e.printStackTrace();
         }
