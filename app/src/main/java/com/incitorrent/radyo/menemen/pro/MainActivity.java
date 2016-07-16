@@ -187,9 +187,6 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     @Override
     protected void onResume() {
         fab.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main");
-        RMPRO.getInstance().getFireBase().logEvent("MainTest",bundle);
         super.onResume();
     }
 
