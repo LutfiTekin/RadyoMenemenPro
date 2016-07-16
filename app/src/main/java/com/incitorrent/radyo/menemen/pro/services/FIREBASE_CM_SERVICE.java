@@ -12,7 +12,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.v("onMessageReceived", remoteMessage.getData().get("msg"));
+        String msg = remoteMessage.getData().get("msg");
+        String destination = remoteMessage.getTo();
+        Log.v("onMessageReceived", "message received"+ msg + " " + destination);
         super.onMessageReceived(remoteMessage);
     }
 }

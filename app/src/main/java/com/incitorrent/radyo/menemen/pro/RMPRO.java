@@ -3,8 +3,12 @@ package com.incitorrent.radyo.menemen.pro;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
 
 /**
@@ -31,7 +35,8 @@ public class RMPRO extends Application {
         mInstance = this;
         RMPRO.context = getApplicationContext();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
+        FirebaseMessaging.getInstance().subscribeToTopic("general");
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
     }
 
     public static Context getContext(){
