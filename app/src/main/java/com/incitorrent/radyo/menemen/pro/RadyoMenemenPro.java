@@ -66,6 +66,12 @@ public final class RadyoMenemenPro {
         public final static String SEARCH_L = "searching track lyrics";
     }
 
+    public final static class FCMTopics{
+        public final static String TOPIC = "/topics/";
+        public final static String GENERAL = TOPIC + "general";
+        public final static String NEWS = TOPIC + "news";
+    }
+
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
 
