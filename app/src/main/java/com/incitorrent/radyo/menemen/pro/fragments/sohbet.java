@@ -634,6 +634,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }
 
         @Override
+        protected void onPreExecute() {
+            sohbetList = new ArrayList<>();
+            super.onPreExecute();
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
             String line;
             if(loadFromCache)
