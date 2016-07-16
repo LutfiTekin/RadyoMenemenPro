@@ -289,11 +289,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     private void postToMenemen(final String mesaj) {
         new AsyncTask<Void,Void,Boolean>(){
-            @Override
-            protected void onPreExecute() {
-                sohbetList.add(0,new Sohbet_Objects("0",m.oku("username"),mesaj,getString(R.string.time_moment)));
-                super.onPreExecute();
-            }
 
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -602,7 +597,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                     nick = c.getString("nick");
                     mesaj = c.getString("post");
                     zaman = c.getString("time");
-                   if(!sohbetList.get(0).mesaj.equals(mesaj)) sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
+                  sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
                 }
                 if(arr.getJSONArray(0).length()<1) return false;
                  Log.v(TAG, " SOHBETLIST" + line);
