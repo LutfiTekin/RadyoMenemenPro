@@ -50,12 +50,14 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
             //CHAT mesajı geldi
             //notify sohbet fragment
-            broadcasterForChat.sendBroadcast(new Intent(CHAT_BROADCAST_FILTER));
-            if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
-
+            Intent chat = new Intent(CHAT_BROADCAST_FILTER);
             String nick = getDATA(remoteMessage,"nick");
             String msg = getDATA(remoteMessage,"msg");
+            chat.putExtra("nick",nick);
+            chat.putExtra("msg",msg);
+            broadcasterForChat.sendBroadcast(chat);
             Log.v("onMessageReceived", "message received"+ nick + " " + msg);
+            if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
             buildNotification(nick,msg);
 
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
