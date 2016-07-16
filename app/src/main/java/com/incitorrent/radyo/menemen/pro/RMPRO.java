@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 
 /**
  * Radyo Menemen Pro Created by lutfi on 19.06.2016.
@@ -15,7 +17,7 @@ public class RMPRO extends Application {
             .getSimpleName();
 
     private static RMPRO mInstance;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -28,6 +30,8 @@ public class RMPRO extends Application {
         super.onCreate();
         mInstance = this;
         RMPRO.context = getApplicationContext();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
     }
 
     public static Context getContext(){
@@ -38,11 +42,7 @@ public class RMPRO extends Application {
         return mInstance;
     }
 
-
-
-
-
-
-
-
+    public FirebaseAnalytics getFireBase() {
+        return mFirebaseAnalytics;
+    }
 }
