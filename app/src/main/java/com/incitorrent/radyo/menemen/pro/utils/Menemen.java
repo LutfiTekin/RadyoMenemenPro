@@ -33,6 +33,7 @@ import android.view.animation.PathInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
@@ -54,6 +55,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -434,6 +436,15 @@ public class Menemen {
             view.setTextColor(context.getColor(R.color.colorAccent));
         else view.setTextColor(context.getResources().getColor(R.color.colorAccent));
         view.setText(badge);
+    }
+
+    public void setToken() {
+        final String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String, String> dataToSend = new HashMap<>();
+        dataToSend.put("nick", oku("username"));
+        dataToSend.put("token", token);
+        String encodedStr = getEncodedData(dataToSend);
+        Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
     }
 
 }

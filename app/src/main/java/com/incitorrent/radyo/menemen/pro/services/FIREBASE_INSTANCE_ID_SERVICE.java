@@ -18,12 +18,7 @@ public class FIREBASE_INSTANCE_ID_SERVICE extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-        final String token = FirebaseInstanceId.getInstance().getToken();
-        Map<String, String> dataToSend = new HashMap<>();
-        dataToSend.put("nick", m.oku("username"));
-        dataToSend.put("token", token);
-        String encodedStr = Menemen.getEncodedData(dataToSend);
-        Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
+       m.setToken();
         super.onTokenRefresh();
     }
 }

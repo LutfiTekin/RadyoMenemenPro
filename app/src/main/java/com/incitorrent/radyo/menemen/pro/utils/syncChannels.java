@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
@@ -55,10 +56,12 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
             m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
             m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
             m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-
+            if(m.isFirstTime("tokenset")) m.setToken();
         } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+
 }
