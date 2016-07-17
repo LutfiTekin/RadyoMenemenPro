@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -95,6 +97,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     SohbetAdapter SohbetAdapter;
     ScheduledThreadPoolExecutor exec;
     BroadcastReceiver Chatreceiver;
+    SwipeRefreshLayout swipeRV;
     public sohbet() {
         // Required empty public constructor
     }
@@ -176,6 +179,17 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //SOHBETEND
+        //SWIPETOREFRESH
+        swipeRV = (SwipeRefreshLayout) sohbetView.findViewById(R.id.swipeRV);
+        swipeRV.setColorSchemeColors(Color.RED,Color.MAGENTA,Color.BLUE,Color.CYAN);
+        swipeRV.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
+        //SWIPETOREFRESHEND
+
         new initsohbet(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        exec = new ScheduledThreadPoolExecutor(1);
 //        exec.scheduleAtFixedRate(new Runnable() {
@@ -675,6 +689,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         protected void onPostExecute(Void aVoid) {
             if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
             sohbetRV.setAdapter(SohbetAdapter);
+            if(swipeRV != null) swipeRV.setRefreshing(false);
             super.onPostExecute(aVoid);
         }
     }
