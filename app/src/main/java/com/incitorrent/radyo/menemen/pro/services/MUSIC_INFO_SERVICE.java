@@ -99,10 +99,10 @@ public class MUSIC_INFO_SERVICE extends Service {
             final Boolean isPlaying = inf.oku("caliyor").equals("evet");
 
             //yayın bildirimi ayar kapalı olduğunda şarkı kontrolünü radyo çaldığı sırada yap
-            Boolean shouldcheck = isPlaying || (notify_when_onair && notify);
-            Log.v(TAG, " Should check " + shouldcheck + " isPlaying " + isPlaying + " notifyonair " + notify_when_onair + " notify " + notify );
+//            Boolean shouldcheck = isPlaying || (notify_when_onair && notify);
+//            Log.v(TAG, " Should check " + shouldcheck + " isPlaying " + isPlaying + " notifyonair " + notify_when_onair + " notify " + notify );
             try {
-                if (shouldcheck) {
+                if (isPlaying) {
                     //Şarkı bilgisi kontrolü
 
                         String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
@@ -115,7 +115,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                         String download = "no url";//artık indirme yok
                         String artwork = c.getString(ARTWORK);
                         inf.kaydet(LAST_ARTWORK_URL, artwork);
-                        if (isPlaying && !inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
+                        if (!inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
                             sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
                             inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
                             notifyNP();
@@ -157,27 +157,27 @@ public class MUSIC_INFO_SERVICE extends Service {
 //            }
                 //yayın başlayınca bildirim at
                 //Bildirim ayarı açık mı? , Yayında Oto Dj mi var ?, Radyo zaten çalmıyor mu?
-                Boolean isOnair = notify_when_onair && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !isPlaying;
-                if (isOnair) {
-                    notification = new NotificationCompat.Builder(context);
-
-                        notification.setContentTitle(getString(R.string.notification_onair_title))
-                                .setContentText(inf.oku(DJ) + getString(R.string.notification_onair_content))
-                                .setSmallIcon(R.drawable.ic_on_air)
-                                .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
-                        //Main activity yi aç
-                        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
-                    if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-                    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
-                        notification.setVibrate(new long[]{500, 500, 500});
-                    notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                    notification.setAutoCancel(true);
-
-                    nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
-                    inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
-                    Log.v(TAG, " Notification built");
-
-                }
+//                Boolean isOnair = notify_when_onair && !inf.oku("dj").equals(RadyoMenemenPro.OTO_DJ) && !inf.oku("dj").equals("yok") && !inf.oku(RadyoMenemenPro.SAVED_DJ).equals(inf.oku("dj")) && !isPlaying;
+//                if (isOnair) {
+//                    notification = new NotificationCompat.Builder(context);
+//
+//                        notification.setContentTitle(getString(R.string.notification_onair_title))
+//                                .setContentText(inf.oku(DJ) + getString(R.string.notification_onair_content))
+//                                .setSmallIcon(R.drawable.ic_on_air)
+//                                .setLargeIcon(Glide.with(MUSIC_INFO_SERVICE.this).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
+//                        //Main activity yi aç
+//                        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+//                    if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+//                    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+//                        notification.setVibrate(new long[]{500, 500, 500});
+//                    notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+//                    notification.setAutoCancel(true);
+//
+//                    nm.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
+//                    inf.kaydet(RadyoMenemenPro.SAVED_DJ, inf.oku("dj")); //önceki djyi kaydet
+//                    Log.v(TAG, " Notification built");
+//
+//                }
                 /*
                 //Mesaj bildirimi
                 final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
@@ -241,9 +241,11 @@ public class MUSIC_INFO_SERVICE extends Service {
                 }
                 //Mesaj bildirimi END
                 */
-            } catch (JSONException | InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }catch (Exception e){
+            }
+//            catch (JSONException | InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//            }
+            catch (Exception e){
                 Log.v(TAG,"ERROR" + e.toString());
             }
 
