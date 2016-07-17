@@ -38,6 +38,7 @@ public class RMPRO extends Application {
         FirebaseMessaging.getInstance().subscribeToTopic("general");
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         FirebaseMessaging.getInstance().subscribeToTopic("sync");
+        FirebaseMessaging.getInstance().subscribeToTopic("onair");
     }
 
     public static Context getContext(){
