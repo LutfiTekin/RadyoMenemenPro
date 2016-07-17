@@ -132,7 +132,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                }
                 Log.v(TAG, "COMPLETED TASK COUNT " + exec.getCompletedTaskCount());
             }
-        },1,RadyoMenemenPro.MUSIC_SERVICE_INFO_INTERVAL/2, TimeUnit.SECONDS);
+        },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /2, TimeUnit.SECONDS);
 
         super.onCreate();
     }

@@ -24,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -101,7 +100,7 @@ public class haykir extends Fragment implements View.OnClickListener {
             public void run() {
                 new initShout().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
-        },0,RadyoMenemenPro.MUSIC_SERVICE_INFO_INTERVAL/4, TimeUnit.SECONDS);
+        },0,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /4, TimeUnit.SECONDS);
         return haykirview;
     }
 

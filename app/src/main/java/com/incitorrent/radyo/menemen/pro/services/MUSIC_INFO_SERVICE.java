@@ -1,6 +1,5 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,7 +11,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +20,6 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,7 +72,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                 Log.v(TAG,"Update");
                     new UpdateOnBackground().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
-        }, 0, RadyoMenemenPro.MUSIC_SERVICE_INFO_INTERVAL, TimeUnit.SECONDS); // execute every ** seconds
+        }, 0, RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL, TimeUnit.SECONDS); // execute every ** seconds
         super.onCreate();
     }
 
