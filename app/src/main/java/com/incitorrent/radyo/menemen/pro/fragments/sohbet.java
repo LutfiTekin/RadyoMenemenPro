@@ -229,7 +229,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
-        new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new initsohbet(false).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         super.onResume();
     }
