@@ -79,6 +79,7 @@ public class MUSIC_INFO_SERVICE extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
         Log.v(TAG, "ID: " +startId);
+        new UpdateOnBackground().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return START_NOT_STICKY;
     }
 
