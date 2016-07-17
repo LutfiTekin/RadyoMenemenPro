@@ -83,12 +83,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
-
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-                mesaj = Html.fromHtml(mesaj, Html.FROM_HTML_MODE_LEGACY).toString();
-            else mesaj = Html.fromHtml(mesaj).toString();
-
            builder.setContentTitle(nick).setContentText(mesaj);
 
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
