@@ -79,7 +79,7 @@ public class MUSIC_INFO_SERVICE extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
         Log.v(TAG, "ID: " +startId);
-        new UpdateOnBackground().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new UpdateNow().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return START_NOT_STICKY;
     }
 
@@ -246,6 +246,47 @@ public class MUSIC_INFO_SERVICE extends Service {
 //            catch (JSONException | InterruptedException | ExecutionException e) {
 //                e.printStackTrace();
 //            }
+            catch (Exception e){
+                Log.v(TAG,"ERROR" + e.toString());
+            }
+
+
+            return null;
+        }
+    }
+
+
+    public class UpdateNow extends AsyncTask<String,String,String>{
+        @Override
+        protected String doInBackground(String... params) {
+            Log.v(TAG, "UpdateNOW");
+            if (!inf.isInternetAvailable()) return null;
+            BufferedReader reader = null;
+            final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
+            final Boolean notify_when_onair = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
+            final Boolean isPlaying = inf.oku("caliyor").equals("evet");
+            try {
+
+                //Şarkı bilgisi kontrolü
+
+                String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
+                Log.v(TAG, line);
+                JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
+                String calan = c.getString(CALAN);
+                inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
+                inf.kaydet(DJ, c.getString(DJ));
+                String songid = c.getString("songid");
+                String download = "no url";//artık indirme yok
+                String artwork = c.getString(ARTWORK);
+                inf.kaydet(LAST_ARTWORK_URL, artwork);
+                if (!inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
+                    sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
+                    inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
+                    notifyNP();
+                }
+
+            }
+
             catch (Exception e){
                 Log.v(TAG,"ERROR" + e.toString());
             }
