@@ -135,4 +135,5 @@
     <string name="track_deleted">Şarkı listeden silindi</string>
     <string name="notification_new_msg">Yeni Mesajlar Var</string>
     <string name="notification_new_messages_text">Sohbette yeni mesajlar var</string>
+    <string name="save">Kaydet</string>
 </resources>
