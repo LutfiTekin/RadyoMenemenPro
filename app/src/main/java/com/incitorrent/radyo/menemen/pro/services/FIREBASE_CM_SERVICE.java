@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -25,6 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
 
 /**
  * Radyo Menemen Pro Created by lutfi on 16.07.2016.
@@ -40,11 +44,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
     final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
     final Boolean is_chat_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
+    final Boolean notify_when_on_air = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
+    Intent  notification_intent = new Intent(context, MainActivity.class);
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notification_intent.setAction("radyo.menemen.chat");
 //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
@@ -73,9 +81,36 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
+        }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
+            //Onair bildirimi
+          if(notify && notify_when_on_air){
+              onAir(remoteMessage);
+          }
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void onAir(RemoteMessage rm) {
+        String dj = getDATA(rm,DJ);
+        NotificationCompat.Builder notification;
+        notification = new NotificationCompat.Builder(context);
+        notification.setContentTitle(getString(R.string.notification_onair_title))
+                .setContentText(dj + getString(R.string.notification_onair_content))
+                .setSmallIcon(R.drawable.ic_on_air);
+        try {
+            notification.setLargeIcon(Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //Main activity yi aç
+        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+            notification.setVibrate(new long[]{500, 500, 500});
+        notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        notification.setAutoCancel(true);
+        notificationManager.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
+        Log.v(TAG, " Notification built");
     }
 
     private void buildNotification(String nick, String mesaj) {
@@ -91,9 +126,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
             builder.setVibrate(new long[]{500, 500, 500});
-
-        Intent  notification_intent = new Intent(context, MainActivity.class);
-        notification_intent.setAction("radyo.menemen.chat");
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
 
