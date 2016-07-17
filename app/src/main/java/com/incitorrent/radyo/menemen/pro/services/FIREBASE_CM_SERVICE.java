@@ -53,10 +53,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             Intent chat = new Intent(CHAT_BROADCAST_FILTER);
             String nick = getDATA(remoteMessage,"nick");
             String msg = getDATA(remoteMessage,"msg");
+            String msgid = getDATA(remoteMessage,"msgid");
             chat.putExtra("nick",nick);
             chat.putExtra("msg",msg);
+            chat.putExtra("msgid",msgid);
             broadcasterForChat.sendBroadcast(chat);
-            Log.v("onMessageReceived", "message received"+ nick + " " + msg);
+            Log.v("onMessageReceived", "message received"+ nick + " " + msg + " " + msgid);
             if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
             buildNotification(nick,msg);
 
