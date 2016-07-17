@@ -76,9 +76,7 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="http" />
                 <data android:host="radyomenemen.com" />
             </intent-filter>
@@ -101,12 +99,20 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".services.FIREBASE_INSTANCE_ID_SERVICE">
+        <service android:name=".services.FIREBASE_INSTANCE_ID_SERVICE">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".show_image">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:host="caps.radyomenemen.com" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
