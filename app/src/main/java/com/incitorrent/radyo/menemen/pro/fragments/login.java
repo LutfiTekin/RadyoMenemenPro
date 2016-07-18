@@ -21,9 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -93,7 +91,7 @@ public class login extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_login,container,false);
@@ -165,8 +163,8 @@ public class login extends Fragment {
                                 Toast.makeText(getActivity(), getString(R.string.toast_signed_up), Toast.LENGTH_SHORT).show();
                             //TODO sohbeti aç
                             if(!s.equals("problem"))
-                                getFragmentManager().beginTransaction().replace(R.id.Fcontent,new sohbet()).commit();
-                                getActivity().recreate();
+                                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+                            getActivity().recreate();
                              }
                         super.onPostExecute(s);
                     }
@@ -220,9 +218,7 @@ public class login extends Fragment {
                                         case "password": toastmsg = getString(R.string.toast_error_password_incorrect); break;
                                         default: toastmsg = getString(R.string.error_occured) + " " + e.getMessage(); break;
                                     }
-
                                     Toast.makeText(getActivity(), toastmsg, Toast.LENGTH_LONG).show();
-
                                 }
                             });
 
