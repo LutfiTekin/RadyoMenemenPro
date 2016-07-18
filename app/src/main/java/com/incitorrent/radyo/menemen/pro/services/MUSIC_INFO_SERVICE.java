@@ -275,16 +275,9 @@ public class MUSIC_INFO_SERVICE extends Service {
                 String calan = c.getString(CALAN);
                 inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
                 inf.kaydet(DJ, c.getString(DJ));
-                String songid = c.getString("songid");
-                String download = "no url";//artık indirme yok
                 String artwork = c.getString(ARTWORK);
                 inf.kaydet(LAST_ARTWORK_URL, artwork);
-                if (!inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
-                    sql.addtoHistory(new radioDB.Songs(songid, null, calan, download,artwork)); // Şarkıyı kaydet
-                    inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
                     notifyNP();
-                }
-
             }
 
             catch (Exception e){
