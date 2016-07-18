@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -206,6 +207,9 @@ public class login extends Fragment {
                                 m.kaydet("logged", "evet");
                                 if(aksiyon.equals("giris")) return "loggedin";
                                 else if(aksiyon.equals("kayit")) return "signedup";
+                                //SEND FCM TOKEN
+                                FirebaseInstanceId.getInstance().deleteInstanceId();
+                                m.setToken();
                                 return "ok";
                             }else throw  new Exception(durum);
 

@@ -56,7 +56,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
             m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
             m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
             m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-            if(m.isFirstTime("tokenset")) m.setToken();
+            if(m.oku("logged").equals("evet") && m.isFirstTime("tokenset")) m.setToken();
         } catch (final Exception e) {
             e.printStackTrace();
         }
