@@ -167,7 +167,6 @@ public class login extends Fragment {
                             if(!s.equals("problem"))
                                 getFragmentManager().beginTransaction().replace(R.id.Fcontent,new sohbet()).commit();
                                 getActivity().recreate();
-//                                startActivity(new Intent(getActivity(), MainActivity.class));
                              }
                         super.onPostExecute(s);
                     }
@@ -205,11 +204,9 @@ public class login extends Fragment {
                                 m.kaydet("username",nick);
                                 m.kaydet("mkey",J.getString("mkey"));
                                 m.kaydet("logged", "evet");
+                                m.setToken();
                                 if(aksiyon.equals("giris")) return "loggedin";
                                 else if(aksiyon.equals("kayit")) return "signedup";
-                                //SEND FCM TOKEN
-                                FirebaseInstanceId.getInstance().deleteInstanceId();
-                                m.setToken();
                                 return "ok";
                             }else throw  new Exception(durum);
 

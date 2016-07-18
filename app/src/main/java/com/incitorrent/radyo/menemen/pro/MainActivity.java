@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
@@ -241,11 +242,25 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            //REFRESH FCM TOKEN
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        FirebaseInstanceId.getInstance().deleteInstanceId();
+                                        FirebaseInstanceId.getInstance().getToken();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                            //DELETE username and key
                             m.kaydet("username","yok");
                             m.kaydet("mkey","yok");
                             m.kaydet("logged", "yok");
                             m.kaydet(RadyoMenemenPro.HAYKIRCACHE,"yok");
                             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
+                            //REOPEN Activity
                             fragmentManager.beginTransaction().replace(R.id.Fcontent,new login()).commit();
                             MainActivity.this.recreate();
                         }

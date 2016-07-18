@@ -657,6 +657,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         @Override
         protected Void doInBackground(Void... params) {
             String line;
+            if(loadFromCache == null) return null;
             if(loadFromCache)
                 line = m.oku(RadyoMenemenPro.SOHBETCACHE);
             else if(m.isInternetAvailable())

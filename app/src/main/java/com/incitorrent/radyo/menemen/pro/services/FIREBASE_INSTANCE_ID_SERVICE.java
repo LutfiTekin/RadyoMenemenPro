@@ -18,7 +18,7 @@ public class FIREBASE_INSTANCE_ID_SERVICE extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-       m.setToken();
+      if(m.oku("logged").equals("evet")) m.setToken();
         super.onTokenRefresh();
     }
 }

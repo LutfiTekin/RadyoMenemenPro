@@ -438,7 +438,7 @@ public class Menemen {
     }
 
     public void setToken() {
-        final String token = FirebaseInstanceId.getInstance().getToken();
+        String token = FirebaseInstanceId.getInstance().getToken();
         Map<String, String> dataToSend = new HashMap<>();
         dataToSend.put("nick", oku("username"));
         dataToSend.put("token", token);
