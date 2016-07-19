@@ -1,11 +1,9 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -13,23 +11,20 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
-import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.ARTWORK;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
 
 /**
  * Created by lutfi on 22.05.2016.
@@ -49,11 +44,13 @@ public class MUSIC_INFO_SERVICE extends Service {
     Intent notification_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcasterForUi;
+    ScheduledThreadPoolExecutor exec;
     public MUSIC_INFO_SERVICE() {
     }
 
     @Override
     public void onDestroy() {
+        exec.shutdown();
         Log.v(TAG,"Destroy called");
         super.onDestroy();
     }
@@ -66,7 +63,8 @@ public class MUSIC_INFO_SERVICE extends Service {
         broadcasterForUi = LocalBroadcastManager.getInstance(this);
         inf = new Menemen(context);
         sql = new radioDB(context,null,null,1);
-        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+        exec = new ScheduledThreadPoolExecutor(1);
         exec.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 Log.v(TAG,"Update");

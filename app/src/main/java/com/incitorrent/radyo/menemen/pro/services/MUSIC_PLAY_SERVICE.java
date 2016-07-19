@@ -187,7 +187,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String dataSource =null;
         isPodcast = m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
-        if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
             Log.v(TAG,"STOP");
@@ -195,6 +194,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
             return START_NOT_STICKY;
         }
         if(!m.oku("caliyor").equals("evet")){
+            //MUSIC_INFO_SERVICE başlat
+            if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
            if(dataSource!=null)  play(dataSource);
             else resume(true);
             Log.v(TAG,"DATA SOURCE " +dataSource);
