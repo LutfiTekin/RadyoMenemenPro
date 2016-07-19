@@ -33,7 +33,8 @@ import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
 
 
 public class MUSIC_PLAY_SERVICE extends Service {
@@ -186,6 +187,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String dataSource =null;
         isPodcast = m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
+        if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
             Log.v(TAG,"STOP");
@@ -285,6 +287,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             mediaSessionCompat.release();
             exec.shutdown();
             unregisterReceiver(PlugReceiver);
+            stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
         } catch (Exception e) {
             Log.v(TAG, "onDestroy "+ e.toString());
         }

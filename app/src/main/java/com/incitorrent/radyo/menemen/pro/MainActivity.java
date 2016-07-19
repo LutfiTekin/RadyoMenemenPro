@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         if(m.isFirstTime("intro")) startActivity(new Intent(this, Intro.class));
 
         fragmentManager = getFragmentManager();
-              
+
         //Radyo durumunu buton ile senkronize tut
         receiver = new BroadcastReceiver() {
             @Override
