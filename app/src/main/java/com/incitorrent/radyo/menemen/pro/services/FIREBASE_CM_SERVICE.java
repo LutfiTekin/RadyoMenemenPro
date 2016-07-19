@@ -43,6 +43,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
     final Boolean is_chat_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
     final Boolean notify_when_on_air = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
+    final Boolean notify_new_podcast = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_podcast", true);
+    final Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true);
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
@@ -77,8 +79,33 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
           if(notify && notify_when_on_air){
               onAir(remoteMessage);
           }
+        }else if(topic.equals(RadyoMenemenPro.FCMTopics.PODCAST)){
+          if(notify && notify_new_podcast)  notify_new_podcast(remoteMessage);
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void notify_new_podcast(RemoteMessage rm) {
+        final String podcast_message = getDATA(rm,"podcast_msg");
+        NotificationCompat.Builder notification;
+        notification = new NotificationCompat.Builder(context);
+        notification.setContentTitle(getString(R.string.notification_title_new_podcast))
+                .setContentText(podcast_message)
+                .setSmallIcon(R.drawable.ic_on_air);
+        try {
+            notification.setLargeIcon(Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //Main activity yi aç
+        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+        if (vibrate)
+            notification.setVibrate(new long[]{500, 1000, 500});
+        notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        notification.setAutoCancel(true);
+        notificationManager.notify(RadyoMenemenPro.PODCAST_NOTIFICATION, notification.build());
+        Log.v(TAG, " Notification built");
     }
 
     private void updateNews() {
@@ -107,7 +134,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         //Main activity yi aç
         notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+        if (vibrate)
             notification.setVibrate(new long[]{500, 500, 500});
         notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notification.setAutoCancel(true);
@@ -126,7 +153,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
             builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true))
+        if (vibrate)
             builder.setVibrate(new long[]{500, 500, 500});
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
