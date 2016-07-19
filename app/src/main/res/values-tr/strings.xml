@@ -136,6 +136,6 @@
     <string name="notification_new_msg">Yeni Mesajlar Var</string>
     <string name="notification_new_messages_text">Sohbette yeni mesajlar var</string>
     <string name="save">Kaydet</string>
-    <string name="pref_title_podcast_notifications">Yeni podcast Geldiğinde bildir</string>
+    <string name="pref_title_podcast_notifications">Yeni podcast geldiğinde bildir</string>
     <string name="notification_title_new_podcast">Yeni Podcast</string>
 </resources>
