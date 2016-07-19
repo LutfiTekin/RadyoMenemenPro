@@ -73,6 +73,7 @@ public final class RadyoMenemenPro {
         public final static String NEWS = TOPIC + "news";
         public final static String SYNC = TOPIC + "sync";
         public final static String ONAIR = TOPIC + "onair";
+        public final static String PODCAST = TOPIC + "podcast";
     }
 
     public final static String OTO_DJ = "Oto Dj";
