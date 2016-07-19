@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +20,6 @@ import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,15 +70,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
-            //Son olan biteni al
             //TODO bildirim oluştur
-            String lastob = null;
-            try {
-                lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
-                m.kaydet(RadyoMenemenPro.LASTOB,lastob);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            updateNews();
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
             //Onair bildirimi
           if(notify && notify_when_on_air){
@@ -88,6 +79,17 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
           }
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void updateNews() {
+        //Son olan biteni al
+        String lastob = null;
+        try {
+            lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
+            m.kaydet(RadyoMenemenPro.LASTOB,lastob);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void onAir(RemoteMessage rm) {
