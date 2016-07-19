@@ -27,7 +27,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
@@ -35,7 +34,6 @@ import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
-import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
@@ -61,8 +59,7 @@ public class MainActivity extends AppCompatActivity
         if(m.isFirstTime("intro")) startActivity(new Intent(this, Intro.class));
 
         fragmentManager = getFragmentManager();
-        //Music info servisini başlat
-        startService(new Intent(MainActivity.this,MUSIC_INFO_SERVICE.class));
+              
         //Radyo durumunu buton ile senkronize tut
         receiver = new BroadcastReceiver() {
             @Override
