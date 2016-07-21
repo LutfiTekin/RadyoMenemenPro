@@ -36,6 +36,9 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
  */
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
+    private static final String ADD = "add";
+    private static final String DELETE = "delete";
+
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -74,18 +77,27 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification_intent.setAction("radyo.menemen.chat");
 //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
+        Intent chat = new Intent(CHAT_BROADCAST_FILTER);
+        String msgid = getDATA(remoteMessage,"msgid");
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
+            String action = getDATA(remoteMessage, "action");
+            if(action.equals(DELETE)){
+                sql.deleteMSG(msgid);
+                chat.putExtra("action",DELETE);
+                chat.putExtra("msgid",msgid);
+                broadcasterForChat.sendBroadcast(chat);
+                return;
+            }
             //CHAT mesajı geldi
             //notify sohbet fragment
-            Intent chat = new Intent(CHAT_BROADCAST_FILTER);
             String nick = getDATA(remoteMessage,"nick");
             String msg = getDATA(remoteMessage,"msg");
-            String msgid = getDATA(remoteMessage,"msgid");
             String time = getDATA(remoteMessage, "time");
             chat.putExtra("nick",nick);
             chat.putExtra("msg",msg);
             chat.putExtra("msgid",msgid);
             chat.putExtra("time",time);
+            chat.putExtra("action",ADD);
             broadcasterForChat.sendBroadcast(chat);
             //add to db
             sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
