@@ -138,4 +138,7 @@
     <string name="save">Kaydet</string>
     <string name="pref_title_podcast_notifications">Yeni podcast geldiğinde bildir</string>
     <string name="notification_title_new_podcast">Yeni Podcast</string>
+    <string name="pref_title2_new_message_notifications">Sohbet Bildirimleri</string>
+    <string name="pref_title2_on_air_notifications">Yayın Bildirimleri</string>
+    <string name="pref_title2_podcast_notifications">Podcast Bildirimleri</string>
 </resources>

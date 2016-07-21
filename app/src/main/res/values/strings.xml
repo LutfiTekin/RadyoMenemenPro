@@ -209,5 +209,8 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="save">Save</string>
     <string name="pref_title_podcast_notifications">Notify me when new podcast uploaded</string>
     <string name="notification_title_new_podcast">New Podcast</string>
+    <string name="pref_title2_new_message_notifications">Chat Notifications</string>
+    <string name="pref_title2_on_air_notifications">On Air Notifications</string>
+    <string name="pref_title2_podcast_notifications">Podcast Notifications</string>
 
 </resources>

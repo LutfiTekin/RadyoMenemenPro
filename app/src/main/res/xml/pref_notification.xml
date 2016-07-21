@@ -9,7 +9,8 @@
         android:defaultValue="true"
         android:dependency="notifications"
         android:key="notifications_chat"
-        android:title="@string/pref_title_new_message_notifications"   />
+        android:title="@string/pref_title2_new_message_notifications"
+        android:summary="@string/pref_title_new_message_notifications"   />
         <!--android:summary="@string/pref_summary_new_message_notifications"-->
 
 
@@ -17,13 +18,15 @@
         android:defaultValue="true"
         android:dependency="notifications"
         android:key="notifications_on_air"
-        android:title="@string/pref_title_on_air_notifications" />
+        android:title="@string/pref_title2_on_air_notifications"
+        android:summary="@string/pref_title_on_air_notifications" />
 
     <SwitchPreference
         android:defaultValue="false"
         android:dependency="notifications"
         android:key="notifications_podcast"
-        android:title="@string/pref_title_podcast_notifications" />
+        android:title="@string/pref_title2_podcast_notifications"
+        android:summary="@string/pref_title_podcast_notifications" />
 
     <!-- Allows the user to choose a ringtone in the 'notification' category. -->
     <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
