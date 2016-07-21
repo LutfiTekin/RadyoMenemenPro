@@ -138,6 +138,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
         m = new Menemen(getActivity().getApplicationContext());
+        sql = new chatDB(getActivity().getApplicationContext(),null,null,1);
         resimekle = (ImageView) sohbetView.findViewById(R.id.resim_ekle);
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
         mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
