@@ -133,11 +133,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
             }
         }
-        //Yeni mesaj Bildirimnden gelenleri chate gönder
-       if(getIntent().getAction()!=null){
-           Log.v("ACTION",getIntent().getAction());
-           if(getIntent().getAction().equals("radyo.menemen.chat")) fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
-       }
+
 
 
         if (m.oku("logged").equals("evet") && navigationView != null) {
@@ -148,7 +144,22 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     }
 
 
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        //Yeni mesaj Bildirimnden gelenleri chate gönder
+        if(intent!=null){
+            Log.v("ACTION",getIntent().getAction());
+            if(intent.getAction().equals("radyo.menemen.chat"))
+                fragmentManager.beginTransaction()
+                        .replace(R.id.Fcontent, new sohbet()).commit();
+            else if(intent.getAction().equals("radyo.menemen.podcast"))
+                fragmentManager.beginTransaction()
+                        .replace(R.id.Fcontent, new podcast()).commit();
+            else fragmentManager.beginTransaction()
+                        .replace(R.id.Fcontent, new radio()).commit();
+        }
+        super.onNewIntent(intent);
+    }
 
     @Override
     protected void onStart() {
