@@ -233,7 +233,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
-        new initsohbet().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         super.onResume();
@@ -667,7 +666,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                 time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
-                sohbetList.add(0,new Sohbet_Objects(id,nick,post,time));
+                sohbetList.add(new Sohbet_Objects(id,nick,post,time));
                 cursor.moveToNext();
             }
             cursor.close();
