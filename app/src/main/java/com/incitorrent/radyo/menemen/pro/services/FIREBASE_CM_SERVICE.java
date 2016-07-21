@@ -21,6 +21,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +54,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
-
+    chatDB sql;
     @SuppressLint("ServiceCast")
     @Override
     public void onCreate() {
@@ -62,6 +63,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         inbox = new NotificationCompat.InboxStyle();
         inbox.setSummaryText(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
+        sql = new chatDB(context,null,null,1);
         Log.v(TAG,"onCreate");
         super.onCreate();
     }
@@ -79,14 +81,17 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             String nick = getDATA(remoteMessage,"nick");
             String msg = getDATA(remoteMessage,"msg");
             String msgid = getDATA(remoteMessage,"msgid");
+            String time = getDATA(remoteMessage, "time");
             chat.putExtra("nick",nick);
             chat.putExtra("msg",msg);
             chat.putExtra("msgid",msgid);
+            chat.putExtra("time",time);
             broadcasterForChat.sendBroadcast(chat);
+            //add to db
+            sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
             Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid);
             if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
             buildNotification(nick,msg);
-
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
             //TODO bildirim oluştur
