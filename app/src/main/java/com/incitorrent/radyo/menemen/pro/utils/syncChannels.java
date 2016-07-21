@@ -2,26 +2,13 @@ package com.incitorrent.radyo.menemen.pro.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by lutfi on 20.05.2016.
@@ -57,10 +44,37 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
             m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
             m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
             if(m.oku("logged").equals("evet") && m.isFirstTime("tokenset")) m.setToken();
+            if(m.isFirstTime("loadmessages")) loadMSGs();
         } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Sitedeki son 20 mesajı yükle
+     */
+    private void loadMSGs() {
+       chatDB sql = new chatDB(context,null,null,1);
+       String line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
+        try {
+            JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
+            JSONObject c;
+            for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                String id,nick,mesaj,zaman;
+                JSONArray innerJarr = arr.getJSONArray(0);
+                c = innerJarr.getJSONObject(i);
+                id = c.getString("id");
+                nick = c.getString("nick");
+                mesaj = c.getString("post");
+                zaman = c.getString("time");
+                //db ye ekle
+              sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+            }
+        }catch (JSONException e){
+            m.resetFirstTime("loadmessages");
+            e.printStackTrace();
+        }
     }
 
 

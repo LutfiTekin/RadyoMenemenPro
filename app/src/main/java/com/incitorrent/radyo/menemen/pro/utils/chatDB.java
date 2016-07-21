@@ -39,7 +39,7 @@ public class chatDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
-    
+
     public void addtoHistory(CHAT chat){
         Log.v("ADD TO HISTORY",chat.get_NICK());
         ContentValues values = new ContentValues();

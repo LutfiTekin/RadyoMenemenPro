@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -24,13 +23,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BaseInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.view.animation.PathInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -109,6 +106,15 @@ public class Menemen {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Resets first time action to true
+     * @param action
+     */
+    public void resetFirstTime(String action){
+        final SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.FIRST_TIME, Context.MODE_PRIVATE);
+    sharedPreferences.edit().putBoolean(action,true).apply();
     }
 
 
