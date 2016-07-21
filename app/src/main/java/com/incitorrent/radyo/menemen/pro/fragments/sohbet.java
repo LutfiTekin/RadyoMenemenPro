@@ -203,7 +203,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             @Override
             public void onReceive(Context context, Intent intent) {
               if(intent.getExtras()==null)
-                new sohbetPopulate().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 else {
                   String id = intent.getExtras().getString("msgid");
                   String nick = intent.getExtras().getString("nick");
@@ -592,56 +592,56 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }
     }
 
-    class sohbetPopulate extends AsyncTask<Void,Void,Boolean>{
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            String line;
-            String lastmsg;
-
-            if(m.isInternetAvailable()) {
-                if(sohbetList.size()<1) return false;
-                if(sohbetList.get(0).id.equals(Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR+ "&print_last_msg")))
-                    return false;
-                else lastmsg = sohbetList.get(0).id;
-                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + lastmsg);
-                if(line==null) return false;
-                if(line.equals(m.oku(RadyoMenemenPro.SOHBETCACHE))) return false;
-            }
-                else line = m.oku(RadyoMenemenPro.SOHBETCACHE);
-            if(line.equals("yok")) return null;
-            try {
-
-                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-                JSONObject c;
-                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                    String id,nick,mesaj,zaman;
-                  JSONArray innerJarr = arr.getJSONArray(0);
-                    c = innerJarr.getJSONObject(i);
-                    id = c.getString("id");
-                    nick = c.getString("nick");
-                    mesaj = c.getString("post");
-                    zaman = c.getString("time");
-                  sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
-                }
-                if(arr.getJSONArray(0).length()<1) return false;
-                 Log.v(TAG, " SOHBETLIST" + line);
-            }catch (JSONException e){
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean ok) {
-            if(!ok) return;
-       if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
-         if(sohbetRV.getAdapter()!=null)   sohbetRV.getAdapter().notifyDataSetChanged();
-            super.onPostExecute(true);
-        }
-    }
+//    class sohbetPopulate extends AsyncTask<Void,Void,Boolean>{
+//
+//        @Override
+//        protected Boolean doInBackground(Void... params) {
+//            String line;
+//            String lastmsg;
+//
+//            if(m.isInternetAvailable()) {
+//                if(sohbetList.size()<1) return false;
+//                if(sohbetList.get(0).id.equals(Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR+ "&print_last_msg")))
+//                    return false;
+//                else lastmsg = sohbetList.get(0).id;
+//                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + lastmsg);
+//                if(line==null) return false;
+//                if(line.equals(m.oku(RadyoMenemenPro.SOHBETCACHE))) return false;
+//            }
+//                else line = m.oku(RadyoMenemenPro.SOHBETCACHE);
+//            if(line.equals("yok")) return null;
+//            try {
+//
+//                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
+//                JSONObject c;
+//                for(int i = 0;i<arr.getJSONArray(0).length();i++){
+//                    String id,nick,mesaj,zaman;
+//                  JSONArray innerJarr = arr.getJSONArray(0);
+//                    c = innerJarr.getJSONObject(i);
+//                    id = c.getString("id");
+//                    nick = c.getString("nick");
+//                    mesaj = c.getString("post");
+//                    zaman = c.getString("time");
+//                  sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
+//                }
+//                if(arr.getJSONArray(0).length()<1) return false;
+//                 Log.v(TAG, " SOHBETLIST" + line);
+//            }catch (JSONException e){
+//                e.printStackTrace();
+//                return false;
+//            }
+//
+//            return true;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean ok) {
+//            if(!ok) return;
+//       if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
+//         if(sohbetRV.getAdapter()!=null)   sohbetRV.getAdapter().notifyDataSetChanged();
+//            super.onPostExecute(true);
+//        }
+//    }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{
     Boolean loadFromCache;
