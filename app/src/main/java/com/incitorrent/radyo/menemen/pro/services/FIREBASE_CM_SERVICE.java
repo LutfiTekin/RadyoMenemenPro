@@ -89,7 +89,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             broadcasterForChat.sendBroadcast(chat);
             //add to db
             sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
-            Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid);
+            Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
             if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
             buildNotification(nick,msg);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
