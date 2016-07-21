@@ -157,6 +157,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void buildNotification(String nick, String mesaj) {
+        Boolean isUser = nick.equals(m.oku("username")); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
@@ -180,9 +181,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
                 .setGroupSummary(true);
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null && !isUser)
             SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (vibrate)
+        if (vibrate && !isUser)
             SUM_Notification.setVibrate(new long[]{500, 500, 500});
         Notification summary = SUM_Notification.build();
         notificationManager.notify(CHAT_NOTIFICATION + 1,summary);
