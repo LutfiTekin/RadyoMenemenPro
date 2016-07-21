@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -48,6 +49,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 
 import org.json.JSONException;
@@ -98,6 +100,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     ScheduledThreadPoolExecutor exec;
     BroadcastReceiver Chatreceiver;
     SwipeRefreshLayout swipeRV;
+    chatDB sql;
     public sohbet() {
         // Required empty public constructor
     }
@@ -654,14 +657,26 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         @Override
         protected Void doInBackground(Void... params) {
             //Getfrom db
-
+            Cursor cursor = sql.getHistory(20);
+            if(cursor == null) return null;
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                String id,nick,post,time;
+                id = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
+                nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
+                sohbetList.add(0,new Sohbet_Objects(id,nick,post,time));
+                cursor.moveToNext();
+            }
+            cursor.close();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
-            sohbetRV.setAdapter(SohbetAdapter);
+            if(SohbetAdapter!=null) sohbetRV.setAdapter(SohbetAdapter);
             if(swipeRV != null) swipeRV.setRefreshing(false);
             super.onPostExecute(aVoid);
         }

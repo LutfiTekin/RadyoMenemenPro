@@ -41,7 +41,7 @@ public class chatDB extends SQLiteOpenHelper {
     }
 
     public void addtoHistory(CHAT chat){
-        Log.v("ADD TO HISTORY",chat.get_NICK());
+        Log.v(DATABASE_NAME,chat.get_NICK() + " " + chat._POST);
         ContentValues values = new ContentValues();
         values.put(_MSGID, chat.get_MSGID());
         values.put(_NICK, chat.get_NICK());
