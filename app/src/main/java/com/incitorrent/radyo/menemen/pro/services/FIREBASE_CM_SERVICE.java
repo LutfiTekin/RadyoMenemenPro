@@ -73,13 +73,13 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         notification_intent.setAction("radyo.menemen.chat");
 //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
         Intent chat = new Intent(CHAT_BROADCAST_FILTER);
         String msgid = getDATA(remoteMessage,"msgid");
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
+            if(!m.oku("logged").equals("evet")) return;
             String action = getDATA(remoteMessage, "action");
             if(action.equals(DELETE)){
                 sql.deleteMSG(msgid);
