@@ -29,7 +29,7 @@ public class chatDB extends SQLiteOpenHelper {
                 _MSGID + " INTEGER PRIMARY KEY," +
                 _NICK + " TEXT, " +
                 _POST + " TEXT, " +
-                _TIME + " TEXT, " +
+                _TIME + " TEXT " +
                 ");";
         db.execSQL(query);
     }
