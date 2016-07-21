@@ -146,19 +146,35 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
     @Override
     protected void onNewIntent(Intent intent) {
-        //Yeni mesaj Bildirimnden gelenleri chate gönder
-        if(intent!=null){
-            Log.v("ACTION",getIntent().getAction());
-            if(intent.getAction().equals("radyo.menemen.chat"))
-                fragmentManager.beginTransaction()
-                        .replace(R.id.Fcontent, new sohbet()).commit();
-            else if(intent.getAction().equals("radyo.menemen.podcast"))
-                fragmentManager.beginTransaction()
-                        .replace(R.id.Fcontent, new podcast()).commit();
-            else fragmentManager.beginTransaction()
-                        .replace(R.id.Fcontent, new radio()).commit();
-        }
         super.onNewIntent(intent);
+        //Bildirimden gelen aksiyonları doğru fragmente yolla
+        if(intent!=null){
+           String action = intent.getAction();
+            if(action == null) {
+                fragmentManager.beginTransaction()
+                        .replace(R.id.Fcontent, new radio()).commit();
+                return;
+            }
+            Log.v("ACTION",action);
+            try {
+                switch (action) {
+                    case "radyo.menemen.chat":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new sohbet()).commit();
+                        break;
+                    case "radyo.menemen.podcast":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new podcast()).commit();
+                        break;
+                    default:
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new radio()).commit();
+                        break;
+                }
+            } catch (Exception e) {
+                Log.v("ACTION",e.toString());
+            }
+        }
     }
 
     @Override
