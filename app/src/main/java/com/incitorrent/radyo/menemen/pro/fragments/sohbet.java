@@ -193,8 +193,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             }
         });
         //SWIPETOREFRESHEND
-
-        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        exec = new ScheduledThreadPoolExecutor(1);
 //        exec.scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -248,6 +246,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
+        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         super.onResume();
