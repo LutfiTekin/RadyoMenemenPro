@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -37,9 +38,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
+    private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.InboxStyle inbox;
     private final static String GROUP_KEY_CHAT = "group_key_chat";
-    private final static int CHAT_NOTIFICATION =  111;
+    public final static int GROUP_CHAT_NOTIFICATION =  111;
     Menemen m = new Menemen(context);
     final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
     final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
@@ -56,6 +58,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     @Override
     public void onCreate() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManagerCompat = NotificationManagerCompat.from(context);
         inbox = new NotificationCompat.InboxStyle();
         inbox.setSummaryText(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
@@ -186,7 +189,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         if (vibrate && !isUser)
             SUM_Notification.setVibrate(new long[]{500, 500, 500});
         Notification summary = SUM_Notification.build();
-        notificationManager.notify(CHAT_NOTIFICATION + 1,summary);
+        notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
+//        notificationManager.notify(GROUP_CHAT_NOTIFICATION,summary);
     }
 
     private String getDATA(RemoteMessage rm,String data) {
