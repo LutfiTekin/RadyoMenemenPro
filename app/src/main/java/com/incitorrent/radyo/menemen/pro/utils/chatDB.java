@@ -63,9 +63,13 @@ public class chatDB extends SQLiteOpenHelper {
     }
 
     public void deleteMSG(String msgid){
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_NAME,_MSGID + "=\'"+ msgid + "\'",null);
-        db.close();
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            db.delete(TABLE_NAME,_MSGID + "=\'"+ msgid + "\'",null);
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static class CHAT {

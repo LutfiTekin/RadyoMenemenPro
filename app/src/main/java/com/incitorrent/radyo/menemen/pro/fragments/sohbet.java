@@ -205,15 +205,30 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         Chatreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-              if(intent.getExtras()==null)
+                Bundle bundle = intent.getExtras();
+              if(bundle==null)
                 new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 else {
-                  String id = intent.getExtras().getString("msgid");
-                  String nick = intent.getExtras().getString("nick");
-                  String mesaj = intent.getExtras().getString("msg");
-                  if(sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null) return;
-                  sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,null));
-                  sohbetRV.getAdapter().notifyDataSetChanged();
+                  String action = bundle.getString("action");
+                  if(action==null) return;
+                  String id = bundle.getString("msgid");
+                  if(action.equals(FIREBASE_CM_SERVICE.ADD)) {
+                      String nick = bundle.getString("nick");
+                      String mesaj = bundle.getString("msg");
+                      if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
+                          return;
+                      sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                      sohbetRV.getAdapter().notifyDataSetChanged();
+                  }else if(action.equals(FIREBASE_CM_SERVICE.DELETE)){
+                      sql.deleteMSG(id);
+                      for(int i=0;i<sohbetList.size();i++) {
+                          if (sohbetList.get(i).id.equals(id)) {
+                              Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
+                              sohbetList.remove(i);
+                              sohbetRV.getAdapter().notifyItemRemoved(i);
+                          }
+                      }
+                  }
               }
             }
         };

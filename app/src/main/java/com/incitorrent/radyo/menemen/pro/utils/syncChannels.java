@@ -70,6 +70,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
                 zaman = c.getString("time");
                 //db ye ekle
               sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+                Log.v(TAG,"add to history " + id + " " + nick);
             }
         }catch (JSONException e){
             m.resetFirstTime("loadmessages");

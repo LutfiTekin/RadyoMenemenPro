@@ -36,8 +36,8 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
  */
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
-    private static final String ADD = "add";
-    private static final String DELETE = "delete";
+    public static final String ADD = "add";
+    public static final String DELETE = "delete";
 
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
