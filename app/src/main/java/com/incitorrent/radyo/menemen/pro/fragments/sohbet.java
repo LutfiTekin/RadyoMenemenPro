@@ -65,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -436,7 +437,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
         @Override
         public void onBindViewHolder(PersonViewHolder personViewHolder, final int i) {
-    personViewHolder.nick.setText(sohbetList.get(i).nick);
+    personViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),Html.FROM_HTML_MODE_LEGACY,new Html.ImageGetter() {
                             @Override
