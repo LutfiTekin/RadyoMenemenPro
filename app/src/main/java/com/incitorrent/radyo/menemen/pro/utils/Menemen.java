@@ -261,33 +261,37 @@ public class Menemen {
     }
 
     public String getElapsed(String Sdate){
-        if(Sdate==null) return context.getString(R.string.time_moment);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date _date = null;
         try {
-            _date = df.parse(Sdate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date _now = new Date(System.currentTimeMillis());
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(_date);
+            if(Sdate==null) return context.getString(R.string.time_moment);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date _date = null;
+            try {
+                _date = df.parse(Sdate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Date _now = new Date(System.currentTimeMillis());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(_date);
 //        cal.add(Calendar.HOUR_OF_DAY, 3);
-        _date = cal.getTime();
-        long diff = _now.getTime() - _date.getTime();
-        int diffMinutes = (int)diff / (60 * 1000);
-        String mesaj = "";
-        if(diffMinutes < 60 && diffMinutes>1)
-            mesaj = String.valueOf(diffMinutes) + context.getString(R.string.time_mins) + " " + context.getString(R.string.time_ago);
-        else if(60 <= diffMinutes && diffMinutes < 60*24)
-            mesaj = String.valueOf(diffMinutes / 60) + context.getString(R.string.time_hrs) + " " + context.getString(R.string.time_ago);
-        else if(60*24 <= diffMinutes && diffMinutes < 30*60*24)
-            mesaj = String.valueOf(diffMinutes / (60 * 24)) + context.getString(R.string.time_days) + " " + context.getString(R.string.time_ago);
-        else if(diffMinutes<1)
-            mesaj = context.getString(R.string.time_moment); //Az önce
-        else
-            mesaj = context.getString(R.string.time_moments); //Biraz önce (Belli değil)
-        return mesaj;
+            _date = cal.getTime();
+            long diff = _now.getTime() - _date.getTime();
+            int diffMinutes = (int)diff / (60 * 1000);
+            String mesaj = "";
+            if(diffMinutes < 60 && diffMinutes>1)
+                mesaj = String.valueOf(diffMinutes) + context.getString(R.string.time_mins) + " " + context.getString(R.string.time_ago);
+            else if(60 <= diffMinutes && diffMinutes < 60*24)
+                mesaj = String.valueOf(diffMinutes / 60) + context.getString(R.string.time_hrs) + " " + context.getString(R.string.time_ago);
+            else if(60*24 <= diffMinutes && diffMinutes < 30*60*24)
+                mesaj = String.valueOf(diffMinutes / (60 * 24)) + context.getString(R.string.time_days) + " " + context.getString(R.string.time_ago);
+            else if(diffMinutes<1)
+                mesaj = context.getString(R.string.time_moment); //Az önce
+            else
+                mesaj = context.getString(R.string.time_moments); //Biraz önce (Belli değil)
+            return mesaj;
+        } catch (Exception e) {
+            return context.getString(R.string.time_moments); //Biraz önce (Belli değil)
+        }
     }
     //site kullanılan smileylerın BBcode karşılıkları
     public static String getIncitorrentSmileys(String post){
