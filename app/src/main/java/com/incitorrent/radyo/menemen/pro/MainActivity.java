@@ -109,8 +109,10 @@ public class MainActivity extends AppCompatActivity
 
             final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                     findItem(R.id.nav_olanbiten));
-           if(!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB)))
-            m.setBadge(badge,getString(R.string.fresh));
+           if(!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB))) {
+               m.setBadge(badge, getString(R.string.fresh)); //Olan bitende yeni ibaresini göster
+               m.kaydet(RadyoMenemenPro.SAVEDOB,m.oku(RadyoMenemenPro.LASTOB));//Yeni gelen veriyi kaydet
+           }
         }
 
 Log.v(TAG,"FRA"+ " "+ m.oku("logged"));

@@ -127,6 +127,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     private void updateNews() {
         //Son olan biteni al
+        Log.v("updateNews","updated");
         String lastob = null;
         try {
             lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
