@@ -703,8 +703,10 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
                     if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
-                        //siteyi güncelle
                         try {
+                            //dbden sil
+                            sql.deleteMSG(sohbetList.get(position).id);
+                            //siteyi güncelle
                             if(getActivity()!=null)  new deletePost(getActivity().getApplicationContext(),sohbetList.get(position).id).execute();
                             sohbetList.remove(position);
                             if(sohbetRV!=null) sohbetRV.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
