@@ -50,7 +50,6 @@ import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -186,12 +185,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         swipeRV.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
         //SWIPETOREFRESHEND
 
-        new initsohbet(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        exec = new ScheduledThreadPoolExecutor(1);
 //        exec.scheduleAtFixedRate(new Runnable() {
 //            @Override
@@ -203,7 +202,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             @Override
             public void onReceive(Context context, Intent intent) {
               if(intent.getExtras()==null)
-                new initsohbet(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 else {
                   String id = intent.getExtras().getString("msgid");
                   String nick = intent.getExtras().getString("nick");
@@ -230,7 +229,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
-        new initsohbet(false).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        new initsohbet().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         super.onResume();
@@ -644,11 +643,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 //    }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{
-    Boolean loadFromCache;
 
-        public initsohbet(Boolean loadFromCache) {
-            this.loadFromCache = loadFromCache;
-        }
 
         @Override
         protected void onPreExecute() {
@@ -658,34 +653,8 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
         @Override
         protected Void doInBackground(Void... params) {
-            String line;
-            if(loadFromCache == null) return null;
-            if(loadFromCache)
-                line = m.oku(RadyoMenemenPro.SOHBETCACHE);
-            else if(m.isInternetAvailable())
-                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
-            else
-                line = m.oku(RadyoMenemenPro.SOHBETCACHE);
-            if(line.equals("yok")) return null;
-            try {
-                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-                JSONObject c;
-                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                    String id,nick,mesaj,zaman;
-                    JSONArray innerJarr = arr.getJSONArray(0);
-                    c = innerJarr.getJSONObject(i);
-                    id = c.getString("id");
-                    nick = c.getString("nick");
-                    mesaj = c.getString("post");
-                    zaman = c.getString("time");
-                    sohbetList.add(new Sohbet_Objects(id,nick,mesaj,zaman));
-                }
-                if(m.isInternetAvailable() && !loadFromCache) m.kaydet(RadyoMenemenPro.SOHBETCACHE,line);
-                if(!m.isInternetAvailable() && !loadFromCache) sohbetList.add(0,new Sohbet_Objects("0","Radyo Menemen",getString(R.string.toast_check_your_connection),null));
-                Log.v(TAG, " SOHBETLIST" + line);
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
+            //Getfrom db
+
             return null;
         }
 
