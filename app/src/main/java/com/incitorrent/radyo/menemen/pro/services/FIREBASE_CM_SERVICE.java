@@ -1,5 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,7 +35,9 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
     final Context context = RMPRO.getContext();
+    private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
+    private NotificationCompat.InboxStyle inbox;
     private final static String GROUP_KEY_CHAT = "group_key_chat";
     private final static int CHAT_NOTIFICATION =  111;
     Menemen m = new Menemen(context);
@@ -49,9 +52,20 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
 
+    @SuppressLint("ServiceCast")
+    @Override
+    public void onCreate() {
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        inbox = new NotificationCompat.InboxStyle();
+        inbox.setSummaryText(getString(R.string.notification_new_messages_text));
+        SUM_Notification = new NotificationCompat.Builder(context);
+        Log.v(TAG,"onCreate");
+        super.onCreate();
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
         notification_intent.setAction("radyo.menemen.chat");
 //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
@@ -66,7 +80,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             chat.putExtra("msg",msg);
             chat.putExtra("msgid",msgid);
             broadcasterForChat.sendBroadcast(chat);
-            Log.v("onMessageReceived", "message received"+ nick + " " + msg + " " + msgid);
+            Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid);
             if (!notify || !notify_new_post || is_chat_foreground || music_only) return; //Create notification condition
             buildNotification(nick,msg);
 
@@ -132,7 +146,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             e.printStackTrace();
         }
         //Main activity yi aç
-        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
             notification.setVibrate(new long[]{500, 500, 500});
@@ -143,34 +157,31 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void buildNotification(String nick, String mesaj) {
-
-
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
+        inbox.addLine(String.format("%s: %s", nick, mesaj));
            builder.setContentTitle(nick).setContentText(mesaj);
-
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
             builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
             builder.setVibrate(new long[]{500, 500, 500});
-        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
+        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
-
         builder.setAutoCancel(true);
         Notification notification = builder.build();
        notificationManager.notify(new Random().nextInt(200), notification);
-        Notification summary = new NotificationCompat.Builder(this)
+        //add lines to inbox
+        SUM_Notification
                 .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setContentTitle(getString(R.string.notification_new_msg))
-                .setContentText(getString(R.string.notification_new_messages_text))
                 .setSmallIcon(R.mipmap.ic_chat)
+                .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
-                .setGroupSummary(true)
-                .build();
-        notificationManager.notify(CHAT_NOTIFICATION,summary);
+                .setGroupSummary(true);
+        Notification summary = SUM_Notification.build();
+        notificationManager.notify(CHAT_NOTIFICATION + 1,summary);
     }
 
     private String getDATA(RemoteMessage rm,String data) {

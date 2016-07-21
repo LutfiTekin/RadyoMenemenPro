@@ -1,37 +1,29 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -39,13 +31,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
-import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.util.concurrent.ExecutionException;
 
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.*;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.ART;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.CALAN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -165,28 +156,31 @@ public class track_info extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         final String trackName = track.getText().toString();
-    if(view == iv_spotify || view == tv_spotify){
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
-        intent.setComponent(new ComponentName(
-                "com.spotify.music",
-                "com.spotify.music.MainActivity"));
-        intent.putExtra(SearchManager.QUERY, trackName);
-        this.startActivity(intent);
+        try {
+            if(view == iv_spotify || view == tv_spotify){
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
+                intent.setComponent(new ComponentName(
+                        "com.spotify.music",
+                        "com.spotify.music.MainActivity"));
+                intent.putExtra(SearchManager.QUERY, trackName);
+                this.startActivity(intent);
 
-    }else if(view == iv_youtube || view == tv_youtube){
-        Intent intent = new Intent(Intent.ACTION_SEARCH);
-        intent.setPackage("com.google.android.youtube");
-        intent.putExtra(SearchManager.QUERY, trackName);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+            }else if(view == iv_youtube || view == tv_youtube){
+                Intent intent = new Intent(Intent.ACTION_SEARCH);
+                intent.setPackage("com.google.android.youtube");
+                intent.putExtra(SearchManager.QUERY, trackName);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
-    }else if(view == iv_lyric || view == tv_lyric){
-        Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-        intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
-        startActivity(intent);
-
-    }
+            }else if(view == iv_lyric || view == tv_lyric){
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -9,6 +9,13 @@ public class Browsable extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this,MainActivity.class));
+        Intent main = new Intent(this,MainActivity.class);
+
+        if(getIntent().getData()!=null){
+            if(getIntent().getData().toString().contains("podcast"))
+                main.setAction("radyo.menemen.podcast");
+        }
+        startActivity(main);
+
     }
 }
