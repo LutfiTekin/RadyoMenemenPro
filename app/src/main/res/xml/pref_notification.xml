@@ -6,7 +6,7 @@
         android:title="@string/notifications" />
 
     <SwitchPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:dependency="notifications"
         android:key="notifications_chat"
         android:title="@string/pref_title_new_message_notifications"   />
@@ -20,7 +20,7 @@
         android:title="@string/pref_title_on_air_notifications" />
 
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:dependency="notifications"
         android:key="notifications_podcast"
         android:title="@string/pref_title_podcast_notifications" />

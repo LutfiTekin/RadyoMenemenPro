@@ -48,7 +48,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public final static int GROUP_CHAT_NOTIFICATION =  111;
     Menemen m = new Menemen(context);
     final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
-    final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", false);
+    final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", true);
     final Boolean music_only = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("music_only",false);
     final Boolean is_chat_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND);
     final Boolean notify_when_on_air = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
