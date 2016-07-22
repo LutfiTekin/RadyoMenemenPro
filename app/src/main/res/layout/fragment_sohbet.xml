@@ -16,14 +16,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
         >
-        <ImageView
-            android:id="@+id/resim_ekle"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="Send Button"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:layout_marginLeft="16dp" />
+
         <EditText
             android:id="@+id/ETmesaj"
             android:layout_width="0dp"
@@ -40,7 +33,8 @@
             android:minLines="2"
 
             android:textColorHint="#eeeeee"
-            android:textColor="#f5f5f5" />
+            android:textColor="#f5f5f5"
+            android:layout_marginLeft="16dp" />
         <ImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/smile_goster_button"
@@ -79,4 +73,13 @@
         android:id="@+id/sohbetRV" />
 </android.support.v4.widget.SwipeRefreshLayout>
   </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resim_ekle"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="16dp"
+        app:backgroundTint="#3d5afe"
+        android:src="@drawable/ic_upload_orange" />
 </FrameLayout>

@@ -90,7 +90,8 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     private String mParam1;
     private String mParam2;
     private EditText mesaj;
-    private ImageView smilegoster,resimekle;
+    private ImageView smilegoster;
+    FloatingActionButton resimekle;
     private RecyclerView smileRV,sohbetRV;
     private FloatingActionButton mesaj_gonder;
     Menemen m;
@@ -140,7 +141,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
         m = new Menemen(getActivity().getApplicationContext());
         sql = new chatDB(getActivity().getApplicationContext(),null,null,1);
-        resimekle = (ImageView) sohbetView.findViewById(R.id.resim_ekle);
+        resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
         mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
         mesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
