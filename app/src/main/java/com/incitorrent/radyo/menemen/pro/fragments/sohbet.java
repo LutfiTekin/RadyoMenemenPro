@@ -250,6 +250,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
+        if(sohbetList != null) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
         super.onResume();
     }
 
