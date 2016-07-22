@@ -205,7 +205,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                 inbox.addLine(String.format("%s: %s", user, post));
-                Log.v(TAG, "inbox addline" + String.format("%s: %s", user, Menemen.fromHtmlCompat(mesaj)));
                 cursor.moveToNext();
             }
             cursor.close();
