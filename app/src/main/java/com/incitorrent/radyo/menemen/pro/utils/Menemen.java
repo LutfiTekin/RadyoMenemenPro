@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.text.Html;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -454,6 +455,13 @@ public class Menemen {
         dataToSend.put("token", token);
         String encodedStr = getEncodedData(dataToSend);
         Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
+    }
+
+    public static String fromHtmlCompat(String title){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
+            return Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+        else
+            return Html.fromHtml(title).toString();
     }
 
 }
