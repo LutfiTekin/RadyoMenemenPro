@@ -42,7 +42,6 @@ public final class RadyoMenemenPro {
     public final static String SAVEDOB = "kayitliolabiten";
     public final static String LASTOB = "sonolabiten";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
-    public final static String SAVED_DJ = "saveddj";
     public final static String PLAYING_PODCAST = "playingpodcast";
     public static final String IS_PODCAST = "podcastmicaliyor";
     public static final String FIRST_TIME = "f_t";
