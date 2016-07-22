@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -182,8 +183,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
-        inbox.addLine(String.format("%s: %s", nick, mesaj));
-           builder.setContentTitle(nick).setContentText(mesaj);
+//        inbox.addLine(String.format("%s: %s", nick, mesaj));
+           builder.setContentTitle(nick).setContentText(Menemen.fromHtmlCompat(mesaj));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
             builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
@@ -194,6 +195,23 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         Notification notification = builder.build();
        notificationManager.notify(new Random().nextInt(200), notification);
         //add lines to inbox
+        try {
+            Cursor cursor = sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                String user,post;
+                user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                inbox.addLine(String.format("%s: %s", user, post));
+                Log.v(TAG, "inbox addline" + String.format("%s: %s", user, Menemen.fromHtmlCompat(mesaj)));
+                cursor.moveToNext();
+            }
+            cursor.close();
+            sql.close();
+        } catch (Exception e) {
+            inbox.addLine(String.format("%s: %s", nick, Menemen.fromHtmlCompat(mesaj)));
+            e.printStackTrace();
+        }
         SUM_Notification
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))

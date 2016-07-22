@@ -59,16 +59,12 @@ public class chatDB extends SQLiteOpenHelper {
     public Cursor getHistory(int limit){
         SQLiteDatabase db = getReadableDatabase();
         if(limit < 20) limit = 20;
-        Cursor c = db.query(TABLE_NAME,null,null,null,null,null,_MSGID+" DESC", String.valueOf(limit));
-        db.close();
-        return c;
+        return db.query(TABLE_NAME,null,null,null,null,null,_MSGID+" DESC", String.valueOf(limit));
     }
 
     public Cursor getHistoryById(String msgid){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME,null,_MSGID + ">=\'" + "\'",null,null,null,_MSGID+" DESC");
-        db.close();
-        return c;
+        return db.query(TABLE_NAME,null,_MSGID + ">=\'" + msgid + "\'",null,null,null,_MSGID+" DESC");
     }
 
     public void deleteMSG(String msgid){

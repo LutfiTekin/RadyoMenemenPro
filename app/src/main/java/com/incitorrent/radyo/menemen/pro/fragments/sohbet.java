@@ -218,6 +218,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                           return;
                       sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
                       sohbetRV.getAdapter().notifyDataSetChanged();
+                      m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,id);
                   }else if(action.equals(FIREBASE_CM_SERVICE.DELETE)){
                       sql.deleteMSG(id);
                       for(int i=0;i<sohbetList.size();i++) {
@@ -250,7 +251,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
-        if(sohbetList != null) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
         super.onResume();
     }
 
@@ -686,6 +686,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 cursor.moveToNext();
             }
             cursor.close();
+            sql.close();
             return null;
         }
 
@@ -694,6 +695,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
             if(SohbetAdapter!=null) sohbetRV.setAdapter(SohbetAdapter);
             if(swipeRV != null) swipeRV.setRefreshing(false);
+            if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             super.onPostExecute(aVoid);
         }
     }
