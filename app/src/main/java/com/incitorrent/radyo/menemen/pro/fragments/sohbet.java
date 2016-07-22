@@ -254,7 +254,9 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         if(getActivity()!=null) {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.INVISIBLE);
+            if(fab!=null)
+                fab.setVisibility(View.INVISIBLE);
+            m.runEnterAnimation(resimekle,250);
         }
         super.onResume();
     }
@@ -265,7 +267,9 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
         if(getActivity()!=null) {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)  fab.setVisibility(View.VISIBLE);
+            if(fab!=null)
+         m.runEnterAnimation(fab,200);
+//                fab.setVisibility(View.VISIBLE);
         }
         super.onStop();
     }
