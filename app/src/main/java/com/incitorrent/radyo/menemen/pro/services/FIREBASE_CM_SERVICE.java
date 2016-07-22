@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -67,6 +68,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notificationManagerCompat = NotificationManagerCompat.from(context);
         inbox = new NotificationCompat.InboxStyle();
         inbox.setSummaryText(getString(R.string.notification_new_messages_text));
+        inbox.setBigContentTitle(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         Log.v(TAG,"onCreate");
@@ -212,6 +214,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             inbox.addLine(String.format("%s: %s", nick, Menemen.fromHtmlCompat(mesaj)));
             e.printStackTrace();
         }
+        Bitmap largeicon = null;
+        try {
+            largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
+        } catch (Exception e){e.printStackTrace();}
         SUM_Notification
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
@@ -220,6 +226,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
                 .setGroupSummary(true);
+        if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null && !isUser)
             SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate && !isUser)
