@@ -273,7 +273,6 @@ public class Menemen {
             Date _now = new Date(System.currentTimeMillis());
             Calendar cal = Calendar.getInstance();
             cal.setTime(_date);
-//        cal.add(Calendar.HOUR_OF_DAY, 3);
             _date = cal.getTime();
             long diff = _now.getTime() - _date.getTime();
             int diffMinutes = (int)diff / (60 * 1000);
@@ -290,6 +289,7 @@ public class Menemen {
                 mesaj = context.getString(R.string.time_moments); //Biraz önce (Belli değil)
             return mesaj;
         } catch (Exception e) {
+            Log.v(TAG,"getElapsed " + Sdate);
             return context.getString(R.string.time_moments); //Biraz önce (Belli değil)
         }
     }
