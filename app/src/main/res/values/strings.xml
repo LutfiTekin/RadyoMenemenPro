@@ -195,9 +195,9 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="intro_slide_chat_descr">Only Music* is not enough, you should come join our chat</string>
     <string name="intro_slide_chat_title">Join Chat</string>
     <string name="intro_slide_haykir_descr">Contact with the broadcaster directly</string>
-    <string name="intro_slide_music_descr">You will be experiencing seamless music whereever and whenever you are</string>
+    <string name="intro_slide_music_descr">You will be experiencing seamless music wherever and whenever you are</string>
     <string name="intro_slide_music_title">Seamless Music Experience</string>
-    <string name="intro_slide_news_descr">Get notified with what happend in Radio Menemen</string>
+    <string name="intro_slide_news_descr">Get notified with what happened in Radio Menemen</string>
     <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
     <string name="toast_caps_upload_cam">Hold the button if you want to select image from camera</string>
     <string name="notifications">Notifications</string>
@@ -213,5 +213,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="pref_title2_on_air_notifications">On Air Notifications</string>
     <string name="pref_title2_podcast_notifications">Podcast Notifications</string>
     <string name="mute_chat_notifications">Mute Chat Notifications</string>
+    <string name="pref_title_show_intro">Show Intro</string>
+    <string name="pref_summary_show_intro">Show intro that appears in first lauch</string>
 
 </resources>
