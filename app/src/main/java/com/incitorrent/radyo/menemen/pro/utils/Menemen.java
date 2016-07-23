@@ -464,4 +464,17 @@ public class Menemen {
             return Html.fromHtml(title).toString();
     }
 
+
+    public void muteChatNotification(){
+        long time = (1000*60*10) + System.currentTimeMillis(); //şuanki zamana 10dk ekle
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(RadyoMenemenPro.SAVED_TIME,0).apply();
+    }
+
+    public long savedTime(){
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(RadyoMenemenPro.SAVED_TIME, System.currentTimeMillis());
+    }
+
+    public boolean isNotificationMuted(){
+        return savedTime() > System.currentTimeMillis();
+    }
 }

@@ -57,6 +57,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean notify_new_podcast = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_podcast", true);
     final Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true);
     final Boolean logged = m.oku("logged").equals("evet");
+    final Boolean mutechatnotification = m.isNotificationMuted();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
@@ -105,7 +106,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             //add to db
             sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
             Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
-            if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
+            if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || mutechatnotification) return; //Create notification condition
             buildNotification(nick,msg);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN

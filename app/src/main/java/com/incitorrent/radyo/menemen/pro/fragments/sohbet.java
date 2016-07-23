@@ -236,6 +236,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
               }
             }
         };
+        setHasOptionsMenu(true);
         return sohbetView;
 
     }
@@ -286,10 +287,22 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        //TODO eğer sustur açıksa ayarı gizle
+        inflater.inflate(R.menu.sohbet_menu,menu);
+       MenuItem silentN = menu.findItem(R.id.action_silent_notification);
+        if(m.isNotificationMuted()) silentN.setVisible(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int itemid = item.getItemId();
+        switch (itemid){
+            case R.id.action_silent_notification:
+                m.muteChatNotification();
+                Snackbar.make(resimekle, R.string.mute_chat_notificaitions_for_10_min,Snackbar.LENGTH_LONG).show();
+                item.setVisible(false);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -47,6 +47,7 @@ public final class RadyoMenemenPro {
     public static final String FIRST_TIME = "f_t";
     public static final String IS_CHAT_FOREGROUND = "icf";
     public static final String LAST_ID_SEEN_ON_CHAT = "lastseenid"; //Bildirim gruplaması için gerekli
+    public static final String SAVED_TIME = "savedtime";
 
     public final static class broadcastinfo{
         public final static String DJ = "dj";
