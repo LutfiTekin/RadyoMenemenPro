@@ -106,7 +106,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             //add to db
             sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
             Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
-            if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || mutechatnotification) return; //Create notification condition
+            if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
             buildNotification(nick,msg);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
@@ -188,10 +188,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setAutoCancel(true);
 //        inbox.addLine(String.format("%s: %s", nick, mesaj));
            builder.setContentTitle(nick).setContentText(Menemen.fromHtmlCompat(mesaj));
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
-            builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (vibrate)
-            builder.setVibrate(new long[]{500, 500, 500});
+        if(!mutechatnotification) {
+            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500, 500, 500});
+        }
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
         builder.setAutoCancel(true);
@@ -227,10 +229,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setGroup(GROUP_KEY_CHAT)
                 .setGroupSummary(true);
         if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null && !isUser)
-            SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (vibrate && !isUser)
-            SUM_Notification.setVibrate(new long[]{500, 500, 500});
+        if(!mutechatnotification) {
+            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null && !isUser)
+                SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate && !isUser)
+                SUM_Notification.setVibrate(new long[]{500, 500, 500});
+        }
         Notification summary = SUM_Notification.build();
         notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
 //        notificationManager.notify(GROUP_CHAT_NOTIFICATION,summary);
