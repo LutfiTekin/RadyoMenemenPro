@@ -269,14 +269,14 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null)
          m.runEnterAnimation(fab,200);
-//                fab.setVisibility(View.VISIBLE);
+            //fab.setVisibility(View.VISIBLE);
         }
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-//        exec.shutdown();
+        //exec.shutdown();
         super.onDestroyView();
     }
 
