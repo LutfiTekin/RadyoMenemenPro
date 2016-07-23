@@ -467,7 +467,7 @@ public class Menemen {
 
     public void muteChatNotification(){
         long time = (1000*60*10) + System.currentTimeMillis(); //şuanki zamana 10dk ekle
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(RadyoMenemenPro.SAVED_TIME,0).apply();
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(RadyoMenemenPro.SAVED_TIME,time).apply();
     }
 
     public long savedTime(){
