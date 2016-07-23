@@ -7,3 +7,10 @@ radyo menemen android uygulaması
       adresinde kullanılabilir durumdadır.
 
 Önceki sürümündeki bütün eksiklikleri ve hataların giderilmiş halidir.
+
+
+Kullanılan 3. parti kütüphaneler
+
+Glide - https://github.com/bumptech/glide
+
+AppIntro - https://github.com/PaoloRotolo/AppIntro
