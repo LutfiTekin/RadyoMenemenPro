@@ -287,7 +287,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //TODO eğer sustur açıksa ayarı gizle
         inflater.inflate(R.menu.sohbet_menu,menu);
        MenuItem silentN = menu.findItem(R.id.action_silent_notification);
         if(m.isNotificationMuted()) silentN.setVisible(false);
@@ -369,7 +368,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void postToMenemen(final String mesaj) {
+        private void postToMenemen(final String mesaj) {
         new AsyncTask<Void,Void,Boolean>(){
 
             @Override
@@ -423,7 +422,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                         CAM_PERMISSION_REQUEST_ID);
                 return false;
             }
-            //TODO kamerayı aç
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File f = new File(android.os.Environment
                     .getExternalStorageDirectory(), "temp.jpg");
