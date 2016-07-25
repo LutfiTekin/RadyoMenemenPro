@@ -150,6 +150,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         //Bildirimden gelen aksiyonları doğru fragmente yolla
+        final String main = "android.intent.action.MAIN";
         if(intent!=null){
            String action = intent.getAction();
             if(action == null) {
@@ -158,29 +159,31 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                 return;
             }
             Log.v("ACTION",action);
-            try {
-                switch (action) {
-                    case "radyo.menemen.chat":
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.Fcontent, new sohbet()).commit();
-                        break;
-                    case "radyo.menemen.podcast":
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.Fcontent, new podcast()).commit();
-                        break;
-                    default:
-                        if (m.oku("logged").equals("yok")) {
-                            fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
-                        } else {
-                            if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
-                                fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
-                            else
-                                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-                        }
-                        break;
+            if(!action.equals(main)) {
+                try {
+                    switch (action) {
+                        case "radyo.menemen.chat":
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.Fcontent, new sohbet()).commit();
+                            break;
+                        case "radyo.menemen.podcast":
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.Fcontent, new podcast()).commit();
+                            break;
+                        default:
+                            if (m.oku("logged").equals("yok")) {
+                                fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
+                            } else {
+                                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat", true))
+                                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+                                else
+                                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+                            }
+                            break;
+                    }
+                } catch (Exception e) {
+                    Log.v("ACTION", e.toString());
                 }
-            } catch (Exception e) {
-                Log.v("ACTION",e.toString());
             }
         }
     }
