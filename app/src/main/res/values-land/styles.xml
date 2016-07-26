@@ -1,0 +1,6 @@
+<resources>
+    <style name="splashScreenTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_fit</item>
+    </style>
+    <!-- TODO landscape versionu resimi değiştir-->
+</resources>
