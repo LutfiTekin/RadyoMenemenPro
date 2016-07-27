@@ -167,7 +167,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
     private void setHeaderDefault() {
         header_img.setImageResource(R.mipmap.ic_launcher);
-        header_txt.setText(m.oku("username").toUpperCase());
+        if(m.oku("logged").equals("evet"))
+            header_txt.setText(m.oku("username").toUpperCase());
+        else header_txt.setText(getString(R.string.app_name));
         header_sub_txt.setText(R.string.site_adress);
 
     }
@@ -259,6 +261,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     @Override
     protected void onResume() {
         fab.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+        if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+            setNPHeader();
+        else setHeaderDefault();
         super.onResume();
     }
 
