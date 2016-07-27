@@ -321,8 +321,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         stop.putExtra("stop",true);
         PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
-        if(m.oku("caliyor").equals("evet")) notification.addAction(android.R.drawable.ic_media_pause,getString(R.string.media_pause),ppIntent);
-        else notification.addAction(android.R.drawable.ic_media_play,getString(R.string.media_resume),ppIntent);
+        if(m.oku("caliyor").equals("evet")) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
+        else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
         notification.addAction(R.mipmap.ic_media_stop,getString(R.string.media_stop),stopIntent);
         notification.setDeleteIntent(stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
