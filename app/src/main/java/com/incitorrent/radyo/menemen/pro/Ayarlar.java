@@ -192,13 +192,22 @@ public class Ayarlar extends AppCompatPreferenceActivity {
 
 //           if(RMPRO.context!=null)
                Preference button = findPreference("show_intro");
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     startActivity(new Intent(RMPRO.context, Intro.class));
                     return true;
                 }
             });
+            Preference about = findPreference("about");
+                about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        startActivity(new Intent(RMPRO.context, About.class));
+                        return true;
+                    }
+                });
+
             String version = null;
             try {
                 version = RMPRO.context.getPackageManager().getPackageInfo(RMPRO.context.getPackageName(), 0).versionName;
