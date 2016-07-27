@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             if(m.oku("logged").equals("yok")) {
-                navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);//TODO giriş yapınca aktif
+                navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);
                 navigationView.getMenu().findItem(R.id.nav_shout).setEnabled(false);
                 header_txt.setText(m.oku("username").toUpperCase());
             }
