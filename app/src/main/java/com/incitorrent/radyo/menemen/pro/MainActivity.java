@@ -308,9 +308,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             shareIntent.setType("text/plain");
             startActivity(shareIntent);
 
-        } else if (id == R.id.nav_about) {
-        startActivity(new Intent(this,About.class));
-        } else if(id == R.id.nav_logout){
+        }  else if(id == R.id.nav_logout){
 
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.dialog_logout_title))
