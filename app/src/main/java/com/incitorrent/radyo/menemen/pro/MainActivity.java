@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity
               if(intent!=null) {
                 play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                 fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                if(m.oku("caliyor").equals("evet") || play) setNPHeader();
+                if((m.oku("caliyor").equals("evet") || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                    setNPHeader();
                   else setHeaderDefault();
               }
             }
