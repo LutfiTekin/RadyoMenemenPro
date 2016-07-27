@@ -1,13 +1,11 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.annotation.TargetApi;
-import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -15,27 +13,20 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
-import android.text.method.BaseMovementMethod;
-import android.transition.ArcMotion;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
-import android.transition.Explode;
 import android.transition.Fade;
-import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.util.Log;
@@ -50,18 +41,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
-import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.*;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
 
 
 public class radio extends Fragment implements View.OnClickListener,View.OnLongClickListener{
@@ -79,6 +69,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     TextView NPtrack;
     TextView NPdj;
     ImageView NPart,NPequ;
+    View hview;
     CardView NPcard;
     ImageButton NPspotify,NPyoutube,NPlyric;
     LinearLayout nowplayingbox;
@@ -213,15 +204,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNP() {
-        String title = m.oku(CALAN);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-            title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
-        else title = Html.fromHtml(title).toString();
+        String title = Menemen.fromHtmlCompat(m.oku(CALAN));
         NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
-        if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+        if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true)) {
             Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
+        }
     }
+
 
     @Override
     public void onStart() {

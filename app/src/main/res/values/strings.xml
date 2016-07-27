@@ -216,5 +216,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="pref_title_show_intro">Show Intro</string>
     <string name="pref_summary_show_intro">Show intro that appears in first lauch</string>
     <string name="mute_chat_notificaitions_for_10_min">Chat notifications will be muted next 10 minutes</string>
+    <string name="site_adress" translatable="false">radyomenemen.com</string>
 
 </resources>

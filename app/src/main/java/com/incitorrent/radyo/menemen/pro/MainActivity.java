@@ -24,9 +24,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
@@ -34,9 +36,13 @@ import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
+
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
 
 
 public class MainActivity extends AppCompatActivity
@@ -47,6 +53,10 @@ public class MainActivity extends AppCompatActivity
     Fragment fragment;
     FragmentManager fragmentManager;
     BroadcastReceiver receiver;
+    NavigationView navigationView;
+    View hview;
+    TextView header_txt,header_sub_txt;
+    ImageView header_img;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +79,8 @@ public class MainActivity extends AppCompatActivity
               if(intent!=null) {
                 play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                 fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                if(m.oku("caliyor").equals("evet") || play) setNPHeader();
+                  else setHeaderDefault();
               }
             }
         };
@@ -100,12 +112,17 @@ public class MainActivity extends AppCompatActivity
        if(drawer!=null) drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        hview = navigationView.getHeaderView(0);
+        header_img = (ImageView) hview.findViewById(R.id.header_img);
+        header_txt = (TextView) hview.findViewById(R.id.header_txt);
+        header_sub_txt = (TextView) hview.findViewById(R.id.header_sub_txt);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             if(m.oku("logged").equals("yok")) {
                 navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);//TODO giriş yapınca aktif
                 navigationView.getMenu().findItem(R.id.nav_shout).setEnabled(false);
+                header_txt.setText(m.oku("username").toUpperCase());
             }
 
             final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
@@ -144,6 +161,22 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
         new syncChannels(this).execute();
+
+    }
+
+    private void setHeaderDefault() {
+        header_img.setImageResource(R.mipmap.ic_launcher);
+        header_txt.setText(m.oku("username").toUpperCase());
+        header_sub_txt.setText(R.string.site_adress);
+
+    }
+
+    private void setNPHeader() {
+        String title = Menemen.fromHtmlCompat(m.oku(CALAN));
+        if(header_txt != null) header_txt.setText(m.oku(DJ));
+        if(header_sub_txt != null) header_sub_txt.setText(title);
+        if(header_img != null)
+            Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.ic_equalizer).into(header_img);
     }
 
 
@@ -191,9 +224,10 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
     @Override
     protected void onStart() {
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
-                new IntentFilter(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)
-        );
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
+        filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((receiver),filter);
         super.onStart();
     }
 
