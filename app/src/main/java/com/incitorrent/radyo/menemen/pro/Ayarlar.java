@@ -4,6 +4,7 @@ package com.incitorrent.radyo.menemen.pro;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -198,6 +199,13 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                     return true;
                 }
             });
+            String version = null;
+            try {
+                version = RMPRO.context.getPackageManager().getPackageInfo(RMPRO.context.getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            if(version != null) findPreference("versiyon").setSummary(version);
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }
