@@ -66,8 +66,8 @@
         android:key="show_intro"
         android:summary="@string/pref_summary_show_intro"/>
     <Preference
-        android:title="@string/about"
-        android:key="about"
+        android:title="@string/licence"
+        android:key="licence"
         android:summary="@string/licence_title"/>
     <Preference android:title="@string/version"
         android:key="versiyon"

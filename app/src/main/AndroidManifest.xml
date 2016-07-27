@@ -58,8 +58,8 @@
         </receiver>
 
         <activity
-            android:name=".About"
-            android:label="@string/about" />
+            android:name=".Licence"
+            android:label="@string/licence" />
         <activity
             android:name=".get_image"
             android:noHistory="true">

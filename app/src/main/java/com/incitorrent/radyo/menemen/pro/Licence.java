@@ -5,13 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-
-public class About extends AppCompatActivity {
+public class Licence extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

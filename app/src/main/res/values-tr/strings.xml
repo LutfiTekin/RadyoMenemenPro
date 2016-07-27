@@ -14,7 +14,7 @@
     <string name="nav_login">Giriş Yap</string>
     <string name="news">Olan Biten</string>
     <string name="share">Paylaş</string>
-    <string name="about">Hakkında</string>
+    <string name="licence">Lisans</string>
     <string name="navigation_drawer_open">Nav Barı Aç</string>
     <string name="pref_title_select_channel">Kanal Seç</string>
     <string name="pref_title_new_message_notifications">Sohbete yeni mesaj gelince bildir</string>

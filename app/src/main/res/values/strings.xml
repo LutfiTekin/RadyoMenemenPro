@@ -93,7 +93,7 @@
     <string name="podcast" translatable="false">Podcast</string>
     <string name="other">Other</string>
     <string name="news">News</string>
-    <string name="about">About</string>
+    <string name="licence">Licence</string>
     <string name="pref_title_select_channel">Select Channel</string>
 
     <!-- TODO: Remove or change this placeholder text -->

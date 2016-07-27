@@ -199,11 +199,11 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                     return true;
                 }
             });
-            Preference about = findPreference("about");
+            Preference about = findPreference("licence");
                 about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        startActivity(new Intent(RMPRO.context, About.class));
+                        startActivity(new Intent(RMPRO.context, Licence.class));
                         return true;
                     }
                 });
