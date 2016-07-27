@@ -224,6 +224,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setContentTitle(getString(R.string.notification_new_msg))
+                .setContentText(String.format("%s: %s", nick, Menemen.fromHtmlCompat(mesaj)))
                 .setSmallIcon(R.mipmap.ic_chat)
                 .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
