@@ -110,7 +110,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             buildNotification(nick,msg);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
-            //TODO bildirim oluştur
             updateNews();
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
             //Onair bildirimi
@@ -238,10 +237,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         Notification summary = SUM_Notification.build();
         notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
-//        notificationManager.notify(GROUP_CHAT_NOTIFICATION,summary);
     }
-
-    private String getDATA(RemoteMessage rm,String data) {
+      private String getDATA(RemoteMessage rm, String data) {
         return rm.getData().get(data);
     }
 
