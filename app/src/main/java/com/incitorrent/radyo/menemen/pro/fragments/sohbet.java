@@ -55,6 +55,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -194,7 +195,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         swipeRV.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new forceSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
         //SWIPETOREFRESHEND
@@ -698,6 +699,40 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 //            super.onPostExecute(true);
 //        }
 //    }
+
+    class forceSync extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if(!m.isInternetAvailable()) return null;
+            String line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
+            try {
+                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
+                JSONObject c;
+                for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                    String id,nick,mesaj,zaman;
+                    JSONArray innerJarr = arr.getJSONArray(0);
+                    c = innerJarr.getJSONObject(i);
+                    id = c.getString("id");
+                    nick = c.getString("nick");
+                    mesaj = c.getString("post");
+                    zaman = c.getString("time");
+                    //db ye ekle
+                    sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+                    Log.v(TAG,"add to sql " + id + " " + nick);
+                }
+            }catch (JSONException e){
+                m.resetFirstTime("loadmessages");
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            new initsohbet().execute();
+            super.onPostExecute(aVoid);
+        }
+    }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{
 
