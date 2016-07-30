@@ -141,7 +141,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
+        final View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
         m = new Menemen(getActivity().getApplicationContext());
         sql = new chatDB(getActivity().getApplicationContext(),null,null,1);
@@ -184,10 +184,28 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
         sohbetList = new ArrayList<>();
         sohbetRV.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
+        //Onscroll Listener
+        sohbetRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(sohbetList == null) return;
+                int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
+                int LIST_SIZE = sohbetList.size();
+                String lastid = sohbetList.get(LIST_SIZE - 1).id;
+                if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
+                    Log.v(TAG, "loadmore" + lastid);
+                    new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                }
+
+            }
+        });
+        //Onscroll Listener End
+
         //SOHBETEND
         //SWIPETOREFRESH
         swipeRV = (SwipeRefreshLayout) sohbetView.findViewById(R.id.swipeRV);
@@ -770,6 +788,52 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             super.onPostExecute(aVoid);
+        }
+    }
+
+    class loadMore extends AsyncTask<Void,Void,Void>{
+        String lastid;
+        int listSize;
+
+        public loadMore(String lastid, int listSize) {
+            this.lastid = lastid;
+            this.listSize = listSize;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Cursor cursor = sql.getHistoryOnScroll(lastid);
+                if(cursor == null) return null;
+                cursor.moveToFirst();
+                while(!cursor.isAfterLast()){
+                    String id,nick,post,time;
+                    id = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
+                    nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                    post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                    time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
+                    sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                sql.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(sohbetList == null) return;
+            if(sohbetRV != null && sohbetRV.getAdapter() != null){
+                try {
+                    sohbetRV.getAdapter().notifyItemRangeInserted(listSize,20);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
     //RecyclerView callback methods for swipe to delete effects
