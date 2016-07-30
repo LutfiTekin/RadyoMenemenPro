@@ -95,7 +95,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     private String mParam2;
     private EditText mesaj;
     private ImageView smilegoster;
-    FloatingActionButton resimekle;
+    FloatingActionButton resimekle,scrollTop;
     private RecyclerView smileRV,sohbetRV;
     private FloatingActionButton mesaj_gonder;
     Menemen m;
@@ -163,10 +163,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             }
         });
         mesaj_gonder = (FloatingActionButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
+        scrollTop = (FloatingActionButton) sohbetView.findViewById(R.id.scrolltoTop);
         resimekle.setOnClickListener(this);
         resimekle.setOnLongClickListener(this);
         smilegoster.setOnClickListener(this);
         mesaj_gonder.setOnClickListener(this);
+        scrollTop.setOnClickListener(this);
         //SMILEY
         smileRV = (RecyclerView) sohbetView.findViewById(R.id.RVsmileys);
         satbaxSmileList = new ArrayList<>();
@@ -201,7 +203,10 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                     Log.v(TAG, "loadmore" + lastid);
                     new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                 }
-
+            if(LAST_POSITION_COMP_VISIBLE > 100 && scrollTop.getVisibility() == View.GONE)
+                m.runEnterAnimation(scrollTop,200);
+            else if(LAST_POSITION_COMP_VISIBLE < 20 && scrollTop.getVisibility() == View.VISIBLE)
+                scrollTop.setVisibility(View.GONE);
             }
         });
         //Onscroll Listener End
@@ -337,15 +342,21 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 break;
             case R.id.resim_ekle:
               if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_LONG).show();
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-    //Dosya okuma izni yok izin iste
-    AskReadPerm();
-    break;
-}
+                 if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //Dosya okuma izni yok izin iste
+                  AskReadPerm();
+                  break;
+                }
     Intent resimsec = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             .setType("image/*");
     startActivityForResult(resimsec, RESULT_LOAD_IMAGE);
-
+                break;
+            case R.id.scrolltoTop:
+                try {
+                    sohbetRV.scrollToPosition(0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

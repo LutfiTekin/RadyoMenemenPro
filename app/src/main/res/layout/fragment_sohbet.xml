@@ -82,4 +82,13 @@
         android:layout_margin="16dp"
         app:backgroundTint="#3d5afe"
         android:src="@drawable/ic_upload_orange" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/scrolltoTop"
+        android:layout_gravity="center_horizontal|bottom"
+        android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+        android:visibility="visible"
+        android:scaleType="center" />
 </FrameLayout>
