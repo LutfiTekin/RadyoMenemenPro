@@ -22,5 +22,15 @@
     <style name="navBarHeaderTheme" parent="ThemeOverlay.AppCompat.Dark">
     </style>
 
+    <style name="settingsTheme" parent="AppTheme">
 
+        <item name="android:colorBackground">@color/cardviewBG</item>
+        <item name="android:colorForeground">#aaaaaa</item>
+
+        <item name="android:colorFocusedHighlight">@color/select</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorPrimaryDisabled</item>
+        <item name="android:textColorHint">@color/textColorHint</item>
+
+    </style>
 </resources>

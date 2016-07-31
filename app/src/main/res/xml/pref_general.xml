@@ -22,7 +22,12 @@
         android:dependency="music_only"
         android:summary="@string/settings_onstart_chat_summary"
         android:title="@string/settings_onstart_chat_title" />
-
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="night_mode"
+        android:summary="@string/settings_night_mode_summary"
+        android:title="@string/settings_night_mode_title"
+        />
     <SwitchPreference
         android:defaultValue="false"
         android:key="show_full_error"

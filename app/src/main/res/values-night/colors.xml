@@ -15,6 +15,7 @@
     <color name="textColorPrimaryDisabled">#a3ffffff</color>
     <color name="textColorHint">#bdbdbd</color>
     <color name="cardviewBG">#616161</color>
+    <color name="select">#fff</color>
     <!--navbar items-->
     <color name="itemText">@color/textColorPrimary</color>
     <color name="itemBackground">@color/cardviewBG</color>

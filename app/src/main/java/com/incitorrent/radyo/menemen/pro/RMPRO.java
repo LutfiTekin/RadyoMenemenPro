@@ -3,7 +3,6 @@ package com.incitorrent.radyo.menemen.pro;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -18,10 +17,10 @@ public class RMPRO extends Application {
     public static Context context;
     public static final String TAG = RMPRO.class
             .getSimpleName();
-    static {
-        AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_YES);
-    }
+//    static {
+//        AppCompatDelegate.setDefaultNightMode(
+//                AppCompatDelegate.MODE_NIGHT_YES);
+//    }
     private static RMPRO mInstance;
     private FirebaseAnalytics mFirebaseAnalytics;
     @Override
