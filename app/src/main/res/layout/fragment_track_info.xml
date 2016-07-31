@@ -3,17 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.incitorrent.radyo.menemen.pro.fragments.track_info"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBackgroundsoft"
+    android:id="@+id/rel_track_info">
 
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left|top"
-        android:background="@color/colorBackgroundsoft"
-        android:id="@+id/rel_track_info">
+
+        >
 
         <ImageView
             android:layout_width="match_parent"

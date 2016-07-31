@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.incitorrent.radyo.menemen.pro.fragments.track_info">
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.track_info"
+    android:background="@color/colorBackgroundsoft"
+    android:id="@+id/rel_track_info">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left|top"
-        android:background="@color/colorBackgroundsoft"
-        android:id="@+id/rel_track_info">
+        >
 
         <ImageView
             android:layout_width="200dp"
