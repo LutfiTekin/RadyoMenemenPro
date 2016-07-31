@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
-    android:layout_marginTop="2dp"
-    android:id="@+id/obC">
+    android:layout_margin="8dp"
+    android:id="@+id/obC"
+    android:background="@color/cardviewBG">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Pitem"
-        android:padding="5dp"
+        android:padding="8dp"
         android:focusable="true"
         android:clickable="true">
 
@@ -20,15 +21,14 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Olan Biten Başlık"
             android:id="@+id/ob_title"
-            android:textColor="#cc263238"
+            android:textColor="@color/textColorPrimary"
             android:typeface="normal"
             android:textStyle="bold"
-            android:textSize="22dp"
+            android:textSize="22sp"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_margin="8dp"
             android:textIsSelectable="true"
-            android:layout_marginRight="16dp" />
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,9 +39,10 @@
             android:layout_below="@+id/ob_title"
             android:layout_alignLeft="@+id/ob_title"
             android:layout_alignStart="@+id/ob_title"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textIsSelectable="true"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="8dp"
+            android:textColor="@color/textColorPrimaryDisabled"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,7 +52,7 @@
             android:id="@+id/ob_zaman"
             android:layout_below="@+id/ob_content"
             android:layout_alignStart="@+id/ob_content"
-            android:textColor="@color/material_blue_grey_800"
+            android:textColor="@color/textColorPrimary"
             android:textStyle="italic" />
 
         <TextView
@@ -62,7 +63,8 @@
             android:id="@+id/ob_yazan"
             android:layout_below="@+id/ob_content"
             android:layout_alignEnd="@+id/ob_content"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:textColor="@color/textColorPrimaryDisabled"/>
 
     </RelativeLayout>
 

@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
     android:layout_margin="4dp"
-    android:id="@+id/cvP">
+    android:id="@+id/cvP"
+    android:background="@color/cardviewBG">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/Pitem"
-        android:padding="5dp"
+        android:padding="8dp"
         android:focusable="true"
         android:clickable="true">
 
@@ -20,11 +21,11 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="podcast ismi"
             android:id="@+id/title"
-            android:textColor="#cc263238"
+            android:textColor="@color/textColorPrimary"
             android:typeface="normal"
             android:textStyle="bold"
-            android:textSize="22dp"
-            android:layout_marginLeft="16dp"
+            android:textSize="22sp"
+            android:layout_marginLeft="8dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/duration" />
@@ -38,8 +39,9 @@
             android:layout_below="@+id/title"
             android:layout_alignLeft="@+id/title"
             android:layout_alignStart="@+id/title"
-            android:textSize="12dp"
-            android:layout_marginBottom="4dp" />
+            android:textSize="12sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/textColorPrimaryDisabled"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,7 +54,8 @@
             android:layout_marginRight="16dp"
             android:layout_alignTop="@+id/title"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:textColor="@color/textColorPrimaryDisabled"/>
 
     </RelativeLayout>
 

@@ -15,7 +15,7 @@
           android:text="@string/descr_login_logout"
           android:id="@+id/textView"
           android:gravity="center_horizontal"
-          android:textColor="#f5f5f5"
+          android:textColor="@color/textColor"
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true" />
 
@@ -28,8 +28,8 @@
           android:id="@+id/usernameET"
           android:layout_below="@+id/textView"
           android:layout_centerHorizontal="true"
-          android:textColor="#f5f5f5"
-          android:textColorHint="#eeeeee"
+          android:textColor="@color/textColor"
+          android:textColorHint="@color/textColorHint"
           android:layout_margin="16dp" />
 
       <EditText
@@ -41,7 +41,7 @@
           android:id="@+id/passET"
           android:layout_below="@+id/usernameET"
           android:layout_alignStart="@+id/usernameET"
-          android:textColorHint="#eeeeee"
+          android:textColorHint="@color/textColorHint"
           android:layout_marginBottom="16dp" />
 
       <Button
@@ -61,7 +61,7 @@
           android:text="@string/login_screen_descr"
           android:id="@+id/textView2"
           android:gravity="center_horizontal"
-          android:textColor="#ffffff"
+          android:textColor="@color/textColor"
           android:layout_alignParentBottom="true"
           android:layout_alignParentRight="true"
           android:layout_alignParentEnd="true"

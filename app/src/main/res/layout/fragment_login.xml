@@ -19,7 +19,7 @@ Yoksa kayıt ol!"
           android:gravity="center_horizontal"
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"
-          android:textColor="#f5f5f5" />
+          android:textColor="@color/textColor" />
 
       <EditText
           android:layout_width="wrap_content"
@@ -30,8 +30,8 @@ Yoksa kayıt ol!"
           android:id="@+id/usernameET"
           android:layout_below="@+id/textView"
           android:layout_centerHorizontal="true"
-          android:textColor="#f5f5f5"
-          android:textColorHint="#eeeeee" />
+          android:textColor="@color/textColor"
+          android:textColorHint="@color/textColorHint" />
 
       <EditText
           android:layout_width="wrap_content"
@@ -43,7 +43,7 @@ Yoksa kayıt ol!"
           android:layout_below="@+id/usernameET"
           android:layout_alignStart="@+id/usernameET"
           android:layout_alignLeft="@+id/usernameET"
-          android:textColorHint="#eeeeee" />
+          android:textColorHint="@color/textColorHint" />
 
       <Button
           android:layout_width="wrap_content"
@@ -64,7 +64,7 @@ Yoksa kayıt ol!"
           android:layout_marginLeft="16dp"
           android:layout_marginRight="16dp"
           android:gravity="center_horizontal"
-          android:textColor="#ffffff" />
+          android:textColor="@color/textColor" />
 
       <Button
           android:layout_width="wrap_content"
@@ -72,7 +72,6 @@ Yoksa kayıt ol!"
           android:text="@string/button_no_login"
           android:id="@+id/no_login"
           android:layout_below="@+id/submit"
-
           android:layout_centerHorizontal="true"/>
 
   </RelativeLayout>

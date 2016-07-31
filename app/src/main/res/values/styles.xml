@@ -19,6 +19,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="navBarHeaderTheme" parent="ThemeOverlay.AppCompat.Dark">
+    </style>
 
 
 </resources>
