@@ -25,8 +25,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -45,7 +45,7 @@ public class track_info extends Fragment implements View.OnClickListener{
     private ImageView art,iv_spotify,iv_youtube,iv_lyric;
     private TextView track,tv_spotify,tv_youtube,tv_lyric;
     private CardView card_spotify,card_youtube,card_lyric;
-
+    Menemen m;
 
     public track_info() {
         // Required empty public constructor
@@ -79,7 +79,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         card_youtube = (CardView) trackview.findViewById(R.id.youtube_card);
         card_lyric = (CardView) trackview.findViewById(R.id.lyric_card);
         if(getActivity() != null){
-            Menemen m = new Menemen(getActivity().getApplicationContext());
+            m = new Menemen(getActivity().getApplicationContext());
             m.runEnterAnimation(card_spotify,200);
             m.runEnterAnimation(card_youtube,300);
             m.runEnterAnimation(card_lyric,400);
@@ -94,7 +94,7 @@ public class track_info extends Fragment implements View.OnClickListener{
             final String arturl = bundle.getString("arturl", null);
             if(arturl != null && getActivity() != null) {
                 //Arkaplan rengini artworkten al
-                final RelativeLayout relativeLayout = (RelativeLayout) trackview.findViewById(R.id.rel_track_info);
+                final FrameLayout frame = (FrameLayout) trackview.findViewById(R.id.rel_track_info);
                 final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
                 new AsyncTask<Void,Void,Integer[]>() {
                     Bitmap resim = null;
@@ -128,7 +128,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                     @Override
                     protected void onPostExecute(Integer[] color) {
                         if(color != null) {
-                            relativeLayout.setBackgroundColor(color[0]);
+                            frame.setBackgroundColor(color[0]);
                             toolbar.setBackgroundColor(color[0]);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
                                 Window window = getActivity().getWindow();
@@ -156,8 +156,10 @@ public class track_info extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         final String trackName = track.getText().toString();
+        Bundle bundle = new Bundle();
         try {
             if(view == iv_spotify || view == tv_spotify){
+                bundle.putString("action","spo");
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
                 intent.setComponent(new ComponentName(
@@ -167,6 +169,7 @@ public class track_info extends Fragment implements View.OnClickListener{
                 this.startActivity(intent);
 
             }else if(view == iv_youtube || view == tv_youtube){
+                bundle.putString("action","ytb");
                 Intent intent = new Intent(Intent.ACTION_SEARCH);
                 intent.setPackage("com.google.android.youtube");
                 intent.putExtra(SearchManager.QUERY, trackName);
@@ -174,13 +177,17 @@ public class track_info extends Fragment implements View.OnClickListener{
                 startActivity(intent);
 
             }else if(view == iv_lyric || view == tv_lyric){
+                bundle.putString("action","lyric");
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
                 startActivity(intent);
             }
+            bundle.putString("track",trackName.substring(0,35));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        m.trackEvent("iv_s",bundle);
     }
 
     @Override

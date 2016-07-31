@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -142,7 +141,9 @@ public class podcast extends Fragment {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null) fab.setVisibility(View.INVISIBLE);
         }
-
+        Bundle bundle = new Bundle();
+        bundle.putString("podcast","onresume");
+        inf.trackEvent("Podcast",bundle);
         super.onResume();
     }
 

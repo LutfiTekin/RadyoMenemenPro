@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -32,6 +33,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -476,5 +478,13 @@ public class Menemen {
 
     public boolean isNotificationMuted(){
         return savedTime() > System.currentTimeMillis();
+    }
+
+    public void trackEvent(String event, Bundle bundle){
+        try {
+            FirebaseAnalytics.getInstance(context).logEvent(event, bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
