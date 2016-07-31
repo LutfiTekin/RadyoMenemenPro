@@ -2,9 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.incitorrent.radyo.menemen.pro.fragments.track_info">
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.track_info"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +37,7 @@
             android:layout_margin="16dp"
             android:maxLines="2"
             android:textSize="26sp"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/textColorPrimary" />
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +46,8 @@
             android:layout_alignStart="@+id/track"
             android:id="@+id/spotify_card"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            app:cardBackgroundColor="@color/cardviewBG">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -64,7 +68,7 @@
                     android:gravity="left|center"
                     android:paddingStart="16dp"
                     android:id="@+id/tv_spotify"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/textColorPrimary" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -75,7 +79,8 @@
             android:layout_alignLeft="@+id/spotify_card"
             android:layout_alignStart="@+id/spotify_card"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            app:cardBackgroundColor="@color/cardviewBG">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -96,7 +101,7 @@
             android:gravity="left|center"
             android:paddingStart="16dp"
             android:id="@+id/tv_youtube"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/textColorPrimary" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
@@ -106,7 +111,8 @@
             android:layout_below="@+id/youtube_card"
             android:layout_alignLeft="@+id/youtube_card"
             android:layout_alignStart="@+id/youtube_card"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            app:cardBackgroundColor="@color/cardviewBG">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -127,9 +133,10 @@
                     android:gravity="left|center"
                     android:paddingStart="16dp"
                     android:id="@+id/tv_lyric"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@color/textColorPrimary" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
     </RelativeLayout>
+</ScrollView>
 </FrameLayout>

@@ -6,7 +6,7 @@
     app:cardCornerRadius="4dp"
     android:layout_margin="4dp"
     android:id="@+id/cvP"
-    android:background="@color/cardviewBG">
+    app:cardBackgroundColor="@color/cardviewBG">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
