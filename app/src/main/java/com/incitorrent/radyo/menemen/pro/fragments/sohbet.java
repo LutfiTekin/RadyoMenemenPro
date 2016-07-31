@@ -196,17 +196,21 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(sohbetList == null) return;
-                int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
-                int LIST_SIZE = sohbetList.size();
-                String lastid = sohbetList.get(LIST_SIZE - 1).id;
-                if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
-                    Log.v(TAG, "loadmore" + lastid);
-                    new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                try {
+                    int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
+                    int LIST_SIZE = sohbetList.size();
+                    String lastid = sohbetList.get(LIST_SIZE - 1).id;
+                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
+                        Log.v(TAG, "loadmore" + lastid);
+                        new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                    }
+                    if(LAST_POSITION_COMP_VISIBLE > 100 && scrollTop.getVisibility() == View.GONE)
+                        m.runEnterAnimation(scrollTop,200);
+                    else if(LAST_POSITION_COMP_VISIBLE < 20 && scrollTop.getVisibility() == View.VISIBLE)
+                        scrollTop.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            if(LAST_POSITION_COMP_VISIBLE > 100 && scrollTop.getVisibility() == View.GONE)
-                m.runEnterAnimation(scrollTop,200);
-            else if(LAST_POSITION_COMP_VISIBLE < 20 && scrollTop.getVisibility() == View.VISIBLE)
-                scrollTop.setVisibility(View.GONE);
             }
         });
         //Onscroll Listener End
