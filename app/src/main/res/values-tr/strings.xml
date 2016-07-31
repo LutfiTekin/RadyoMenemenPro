@@ -145,4 +145,6 @@
     <string name="pref_title_show_intro">Introyu Göster</string>
     <string name="pref_summary_show_intro">İlk açılışta çıkan introyu göster</string>
     <string name="mute_chat_notificaitions_for_10_min">Sohbet bildirimlerinin ses ve titreşimleri 10 dakika boyunca kapalı olacak</string>
+    <string name="settings_night_mode_title">Gece Modu</string>
+    <string name="settings_night_mode_summary">Değişiklerin görünmesi için uygulamanın yeniden başlatılması gerekebilir</string>
 </resources>
