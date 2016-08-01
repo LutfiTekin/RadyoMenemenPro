@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -35,13 +37,21 @@ public class show_image extends AppCompatActivity {
         final Intent mintent = getIntent();
         final Uri imageUri=mintent.getData();
         imageurl = imageUri.toString().trim();
-        FloatingActionButton c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
+        final FloatingActionButton c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
        if(c_fab!=null) c_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
-                showimagecomment.putExtra("url",imageurl);
-                startActivity(showimagecomment);
+//                Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
+//                showimagecomment.putExtra("url",imageurl);
+//                startActivity(showimagecomment);
+             final Snackbar snackbar =  Snackbar.make(c_fab, R.string.snackbar_feature_under_development, Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                    }
+                });
+                snackbar.show();
             }
         });
     }
@@ -91,7 +101,7 @@ public class show_image extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_save:
-            save();
+            save(true);
                 break;
             case R.id.action_share:
             share();
@@ -102,7 +112,7 @@ public class show_image extends AppCompatActivity {
     }
 
     public void share() {
-        String pic = save();
+        String pic = save(false);
         Uri pictureUri = Uri.parse(pic);
         Log.v("URI", "BUILD "+ pictureUri);
         Intent shareIntent = new Intent();
@@ -113,7 +123,7 @@ public class show_image extends AppCompatActivity {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
     }
 
-    public String save() {
+    public String save(final Boolean toast) {
         final File compressed = new File(root + "/RadyoMemenen/images/compressed");
         long time = System.currentTimeMillis();
         final String fname = String.valueOf(time).substring(0,12)  + ".jpg";
@@ -135,6 +145,8 @@ public class show_image extends AppCompatActivity {
                 }
             }
         }).start();
+        if(toast)
+            Toast.makeText(show_image.this, R.string.toast_image_saved, Toast.LENGTH_SHORT).show();
         return compressed + "/" + fname;
     }
 }
