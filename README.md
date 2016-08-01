@@ -14,3 +14,5 @@ Kullanılan 3. parti kütüphaneler
 Glide - https://github.com/bumptech/glide
 
 AppIntro - https://github.com/PaoloRotolo/AppIntro
+
+TouchImageView https://github.com/MikeOrtiz/TouchImageView
