@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
@@ -23,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 public class show_image extends AppCompatActivity implements View.OnClickListener {
     private TouchImageView image;
     private String imageurl;
+    final String root = Environment.getExternalStorageDirectory().toString();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +39,6 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
         Glide.with(image.getContext())
                 .load(imageurl)
                 .dontAnimate()
-                .centerCrop()
                 .into(image);
         super.onStart();
     }
@@ -77,30 +76,8 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
         return super.onOptionsItemSelected(item);
     }
 
-    private void share() {
-        final String root = Environment.getExternalStorageDirectory().toString();
-        final File compressed = new File(root + "/RadyoMenemen/images/compressed");
-        final String fname =  System.currentTimeMillis() + ".jpg";
-        final int width = image.getWidth();
-        final int height = image.getHeight();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    File file = new File(compressed, fname);
-                    file.createNewFile();
-                    FileOutputStream out = new FileOutputStream(file);
-                    Bitmap bit = Glide.with(show_image.this).load(imageurl).asBitmap().into(width,height).get();
-                    bit.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    out.flush();
-                    out.close();
-                } catch (InterruptedException | ExecutionException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        String pic = compressed + "/" + fname;
+    public void share() {
+        String pic = save();
         Uri pictureUri = Uri.parse(pic);
         Log.v("URI", "BUILD "+ pictureUri);
         Intent shareIntent = new Intent();
@@ -111,18 +88,18 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
     }
 
-    private void save() {
-        final String root = Environment.getExternalStorageDirectory().toString();
-        final File compressed = new File(root + "/RadyoMenemen/images/compressed");
-        final String fname =  System.currentTimeMillis() + ".jpg";
+    public String save() {
+        final File compressed = new File(root + "/RadyoMemenen/images/compressed");
+        long time = System.currentTimeMillis();
+        final String fname = String.valueOf(time).substring(0,12)  + ".jpg";
         final int width = image.getWidth();
         final int height = image.getHeight();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    compressed.mkdirs();
                     File file = new File(compressed, fname);
-                    file.createNewFile();
                     FileOutputStream out = new FileOutputStream(file);
                     Bitmap bit = Glide.with(show_image.this).load(imageurl).asBitmap().into(width,height).get();
                     bit.compress(Bitmap.CompressFormat.JPEG, 100, out);
@@ -133,6 +110,6 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
                 }
             }
         }).start();
-        Toast.makeText(show_image.this, compressed.toString() + fname, Toast.LENGTH_SHORT).show();
+        return compressed + "/" + fname;
     }
 }
