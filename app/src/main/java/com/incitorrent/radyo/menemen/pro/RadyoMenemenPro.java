@@ -25,14 +25,16 @@ public final class RadyoMenemenPro {
 
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    public final static String SYNCCHANNEL = "http://radyomenemen.com/inc/appinfo.php?channels";
-    public final static String DJRESPONSE = "http://radyomenemen.com/inc/appinfo.php?djresponse";
-    public final static String MESAJLAR = "http://radyomenemen.com/inc/appinfo.php?mesajlar";
-    public final static String HAYKIRMALAR = "http://radyomenemen.com/inc/appinfo.php?haykirmalarim";
-    public final static String OLAN_BITEN = "http://radyomenemen.com/inc/appinfo.php?olanbiten";
-    public final static String MESAJ_GONDER = "http://radyomenemen.com/inc/appinfo.php?postmessage";
-    public final static String MESAJ_SIL = "http://radyomenemen.com/inc/appinfo.php?deletemessage";
-    public final static String TOKEN_ADD = "http://radyomenemen.com/inc/appinfo.php?fcm_tokenadd";
+    public final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
+    public final static String SYNCCHANNEL = APP_INFO + "channels";
+    public final static String DJRESPONSE = APP_INFO + "djresponse";
+    public final static String MESAJLAR =  APP_INFO + "mesajlar";
+    public final static String HAYKIRMALAR = APP_INFO + "haykirmalarim";
+    public final static String OLAN_BITEN = APP_INFO + "olanbiten";
+    public final static String MESAJ_GONDER = APP_INFO + "postmessage";
+    public final static String MESAJ_SIL = APP_INFO + "deletemessage";
+    public final static String TOKEN_ADD = APP_INFO + "fcm_tokenadd";
+    public final static String REGISTER_CAPS = APP_INFO + "registercaps";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
