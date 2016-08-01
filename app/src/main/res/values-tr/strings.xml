@@ -147,4 +147,5 @@
     <string name="mute_chat_notificaitions_for_10_min">Sohbet bildirimlerinin ses ve titreşimleri 10 dakika boyunca kapalı olacak</string>
     <string name="settings_night_mode_title">Gece Modu</string>
     <string name="settings_night_mode_summary">Değişiklerin görünmesi için uygulamanın yeniden başlatılması gerekebilir</string>
+    <string name="title_activity_show_image_comments">Resime ait yorumlar</string>
 </resources>
