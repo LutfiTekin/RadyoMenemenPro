@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 
 import java.io.File;
@@ -28,33 +31,51 @@ public class show_image extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_image);
-        image = (TouchImageView) findViewById(R.id.image);
+        image = (TouchImageView) findViewById(R.id.show_image);
         final Intent mintent = getIntent();
         final Uri imageUri=mintent.getData();
         imageurl = imageUri.toString().trim();
         FloatingActionButton c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
-        c_fab.setOnClickListener(new View.OnClickListener() {
+       if(c_fab!=null) c_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(show_image.this, show_image_comments.class));
+                Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
+                showimagecomment.putExtra("url",imageurl);
+                startActivity(showimagecomment);
             }
         });
     }
 
     @Override
-    protected void onStart() {
-        Glide.with(image.getContext())
-                .load(imageurl)
-                .dontAnimate()
-                .into(image);
-        super.onStart();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("url", imageurl);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState!=null) imageurl = savedInstanceState.getString("url");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
-
         super.onResume();
+        try {
+            Glide.with(show_image.this)
+                .load(imageurl)
+                .into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        image.setImageDrawable(resource);
+                    }
+                });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
 
 
 
