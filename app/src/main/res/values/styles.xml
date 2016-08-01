@@ -7,9 +7,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="splashScreenTheme" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_fit</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -19,8 +21,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="navBarHeaderTheme" parent="ThemeOverlay.AppCompat.Dark">
-    </style>
+    <style name="navBarHeaderTheme" parent="ThemeOverlay.AppCompat.Dark"></style>
 
     <style name="settingsTheme" parent="AppTheme">
 
