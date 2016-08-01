@@ -477,13 +477,13 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             this.zaman = zaman;
         }
     }
-    public class SohbetAdapter extends RecyclerView.Adapter<SohbetAdapter.PersonViewHolder> {
+    public class SohbetAdapter extends RecyclerView.Adapter<sohbet.SohbetAdapter.chatViewHolder> {
         Context context;
         List<Sohbet_Objects> sohbetList;
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder{
+        public class chatViewHolder extends RecyclerView.ViewHolder{
             TextView nick,mesaj,zaman;
-            PersonViewHolder(View itemView) {
+            chatViewHolder(View itemView) {
                 super(itemView);
                 nick = (TextView) itemView.findViewById(R.id.username);
                 mesaj = (TextView) itemView.findViewById(R.id.mesaj);
@@ -497,9 +497,9 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }
 
         @Override
-        public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public chatViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sohbet_item, viewGroup,false);
-            PersonViewHolder pvh = new PersonViewHolder(v);
+            chatViewHolder pvh = new chatViewHolder(v);
             context = viewGroup.getContext();
             return pvh;
         }
@@ -509,10 +509,10 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }
 
         @Override
-        public void onBindViewHolder(PersonViewHolder personViewHolder, final int i) {
-    personViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
+        public void onBindViewHolder(chatViewHolder chatViewHolder, final int i) {
+    chatViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),Html.FROM_HTML_MODE_LEGACY,new Html.ImageGetter() {
+                chatViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),Html.FROM_HTML_MODE_LEGACY,new Html.ImageGetter() {
                             @Override
                             public Drawable getDrawable(String source) {
                                 int id = 0;
@@ -545,7 +545,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                             }
                         },null)));
             }else{
-                personViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),new Html.ImageGetter() {
+                chatViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),new Html.ImageGetter() {
                     @Override
                     public Drawable getDrawable(String source) {
                         int id = 0;
@@ -579,8 +579,8 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 },null)));
 
             }
-            personViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
-    personViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
+            chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
+    chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
         }
 
         @Override
