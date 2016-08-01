@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-public class show_image extends AppCompatActivity implements View.OnClickListener {
+public class show_image extends AppCompatActivity {
     private TouchImageView image;
     private String imageurl;
     final String root = Environment.getExternalStorageDirectory().toString();
@@ -31,7 +32,13 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
         final Intent mintent = getIntent();
         final Uri imageUri=mintent.getData();
         imageurl = imageUri.toString().trim();
-
+        FloatingActionButton c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
+        c_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(show_image.this, show_image_comments.class));
+            }
+        });
     }
 
     @Override
@@ -49,10 +56,7 @@ public class show_image extends AppCompatActivity implements View.OnClickListene
         super.onResume();
     }
 
-    @Override
-    public void onClick(View view) {
-     //TODO handle fab click
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
