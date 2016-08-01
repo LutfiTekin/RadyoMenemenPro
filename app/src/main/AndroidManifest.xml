@@ -118,7 +118,8 @@
 
                 <data
                     android:host="caps.radyomenemen.com"
-                    android:scheme="http" />
+                    android:scheme="http"
+                    android:pathPrefix="/images"/>
             </intent-filter>
         </activity>
         <activity
