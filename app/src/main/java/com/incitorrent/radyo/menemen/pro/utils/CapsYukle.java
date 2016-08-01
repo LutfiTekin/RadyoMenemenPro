@@ -78,6 +78,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 sb.append(line + "\n");
             }
             line = sb.toString();
+            Log.v(TAG, "register " + line);
             JSONObject J = new JSONObject(line);
             JSONObject Jo = J.getJSONObject("image");
             if(!J.getString("status_code").equals("200")) throw new Exception(context.getString(R.string.image_not_uploaded));
@@ -85,6 +86,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
             bit.recycle();
             bit= null;
             System.gc();
+            registerCaps(Jo.getString("url"));
             return Jo.getString("url");
         } catch (Exception e) {
             notification = new NotificationCompat.Builder(context)
@@ -108,6 +110,8 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
         return null;
     }
+
+
 
     @Override
     protected void onPostExecute(final String s) {
@@ -157,7 +161,21 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         }.execute();
         if(s!=null) uploadedimg();
     }
-
+    private void registerCaps(final String name) {
+        Log.v("registerCaps",name);
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Map<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.oku("username"));
+                dataToSend.put("imagehash", name);
+                dataToSend.put("mkey", m.oku("mkey"));
+                String encodedStr = Menemen.getEncodedData(dataToSend);
+                Menemen.postMenemenData(RadyoMenemenPro.REGISTER_CAPS, encodedStr);
+                return null;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
     public void uploadedimg() {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
         notification = new NotificationCompat.Builder(context);
