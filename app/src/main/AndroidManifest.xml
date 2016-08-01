@@ -111,7 +111,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
-                    android:host="csaps.radyomenemen.com"
+                    android:host="caps.radyomenemen.com"
                     android:scheme="http" />
             </intent-filter>
         </activity>
