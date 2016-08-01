@@ -35,6 +35,9 @@ public final class RadyoMenemenPro {
     public final static String MESAJ_SIL = APP_INFO + "deletemessage";
     public final static String TOKEN_ADD = APP_INFO + "fcm_tokenadd";
     public final static String REGISTER_CAPS = APP_INFO + "registercaps";
+    public final static String POST_COMMENT_CAPS = APP_INFO + "postcaps_comment";
+    public final static String DELETE_COMMENT_CAPS = APP_INFO + "deletecaps_comment";
+
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
