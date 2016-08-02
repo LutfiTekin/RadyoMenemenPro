@@ -451,12 +451,16 @@ public class Menemen {
     }
 
     public void setToken() {
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Map<String, String> dataToSend = new HashMap<>();
-        dataToSend.put("nick", oku("username"));
-        dataToSend.put("token", token);
-        String encodedStr = getEncodedData(dataToSend);
-        Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
+        try {
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Map<String, String> dataToSend = new HashMap<>();
+            dataToSend.put("nick", oku("username"));
+            dataToSend.put("token", token);
+            String encodedStr = getEncodedData(dataToSend);
+            Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String fromHtmlCompat(String title){
