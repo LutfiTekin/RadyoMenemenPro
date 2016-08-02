@@ -195,8 +195,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         if(intent!=null){
            String action = intent.getAction();
             if(action == null) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.Fcontent, new radio()).commit();
+                defaultAction();
                 return;
             }
             Log.v("ACTION",action);
@@ -212,20 +211,24 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                                     .replace(R.id.Fcontent, new podcast()).commit();
                             break;
                         default:
-                            if (m.oku("logged").equals("yok")) {
-                                fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
-                            } else {
-                                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat", true))
-                                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
-                                else
-                                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-                            }
+                            defaultAction();
                             break;
                     }
                 } catch (Exception e) {
                     Log.v("ACTION", e.toString());
                 }
             }
+        }
+    }
+
+    private void defaultAction() {
+        if (m.oku("logged").equals("yok")) {
+            fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
+        } else {
+            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat", true))
+                fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+            else
+                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
         }
     }
 
