@@ -112,10 +112,8 @@
         <activity android:name=".show_image">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data
                     android:host="caps.radyomenemen.com"
                     android:scheme="http"
