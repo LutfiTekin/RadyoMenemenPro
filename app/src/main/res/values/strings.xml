@@ -219,7 +219,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="site_adress" translatable="false">radyomenemen.com</string>
     <string name="settings_night_mode_title">Night Mode</string>
     <string name="settings_night_mode_summary">You might need restart for changes to take effect</string>
-    <string name="title_activity_show_image_comments">Viewing image comments</string>
+    <string name="title_activity_show_image_comments">Comments</string>
     <string name="toast_image_saved">Image saved to sdcard</string>
     <string name="snackbar_feature_under_development">This feature is not available at this time</string>
 
