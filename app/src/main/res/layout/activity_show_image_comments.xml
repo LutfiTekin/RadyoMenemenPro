@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundsoft"
     android:fitsSystemWindows="true"
     tools:context="com.incitorrent.radyo.menemen.pro.show_image_comments">
 
@@ -43,5 +44,33 @@
     <include layout="@layout/content_show_image_comments" />
 
 
-
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginStart="@dimen/fab_margin"
+    android:layout_marginEnd="@dimen/fab_margin"
+    android:layout_marginTop="72dp"
+    android:gravity="center_vertical"
+    android:hint="@string/ET_hint_write_something"
+    android:imeOptions="actionDone"
+    android:inputType="textCapSentences|textAutoCorrect"
+    android:maxLines="4"
+    android:scrollHorizontally="false"
+    android:minLines="2"
+    android:textColorHint="@color/textColorHint"
+    android:textColor="@color/textColorPrimary"
+    android:layout_marginLeft="16dp"
+    app:layout_anchor="@id/app_bar"
+    app:layout_anchorGravity="bottom|center"
+   />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/ic_menu_send"
+        android:scaleType="center"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end" />
 </android.support.design.widget.CoordinatorLayout>
