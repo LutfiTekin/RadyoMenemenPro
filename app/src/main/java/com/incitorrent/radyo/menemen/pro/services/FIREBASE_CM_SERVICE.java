@@ -227,7 +227,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setSmallIcon(R.mipmap.ic_chat)
                 .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
-                .setGroupSummary(true);
+                .setGroupSummary(true)
+                .setOnlyAlertOnce(true);
         if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
         if(!mutechatnotification) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null && !isUser)
