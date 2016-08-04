@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,7 +30,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -510,77 +508,10 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
         @Override
         public void onBindViewHolder(chatViewHolder chatViewHolder, final int i) {
-    chatViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                chatViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),Html.FROM_HTML_MODE_LEGACY,new Html.ImageGetter() {
-                            @Override
-                            public Drawable getDrawable(String source) {
-                                int id = 0;
-                                switch (source){
-                                    case "gmansmile": id= R.mipmap.smile_gman;  break;
-                                    case "YSB": id= R.mipmap.ysb;  break;
-                                    case "arap": id= R.mipmap.smile_arap;  break;
-                                    case "gc": id= R.mipmap.smile_keci;  break;
-                                    case "SBH": id= R.mipmap.smile_sbh;  break;
-                                    case "000lan000": id= R.mipmap.smile_lan;  break;
-                                    case "lann0lebowski": id= R.mipmap.smile_lann;  break;
-                                    case "olumlu": id= R.mipmap.smile_olumlu;  break;
-                                    case "lol": id= R.mipmap.smile_gulme;  break;
-                                    case "ayg": id= R.mipmap.smile_ayg;  break;
-                                    case "<sikimizdedegil>": id= R.mipmap.smile_sd;  break;
-                                    case "<cahil>": id = R.mipmap.smile_cahil; break;
-                                    case "<nereyeS>": id = R.mipmap.smile_ns; break;
-                                    case "<ypm>": id = R.mipmap.ypm; break;
-                                    case "hl": id = R.mipmap.smile_harbimi; break;
-                                    case "nopanic": id = R.mipmap.smile_panikyok; break;
-                                    case "v": id = R.mipmap.v; break;
-                                    case "yds": id = R.mipmap.yds; break;
-                                    case "eizen": id = R.mipmap.eizen; break;
-                                }
-
-
-                                Drawable d = context.getResources().getDrawable(id);
-                                d.setBounds(0,0,d.getIntrinsicWidth(),d.getIntrinsicHeight());
-                                return d;
-                            }
-                        },null)));
-            }else{
-                chatViewHolder.mesaj.setText((Html.fromHtml(Menemen.getIncitorrentSmileys(sohbetList.get(i).mesaj),new Html.ImageGetter() {
-                    @Override
-                    public Drawable getDrawable(String source) {
-                        int id = 0;
-                        switch (source){
-                            case "gmansmile": id= R.mipmap.smile_gman;  break;
-                            case "YSB": id= R.mipmap.ysb;  break;
-                            case "arap": id= R.mipmap.smile_arap;  break;
-                            case "gc": id= R.mipmap.smile_keci;  break;
-                            case "SBH": id= R.mipmap.smile_sbh;  break;
-                            case "000lan000": id= R.mipmap.smile_lan;  break;
-                            case "lann0lebowski": id= R.mipmap.smile_lann;  break;
-                            case "olumlu": id= R.mipmap.smile_olumlu;  break;
-                            case "lol": id= R.mipmap.smile_gulme;  break;
-                            case "ayg": id= R.mipmap.smile_ayg;  break;
-                            case "<sikimizdedegil>": id= R.mipmap.smile_sd;  break;
-                            case "<cahil>": id = R.mipmap.smile_cahil; break;
-                            case "<nereyeS>": id = R.mipmap.smile_ns; break;
-                            case "<ypm>": id = R.mipmap.ypm; break;
-                            case "hl": id = R.mipmap.smile_harbimi; break;
-                            case "nopanic": id = R.mipmap.smile_panikyok; break;
-                            case "v": id = R.mipmap.v; break;
-                            case "yds": id = R.mipmap.yds; break;
-                            case "eizen": id = R.mipmap.eizen; break;
-                        }
-
-
-                        Drawable d = context.getResources().getDrawable(id);
-                        d.setBounds(0,0,d.getIntrinsicWidth(),d.getIntrinsicHeight());
-                        return d;
-                    }
-                },null)));
-
-            }
+            chatViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
+            chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
-    chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
+            chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
         }
 
         @Override
