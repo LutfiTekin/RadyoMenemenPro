@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -38,9 +39,9 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
  */
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
+    public static final String CATEGORY_CAPS = "caps";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
-
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -72,18 +73,19 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         inbox.setBigContentTitle(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
-        Log.v(TAG,"onCreate");
+        Log.v(TAG,"onCreate" + " token " + FirebaseInstanceId.getInstance().getToken());
         super.onCreate();
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.v("onMessageR", remoteMessage.getFrom());
         notification_intent.setAction("radyo.menemen.chat");
-//Broadcast ekle sohbet fragmenti güncelle
+        //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
         Intent chat = new Intent(CHAT_BROADCAST_FILTER);
-        String msgid = getDATA(remoteMessage,"msgid");
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
+            String msgid = getDATA(remoteMessage,"msgid");
             String action = getDATA(remoteMessage, "action");
             if(action.equals(DELETE)){
                 sql.deleteMSG(msgid);
@@ -118,6 +120,14 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
           }
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.PODCAST)){
           if(notify && notify_new_podcast)  notify_new_podcast(remoteMessage);
+        }else{
+            //Topic yok
+            String category = remoteMessage.getData().get("cat");
+            if(category == null) return;
+            if(category.equals(CATEGORY_CAPS)) {
+                //RECEIVE CAPS COMMENTS
+            }
+
         }
         super.onMessageReceived(remoteMessage);
     }
