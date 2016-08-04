@@ -59,10 +59,10 @@ public class capsDB extends SQLiteOpenHelper {
         }
         db.close();
     }
-    public Cursor getHistory(int limit){
+    public Cursor getHistory(int limit, String capsurl){
         SQLiteDatabase db = getReadableDatabase();
         if(limit < 20) limit = 20;
-        return db.query(TABLE_NAME,null,null,null,null,null,_MSGID+" DESC", String.valueOf(limit));
+        return db.query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" DESC", String.valueOf(limit));
     }
 
     public Cursor getHistoryById(String msgid){
