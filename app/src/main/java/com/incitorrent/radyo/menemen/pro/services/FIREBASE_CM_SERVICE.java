@@ -186,7 +186,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
 //        inbox.addLine(String.format("%s: %s", nick, mesaj));
-           builder.setContentTitle(nick).setContentText(Menemen.fromHtmlCompat(mesaj));
+           builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
         if(!mutechatnotification) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
@@ -206,7 +206,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 String user,post;
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
-                inbox.addLine(String.format("%s: %s", user, post));
+                inbox.addLine(String.format("%s: %s", user, m.getSpannedTextWithSmileys(post)));
                 cursor.moveToNext();
             }
             cursor.close();
@@ -223,7 +223,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
                 .setContentTitle(getString(R.string.notification_new_msg))
-                .setContentText(String.format("%s: %s", nick, Menemen.fromHtmlCompat(mesaj)))
+                .setContentText(String.format("%s: %s", nick, m.getSpannedTextWithSmileys(mesaj)))
                 .setSmallIcon(R.mipmap.ic_chat)
                 .setStyle(inbox)
                 .setGroup(GROUP_KEY_CHAT)
