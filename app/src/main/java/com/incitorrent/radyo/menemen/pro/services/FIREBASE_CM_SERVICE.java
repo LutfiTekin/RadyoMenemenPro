@@ -144,7 +144,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        //Main activity yi aç
+        //podcast fragmenti aç
+        notification_intent.setAction("radyo.menemen.podcast");
         notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
