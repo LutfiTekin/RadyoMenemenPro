@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
@@ -87,7 +86,8 @@ public class olan_biten extends Fragment {
         content = (TextView) obview.findViewById(R.id.ob_content);
         time = (TextView) obview.findViewById(R.id.ob_zaman);
         author = (TextView) obview.findViewById(R.id.ob_yazan);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setNestedScrollingEnabled(false);
         if(getResources().getBoolean(R.bool.xlarge_landscape_mode))
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
         else  if(getResources().getBoolean(R.bool.landscape_mode))
