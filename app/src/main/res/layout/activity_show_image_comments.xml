@@ -63,7 +63,7 @@
     android:layout_marginLeft="16dp"
     app:layout_anchor="@id/app_bar"
     app:layout_anchorGravity="bottom|center"
-   />
+    android:id="@+id/ETmesaj" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
