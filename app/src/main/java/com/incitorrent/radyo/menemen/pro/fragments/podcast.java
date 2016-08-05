@@ -95,7 +95,8 @@ public class podcast extends Fragment {
             }
         });
         PR = (RecyclerView) podcastview.findViewById(R.id.podcastR);
-        PR.setHasFixedSize(true);
+        PR.setHasFixedSize(false);
+        PR.setNestedScrollingEnabled(false);
         if(getResources().getBoolean(R.bool.xlarge_landscape_mode))
             PR.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
         else if(getResources().getBoolean(R.bool.landscape_mode))
