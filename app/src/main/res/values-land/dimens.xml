@@ -1,3 +1,4 @@
 <resources>
     <dimen name="now_playing_anim_dim">32dp</dimen>
+    <dimen name="cardview_in_appbar_margin">72dp</dimen>
 </resources>

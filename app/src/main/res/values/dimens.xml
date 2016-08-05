@@ -9,4 +9,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="now_playing_anim_dim">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="cardview_in_appbar_margin">16dp</dimen>
 </resources>
