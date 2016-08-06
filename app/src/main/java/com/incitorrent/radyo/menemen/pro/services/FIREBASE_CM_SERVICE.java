@@ -24,6 +24,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 
 import org.json.JSONException;
@@ -60,9 +61,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean logged = m.oku("logged").equals("evet");
     final Boolean mutechatnotification = m.isNotificationMuted();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
+    public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
     LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
     chatDB sql;
+    capsDB sql_caps;
     @SuppressLint("ServiceCast")
     @Override
     public void onCreate() {
@@ -73,6 +76,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         inbox.setBigContentTitle(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
+        sql_caps = new capsDB(context,null,null,1);
         Log.v(TAG,"onCreate" + " token " + FirebaseInstanceId.getInstance().getToken());
         super.onCreate();
     }
@@ -129,16 +133,32 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 String action = getDATA(remoteMessage, "action");
                 if(action == null) return;
                 if(action.equals(ADD)){
-                    String msgid = getDATA(remoteMessage, "msgid");
-                    String nick = getDATA(remoteMessage, "nick");
-                    String comment = getDATA(remoteMessage, "comment");
-                    String time = getDATA(remoteMessage, "time");
-                    String caps_url = getDATA(remoteMessage, "caps_url");
+                    addCapsComments(remoteMessage);
                 }
             }
 
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void addCapsComments(RemoteMessage remoteMessage) {
+        //Get data
+        String msgid = getDATA(remoteMessage, "msgid");
+        String nick = getDATA(remoteMessage, "nick");
+        String comment = getDATA(remoteMessage, "comment");
+        String time = getDATA(remoteMessage, "time");
+        String caps_url = getDATA(remoteMessage, "caps_url");
+        //Create ıntent
+        Intent caps_comment = new Intent(CAPS_BROADCAST_FILTER);
+        caps_comment.putExtra("msgid",msgid)
+                .putExtra("nick", nick)
+                .putExtra("comment", comment)
+                .putExtra("time", time)
+                .putExtra("caps_url", caps_url);
+        broadcasterForChat.sendBroadcast(caps_comment);
+        //Add to sql
+        sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
+
     }
 
     private void notify_new_podcast(RemoteMessage rm) {
