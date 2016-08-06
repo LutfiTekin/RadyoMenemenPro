@@ -407,8 +407,8 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             @Override
             protected Boolean doInBackground(Void... params) {
                 Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.oku("username"));
-                dataToSend.put("mkey", m.oku("mkey"));
+                dataToSend.put("nick", m.getUsername());
+                dataToSend.put("mkey", m.getMobilKey());
                 dataToSend.put("mesaj", mesaj);
                 String encodedStr = Menemen.getEncodedData(dataToSend);
                 BufferedReader reader = null;
