@@ -16,7 +16,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -77,43 +76,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
-        Log.v(TAG,"onCreate" + " token " + FirebaseInstanceId.getInstance().getToken());
+//        Log.v(TAG,"onCreate" + " token " + FirebaseInstanceId.getInstance().getToken());
         super.onCreate();
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.v("onMessageR", remoteMessage.getFrom());
+//        Log.v("onMessageR", remoteMessage.getFrom());
         notification_intent.setAction("radyo.menemen.chat");
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
-        Intent chat = new Intent(CHAT_BROADCAST_FILTER);
         if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
-            String msgid = getDATA(remoteMessage,"msgid");
-            String action = getDATA(remoteMessage, "action");
-            if(action.equals(DELETE)){
-                sql.deleteMSG(msgid);
-                chat.putExtra("action",DELETE);
-                chat.putExtra("msgid",msgid);
-                broadcasterForChat.sendBroadcast(chat);
-                return;
-            }
-            //CHAT mesajı geldi
-            //notify sohbet fragment
-            String nick = getDATA(remoteMessage,"nick");
-            String msg = getDATA(remoteMessage,"msg");
-            String time = getDATA(remoteMessage, "time");
-            chat.putExtra("nick",nick);
-            chat.putExtra("msg",msg);
-            chat.putExtra("msgid",msgid);
-            chat.putExtra("time",time);
-            chat.putExtra("action",ADD);
-            broadcasterForChat.sendBroadcast(chat);
-            //add to db
-            sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
-            Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
-            if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
-            buildNotification(nick,msg);
+            generalChat(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
             updateNews();
@@ -139,6 +113,35 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void generalChat(RemoteMessage remoteMessage) {
+        Intent chat = new Intent(CHAT_BROADCAST_FILTER);
+        String action = getDATA(remoteMessage, "action");
+        String msgid = getDATA(remoteMessage,"msgid");
+        if(action.equals(DELETE)){
+            sql.deleteMSG(msgid);
+            chat.putExtra("action",DELETE);
+            chat.putExtra("msgid",msgid);
+            broadcasterForChat.sendBroadcast(chat);
+            return;
+        }
+        //CHAT mesajı geldi
+        //notify sohbet fragment
+        String nick = getDATA(remoteMessage,"nick");
+        String msg = getDATA(remoteMessage,"msg");
+        String time = getDATA(remoteMessage, "time");
+        chat.putExtra("nick",nick);
+        chat.putExtra("msg",msg);
+        chat.putExtra("msgid",msgid);
+        chat.putExtra("time",time);
+        chat.putExtra("action",ADD);
+        broadcasterForChat.sendBroadcast(chat);
+        //add to db
+        sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
+        Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
+        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
+        buildNotification(nick,msg);
     }
 
     private void addCapsComments(RemoteMessage remoteMessage) {
