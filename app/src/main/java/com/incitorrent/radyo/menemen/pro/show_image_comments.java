@@ -3,12 +3,14 @@ package com.incitorrent.radyo.menemen.pro;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -158,7 +160,11 @@ public class show_image_comments extends AppCompatActivity {
         };
 
         //TODO Load Comments
+        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+
+
 
     private void postComment(final String mesaj) {
         new AsyncTask<Void,Void,Boolean>(){
@@ -196,6 +202,20 @@ public class show_image_comments extends AppCompatActivity {
                     Toast.makeText(show_image_comments.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
             }
         }.execute();
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(FIREBASE_CM_SERVICE.CAPS_BROADCAST_FILTER);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((Chatreceiver),filter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(Chatreceiver);
+        super.onStop();
     }
 
     @Override
