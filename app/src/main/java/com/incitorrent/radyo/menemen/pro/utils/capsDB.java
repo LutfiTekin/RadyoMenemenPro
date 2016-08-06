@@ -88,6 +88,14 @@ public class capsDB extends SQLiteOpenHelper {
     public static class CAPS {
         public String _MSGID, _CAPSURL, _NICK, _POST, _TIME;
 
+        public CAPS(String _MSGID, String _CAPSURL, String _NICK, String _POST, String _TIME) {
+            this._MSGID = _MSGID;
+            this._CAPSURL = _CAPSURL;
+            this._NICK = _NICK;
+            this._POST = _POST;
+            this._TIME = _TIME;
+        }
+
         public String get_MSGID() {
             return _MSGID;
         }
