@@ -54,8 +54,10 @@ public class show_image_comments extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        if(getIntent().getExtras()!=null) imageurl = getIntent().getExtras().getString("url");
         toolbar_image = (ImageView) findViewById(R.id.toolbar_image);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar_image.setTransitionName("show_image");
+            fab.setTransitionName("fab");
         }
         m = new Menemen(context);
         sql = new capsDB(context,null,null,1);
@@ -74,7 +76,7 @@ public class show_image_comments extends AppCompatActivity {
                 return false;
             }
         });
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
