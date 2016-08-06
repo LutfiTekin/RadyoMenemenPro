@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -34,6 +35,9 @@ public class show_image extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_image);
         image = (TouchImageView) findViewById(R.id.show_image);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            image.setTransitionName("show_image");
+        }
         final Intent mintent = getIntent();
         final Uri imageUri=mintent.getData();
         imageurl = imageUri.toString().trim();

@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -53,6 +54,9 @@ public class show_image_comments extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        if(getIntent().getExtras()!=null) imageurl = getIntent().getExtras().getString("url");
         toolbar_image = (ImageView) findViewById(R.id.toolbar_image);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar_image.setTransitionName("show_image");
+        }
         m = new Menemen(context);
         sql = new capsDB(context,null,null,1);
         mesaj = (EditText) findViewById(R.id.ETmesaj);
