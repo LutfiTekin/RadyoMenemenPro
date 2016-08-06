@@ -1,6 +1,8 @@
 package com.incitorrent.radyo.menemen.pro;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 
@@ -50,6 +53,7 @@ public class show_image_comments extends AppCompatActivity {
     capsDB sql;
     private RecyclerView sohbetRV;
     final Context context = show_image_comments.this;
+    BroadcastReceiver Chatreceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +125,39 @@ public class show_image_comments extends AppCompatActivity {
             }
         });
         //Onscroll Listener End
+        Chatreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle bundle = intent.getExtras();
+                if(bundle==null)
+                   Log.v(TAG,"init"); //TODO init chat messages
+                else {
+                    String action = bundle.getString("action");
+                    if(action==null) return;
+                    String id = bundle.getString("msgid");
+                    if(action.equals(FIREBASE_CM_SERVICE.ADD)) {
+                        String nick = bundle.getString("nick");
+                        String mesaj = bundle.getString("comment");
+                        if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
+                            return;
+                        sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                        sohbetRV.getAdapter().notifyDataSetChanged();
+                        m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CAPS + imageurl ,id);
+                    }else if(action.equals(FIREBASE_CM_SERVICE.DELETE)){
+                        sql.deleteMSG(id);
+                        for(int i=0;i<sohbetList.size();i++) {
+                            if (sohbetList.get(i).id.equals(id)) {
+                                Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
+                                sohbetList.remove(i);
+                                sohbetRV.getAdapter().notifyItemRemoved(i);
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
+        //TODO Load Comments
     }
 
     private void postComment(final String mesaj) {
