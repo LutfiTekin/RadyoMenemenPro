@@ -157,11 +157,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .putExtra("nick", nick)
                 .putExtra("comment", comment)
                 .putExtra("time", time)
-                .putExtra("caps_url", caps_url);
+                .putExtra("caps_url", caps_url)
+                .putExtra("action", ADD);
         broadcasterForChat.sendBroadcast(caps_comment);
         //Add to sql
         sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
-
+        //Build notification
     }
 
     private void notify_new_podcast(RemoteMessage rm) {
