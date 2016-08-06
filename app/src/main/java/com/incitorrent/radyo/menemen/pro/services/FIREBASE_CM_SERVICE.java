@@ -126,6 +126,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             if(category == null) return;
             if(category.equals(CATEGORY_CAPS)) {
                 //RECEIVE CAPS COMMENTS
+                String action = getDATA(remoteMessage, "action");
+                if(action == null) return;
+                if(action.equals(ADD)){
+                    String msgid = getDATA(remoteMessage, "msgid");
+                    String nick = getDATA(remoteMessage, "nick");
+                    String comment = getDATA(remoteMessage, "comment");
+                    String time = getDATA(remoteMessage, "time");
+                    String caps_url = getDATA(remoteMessage, "caps_url");
+                }
             }
 
         }
