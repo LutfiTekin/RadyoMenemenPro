@@ -29,15 +29,21 @@ import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class show_image_comments extends AppCompatActivity {
+    private static final String TAG = "comments_image";
     ImageView toolbar_image;
     private String imageurl;
     Menemen m;
-    private EditText mesaj;
+    private EditText ETmesaj;
     private FloatingActionButton fab;
     List<Sohbet_Objects> sohbetList;
     SohbetAdapter sohbetAdapter;
@@ -59,17 +65,22 @@ public class show_image_comments extends AppCompatActivity {
             toolbar_image.setTransitionName("show_image");
             fab.setTransitionName("fab");
         }
+        toolbar_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         m = new Menemen(context);
         sql = new capsDB(context,null,null,1);
-        mesaj = (EditText) findViewById(R.id.ETmesaj);
-        mesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        ETmesaj = (EditText) findViewById(R.id.ETmesaj);
+        ETmesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(mesaj.getText().toString().trim().length()>0) {
-                        //TODO Post comment
-                        mesaj.setText(""); //Todo add this on method
+                    if(ETmesaj.getText().toString().trim().length()>0) {
+                        postComment(ETmesaj.getText().toString());
                     }
                     return true;
                 }
@@ -80,7 +91,7 @@ public class show_image_comments extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Post comment
+                postComment(ETmesaj.getText().toString());
             }
         });
         sohbetList = new ArrayList<>();
@@ -111,6 +122,44 @@ public class show_image_comments extends AppCompatActivity {
         });
         //Onscroll Listener End
 
+    }
+
+    private void postComment(final String mesaj) {
+        new AsyncTask<Void,Void,Boolean>(){
+
+            @Override
+            protected void onPreExecute() {
+                ETmesaj.setText("");
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                Map<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.getUsername());
+                dataToSend.put("capsurl", imageurl);
+                dataToSend.put("comment", mesaj);
+                dataToSend.put("ETmesaj", mesaj);
+                String encodedStr = Menemen.getEncodedData(dataToSend);
+                String line = Menemen.postMenemenData(RadyoMenemenPro.POST_COMMENT_CAPS,encodedStr);
+                Log.v(TAG,line);
+                try {
+                    JSONObject json = new JSONObject(line);
+                   String status = json.getString("status");
+                   if(status.equals("ok")) return true;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean ok) {
+                super.onPostExecute(ok);
+                if(!ok)
+                    Toast.makeText(show_image_comments.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+            }
+        }.execute();
     }
 
     @Override
