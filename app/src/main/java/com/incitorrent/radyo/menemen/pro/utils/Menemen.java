@@ -563,4 +563,13 @@ public class Menemen {
             e.printStackTrace();
         }
     }
+
+
+    public String getMobilKey(){
+        return oku("mkey");
+    }
+
+    public String getUsername(){
+        return oku("username");
+    }
 }
