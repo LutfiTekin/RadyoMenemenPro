@@ -151,4 +151,6 @@
     <string name="toast_image_saved">Resim sd karta kaydedildi</string>
     <string name="snackbar_feature_under_development">Bu özelik yapım aşamasında</string>
     <string name="notification_caps_comment_sub_text">Bir caps yorumu var</string>
+    <string name="pref_title2_new_comment_caps">Caps Yorumları</string>
+    <string name="pref_title_new_comment_caps">Yorum yaptığım veya yüklediğim caps için bana bildirim gönder</string>
 </resources>

@@ -12,7 +12,12 @@
         android:title="@string/pref_title2_new_message_notifications"
         android:summary="@string/pref_title_new_message_notifications"   />
         <!--android:summary="@string/pref_summary_new_message_notifications"-->
-
+    <SwitchPreference
+        android:defaultValue="true"
+        android:dependency="notifications"
+        android:key="notifications_comment_caps"
+        android:title="@string/pref_title2_new_comment_caps"
+        android:summary="@string/pref_title_new_comment_caps" />
 
     <SwitchPreference
         android:defaultValue="true"
