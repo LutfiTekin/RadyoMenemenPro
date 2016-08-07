@@ -112,7 +112,7 @@ public class show_image_comments extends AppCompatActivity {
         sohbetRV.setLayoutManager(linearLayoutManager);
         sohbetRV.setHasFixedSize(true);
         sohbetAdapter = new SohbetAdapter(sohbetList);
-        itemTouchHelper.attachToRecyclerView(sohbetRV);
+//        itemTouchHelper.attachToRecyclerView(sohbetRV); //şimdilik kapalı
 //Onscroll Listener
         sohbetRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
