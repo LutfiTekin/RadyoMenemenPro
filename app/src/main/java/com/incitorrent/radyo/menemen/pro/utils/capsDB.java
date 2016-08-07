@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -63,6 +64,12 @@ public class capsDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         if(limit < 20) limit = 20;
         return db.query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" DESC", String.valueOf(limit));
+    }
+
+    public Boolean isHistoryExist(String capsurl,String nick){
+        SQLiteDatabase db = getReadableDatabase();
+        long rownum = DatabaseUtils.queryNumEntries(db,TABLE_NAME, _CAPSURL  + "='"+ capsurl + "' AND " + _NICK + "='" + nick + "'" );
+        return rownum > 0;
     }
 
     public Cursor getHistoryById(String msgid){
