@@ -150,4 +150,5 @@
     <string name="title_activity_show_image_comments">Yorumlar</string>
     <string name="toast_image_saved">Resim sd karta kaydedildi</string>
     <string name="snackbar_feature_under_development">Bu özelik yapım aşamasında</string>
+    <string name="notification_caps_comment_sub_text">Bir caps yorumu var</string>
 </resources>

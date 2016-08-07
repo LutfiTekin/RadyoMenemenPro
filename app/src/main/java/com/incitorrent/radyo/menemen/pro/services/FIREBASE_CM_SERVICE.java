@@ -22,6 +22,7 @@ import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
@@ -151,6 +152,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String comment = getDATA(remoteMessage, "comment");
         String time = getDATA(remoteMessage, "time");
         String caps_url = getDATA(remoteMessage, "caps_url");
+        String caps_id = getDATA(remoteMessage, "caps_id");
         //Create ıntent
         Intent caps_comment = new Intent(CAPS_BROADCAST_FILTER);
         caps_comment.putExtra("msgid",msgid)
@@ -163,6 +165,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         //Add to sql
         sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
         //Build notification
+        notification_intent = new Intent(context, show_image_comments.class);
+        notification_intent.setAction("radyo.menemen.caps")
+                .putExtra("url",caps_url);
+        if(!nick.equals(m.getUsername()))
+            buildNotificationforCaps(nick,comment,caps_id);
     }
 
     private void notify_new_podcast(RemoteMessage rm) {
@@ -282,6 +289,33 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         Notification summary = SUM_Notification.build();
         notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
+    }
+
+
+
+    private void buildNotificationforCaps(String nick, String mesaj, String caps_id) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.default_image);
+        builder.setAutoCancel(true);
+        builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
+        builder.setSubText(getString(R.string.notification_caps_comment_sub_text));
+        if(!mutechatnotification) {
+            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500, 500, 500});
+        }
+        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setGroup(GROUP_KEY_CHAT);
+        builder.setAutoCancel(true);
+        Notification notification = builder.build();
+        int notification_id = RadyoMenemenPro.ON_AIR_NOTIFICATION + 1;
+        try {
+            notification_id = Integer.parseInt(caps_id) + RadyoMenemenPro.ON_AIR_NOTIFICATION;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        notificationManager.notify(notification_id, notification);
     }
       private String getDATA(RemoteMessage rm, String data) {
         return rm.getData().get(data);
