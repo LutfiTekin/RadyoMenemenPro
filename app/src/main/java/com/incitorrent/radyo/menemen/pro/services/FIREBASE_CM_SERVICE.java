@@ -169,7 +169,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification_intent = new Intent(context, show_image_comments.class);
         notification_intent.setAction("radyo.menemen.caps")
                 .putExtra("url",caps_url);
-        if(!nick.equals(m.getUsername()) && notify_new_comment_caps)
+        Boolean is_caps_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND + caps_url);
+        if(!nick.equals(m.getUsername()) && notify_new_comment_caps && !is_caps_foreground)
             buildNotificationforCaps(nick,comment,caps_id);
     }
 

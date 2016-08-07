@@ -220,6 +220,7 @@ public class show_image_comments extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + imageurl, false);//Sohbet ön planda değil: bildirim gelebilir
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(Chatreceiver);
         super.onStop();
     }
@@ -239,6 +240,7 @@ public class show_image_comments extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + imageurl,true); //Sohbet ön planda: bildirim gelmeyecek
         Glide.with(show_image_comments.this)
                 .load(imageurl)
                 .error(android.R.color.holo_red_light)
