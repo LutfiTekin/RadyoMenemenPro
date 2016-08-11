@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/colorBackgroundsofter">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/podcast_title"
+        android:layout_gravity="left|top"
+        android:layout_margin="16dp"
+        android:textColor="@color/textColorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ipsum odio, dapibus et diam convallis, pharetra semper mauris. Pellentesque a odio augue. Nulla id porta mi. Sed non venenatis lorem, semper ultrices felis. Morbi tristique enim nec accumsan sed. "
+        android:id="@+id/podcast_descr"
+        android:layout_below="@+id/podcast_title"
+        android:layout_alignLeft="@+id/podcast_title"
+        android:layout_alignStart="@+id/podcast_title"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/textColorPrimaryDisabled"
+        android:minLines="7" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeholder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_play_arrow_black_24dp"
+        android:visibility="invisible" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:secondaryProgress="16"
+        android:id="@+id/seekBar"
+        android:layout_above="@+id/placeholder"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:splitTrack="false" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chronometer"
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
