@@ -34,7 +34,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     TextView title,descr;
     CardView podcastcard;
     SeekBar seekBar;
-    FloatingActionButton fab;
+    FloatingActionButton placeholder;
     Chronometer chronometer;
     ProgressBar progressBar;
     BroadcastReceiver receiver;
@@ -66,8 +66,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         seekBar.setOnSeekBarChangeListener(this);
         progressBar = (ProgressBar) podcastview.findViewById(R.id.loading);
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
-        fab = (FloatingActionButton) podcastview.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        placeholder = (FloatingActionButton) podcastview.findViewById(R.id.placeholder);
+        placeholder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().startService(new Intent(getActivity().getApplicationContext(),MUSIC_PLAY_SERVICE.class));
@@ -100,6 +100,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         progressBar.setVisibility(View.GONE);
                         seekBar.setMax(sec);
                         seekBar.setProgress(currentsec);
+                        placeholder.setImageResource(android.R.drawable.ic_media_pause);
                         startTimer();
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE)){
                         int buffer = intent.getExtras().getInt("buffer");
@@ -110,7 +111,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
                     }else if(action.equals(RadyoMenemenPro.PLAY)){
                         Boolean play = intent.getExtras().getBoolean(RadyoMenemenPro.PLAY);
-                        fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                        placeholder.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                         if(play) {
                             chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                             chronometer.start();
@@ -160,8 +161,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onResume() {
         if(getActivity()!=null) {
-            FloatingActionButton Mainfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(Mainfab!=null) Mainfab.setVisibility(View.INVISIBLE);
+            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(fab!=null) fab.setVisibility(View.GONE);
         }
         super.onResume();
     }
@@ -182,8 +183,10 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     public void onStop() {
         if(getActivity() != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
-            FloatingActionButton Mainfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(Mainfab!=null) Mainfab.setVisibility(View.VISIBLE);
+
+                FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+                if(fab!=null) fab.setVisibility(View.VISIBLE);
+
         }
         super.onStop();
     }
