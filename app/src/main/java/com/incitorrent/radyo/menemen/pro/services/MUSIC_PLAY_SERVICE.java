@@ -126,7 +126,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-               if(m.oku("caliyor").equals("evet")) {
+               if(m.oku("caliyor").equals("evet") && !isPodcast) {
                    setMusicMeta();
                    new Thread(new Runnable() {
                        @Override
