@@ -350,6 +350,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     //Activity de şimdi çalıyor butonunu değiştir
     public void broadcastToUi(Boolean play) {
         Intent intent = new Intent(MUSIC_PLAY_FILTER);
+        intent.putExtra("action",RadyoMenemenPro.PLAY);
         intent.putExtra(RadyoMenemenPro.PLAY,play);
         broadcasterForUi.sendBroadcast(intent);
     }
