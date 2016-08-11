@@ -1,5 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
+import android.transition.ChangeBounds;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -252,6 +259,8 @@ public class podcast extends Fragment {
                 duration = (TextView) itemView.findViewById(R.id.duration);
                 descr = (TextView) itemView.findViewById(R.id.descr);
                 cv = (CardView) itemView.findViewById(R.id.cvP);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    cv.setTransitionName(RadyoMenemenPro.transitionname.PODCASTCARD);
                 rel = (RelativeLayout) itemView.findViewById(R.id.Pitem);
                 title.setOnClickListener(this);
                 title.setOnLongClickListener(this);
@@ -276,7 +285,26 @@ public class podcast extends Fragment {
                     bundle.putString("title",RList.get(getAdapterPosition()).title);
                     bundle.putString("descr",RList.get(getAdapterPosition()).description);
                     podcast_now_playing.setArguments(bundle);
-                    getFragmentManager().beginTransaction().replace(R.id.Fcontent, podcast_now_playing).commit();
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        podcast_now_playing.setSharedElementEnterTransition(new DetailsTransition());
+                        podcast_now_playing.setEnterTransition(new Slide());
+                        setExitTransition(new Fade());
+                        podcast_now_playing.setSharedElementReturnTransition(new DetailsTransition());
+                        getFragmentManager()
+                                .beginTransaction()
+                                .addSharedElement(cv, cv.getTransitionName())
+                                .addToBackStack("podcast")
+                                .replace(R.id.Fcontent, podcast_now_playing)
+                                .commit();
+                    }else {
+                        getFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack("podcast")
+                                .replace(R.id.Fcontent, podcast_now_playing)
+                                .commit();
+                    }
                 }
             }
 
@@ -362,5 +390,12 @@ public class podcast extends Fragment {
             this.url = url;
         }
     }
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public class DetailsTransition extends TransitionSet {
+        public DetailsTransition() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new ChangeBounds()).
+                    addTransition(new ChangeTransform());
+        }
+    }
 }

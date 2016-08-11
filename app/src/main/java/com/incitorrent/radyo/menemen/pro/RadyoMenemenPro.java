@@ -65,6 +65,7 @@ public final class RadyoMenemenPro {
     public final static class transitionname {
         public final static String ART = "artwork";
         public final static String CALAN = "calan";
+        public final static String PODCASTCARD = "podcastcard";
     }
 
     public final static class AnalyticEvents{
