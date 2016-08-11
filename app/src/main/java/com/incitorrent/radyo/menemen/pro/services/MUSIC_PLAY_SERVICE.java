@@ -159,7 +159,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     stopForeground(false);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
-                    if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if puased by user
+                    if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if paused by user
                 } catch (Exception e){ e.printStackTrace(); }
             }
         }).start();
@@ -264,6 +264,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
                             @Override
                             public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
                                 broadcastPodcastBuffering(i);
+                            }
+                        });
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mediaPlayer) {
+                                pause(true);
                             }
                         });
                         broadcastPodcastDuration();

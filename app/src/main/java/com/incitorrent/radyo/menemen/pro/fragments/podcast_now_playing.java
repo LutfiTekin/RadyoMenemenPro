@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.transition.AutoTransition;
@@ -33,6 +34,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     TextView title,descr;
     CardView podcastcard;
     SeekBar seekBar;
+    FloatingActionButton fab;
     Chronometer chronometer;
     ProgressBar progressBar;
     BroadcastReceiver receiver;
@@ -64,6 +66,13 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         seekBar.setOnSeekBarChangeListener(this);
         progressBar = (ProgressBar) podcastview.findViewById(R.id.loading);
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
+        fab = (FloatingActionButton) podcastview.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startService(new Intent(getActivity().getApplicationContext(),MUSIC_PLAY_SERVICE.class));
+            }
+        });
         if(bundle != null){
             podcast_title = bundle.getString("title");
             podcast_descr = bundle.getString("descr");
@@ -101,6 +110,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
                     }else if(action.equals(RadyoMenemenPro.PLAY)){
                         Boolean play = intent.getExtras().getBoolean(RadyoMenemenPro.PLAY);
+                        fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                         if(play) {
                             chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
                             chronometer.start();
@@ -149,6 +159,10 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onResume() {
+        if(getActivity()!=null) {
+            FloatingActionButton Mainfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(Mainfab!=null) Mainfab.setVisibility(View.INVISIBLE);
+        }
         super.onResume();
     }
 
@@ -166,7 +180,11 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStop() {
-        if(getActivity() != null) LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+        if(getActivity() != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+            FloatingActionButton Mainfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            if(Mainfab!=null) Mainfab.setVisibility(View.VISIBLE);
+        }
         super.onStop();
     }
 
