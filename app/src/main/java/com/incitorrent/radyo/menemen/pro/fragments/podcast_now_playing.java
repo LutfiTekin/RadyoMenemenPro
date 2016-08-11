@@ -43,15 +43,14 @@ public class podcast_now_playing extends Fragment {
             descr.setText(podcast_descr);
         }
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSharedElementEnterTransition(new AutoTransition());
+        }
         return podcastview;
     }
 
     @Override
     public void onResume() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition(new AutoTransition());
-        }
         super.onResume();
     }
 }
