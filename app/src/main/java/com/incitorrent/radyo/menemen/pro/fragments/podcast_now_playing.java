@@ -29,7 +29,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
-public class podcast_now_playing extends Fragment {
+public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarChangeListener{
     TextView title,descr;
     CardView podcastcard;
     SeekBar seekBar;
@@ -58,6 +58,7 @@ public class podcast_now_playing extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             podcastcard.setTransitionName(RadyoMenemenPro.transitionname.PODCASTCARD);
         seekBar = (SeekBar) podcastview.findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
         if(bundle != null){
             podcast_title = bundle.getString("title");
@@ -158,5 +159,29 @@ public class podcast_now_playing extends Fragment {
     public void onStop() {
         if(getActivity() != null) LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
         super.onStop();
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+       if(chronometer != null)
+           chronometer.setBase(SystemClock.elapsedRealtime() - (i * 1000));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if(chronometer != null)
+            chronometer.setBase(SystemClock.elapsedRealtime() - (seekBar.getProgress() * 1000));
+        //TODO update media player service
+    }
+
+    @Override
+    public void onDestroy() {
+        exec.shutdown();
+        super.onDestroy();
     }
 }
