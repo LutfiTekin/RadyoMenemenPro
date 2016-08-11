@@ -25,7 +25,6 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -211,7 +210,6 @@ public class podcast extends Fragment {
                         String delims = "=";
                         String[] tokens = phrase.split(delims);
                         String real_mp3_link = podcastlink + tokens[1];
-                        Log.e("tag", real_mp3_link);
                         //StringEntity entity = new UrlEncodedFormEntity(parser,"UTF-8");
                         String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
                         String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
