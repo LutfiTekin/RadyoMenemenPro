@@ -40,6 +40,10 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 public class MUSIC_PLAY_SERVICE extends Service {
     private static final String TAG = "MUSIC_PLAY_SERVICE";
     final public static String MUSIC_PLAY_FILTER = "com.incitorrent.radyo.menemen.UICHANGE";
+    final public static String PODCAST_PLAY_FILTER = "com.incitorrent.radyo.menemen.podcast.UICHANGE";
+    final public static String PODCAST_GET_DURATION = "getpodcastduration";
+    final public static String PODCAST_SEEKBAR_UPDATE = "podcastseekbarupdate";
+
     Menemen m;
     AudioManager audioManager;
     int amgr_result;
@@ -250,6 +254,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 //ONPOST
                 try {
                     mediaPlayer.start();
+                    if(isPodcast) broadcastPodcastDuration();
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -335,6 +340,17 @@ public class MUSIC_PLAY_SERVICE extends Service {
         intent.putExtra(RadyoMenemenPro.PLAY,play);
         broadcasterForUi.sendBroadcast(intent);
     }
+
+    //Podcast Şimdi Çalıyor Fragmentine Bilgileri Gönder
+    public void broadcastPodcastDuration(){
+        Intent intent = new Intent(PODCAST_PLAY_FILTER);
+        long duration = 0;
+        duration = mediaPlayer.getDuration();
+        intent.putExtra("action",PODCAST_GET_DURATION);
+        intent.putExtra("duration",duration);
+        broadcasterForUi.sendBroadcast(intent);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
