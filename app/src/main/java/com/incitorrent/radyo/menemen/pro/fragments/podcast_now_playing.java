@@ -2,8 +2,13 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.transition.AutoTransition;
 import android.view.LayoutInflater;
@@ -13,11 +18,13 @@ import android.widget.TextView;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 
 
 public class podcast_now_playing extends Fragment {
     TextView title,descr;
     CardView podcastcard;
+    BroadcastReceiver receiver;
 
     public podcast_now_playing() {
         // Required empty public constructor
@@ -46,11 +53,37 @@ public class podcast_now_playing extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSharedElementEnterTransition(new AutoTransition());
         }
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent!=null) {
+                    //TODO handle actions
+                }
+            }
+        };
         return podcastview;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        if(getActivity() != null) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(MUSIC_PLAY_SERVICE.PODCAST_PLAY_FILTER);
+            filter.addAction(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_UPDATE);
+            LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((receiver), filter);
+        }
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        if(getActivity() != null) LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+        super.onStop();
     }
 }
