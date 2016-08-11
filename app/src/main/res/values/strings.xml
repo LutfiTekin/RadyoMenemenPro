@@ -226,6 +226,4 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="notification_caps_comment_sub_text">There is a comment for this image</string>
     <string name="pref_title2_new_comment_caps">Caps Comments</string>
     <string name="pref_title_new_comment_caps">Notify me when there is new comment on caps that i uploaded or posted a comment</string>
-
-
 </resources>

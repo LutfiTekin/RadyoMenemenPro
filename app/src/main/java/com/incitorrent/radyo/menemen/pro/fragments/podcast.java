@@ -271,6 +271,12 @@ public class podcast extends Fragment {
                     inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
+                    Fragment podcast_now_playing = new podcast_now_playing();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title",RList.get(getAdapterPosition()).title);
+                    bundle.putString("descr",RList.get(getAdapterPosition()).description);
+                    podcast_now_playing.setArguments(bundle);
+                    getFragmentManager().beginTransaction().replace(R.id.Fcontent, podcast_now_playing).commit();
                 }
             }
 
