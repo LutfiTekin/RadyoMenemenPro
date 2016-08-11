@@ -42,7 +42,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
     final public static String MUSIC_PLAY_FILTER = "com.incitorrent.radyo.menemen.UICHANGE";
     final public static String PODCAST_PLAY_FILTER = "com.incitorrent.radyo.menemen.podcast.UICHANGE";
     final public static String PODCAST_GET_DURATION = "getpodcastduration";
-    final public static String PODCAST_SEEKBAR_UPDATE = "podcastseekbarupdate";
+    final public static String PODCAST_SEEKBAR_BUFFERING_UPDATE = "podcastseekbarupdate";
+    final public static String PODCAST_TERMINATE = "terminate";
 
     Menemen m;
     AudioManager audioManager;
@@ -254,7 +255,15 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 //ONPOST
                 try {
                     mediaPlayer.start();
-                    if(isPodcast) broadcastPodcastDuration();
+                    if(isPodcast) {
+                        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                            @Override
+                            public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
+                                broadcastPodcastBuffering(i);
+                            }
+                        });
+                        broadcastPodcastDuration();
+                    }
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -280,6 +289,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     }
 
+
     @Override
     public void onDestroy() {
         Log.v(TAG,"onDestroy");
@@ -289,6 +299,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             stopForeground(true);
             mediaPlayer.stop();
             mediaPlayer.release();
+            if(isPodcast) terminatePodcast();
             broadcastToUi(false);
             mediaSessionCompat.release();
             exec.shutdown();
@@ -300,6 +311,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
         super.onDestroy();
     }
+
+
 
     void nowPlayingNotification(){
         //Şarkı albüm kapağı
@@ -344,10 +357,24 @@ public class MUSIC_PLAY_SERVICE extends Service {
     //Podcast Şimdi Çalıyor Fragmentine Bilgileri Gönder
     public void broadcastPodcastDuration(){
         Intent intent = new Intent(PODCAST_PLAY_FILTER);
-        long duration = 0;
-        duration = mediaPlayer.getDuration();
+        long duration = mediaPlayer.getDuration();
+        long currentpos = mediaPlayer.getCurrentPosition();
         intent.putExtra("action",PODCAST_GET_DURATION);
         intent.putExtra("duration",duration);
+        intent.putExtra("current", currentpos);
+        broadcasterForUi.sendBroadcast(intent);
+    }
+
+    private void broadcastPodcastBuffering(int i) {
+        Intent intent = new Intent(PODCAST_PLAY_FILTER);
+        intent.putExtra("action",PODCAST_SEEKBAR_BUFFERING_UPDATE);
+        intent.putExtra("buffer",i);
+        broadcasterForUi.sendBroadcast(intent);
+    }
+
+    private void terminatePodcast() {
+        Intent intent = new Intent(PODCAST_PLAY_FILTER);
+        intent.putExtra("action",PODCAST_TERMINATE);
         broadcasterForUi.sendBroadcast(intent);
     }
 

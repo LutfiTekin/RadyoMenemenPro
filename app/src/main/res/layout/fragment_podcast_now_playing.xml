@@ -57,7 +57,8 @@
         android:layout_above="@+id/placeholder"
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
-        android:splitTrack="false" />
+        android:splitTrack="false"
+        android:indeterminate="false" />
 
     <Chronometer
         android:layout_width="wrap_content"

@@ -14,7 +14,9 @@ import android.transition.AutoTransition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -24,6 +26,7 @@ import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 public class podcast_now_playing extends Fragment {
     TextView title,descr;
     CardView podcastcard;
+    SeekBar seekBar;
     BroadcastReceiver receiver;
 
     public podcast_now_playing() {
@@ -32,7 +35,7 @@ public class podcast_now_playing extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View podcastview = inflater.inflate(R.layout.fragment_podcast_now_playing, container, false);
@@ -43,6 +46,7 @@ public class podcast_now_playing extends Fragment {
         podcastcard = (CardView) podcastview.findViewById(R.id.podcast_card);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             podcastcard.setTransitionName(RadyoMenemenPro.transitionname.PODCASTCARD);
+        seekBar = (SeekBar) podcastview.findViewById(R.id.seekBar);
         if(bundle != null){
             podcast_title = bundle.getString("title");
             podcast_descr = bundle.getString("descr");
@@ -58,7 +62,25 @@ public class podcast_now_playing extends Fragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null) {
-                    //TODO handle actions
+                    String action = intent.getExtras().getString("action");
+                    if(action==null) return;
+                    if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_GET_DURATION)){
+                        long duration = intent.getExtras().getLong("duration");
+                        long currentPos = intent.getExtras().getLong("current");
+                        if(duration == -1) return;
+                        int sec = (int) duration/1000;
+                        int currentsec = (int) currentPos/1000;
+                        seekBar.setMax(sec);
+                        seekBar.setProgress(currentsec);
+                        Toast.makeText(getActivity().getApplicationContext(), "Duration is " + duration + " in seconds " + sec, Toast.LENGTH_SHORT).show();
+                    }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE)){
+                        int buffer = intent.getExtras().getInt("buffer");
+                        int max = seekBar.getMax();
+                        int seconds = (max * buffer) / 100;
+                        seekBar.setSecondaryProgress(seconds);
+                    }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_TERMINATE)){
+                        getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
+                    }
                 }
             }
         };
@@ -75,7 +97,7 @@ public class podcast_now_playing extends Fragment {
         if(getActivity() != null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(MUSIC_PLAY_SERVICE.PODCAST_PLAY_FILTER);
-            filter.addAction(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_UPDATE);
+            filter.addAction(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE);
             LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((receiver), filter);
         }
         super.onStart();
