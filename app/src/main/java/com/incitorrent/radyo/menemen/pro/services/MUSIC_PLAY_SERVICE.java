@@ -41,9 +41,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
     private static final String TAG = "MUSIC_PLAY_SERVICE";
     final public static String MUSIC_PLAY_FILTER = "com.incitorrent.radyo.menemen.UICHANGE";
     final public static String PODCAST_PLAY_FILTER = "com.incitorrent.radyo.menemen.podcast.UICHANGE";
+    final public static String PODCAST_SEEK_FILTER = "com.incitorrent.radyo.menemen.podcast.seek";
     final public static String PODCAST_GET_DURATION = "getpodcastduration";
     final public static String PODCAST_SEEKBAR_BUFFERING_UPDATE = "podcastseekbarupdate";
-    final public static String PODCAST_TERMINATE = "terminate";
+    final public static String PODCAST_TERMINATE = "podcastterminate";
+    BroadcastReceiver receiver;
 
     Menemen m;
     AudioManager audioManager;
@@ -140,8 +142,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
             }
         },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /2, TimeUnit.SECONDS);
 
+        podcastReceiver();
         super.onCreate();
     }
+
 
     private void pause(final Boolean abandonfocus) {
         new Thread(new Runnable() {
@@ -263,6 +267,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                             }
                         });
                         broadcastPodcastDuration();
+                        registerPodcastReceiver();
                     }
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
@@ -290,6 +295,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
 
+
+
     @Override
     public void onDestroy() {
         Log.v(TAG,"onDestroy");
@@ -304,6 +311,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             mediaSessionCompat.release();
             exec.shutdown();
             unregisterReceiver(PlugReceiver);
+            LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).unregisterReceiver(receiver);
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
         } catch (Exception e) {
             Log.v(TAG, "onDestroy "+ e.toString());
@@ -379,6 +387,29 @@ public class MUSIC_PLAY_SERVICE extends Service {
         broadcasterForUi.sendBroadcast(intent);
     }
 
+
+
+    private void podcastReceiver() {
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent!=null) {
+                int msec = intent.getExtras().getInt("seek");
+                    try {
+                        mediaPlayer.seekTo(msec);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+    }
+
+    private void registerPodcastReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PODCAST_SEEK_FILTER);
+        LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).registerReceiver((receiver), filter);
+    }
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");

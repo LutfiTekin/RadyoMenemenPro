@@ -16,9 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -34,10 +34,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     CardView podcastcard;
     SeekBar seekBar;
     Chronometer chronometer;
+    ProgressBar progressBar;
     BroadcastReceiver receiver;
     ScheduledThreadPoolExecutor exec;
     Menemen m;
     long timeWhenStopped = 0;
+    LocalBroadcastManager localBroadcastManager;
     public podcast_now_playing() {
         // Required empty public constructor
     }
@@ -58,7 +60,9 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             podcastcard.setTransitionName(RadyoMenemenPro.transitionname.PODCASTCARD);
         seekBar = (SeekBar) podcastview.findViewById(R.id.seekBar);
+        seekBar.setEnabled(false);
         seekBar.setOnSeekBarChangeListener(this);
+        progressBar = (ProgressBar) podcastview.findViewById(R.id.loading);
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
         if(bundle != null){
             podcast_title = bundle.getString("title");
@@ -83,9 +87,10 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         if(duration == -1) return;
                         int sec = (int) duration/1000;
                         int currentsec = (int) currentPos/1000;
+                        seekBar.setEnabled(true);
+                        progressBar.setVisibility(View.GONE);
                         seekBar.setMax(sec);
                         seekBar.setProgress(currentsec);
-                        Toast.makeText(getActivity().getApplicationContext(), "Duration is " + duration + " in seconds " + sec, Toast.LENGTH_SHORT).show();
                         startTimer();
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE)){
                         int buffer = intent.getExtras().getInt("buffer");
@@ -114,14 +119,18 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onSaveInstanceState(Bundle outState) {
        if(chronometer != null) outState.putLong("chr",chronometer.getBase());
+        if(seekBar != null) outState.putBoolean("seekbar", seekBar.isEnabled());
+        if(progressBar != null) outState.putInt("progressbar", progressBar.getVisibility());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if(savedInstanceState != null && chronometer != null) {
+        if(savedInstanceState != null && chronometer != null && seekBar != null && progressBar != null) {
             chronometer.setBase(savedInstanceState.getLong("chr"));
             chronometer.start();
+            seekBar.setEnabled(savedInstanceState.getBoolean("seekbar"));
+            if(savedInstanceState.getInt("progressbar") == View.GONE) progressBar.setVisibility(View.GONE);
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -176,7 +185,13 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     public void onStopTrackingTouch(SeekBar seekBar) {
         if(chronometer != null)
             chronometer.setBase(SystemClock.elapsedRealtime() - (seekBar.getProgress() * 1000));
-        //TODO update media player service
+        //update media player service
+        Intent seek = new Intent(MUSIC_PLAY_SERVICE.PODCAST_SEEK_FILTER);
+        int progress = seekBar.getProgress() < seekBar.getSecondaryProgress() ? seekBar.getProgress() * 1000 : (seekBar.getSecondaryProgress() * 1000) - 1000;
+        seek.putExtra("seek",progress);
+        seekBar.setProgress(progress/1000);
+        localBroadcastManager =  LocalBroadcastManager.getInstance(getActivity().getApplicationContext());
+        localBroadcastManager.sendBroadcast(seek);
     }
 
     @Override
