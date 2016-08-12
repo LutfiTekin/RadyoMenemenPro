@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.PODCAST_DESCR;
 
 
 public class MUSIC_PLAY_SERVICE extends Service {
@@ -61,7 +62,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
     NotificationManager nm;
     LocalBroadcastManager broadcasterForUi;
     Boolean isPodcast = false; //Çalan şey radyo mu podcast mi
-    String podcastDescr = "";
     public MUSIC_PLAY_SERVICE() {
     }
 
@@ -205,7 +205,14 @@ public class MUSIC_PLAY_SERVICE extends Service {
         if(!m.oku("caliyor").equals("evet")){
             //MUSIC_INFO_SERVICE başlat
             if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
-            else podcastDescr = intent.getExtras().getString("descr");
+            else {
+                try {
+                    if(intent.hasExtra("descr"))
+                    m.kaydet(PODCAST_DESCR,intent.getExtras().getString("descr"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
            if(dataSource!=null)  play(dataSource);
             else resume(true);
             Log.v(TAG,"DATA SOURCE " +dataSource);
@@ -341,7 +348,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             calan = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
             intent.setAction("radyo.menemen.podcast.play");
             intent.putExtra("title", calan)
-                    .putExtra("descr", podcastDescr)
+                    .putExtra("descr", m.oku(PODCAST_DESCR))
                     .putExtra("duration", (long) mediaPlayer.getDuration())
                     .putExtra("current", (long) mediaPlayer.getCurrentPosition());
         }
