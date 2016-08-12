@@ -78,6 +78,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             podcast_descr = bundle.getString("descr");
             title.setText(podcast_title);
             descr.setText(podcast_descr);
+            long duration = bundle.getLong("duration");
+            long current = bundle.getLong("current");
+            if(duration != 0) {
+                setCurrentandDuration(duration, current);
+                startTimer();
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -93,13 +99,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                     if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_GET_DURATION)){
                         long duration = intent.getExtras().getLong("duration");
                         long currentPos = intent.getExtras().getLong("current");
-                        if(duration == -1) return;
-                        int sec = (int) duration/1000;
-                        int currentsec = (int) currentPos/1000;
-                        seekBar.setEnabled(true);
-                        progressBar.setVisibility(View.GONE);
-                        seekBar.setMax(sec);
-                        seekBar.setProgress(currentsec);
+                        setCurrentandDuration(duration, currentPos);
                         placeholder.setImageResource(android.R.drawable.ic_media_pause);
                         startTimer();
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE)){
@@ -107,6 +107,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         int max = seekBar.getMax();
                         int seconds = (max * buffer) / 100;
                         seekBar.setSecondaryProgress(seconds);
+                        int currentsec = intent.getExtras().getInt("current")/1000;
+                        seekBar.setProgress(currentsec);
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_TERMINATE)){
                         getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
                     }else if(action.equals(RadyoMenemenPro.PLAY)){
@@ -125,6 +127,16 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             }
         };
         return podcastview;
+    }
+
+    private void setCurrentandDuration(long duration, long currentPos) {
+        if(duration < 1) return;
+        int sec = (int) duration/1000;
+        int currentsec = (int) currentPos/1000;
+        seekBar.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+        seekBar.setMax(sec);
+        seekBar.setProgress(currentsec);
     }
 
     @Override
@@ -166,6 +178,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         }
        if(placeholder != null)
         placeholder.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+       if(m.oku("caliyor").equals("evet") && seekBar.getMax() > 100)
+           progressBar.setVisibility(View.GONE);
         super.onResume();
     }
 

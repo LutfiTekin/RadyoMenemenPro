@@ -274,6 +274,7 @@ public class podcast extends Fragment {
                     Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
                     getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
                     inf.kaydet("caliyor","hayır");
+                        playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
                         playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
                     inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
