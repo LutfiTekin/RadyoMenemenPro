@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -31,8 +32,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
-public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarChangeListener{
+public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarChangeListener,View.OnClickListener{
     TextView title,descr;
+    ImageView rewind,forward;
     CardView podcastcard;
     SeekBar seekBar;
     FloatingActionButton placeholder;
@@ -67,13 +69,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         seekBar.setOnSeekBarChangeListener(this);
         progressBar = (ProgressBar) podcastview.findViewById(R.id.loading);
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
+        rewind = (ImageView) podcastview.findViewById(R.id.rewind);
+        forward = (ImageView) podcastview.findViewById(R.id.forward);
         placeholder = (FloatingActionButton) podcastview.findViewById(R.id.placeholder);
-        placeholder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().startService(new Intent(getActivity().getApplicationContext(),MUSIC_PLAY_SERVICE.class));
-            }
-        });
+        placeholder.setOnClickListener(this);
+        rewind.setOnClickListener(this);
+        forward.setOnClickListener(this);
         if(bundle != null){
             podcast_title = bundle.getString("title");
             podcast_descr = bundle.getString("descr");
@@ -242,5 +243,15 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             e.printStackTrace();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.placeholder:
+                getActivity().startService(new Intent(getActivity().getApplicationContext(),MUSIC_PLAY_SERVICE.class));
+                break;
+
+        }
     }
 }
