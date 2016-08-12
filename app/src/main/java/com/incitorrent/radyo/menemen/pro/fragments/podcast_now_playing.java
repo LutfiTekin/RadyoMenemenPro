@@ -225,8 +225,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         //update media player service
+        seekTo(seekBar.getProgress());
+    }
+
+    private void seekTo(int i) {
         Intent seek = new Intent(MUSIC_PLAY_SERVICE.PODCAST_SEEK_FILTER);
-        int progress = seekBar.getProgress() < seekBar.getSecondaryProgress() ? seekBar.getProgress() * 1000 : (seekBar.getSecondaryProgress() * 1000) - 1000;
+        int progress = i < seekBar.getSecondaryProgress() ? i * 1000 : (seekBar.getSecondaryProgress() * 1000) - 1000;
         seek.putExtra("seek",progress);
         seekBar.setProgress(progress/1000);
         if(chronometer != null)
@@ -251,7 +255,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             case R.id.placeholder:
                 getActivity().startService(new Intent(getActivity().getApplicationContext(),MUSIC_PLAY_SERVICE.class));
                 break;
-
+            case R.id.rewind:
+                seekTo(seekBar.getProgress() - 5);
+                break;
+            case R.id.forward:
+                seekTo(seekBar.getProgress() + 5);
+                break;
         }
     }
 }
