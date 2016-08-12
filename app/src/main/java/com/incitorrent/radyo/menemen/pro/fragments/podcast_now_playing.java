@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.transition.AutoTransition;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,7 +151,9 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         if(savedInstanceState != null && chronometer != null && seekBar != null && progressBar != null) {
-            chronometer.setBase(savedInstanceState.getLong("chr"));
+            Log.v("chr", "" + savedInstanceState.getLong("chr"));
+            long diff = SystemClock.elapsedRealtime() - savedInstanceState.getLong("chr");
+            chronometer.setBase(diff);
             chronometer.start();
             seekBar.setEnabled(savedInstanceState.getBoolean("seekbar"));
             if(savedInstanceState.getInt("progressbar") == View.GONE) progressBar.setVisibility(View.GONE);
@@ -220,20 +223,24 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if(chronometer != null)
-            chronometer.setBase(SystemClock.elapsedRealtime() - (seekBar.getProgress() * 1000));
         //update media player service
         Intent seek = new Intent(MUSIC_PLAY_SERVICE.PODCAST_SEEK_FILTER);
         int progress = seekBar.getProgress() < seekBar.getSecondaryProgress() ? seekBar.getProgress() * 1000 : (seekBar.getSecondaryProgress() * 1000) - 1000;
         seek.putExtra("seek",progress);
         seekBar.setProgress(progress/1000);
+        if(chronometer != null)
+            chronometer.setBase(SystemClock.elapsedRealtime() - progress);
         localBroadcastManager =  LocalBroadcastManager.getInstance(getActivity().getApplicationContext());
         localBroadcastManager.sendBroadcast(seek);
     }
 
     @Override
     public void onDestroy() {
-        exec.shutdown();
+        try {
+            exec.shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 }
