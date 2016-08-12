@@ -164,6 +164,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null) fab.setVisibility(View.GONE);
         }
+       if(placeholder != null)
+        placeholder.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
         super.onResume();
     }
 
