@@ -56,23 +56,50 @@
         android:id="@+id/seekBar"
         android:layout_above="@+id/placeholder"
         android:layout_centerHorizontal="true"
-        android:layout_margin="16dp"
         android:indeterminate="false"
-        android:max="100" />
+        android:max="100"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
 
     <Chronometer
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/chr"
         android:layout_below="@+id/seekBar"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp" />
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/loading"
-        android:layout_below="@+id/chr"
-        android:layout_centerHorizontal="true"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:layout_alignBottom="@+id/placeholder"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rewind"
+        android:layout_below="@+id/seekBar"
+        android:layout_toLeftOf="@+id/chr"
+        android:layout_toStartOf="@+id/chr"
+        android:src="@drawable/ic_fast_rewind_black_24dp"
+        android:padding="16dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/cd_rewind"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:src="@drawable/ic_fast_forward_black_24dp"
+        android:padding="16dp"
+        android:layout_below="@+id/seekBar"
+        android:layout_toRightOf="@+id/chr"
+        android:layout_toEndOf="@+id/chr"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/cd_forward"
+        />
 
 </RelativeLayout>
