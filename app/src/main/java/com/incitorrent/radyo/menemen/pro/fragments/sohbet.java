@@ -221,7 +221,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         //SOHBETEND
         //SWIPETOREFRESH
         swipeRV = (SwipeRefreshLayout) sohbetView.findViewById(R.id.swipeRV);
-        swipeRV.setColorSchemeColors(Color.RED,Color.MAGENTA,Color.BLUE,Color.CYAN);
+        swipeRV.setColorSchemeColors(Color.GRAY,Color.WHITE,Color.BLUE,Color.RED,Color.MAGENTA,Color.CYAN);
         swipeRV.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
