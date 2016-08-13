@@ -202,10 +202,15 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                         Log.v(TAG, "loadmore" + lastid);
                         new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                     }
-                    if(LAST_POSITION_COMP_VISIBLE > 100 && scrollTop.getVisibility() == View.GONE)
-                        m.runEnterAnimation(scrollTop,200);
-                    else if(LAST_POSITION_COMP_VISIBLE < 20 && scrollTop.getVisibility() == View.VISIBLE)
+                    if(LAST_POSITION_COMP_VISIBLE > 100 ) {
+                        if(scrollTop.getVisibility() == View.GONE)
+                        m.runEnterAnimation(scrollTop, 200);
+                        if(getActivity()!=null) getActivity().setTitle(m.getElapsed(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman));
+                    }
+                    else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         scrollTop.setVisibility(View.GONE);
+                        if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
