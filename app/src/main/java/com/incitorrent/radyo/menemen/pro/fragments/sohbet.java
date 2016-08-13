@@ -689,7 +689,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                     sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
                     Log.v(TAG,"add to sql " + id + " " + nick);
                 }
-            }catch (JSONException e){
+            }catch (Exception e){
                 m.resetFirstTime("loadmessages");
                 e.printStackTrace();
             }
