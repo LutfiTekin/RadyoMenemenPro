@@ -208,6 +208,11 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                 if(fab!=null) fab.setVisibility(View.VISIBLE);
 
         }
+        try {
+            exec.shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onStop();
     }
 
