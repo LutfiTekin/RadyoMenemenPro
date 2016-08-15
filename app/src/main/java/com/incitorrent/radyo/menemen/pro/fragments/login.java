@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class login extends Fragment {
             public void onClick(View v) {
         if(getActivity()!=null){
                 final Context context = getActivity().getApplicationContext();
-                new AlertDialog.Builder(getActivity())
+              new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
                         .setTitle(context.getString(R.string.dialog_nologin_title))
                         .setMessage(context.getString(R.string.dialog_nologin_descr))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -88,6 +89,7 @@ public class login extends Fragment {
                     }
                 })
                         .setIcon(R.mipmap.ic_launcher)
+                        .setCancelable(false)
                         .show();
             }
             }
