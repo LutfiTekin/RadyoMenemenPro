@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -48,7 +47,7 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,login.OnFragmentInteractionListener,radio.OnFragmentInteractionListener,podcast.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
     public static String TAG = "RMPRO";
     FloatingActionButton fab;
     private Menemen m;
@@ -381,10 +380,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
 
 }

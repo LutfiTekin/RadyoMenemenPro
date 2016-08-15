@@ -62,7 +62,6 @@ public class podcast extends Fragment {
     Context context;
     Menemen inf;
     int switchToOldPodcast = 1;
-    private OnFragmentInteractionListener mListener;
 
     public podcast() {
         // Required empty public constructor
@@ -88,7 +87,6 @@ public class podcast extends Fragment {
                     int i = 10-switchToOldPodcast;
                    if(getActivity()!=null)
                        Snackbar.make(imageview,String.format(context.getString(R.string.old_podcast_toast), i),Snackbar.LENGTH_SHORT).show();
-//                     Toast.makeText(getActivity().getApplicationContext(), String.format(context.getString(R.string.old_podcast_toast), i), Toast.LENGTH_SHORT).show();
 
                 }else if(switchToOldPodcast == 10){
                     titlepodcast.setText("Incitorrent");
@@ -115,23 +113,6 @@ public class podcast extends Fragment {
         return podcastview;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
     @Override
     public void onStop() {
@@ -152,18 +133,6 @@ public class podcast extends Fragment {
         bundle.putString("podcast","onresume");
         inf.trackEvent("Podcast",bundle);
         super.onResume();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 

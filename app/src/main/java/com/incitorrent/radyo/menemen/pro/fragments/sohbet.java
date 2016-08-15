@@ -69,7 +69,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,10 +86,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     private static final int RESULT_LOAD_IMAGE = 2064;
     private static final int PERMISSION_REQUEST_ID = 2065;
     private static final int CAM_PERMISSION_REQUEST_ID = 2066;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private EditText mesaj;
     private ImageView smilegoster;
     FloatingActionButton resimekle,scrollTop;
@@ -101,7 +96,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     List<Sohbet_Objects> sohbetList;
     SatbaxSmileAdapter Smileadapter;
     SohbetAdapter SohbetAdapter;
-    ScheduledThreadPoolExecutor exec;
     BroadcastReceiver Chatreceiver;
     SwipeRefreshLayout swipeRV;
     chatDB sql;
@@ -109,31 +103,11 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment sohbet.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static sohbet newInstance(String param1, String param2) {
-        sohbet fragment = new sohbet();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -228,14 +202,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 new forceSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
-        //SWIPETOREFRESHEND
-//        exec = new ScheduledThreadPoolExecutor(1);
-//        exec.scheduleAtFixedRate(new Runnable() {
-//            @Override
-//            public void run() {
-//                new sohbetPopulate().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            }
-//        },0,2, TimeUnit.SECONDS);
         Chatreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -304,14 +270,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
             if(fab!=null)
          m.runEnterAnimation(fab,200);
-            //fab.setVisibility(View.VISIBLE);
         }
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        //exec.shutdown();
         super.onDestroyView();
     }
 
@@ -618,56 +582,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }
     }
 
-//    class sohbetPopulate extends AsyncTask<Void,Void,Boolean>{
-//
-//        @Override
-//        protected Boolean doInBackground(Void... params) {
-//            String line;
-//            String lastmsg;
-//
-//            if(m.isInternetAvailable()) {
-//                if(sohbetList.size()<1) return false;
-//                if(sohbetList.get(0).id.equals(Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR+ "&print_last_msg")))
-//                    return false;
-//                else lastmsg = sohbetList.get(0).id;
-//                line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=" + lastmsg);
-//                if(line==null) return false;
-//                if(line.equals(m.oku(RadyoMenemenPro.SOHBETCACHE))) return false;
-//            }
-//                else line = m.oku(RadyoMenemenPro.SOHBETCACHE);
-//            if(line.equals("yok")) return null;
-//            try {
-//
-//                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-//                JSONObject c;
-//                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-//                    String id,nick,mesaj,zaman;
-//                  JSONArray innerJarr = arr.getJSONArray(0);
-//                    c = innerJarr.getJSONObject(i);
-//                    id = c.getString("id");
-//                    nick = c.getString("nick");
-//                    mesaj = c.getString("post");
-//                    zaman = c.getString("time");
-//                  sohbetList.add(0,new Sohbet_Objects(id,nick,mesaj,zaman));
-//                }
-//                if(arr.getJSONArray(0).length()<1) return false;
-//                 Log.v(TAG, " SOHBETLIST" + line);
-//            }catch (JSONException e){
-//                e.printStackTrace();
-//                return false;
-//            }
-//
-//            return true;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean ok) {
-//            if(!ok) return;
-//       if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
-//         if(sohbetRV.getAdapter()!=null)   sohbetRV.getAdapter().notifyDataSetChanged();
-//            super.onPostExecute(true);
-//        }
-//    }
 
     class forceSync extends AsyncTask<Void,Void,Void>{
         @Override
