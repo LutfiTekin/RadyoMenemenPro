@@ -143,12 +143,6 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             if(m.oku("logged").equals("yok") && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
             //Sadece müzik modu açık ve giriş yapılmamış
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-                //sohbet haykır giriş çıkış butonlarını gizle
-                if (navigationView != null){
-                    navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
-                }
             }else if (m.oku("logged").equals("yok")) {
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
             } else {
@@ -156,6 +150,14 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
                 else
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+            }
+            if(m.oku("logged").equals("yok")){
+                //sohbet haykır giriş çıkış butonlarını gizle
+                if (navigationView != null){
+                    navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
+                }
             }
         }
 
@@ -212,6 +214,10 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                             break;
                         case "radyo.menemen.podcast.play":
                             podcastPlay(intent);
+                            break;
+                        case "radyo.menemen.news":
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.Fcontent, new olan_biten()).commit();
                             break;
                         default:
                             defaultAction();

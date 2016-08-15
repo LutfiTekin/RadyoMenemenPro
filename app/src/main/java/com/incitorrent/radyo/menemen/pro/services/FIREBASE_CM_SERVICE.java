@@ -92,12 +92,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             generalChat(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
-            updateNews();
+           if(notify) updateNews(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
             //Onair bildirimi
-          if(notify && notify_when_on_air){
-              onAir(remoteMessage);
-          }
+          if(notify && notify_when_on_air) onAir(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.PODCAST)){
           if(notify && notify_new_podcast)  notify_new_podcast(remoteMessage);
         }else{
@@ -198,9 +196,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         Log.v(TAG, " Notification built");
     }
 
-    private void updateNews() {
+    private void updateNews(RemoteMessage remoteMessage) {
         //Son olan biteni al
-        Log.v("updateNews","updated");
         String lastob = null;
         try {
             lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
@@ -208,6 +205,31 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        String title,content;
+        title = getDATA(remoteMessage, "title");
+        content = getDATA(remoteMessage, "content");
+        //Bildirim oluştur
+        newsNotification(title, content);
+    }
+
+    private void newsNotification(String title, String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.announce);
+        builder.setAutoCancel(true);
+        builder.setContentTitle(title)
+                .setContentText(m.getSpannedTextWithSmileys(content))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(m.getSpannedTextWithSmileys(content)))
+                .setSubText(getString(R.string.news));
+            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500, 1000, 500, 1000});
+        notification_intent.setAction("radyo.menemen.news");
+        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setAutoCancel(true);
+        Notification notification = builder.build();
+        int notification_id = RadyoMenemenPro.ON_AIR_NOTIFICATION + 2;
+        notificationManager.notify(notification_id, notification);
     }
 
     private void onAir(RemoteMessage rm) {
