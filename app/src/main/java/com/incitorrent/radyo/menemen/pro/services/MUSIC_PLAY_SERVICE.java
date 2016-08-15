@@ -292,7 +292,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         @Override
                         public void run() {
                             nowPlayingNotification();
-                            startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
+                            try {
+                                startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }).start();
                     audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
