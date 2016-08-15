@@ -1,5 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +20,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
-import android.util.Log;
+import android.transition.ChangeBounds;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +62,6 @@ public class podcast extends Fragment {
     Context context;
     Menemen inf;
     int switchToOldPodcast = 1;
-    private OnFragmentInteractionListener mListener;
 
     public podcast() {
         // Required empty public constructor
@@ -82,7 +87,6 @@ public class podcast extends Fragment {
                     int i = 10-switchToOldPodcast;
                    if(getActivity()!=null)
                        Snackbar.make(imageview,String.format(context.getString(R.string.old_podcast_toast), i),Snackbar.LENGTH_SHORT).show();
-//                     Toast.makeText(getActivity().getApplicationContext(), String.format(context.getString(R.string.old_podcast_toast), i), Toast.LENGTH_SHORT).show();
 
                 }else if(switchToOldPodcast == 10){
                     titlepodcast.setText("Incitorrent");
@@ -109,23 +113,6 @@ public class podcast extends Fragment {
         return podcastview;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
     @Override
     public void onStop() {
@@ -146,18 +133,6 @@ public class podcast extends Fragment {
         bundle.putString("podcast","onresume");
         inf.trackEvent("Podcast",bundle);
         super.onResume();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 
@@ -204,7 +179,6 @@ public class podcast extends Fragment {
                         String delims = "=";
                         String[] tokens = phrase.split(delims);
                         String real_mp3_link = podcastlink + tokens[1];
-                        Log.e("tag", real_mp3_link);
                         //StringEntity entity = new UrlEncodedFormEntity(parser,"UTF-8");
                         String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
                         String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
@@ -252,6 +226,8 @@ public class podcast extends Fragment {
                 duration = (TextView) itemView.findViewById(R.id.duration);
                 descr = (TextView) itemView.findViewById(R.id.descr);
                 cv = (CardView) itemView.findViewById(R.id.cvP);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    cv.setTransitionName(RadyoMenemenPro.transitionname.PODCASTCARD);
                 rel = (RelativeLayout) itemView.findViewById(R.id.Pitem);
                 title.setOnClickListener(this);
                 title.setOnLongClickListener(this);
@@ -267,10 +243,36 @@ public class podcast extends Fragment {
                     Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
                     getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
                     inf.kaydet("caliyor","hayır");
+                        playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
                         playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
                     inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
+                    Fragment podcast_now_playing = new podcast_now_playing();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title",RList.get(getAdapterPosition()).title);
+                    bundle.putString("descr",RList.get(getAdapterPosition()).description);
+                    podcast_now_playing.setArguments(bundle);
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        podcast_now_playing.setSharedElementEnterTransition(new DetailsTransition());
+                        podcast_now_playing.setEnterTransition(new Slide());
+                        setExitTransition(new Fade());
+                        podcast_now_playing.setSharedElementReturnTransition(new DetailsTransition());
+                        getFragmentManager()
+                                .beginTransaction()
+                                .addSharedElement(cv, cv.getTransitionName())
+                                .addToBackStack("podcast")
+                                .replace(R.id.Fcontent, podcast_now_playing)
+                                .commit();
+                    }else {
+                        getFragmentManager()
+                                .beginTransaction()
+                                .addToBackStack("podcast")
+                                .replace(R.id.Fcontent, podcast_now_playing)
+                                .commit();
+                    }
                 }
             }
 
@@ -356,5 +358,12 @@ public class podcast extends Fragment {
             this.url = url;
         }
     }
-
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public class DetailsTransition extends TransitionSet {
+        public DetailsTransition() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new ChangeBounds()).
+                    addTransition(new ChangeTransform());
+        }
+    }
 }

@@ -153,4 +153,6 @@
     <string name="notification_caps_comment_sub_text">Bir caps yorumu var</string>
     <string name="pref_title2_new_comment_caps">Caps Yorumları</string>
     <string name="pref_title_new_comment_caps">Yorum yaptığım veya yüklediğim caps için bana bildirim gönder</string>
+    <string name="cd_forward">İleri Sar</string>
+    <string name="cd_rewind">Geri Sar</string>
 </resources>

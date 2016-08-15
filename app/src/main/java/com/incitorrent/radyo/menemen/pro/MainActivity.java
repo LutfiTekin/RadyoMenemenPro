@@ -1,17 +1,16 @@
 package com.incitorrent.radyo.menemen.pro;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -35,6 +34,7 @@ import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
+import com.incitorrent.radyo.menemen.pro.fragments.podcast_now_playing;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
@@ -47,7 +47,7 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,login.OnFragmentInteractionListener,radio.OnFragmentInteractionListener,podcast.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
     public static String TAG = "RMPRO";
     FloatingActionButton fab;
     private Menemen m;
@@ -210,6 +210,9 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                             fragmentManager.beginTransaction()
                                     .replace(R.id.Fcontent, new podcast()).commit();
                             break;
+                        case "radyo.menemen.podcast.play":
+                            podcastPlay(intent);
+                            break;
                         default:
                             defaultAction();
                             break;
@@ -219,6 +222,20 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                 }
             }
         }
+    }
+
+    private void podcastPlay(Intent intent) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.Fcontent, new podcast()).addToBackStack("podcast").commit();
+        Fragment podcast_now_playing = new podcast_now_playing();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", intent.getExtras().getString("title"));
+        bundle.putString("descr", intent.getExtras().getString("descr"));
+        bundle.putLong("duration", intent.getExtras().getLong("duration"));
+        bundle.putLong("current", intent.getExtras().getLong("current"));
+        podcast_now_playing.setArguments(bundle);
+        fragmentManager.beginTransaction()
+                .replace(R.id.Fcontent, podcast_now_playing).addToBackStack("podcast_play").commit();
     }
 
     private void defaultAction() {
@@ -363,10 +380,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
         return true;
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
 
 }
