@@ -102,7 +102,7 @@ public class login extends Fragment {
                 if(nick.length()<2 || nick.length()>16 || pass.length()<6) {
                     Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                     infotext.setTextColor(Color.RED);
-                    infotext.setText("Bir hata oluştu \n Kullanıcı adın 16 karakterden fazla olamaz \n Şifren 6 karakterden az olamaz");
+                    infotext.setText(R.string.login_error);
                     return;
                 }
 

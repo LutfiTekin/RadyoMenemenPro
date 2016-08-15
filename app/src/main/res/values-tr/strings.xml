@@ -155,4 +155,5 @@
     <string name="pref_title_new_comment_caps">Yorum yaptığım veya yüklediğim caps için bana bildirim gönder</string>
     <string name="cd_forward">İleri Sar</string>
     <string name="cd_rewind">Geri Sar</string>
+    <string name="login_error">Bir hata oluştu \n Kullanıcı adın 16 karakterden fazla olamaz \n Şifren 6 karakterden az olamaz</string>
 </resources>
