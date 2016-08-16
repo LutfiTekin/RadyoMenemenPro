@@ -26,7 +26,8 @@ public final class RadyoMenemenPro {
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
     public final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
-    public final static String SYNCCHANNEL = APP_INFO + "channels";
+    public final static String FIREBASE_APP_URL = "http://app.radyomenemen.com/"; //base url
+    public final static String SYNCCHANNEL = FIREBASE_APP_URL + "channels.json";
     public final static String DJRESPONSE = APP_INFO + "djresponse";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
     public final static String HAYKIRMALAR = APP_INFO + "haykirmalarim";
