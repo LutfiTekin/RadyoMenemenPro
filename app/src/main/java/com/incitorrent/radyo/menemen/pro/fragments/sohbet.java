@@ -70,11 +70,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link sohbet#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class sohbet extends Fragment implements View.OnClickListener,View.OnLongClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
@@ -99,6 +95,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     BroadcastReceiver Chatreceiver;
     SwipeRefreshLayout swipeRV;
     chatDB sql;
+    LinearLayoutManager linearLayoutManager;
     public sohbet() {
         // Required empty public constructor
     }
@@ -158,7 +155,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
         sohbetList = new ArrayList<>();
         sohbetRV.setHasFixedSize(true);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
