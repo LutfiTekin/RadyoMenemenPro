@@ -111,6 +111,7 @@ public class show_image_comments extends AppCompatActivity {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         sohbetRV.setLayoutManager(linearLayoutManager);
         sohbetRV.setHasFixedSize(true);
+        sohbetRV.setNestedScrollingEnabled(false);
         sohbetAdapter = new SohbetAdapter(sohbetList);
 //        itemTouchHelper.attachToRecyclerView(sohbetRV); //şimdilik kapalı
 //Onscroll Listener

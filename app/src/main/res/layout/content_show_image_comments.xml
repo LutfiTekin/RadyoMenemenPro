@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:layout_marginTop="32dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.incitorrent.radyo.menemen.pro.show_image_comments"
     tools:showIn="@layout/activity_show_image_comments">
 <android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="32dp"
     android:id="@+id/capsRV"/>
 </android.support.v4.widget.NestedScrollView>
