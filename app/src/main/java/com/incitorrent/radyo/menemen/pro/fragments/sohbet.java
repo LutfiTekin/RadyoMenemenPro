@@ -204,7 +204,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             public void onReceive(Context context, Intent intent) {
                 Bundle bundle = intent.getExtras();
               if(bundle==null)
-                new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 else {
                   String action = bundle.getString("action");
                   if(action==null) return;
@@ -230,6 +230,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
               }
             }
         };
+        setRetainInstance(true);
         setHasOptionsMenu(true);
         return sohbetView;
 
@@ -247,7 +248,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
     @Override
     public void onResume() {
-        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         if(getActivity()!=null) {
@@ -275,14 +276,27 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
     public void onDestroyView() {
         super.onDestroyView();
     }
-
+    int first_visible_view;
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSavedInstanceState");
+        if(linearLayoutManager != null){
+            first_visible_view = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
+            outState.putInt("first_visible_view",first_visible_view);
+            Log.d(TAG, "onSavedInstanceState last visible view position saved");
+        }
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(TAG, "onActivityCreated");
+        if(savedInstanceState != null && sohbetRV != null && sohbetList != null){
+            first_visible_view = savedInstanceState.getInt("first_visible_view");
+            if(first_visible_view > 0){
+                    new initsohbet(first_visible_view + 20, first_visible_view).execute();
+            }
+        }
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -619,13 +633,19 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            new initsohbet().execute();
+            new initsohbet(20,0).execute();
             super.onPostExecute(aVoid);
         }
     }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{
+        int limit;
+        int scroll;
 
+        public initsohbet(int limit, int scroll) {
+            this.limit = limit;
+            this.scroll = scroll;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -636,7 +656,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         @Override
         protected Void doInBackground(Void... params) {
             //Getfrom db
-            Cursor cursor = sql.getHistory(20);
+            Cursor cursor = sql.getHistory(limit);
             if(cursor == null) return null;
             cursor.moveToFirst();
             while(!cursor.isAfterLast()){
@@ -655,10 +675,12 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            Log.d(TAG, "initsohbet " + limit + " " + scroll);
             if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
             if(SohbetAdapter!=null) sohbetRV.setAdapter(SohbetAdapter);
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
+            if(sohbetRV != null) sohbetRV.scrollToPosition(scroll);
             super.onPostExecute(aVoid);
         }
     }
