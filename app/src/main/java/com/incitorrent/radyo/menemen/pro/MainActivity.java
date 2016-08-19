@@ -219,6 +219,10 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                             fragmentManager.beginTransaction()
                                     .replace(R.id.Fcontent, new olan_biten()).commit();
                             break;
+                        case "radyo.menemen.haykir":
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.Fcontent, new haykir()).commit();
+                            break;
                         default:
                             defaultAction();
                             break;
