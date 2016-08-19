@@ -1,10 +1,12 @@
 package com.incitorrent.radyo.menemen.pro;
 
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -80,7 +83,16 @@ public class show_image_comments extends AppCompatActivity {
         toolbar_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(imageurl));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image_comments.this,
+                            new Pair<View, String>(toolbar_image, toolbar_image.getTransitionName()),
+                            new Pair<View, String>(fab, fab.getTransitionName()));
+                    startActivity(intent, options.toBundle());
+                }else
+                    startActivity(intent);
+//                onBackPressed();
             }
         });
         m = new Menemen(context);
