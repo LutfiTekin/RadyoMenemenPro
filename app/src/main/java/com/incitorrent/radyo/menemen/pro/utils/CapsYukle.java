@@ -55,8 +55,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bit.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
         String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-//            Log.i("CapsYukle", "Sıkıştırmadan sonra"+String.valueOf(byteSizeOf(bit)));
-
         Map<String,String> dataToSend = new HashMap<>();
         dataToSend.put("source", encodedImage);
         dataToSend.put("key", m.oku(RadyoMenemenPro.CAPS_API_KEY));
