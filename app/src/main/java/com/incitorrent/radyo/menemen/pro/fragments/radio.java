@@ -225,6 +225,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             cursor.moveToNext();
         }
         cursor.close();
+        sql.close();
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
