@@ -156,4 +156,5 @@
     <string name="cd_forward">İleri Sar</string>
     <string name="cd_rewind">Geri Sar</string>
     <string name="login_error">Bir hata oluştu \n Kullanıcı adın 16 karakterden fazla olamaz \n Şifren 6 karakterden az olamaz</string>
+    <string name="dj_response">Dj Cevabı</string>
 </resources>

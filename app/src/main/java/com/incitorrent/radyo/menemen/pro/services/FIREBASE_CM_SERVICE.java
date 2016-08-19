@@ -41,6 +41,7 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
     public static final String CATEGORY_CAPS = "caps";
+    public static final String CATEGORY_HAYKIR = "haykir";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
     final Context context = RMPRO.getContext();
@@ -102,17 +103,40 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             //Topic yok
             String category = remoteMessage.getData().get("cat");
             if(category == null) return;
-            if(category.equals(CATEGORY_CAPS)) {
-                //RECEIVE CAPS COMMENTS
-                String action = getDATA(remoteMessage, "action");
-                if(action == null) return;
-                if(action.equals(ADD)){
-                    addCapsComments(remoteMessage);
-                }
+            switch (category) {
+                case CATEGORY_CAPS:
+                    //RECEIVE CAPS COMMENTS
+                    String action = getDATA(remoteMessage, "action");
+                    if (action == null) break;
+                    if (action.equals(ADD))
+                        addCapsComments(remoteMessage);
+                    break;
+                case CATEGORY_HAYKIR:
+                    haykirbildirim(remoteMessage);
+                    break;
             }
 
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void haykirbildirim(RemoteMessage remoteMessage) {
+        String mesaj = getDATA(remoteMessage, "response");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setSmallIcon(R.drawable.default_image);
+        builder.setAutoCancel(true);
+        builder.setContentTitle(getString(R.string.dj_response)).setContentText(m.getSpannedTextWithSmileys(mesaj));
+        if(!mutechatnotification) {
+            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{1500, 500, 500});
+        }
+        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        builder.setGroup(GROUP_KEY_CHAT);
+        builder.setAutoCancel(true);
+        Notification notification = builder.build();
+        notificationManager.notify(new Random().nextInt(100), notification);
     }
 
     private void generalChat(RemoteMessage remoteMessage) {
@@ -260,7 +284,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
-//        inbox.addLine(String.format("%s: %s", nick, mesaj));
            builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
         if(!mutechatnotification) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
