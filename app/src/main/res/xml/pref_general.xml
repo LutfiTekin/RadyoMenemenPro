@@ -1,8 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-
-
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="onstart_chat"
+        android:dependency="music_only"
+        android:summary="@string/settings_onstart_chat_summary"
+        android:title="@string/settings_onstart_chat_title" />
 
     <SwitchPreference
         android:defaultValue="false"
@@ -12,12 +15,6 @@
         android:disableDependentsState="true"
         />
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="onstart_chat"
-        android:dependency="music_only"
-        android:summary="@string/settings_onstart_chat_summary"
-        android:title="@string/settings_onstart_chat_title" />
     <SwitchPreference
         android:defaultValue="false"
         android:key="night_mode"
