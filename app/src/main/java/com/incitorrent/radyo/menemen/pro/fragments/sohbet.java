@@ -5,6 +5,8 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +20,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -58,8 +59,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -446,15 +447,26 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 return false;
             }
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = new File(android.os.Environment
-                    .getExternalStorageDirectory(), "temp.jpg");
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            final Uri uri = tempUri();
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            m.kaydet(RadyoMenemenPro.LASTURI, uri.toString());
+            Log.v(TAG, "tempuri " + uri);
             startActivityForResult(intent,RESULT_LOAD_IMAGE_CAM);
             return true;
         }
         return false;
     }
 
+    /**
+     * Creates a uri before picking image from camera
+     * @return temproray image uri
+     */
+    private Uri tempUri(){
+        ContentResolver cr = getActivity().getContentResolver();
+        ContentValues cv = new ContentValues();
+        cv.put(MediaStore.Images.Media.TITLE, "temp");
+        return cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+    }
     //SOHBET adaptör ve sınıfı
     public class Sohbet_Objects {
         String id,nick,mesaj,zaman;
@@ -523,21 +535,26 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             }catch (Exception e){e.printStackTrace();}
         }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
             try {
-                File f = new File(Environment.getExternalStorageDirectory()
-                        .toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
+//                File f = new File(Environment.getExternalStorageDirectory()
+//                        .toString());
+//                for (File temp : f.listFiles()) {
+//                    if (temp.getName().equals("temp.jpg")) {
+//                        f = temp;
+//                        break;
+//                    }
+//                }
+                final Uri saveduri = Uri.parse(m.oku(RadyoMenemenPro.LASTURI));
+                Log.v(TAG,"temp " + saveduri);
                 Bitmap bitmap;
-                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
-                        bitmapOptions);
+//                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), tempUri());
+                InputStream image_stream = getActivity().getContentResolver().openInputStream(saveduri);
+                bitmap= BitmapFactory.decodeStream(image_stream);
+//                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//                bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
+//                        bitmapOptions);
                 new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
-                f.delete();
+//                f.delete();
 
 
             } catch (Exception e) {
