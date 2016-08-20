@@ -535,28 +535,13 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
             }catch (Exception e){e.printStackTrace();}
         }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
             try {
-//                File f = new File(Environment.getExternalStorageDirectory()
-//                        .toString());
-//                for (File temp : f.listFiles()) {
-//                    if (temp.getName().equals("temp.jpg")) {
-//                        f = temp;
-//                        break;
-//                    }
-//                }
                 final Uri saveduri = Uri.parse(m.oku(RadyoMenemenPro.LASTURI));
                 Log.v(TAG,"temp " + saveduri);
                 Bitmap bitmap;
-//                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), tempUri());
                 InputStream image_stream = getActivity().getContentResolver().openInputStream(saveduri);
                 bitmap= BitmapFactory.decodeStream(image_stream);
-//                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//                bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
-//                        bitmapOptions);
                 new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
-//                f.delete();
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
