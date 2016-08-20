@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("night_mode",false))
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        else getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
