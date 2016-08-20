@@ -33,6 +33,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,7 +73,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class sohbet extends Fragment implements View.OnClickListener,View.OnLongClickListener{
+public class sohbet extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -135,7 +136,6 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         mesaj_gonder = (FloatingActionButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
         scrollTop = (FloatingActionButton) sohbetView.findViewById(R.id.scrolltoTop);
         resimekle.setOnClickListener(this);
-        resimekle.setOnLongClickListener(this);
         smilegoster.setOnClickListener(this);
         mesaj_gonder.setOnClickListener(this);
         scrollTop.setOnClickListener(this);
@@ -334,15 +334,9 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
-              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_LONG).show();
-                 if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                //Dosya okuma izni yok izin iste
-                  AskReadPerm();
-                  break;
-                }
-    Intent resimsec = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            .setType("image/*");
-    startActivityForResult(resimsec, RESULT_LOAD_IMAGE);
+                resimEkle();
+//              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_LONG).show();
+
                 break;
             case R.id.scrolltoTop:
                 try {
@@ -352,6 +346,62 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
                 }
                 break;
         }
+    }
+
+    private void resimEkle() {
+        if(getActivity()!=null){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme));
+            builder.setTitle(R.string.upload_caps);
+            builder.setCancelable(false);
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            final View promptView = layoutInflater.inflate(R.layout.dialog_image_picker, null);
+            builder.setView(promptView);
+            final TextView cam = (TextView) promptView.findViewById(R.id.cam);
+            final TextView gallery = (TextView) promptView.findViewById(R.id.gallery);
+            cam.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    takePhoto();
+                }
+            });
+            gallery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectFromGallery();
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            builder.show();
+        }
+    }
+
+    private void takePhoto() {
+//        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            requestPermissions(new String[]{Manifest.permission.CAMERA},
+//                    CAM_PERMISSION_REQUEST_ID);
+//            return;
+//        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        final Uri uri = tempUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        m.kaydet(RadyoMenemenPro.LASTURI, uri.toString());
+        startActivityForResult(intent,RESULT_LOAD_IMAGE_CAM);
+    }
+
+    private void selectFromGallery() {
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //Dosya okuma izni yok izin iste
+            AskReadPerm();
+            return;
+        }
+        Intent resimsec = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                .setType("image/*");
+        startActivityForResult(resimsec, RESULT_LOAD_IMAGE);
     }
 
     private void AskReadPerm() {
@@ -438,24 +488,7 @@ public class sohbet extends Fragment implements View.OnClickListener,View.OnLong
         }.execute();
     }
 
-    @Override
-    public boolean onLongClick(View view) {
-        if(view == resimekle){
-            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        CAM_PERMISSION_REQUEST_ID);
-                return false;
-            }
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            final Uri uri = tempUri();
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            m.kaydet(RadyoMenemenPro.LASTURI, uri.toString());
-            Log.v(TAG, "tempuri " + uri);
-            startActivityForResult(intent,RESULT_LOAD_IMAGE_CAM);
-            return true;
-        }
-        return false;
-    }
+
 
     /**
      * Creates a uri before picking image from camera

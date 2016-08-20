@@ -230,4 +230,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="cd_forward">Forward</string>
     <string name="login_error">An error occured \n Your username cannot be more than 16 \n Your password length cannot be less than 6</string>
     <string name="dj_response">Dj Response</string>
+    <string name="dialog_take_photo">Take Photo</string>
+    <string name="dialog_choose_from_gallery">Choose from Gallery</string>
+    <string name="upload_caps">Upload Caps</string>
 </resources>

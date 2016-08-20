@@ -157,4 +157,7 @@
     <string name="cd_rewind">Geri Sar</string>
     <string name="login_error">Bir hata oluştu \n Kullanıcı adın 16 karakterden fazla olamaz \n Şifren 6 karakterden az olamaz</string>
     <string name="dj_response">Dj Cevabı</string>
+    <string name="upload_caps">Caps Yükle</string>
+    <string name="dialog_choose_from_gallery">Galeriden Seç</string>
+    <string name="dialog_take_photo">Resim Çek</string>
 </resources>
