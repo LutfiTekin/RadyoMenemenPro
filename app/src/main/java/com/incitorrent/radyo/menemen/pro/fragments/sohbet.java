@@ -83,7 +83,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private static final int RESULT_LOAD_IMAGE_CAM = 2063;
     private static final int RESULT_LOAD_IMAGE = 2064;
     private static final int PERMISSION_REQUEST_ID = 2065;
-    private static final int CAM_PERMISSION_REQUEST_ID = 2066;
     private EditText mesaj;
     private ImageView smilegoster;
     FloatingActionButton resimekle,scrollTop;
@@ -429,13 +428,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), R.string.toast_permission_read_storage_denied, Toast.LENGTH_SHORT)
                         .show(); // Permission Denied
 
-        }else if(requestCode == CAM_PERMISSION_REQUEST_ID){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_granted, Toast.LENGTH_SHORT)
-                        .show();// Permission Granted
-            else
-                Toast.makeText(getActivity(), R.string.toast_permission_read_storage_denied, Toast.LENGTH_SHORT)
-                        .show(); // Permission Denied
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
