@@ -160,4 +160,6 @@
     <string name="upload_caps">Caps Yükle</string>
     <string name="dialog_choose_from_gallery">Galeriden Seç</string>
     <string name="dialog_take_photo">Resim Çek</string>
+    <string name="nav_galeri">Galeri</string>
+    <string name="galeri_descr">Burda radyo menemene son yüklenen capslere bakıp yorum atabilirsin.</string>
 </resources>

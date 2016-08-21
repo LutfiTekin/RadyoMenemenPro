@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.incitorrent.radyo.menemen.pro.fragments.galeri;
 import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
@@ -325,6 +326,8 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
         else if (id == R.id.nav_chat)
             fragmentManager.beginTransaction().addToBackStack("sohbet").replace(R.id.Fcontent,new sohbet()).commit();
+        else if (id == R.id.nav_galeri)
+            fragmentManager.beginTransaction().addToBackStack("galeri").replace(R.id.Fcontent, new galeri()).commit();
         else if (id == R.id.nav_shout) {
             fragmentManager.beginTransaction().addToBackStack("haykir").replace(R.id.Fcontent,new haykir()).commit();
         }else if(id == R.id.nav_olanbiten){

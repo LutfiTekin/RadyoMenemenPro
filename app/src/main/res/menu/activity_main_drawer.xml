@@ -15,6 +15,11 @@
             android:title="@string/nav_sohbet" />
 
         <item
+            android:id="@+id/nav_galeri"
+            android:icon="@drawable/ic_galeri"
+            android:title="@string/nav_galeri" />
+
+        <item
             android:id="@+id/nav_shout"
             android:icon="@mipmap/ic_shout"
             android:title="@string/nav_haykir" />
