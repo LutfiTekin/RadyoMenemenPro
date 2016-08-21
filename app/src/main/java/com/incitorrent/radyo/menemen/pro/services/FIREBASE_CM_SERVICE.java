@@ -80,13 +80,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
-//        Log.v(TAG,"onCreate" + " token " + FirebaseInstanceId.getInstance().getToken());
         super.onCreate();
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-//        Log.v("onMessageR", remoteMessage.getFrom());
         notification_intent.setAction("radyo.menemen.chat");
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
