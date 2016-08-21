@@ -235,4 +235,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="upload_caps">Upload Caps</string>
     <string name="nav_galeri">Gallery</string>
     <string name="galeri_descr">Here you can see recently uploaded caps and comment on them.</string>
+    <string name="pref_summary_sync_channels">If radio does not play, click here for manuel channel info update</string>
+    <string name="pref_title_sync_channels">Manuel Channel Sync</string>
+    <string name="toast_manuel_sync_finished">Manuel sync completed</string>
 </resources>

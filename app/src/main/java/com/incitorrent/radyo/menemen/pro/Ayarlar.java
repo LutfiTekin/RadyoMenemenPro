@@ -9,8 +9,10 @@ import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -21,6 +23,10 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
 
 import java.util.List;
 
@@ -277,6 +283,27 @@ public class Ayarlar extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("radio_channel"));
+            final Preference sync = findPreference("syncchannels");
+            sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    sync();
+                    return true;
+                }
+            });
+        }
+
+        private void sync() {
+            new syncChannels(RMPRO.context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Menemen m = new Menemen(RMPRO.context);
+                    if(m.isInternetAvailable())
+                        Toast.makeText(RMPRO.context, R.string.toast_manuel_sync_finished, Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(RMPRO.context, R.string.toast_internet_warn, Toast.LENGTH_LONG).show();
+                }
+            }, 2000);
         }
 
         @Override

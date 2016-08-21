@@ -16,6 +16,9 @@
         android:positiveButtonText="@null"
         android:title="@string/pref_title_select_channel" />
 
-
+    <Preference
+        android:title="@string/pref_title_sync_channels"
+        android:key="syncchannels"
+        android:summary="@string/pref_summary_sync_channels"/>
 
 </PreferenceScreen>

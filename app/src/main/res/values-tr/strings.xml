@@ -162,4 +162,7 @@
     <string name="dialog_take_photo">Resim Çek</string>
     <string name="nav_galeri">Galeri</string>
     <string name="galeri_descr">Burda radyo menemene son yüklenen capslere bakıp yorum atabilirsin.</string>
+    <string name="pref_title_sync_channels">Kanalları Elle Güncelle</string>
+    <string name="pref_summary_sync_channels">Eğer radyo çalmıyorsa, kanal bilgilerini elle güncellemek için tıklayın</string>
+    <string name="toast_manuel_sync_finished">Elle güncelleme tamamlandı</string>
 </resources>
