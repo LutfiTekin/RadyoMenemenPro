@@ -27,6 +27,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,6 +100,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
           if(notify && notify_when_on_air) onAir(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.PODCAST)){
           if(notify && notify_new_podcast)  notify_new_podcast(remoteMessage);
+        }else if(topic.equals(RadyoMenemenPro.FCMTopics.SYNC)){
+            sync(remoteMessage);
         }else{
             //Topic yok
             String category = remoteMessage.getData().get("cat");
@@ -118,6 +121,25 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
         }
         super.onMessageReceived(remoteMessage);
+    }
+    //TODO use remote message parameter
+    private void sync(RemoteMessage remoteMessage) {
+        try {
+            String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
+            Log.d(TAG, "Alınan JSON:\n"+ line);
+            JSONObject J = new JSONObject(line);
+            JSONArray JARR = J.getJSONArray("info");
+            JSONObject Jo = JARR.getJSONObject(0);
+            Log.v("SERVER",Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
+            m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
+            m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
+            m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
+            m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
+            m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
+            if(m.oku("logged").equals("evet") && m.isFirstTime("tokenset")) m.setToken();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void haykirbildirim(RemoteMessage remoteMessage) {

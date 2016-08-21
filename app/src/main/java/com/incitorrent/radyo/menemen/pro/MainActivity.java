@@ -166,7 +166,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
-        new syncChannels(this).execute();
+      if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
 
     }
 
