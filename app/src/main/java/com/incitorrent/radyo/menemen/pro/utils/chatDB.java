@@ -85,7 +85,7 @@ public class chatDB extends SQLiteOpenHelper {
     public Cursor getCapsGallery(int limit){
         SQLiteDatabase db = getReadableDatabase();
         if(limit < 20) limit = 20;
-        return db.query(TABLE_NAME,null,_POST + " LIKE %caps.radyomenemen.com%",null,null,null,_MSGID + " DESC",String.valueOf(limit));
+        return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%'",null,null,null,_MSGID + " DESC",String.valueOf(limit));
     }
 
 

@@ -75,8 +75,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:fillViewport="true"
         app:behavior_overlapTop="32dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
