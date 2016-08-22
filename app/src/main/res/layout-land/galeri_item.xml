@@ -6,8 +6,7 @@
     app:cardCornerRadius="4dp"
     android:layout_margin="8dp"
     android:id="@+id/gC"
-    app:cardBackgroundColor="@color/cardviewBG"
-    >
+    app:cardBackgroundColor="@color/cardviewBG">
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -29,5 +28,15 @@
         android:id="@+id/uploader"
         android:layout_margin="8dp"
         android:layout_gravity="left|bottom" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="#55000000"
+        android:text="7"
+        android:padding="8dp"
+        android:textColor="@color/colorAccent"
+        android:id="@+id/comment_count"
+        android:layout_gravity="right|top" />
 </FrameLayout>
 </android.support.v7.widget.CardView>

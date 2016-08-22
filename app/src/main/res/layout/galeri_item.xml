@@ -29,5 +29,16 @@
         android:id="@+id/uploader"
         android:layout_margin="8dp"
         android:layout_gravity="left|bottom" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="7"
+        android:padding="8dp"
+        android:textColor="@color/colorAccent"
+        android:id="@+id/comment_count"
+        android:layout_gravity="right|top"
+        android:background="#55000000" />
 </FrameLayout>
 </android.support.v7.widget.CardView>

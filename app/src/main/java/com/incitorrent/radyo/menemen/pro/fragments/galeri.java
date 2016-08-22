@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class galeri extends Fragment {
     Menemen m;
     List<galeri_objects> Glist;
     chatDB sql;
+    capsDB capsSql;
     LinearLayoutManager llm;
     StaggeredGridLayoutManager sglm;
     public galeri() {
@@ -50,6 +52,7 @@ public class galeri extends Fragment {
         context = getActivity().getApplicationContext();
         m = new Menemen(context);
         sql = new chatDB(context,null,null,1);
+        capsSql = new capsDB(context,null,null,1);
         super.onCreate(savedInstanceState);
     }
 
@@ -131,7 +134,7 @@ public class galeri extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             ImageView image;
-            TextView uploader;
+            TextView uploader,comments;
 
             ViewHolder(View itemView) {
                 super(itemView);
@@ -140,6 +143,8 @@ public class galeri extends Fragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     image.setTransitionName("show_image");
                 uploader = (TextView) itemView.findViewById(R.id.uploader);
+                comments = (TextView) itemView.findViewById(R.id.comment_count);
+
             }
 
             @Override
@@ -178,6 +183,13 @@ public class galeri extends Fragment {
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
            if(getActivity()!=null) Glide.with(getActivity()).load(Glist.get(i).capsurl).placeholder(R.drawable.default_image).centerCrop().into(viewHolder.image);
             viewHolder.uploader.setText(Glist.get(i).uploader.toUpperCase());
+            final int count = capsSql.commentCount(Glist.get(i).capsurl);
+            if(count < 1)
+                viewHolder.comments.setVisibility(View.GONE);
+            else {
+                viewHolder.comments.setVisibility(View.VISIBLE);
+                viewHolder.comments.setText(String.valueOf(count));
+            }
         }
 
 

@@ -92,6 +92,20 @@ public class capsDB extends SQLiteOpenHelper {
         }
     }
 
+    public int commentCount(String capsurl){
+        int count = 0;
+        try {
+            SQLiteDatabase db = getReadableDatabase();
+            Cursor c = db.rawQuery("SELECT count(*) from "+ TABLE_NAME +" WHERE " + _CAPSURL + " ='" + capsurl + "' ", null);
+            c.moveToFirst();
+            count = c.getInt(0);
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
     public static class CAPS {
         public String _MSGID, _CAPSURL, _NICK, _POST, _TIME;
 
