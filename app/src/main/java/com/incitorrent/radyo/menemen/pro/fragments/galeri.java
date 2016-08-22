@@ -176,7 +176,7 @@ public class galeri extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-           if(getActivity()!=null) Glide.with(getActivity()).load(Glist.get(i).capsurl).into(viewHolder.image);
+           if(getActivity()!=null) Glide.with(getActivity()).load(Glist.get(i).capsurl).placeholder(R.drawable.default_image).centerCrop().into(viewHolder.image);
             viewHolder.uploader.setText(Glist.get(i).uploader.toUpperCase());
         }
 
