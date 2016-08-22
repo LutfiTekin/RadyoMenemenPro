@@ -6,9 +6,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
@@ -149,15 +152,21 @@ public class galeri extends Fragment {
 
             @Override
             public void onClick(View view) {
-            String imageurl = Glist.get(getAdapterPosition()).capsurl;
-                Intent showimagecomment = new Intent(getActivity(), show_image_comments.class);
-                showimagecomment.putExtra("url", Glist.get(getAdapterPosition()).capsurl);
+                Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
+                Intent image_intent;
+                if(showcomments) {
+                    image_intent = new Intent(getActivity(), show_image_comments.class);
+                    image_intent.putExtra("url", Glist.get(getAdapterPosition()).capsurl);
+                }else {
+                    image_intent = new Intent(getActivity(), show_image.class);
+                    image_intent.setData(Uri.parse(Glist.get(getAdapterPosition()).capsurl));
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
                             new Pair<View, String>(image, image.getTransitionName()));
-                    startActivity(showimagecomment, options.toBundle());
+                    startActivity(image_intent, options.toBundle());
                 }else
-                    startActivity(showimagecomment);
+                    startActivity(image_intent);
             }
         }
 

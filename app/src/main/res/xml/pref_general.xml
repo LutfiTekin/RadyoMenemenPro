@@ -9,6 +9,13 @@
 
     <SwitchPreference
         android:defaultValue="false"
+        android:key="open_gallery"
+        android:title="Galeri Resimlerini Açma Şekli"
+        android:summaryOn="Galerideki resimlere tıklayınca direkt yorumlar görüntülenir"
+        android:summaryOff="Galerideki resimlere tıklayınca direkt olarak resim görüntülenir"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
         android:key="music_only"
         android:title="@string/settings_music_only_title"
         android:summary="@string/settings_music_only_summary"
