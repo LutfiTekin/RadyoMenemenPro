@@ -16,7 +16,6 @@ import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -116,13 +115,13 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         new AsyncTask<Void,Void,Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params) {
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.oku("username"));
-                dataToSend.put("mkey", m.oku("mkey"));
-                dataToSend.put("mesaj", s);
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                BufferedReader reader = null;
                 try {
+                    Map<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("nick", m.oku("username"));
+                    dataToSend.put("mkey", m.oku("mkey"));
+                    dataToSend.put("mesaj", s);
+                    String encodedStr = Menemen.getEncodedData(dataToSend);
+                    BufferedReader reader = null;
                     HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.MESAJ_GONDER).openConnection();
                     connection.setRequestMethod("POST");
                     connection.setDoOutput(true);
@@ -141,9 +140,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                     JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
 
                     if(j.get("status").equals("ok")) return true;
-                }catch (IOException e){
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
                 return false;
