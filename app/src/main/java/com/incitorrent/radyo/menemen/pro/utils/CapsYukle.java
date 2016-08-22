@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
@@ -52,6 +53,10 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         m = new Menemen(context);
         uploadingimg();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Log.v(TAG,"ByteSize " + byteSizeOf(bit));
+        if(byteSizeOf(bit)>3440000){
+            bit = resizeBitmap(bit,720);
+        }
         bit.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
         String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
         Map<String,String> dataToSend = new HashMap<>();
@@ -205,5 +210,28 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(unid, notification.build());
     }
+    static int byteSizeOf(Bitmap bitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return bitmap.getAllocationByteCount();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            return bitmap.getByteCount();
+        } else {
+            return bitmap.getRowBytes() * bitmap.getHeight();
+        }
+    }
 
+    Bitmap resizeBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 0) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 }
