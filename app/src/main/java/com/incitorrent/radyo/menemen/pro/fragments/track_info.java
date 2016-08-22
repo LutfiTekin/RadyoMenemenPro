@@ -1,7 +1,6 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -23,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -196,22 +193,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         if(getActivity()!=null) {
             //track info ekranına geçince oynatma tuşunu animastonla gizle
             final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-//            if(fab!=null) fab.setVisibility(View.INVISIBLE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                fab.animate().alpha(1).setDuration(1000).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
-                    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                    @Override
-                    public void run() {
-                        fab.animate().alpha(0).setDuration(1000).setInterpolator(new AccelerateInterpolator()).withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                fab.setVisibility(View.GONE);
-                            }
-                        }).start();
-
-                    }
-                }).start();
-            }else fab.setVisibility(View.INVISIBLE);
+            if(fab!=null) fab.hide();
         }
 
     }
@@ -222,17 +204,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         if(getActivity()!=null) {
             //track info ekranına geçince oynatma tuşunu animasyonla göster
             final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)  {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    fab.animate().alpha(0).setDuration(500).setInterpolator(new DecelerateInterpolator()).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            fab.setVisibility(View.VISIBLE);
-                            fab.animate().alpha(1).setDuration(500).setInterpolator(new AccelerateInterpolator()).start();
-                        }
-                    }).start();
-                }else fab.setVisibility(View.VISIBLE);
-            }
+            if(fab!=null) fab.show();
             //Renkleri eski haline getir
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));

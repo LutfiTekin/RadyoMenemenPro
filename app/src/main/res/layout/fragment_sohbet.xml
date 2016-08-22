@@ -89,6 +89,6 @@
         android:id="@+id/scrolltoTop"
         android:layout_gravity="center_horizontal|bottom"
         android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:scaleType="center" />
 </FrameLayout>

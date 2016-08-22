@@ -174,12 +174,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                     }
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
-                        if(scrollTop.getVisibility() == View.GONE)
-                        m.runEnterAnimation(scrollTop, 200);
+                        scrollTop.show();
                         if(getActivity()!=null) getActivity().setTitle(m.getElapsed(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman));
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
-                        scrollTop.setVisibility(View.GONE);
+                        if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
                         if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
                     }
                 } catch (Exception e) {
@@ -253,8 +252,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         if(getActivity()!=null) {
             FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)
-                fab.setVisibility(View.INVISIBLE);
+                if(fab!=null)  fab.setVisibility(View.INVISIBLE);
             m.runEnterAnimation(resimekle,250);
         }
         super.onResume();
@@ -334,8 +332,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 break;
             case R.id.resim_ekle:
                 resimEkle();
-//              if(m.isFirstTime("resim_ekle"))  Toast.makeText(getActivity().getApplicationContext(), R.string.toast_caps_upload_cam, Toast.LENGTH_LONG).show();
-
                 break;
             case R.id.scrolltoTop:
                 try {
@@ -349,9 +345,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     private void resimEkle() {
         if(getActivity()!=null){
+            final AlertDialog dialog;
             final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme));
+            dialog = builder.show();
             builder.setTitle(R.string.upload_caps);
-            builder.setCancelable(false);
+            builder.setCancelable(true);
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             final View promptView = layoutInflater.inflate(R.layout.dialog_image_picker, null);
             builder.setView(promptView);
