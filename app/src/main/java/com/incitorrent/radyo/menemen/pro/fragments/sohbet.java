@@ -27,13 +27,13 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -97,6 +97,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
     SwipeRefreshLayout swipeRV;
     chatDB sql;
     LinearLayoutManager linearLayoutManager;
+    CardView image_pick;
+    ImageView take_photo,pick_gallery,cancel_image_pick;
     public sohbet() {
         // Required empty public constructor
     }
@@ -134,10 +136,17 @@ public class sohbet extends Fragment implements View.OnClickListener{
         });
         mesaj_gonder = (FloatingActionButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
         scrollTop = (FloatingActionButton) sohbetView.findViewById(R.id.scrolltoTop);
+        image_pick = (CardView) sohbetView.findViewById(R.id.image_picker_card);
+        take_photo =  (ImageView) sohbetView.findViewById(R.id.take_photo);
+        pick_gallery = (ImageView) sohbetView.findViewById(R.id.pick_from_gallery);
+        cancel_image_pick = (ImageView) sohbetView.findViewById(R.id.cancel_image_pick);
         resimekle.setOnClickListener(this);
         smilegoster.setOnClickListener(this);
         mesaj_gonder.setOnClickListener(this);
         scrollTop.setOnClickListener(this);
+        take_photo.setOnClickListener(this);
+        pick_gallery.setOnClickListener(this);
+        cancel_image_pick.setOnClickListener(this);
         //SMILEY
         smileRV = (RecyclerView) sohbetView.findViewById(R.id.RVsmileys);
         satbaxSmileList = new ArrayList<>();
@@ -331,7 +340,22 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 mesaj.setText("");
                 break;
             case R.id.resim_ekle:
-                resimEkle();
+                m.runEnterAnimation(image_pick, 0);
+                resimekle.hide();
+                break;
+            case R.id.take_photo:
+                takePhoto();
+                image_pick.setVisibility(View.GONE);
+                resimekle.show();
+                break;
+            case R.id.pick_from_gallery:
+                selectFromGallery();
+                image_pick.setVisibility(View.GONE);
+                resimekle.show();
+                break;
+            case R.id.cancel_image_pick:
+                m.runExitAnimation(image_pick,0);
+                resimekle.show();
                 break;
             case R.id.scrolltoTop:
                 try {
@@ -340,40 +364,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     e.printStackTrace();
                 }
                 break;
-        }
-    }
-
-    private void resimEkle() {
-        if(getActivity()!=null){
-            final AlertDialog dialog;
-            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme));
-            dialog = builder.show();
-            builder.setTitle(R.string.upload_caps);
-            builder.setCancelable(true);
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            final View promptView = layoutInflater.inflate(R.layout.dialog_image_picker, null);
-            builder.setView(promptView);
-            final TextView cam = (TextView) promptView.findViewById(R.id.cam);
-            final TextView gallery = (TextView) promptView.findViewById(R.id.gallery);
-            cam.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    takePhoto();
-                }
-            });
-            gallery.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selectFromGallery();
-                }
-            });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.cancel();
-                }
-            });
-            builder.show();
         }
     }
 
