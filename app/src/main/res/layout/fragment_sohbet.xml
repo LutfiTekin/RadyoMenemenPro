@@ -130,6 +130,8 @@
                 android:text="@string/dialog_take_photo"
                 android:textSize="12sp"
                 android:textColor="@color/textColorPrimary"
+                android:textAllCaps="true"
+                android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:foreground="?android:attr/selectableItemBackground"/>
@@ -156,6 +158,8 @@
                 android:text="@string/dialog_choose_from_gallery"
                 android:textSize="12sp"
                 android:textColor="@color/textColorPrimary"
+                android:textAllCaps="true"
+                android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:foreground="?android:attr/selectableItemBackground"/>
@@ -182,6 +186,8 @@
                 android:text="@android:string/cancel"
                 android:textSize="12sp"
                 android:textColor="@color/textColorPrimary"
+                android:textAllCaps="true"
+                android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:foreground="?android:attr/selectableItemBackground"/>
