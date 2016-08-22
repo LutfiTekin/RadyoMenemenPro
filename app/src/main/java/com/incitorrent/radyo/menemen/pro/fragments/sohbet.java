@@ -683,20 +683,24 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected Void doInBackground(Void... params) {
             //Getfrom db
-            Cursor cursor = sql.getHistory(limit);
-            if(cursor == null) return null;
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                String id,nick,post,time;
-                id = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
-                nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
-                post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
-                time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
-                sohbetList.add(new Sohbet_Objects(id,nick,post,time));
-                cursor.moveToNext();
+            try {
+                Cursor cursor = sql.getHistory(limit);
+                if(cursor == null) return null;
+                cursor.moveToFirst();
+                while(!cursor.isAfterLast()){
+                    String id,nick,post,time;
+                    id = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
+                    nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                    post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                    time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
+                    sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                sql.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            cursor.close();
-            sql.close();
             return null;
         }
 
