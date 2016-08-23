@@ -306,7 +306,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
            builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
-        if(!mutechatnotification) {
+        if(!mutechatnotification && !isUser) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
@@ -349,7 +349,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setGroupSummary(true)
                 .setOnlyAlertOnce(true);
         if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
-        if(!mutechatnotification || isUser) {
+        if(!mutechatnotification && !isUser) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
