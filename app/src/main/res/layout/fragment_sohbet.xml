@@ -11,11 +11,9 @@
       android:orientation="vertical">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout"
-        >
+        android:id="@+id/linearLayout">
 
         <EditText
             android:id="@+id/ETmesaj"
@@ -23,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-
             android:gravity="center_vertical"
             android:hint="Bir şeyler yaz"
             android:imeOptions="actionDone"
@@ -31,7 +28,6 @@
             android:maxLines="4"
             android:scrollHorizontally="false"
             android:minLines="2"
-
             android:textColorHint="#eeeeee"
             android:textColor="#f5f5f5"
             android:layout_marginLeft="16dp" />
@@ -61,6 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:id="@+id/RVsmileys"
         android:visibility="gone" />
       <android.support.v4.widget.SwipeRefreshLayout
