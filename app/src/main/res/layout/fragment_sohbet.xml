@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_gravity="center_vertical"
-            android:contentDescription="Send Button"
+            android:contentDescription="@string/cd_send_button"
             android:src="@mipmap/ic_menu_send"
             android:scaleType="center"
             android:layout_marginRight="16dp"
