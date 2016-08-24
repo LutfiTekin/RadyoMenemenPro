@@ -179,7 +179,6 @@ public class podcast extends Fragment {
                         String delims = "=";
                         String[] tokens = phrase.split(delims);
                         String real_mp3_link = podcastlink + tokens[1];
-                        //StringEntity entity = new UrlEncodedFormEntity(parser,"UTF-8");
                         String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
                         String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
                         String duration = parser.getValue(e, KEY_DURATION);

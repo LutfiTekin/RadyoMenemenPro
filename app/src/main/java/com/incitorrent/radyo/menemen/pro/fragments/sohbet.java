@@ -561,7 +561,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
     }
 
-
 //CAPS YUKLE END
 
     //SOHBET

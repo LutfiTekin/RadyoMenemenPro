@@ -320,51 +320,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                openTrackInfo(trackName,artUrl,art,song);
             }
 
-
-//
-//            @Override
-//            public boolean onLongClick(View v) {
-//                final int i = getAdapterPosition();
-//                if(!RList.get(i).url.contains(".mp3")) return false;
-//                else {
-//                    if (!m.oku("logged").equals("yok")){
-//                        Log.i("Downloadurl", RList.get(i).url + RList.get(i).song + RList.get(i).url.contains(".mp3"));
-//                        new AlertDialog.Builder(context)
-//                                .setTitle(RList.get(i).song)
-//                                .setMessage(getString(R.string.download_file))
-//                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        try {
-//                                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RList.get(i).url));
-//                                            request.setDescription(context.getString(R.string.downloading_file))
-//                                                    .setTitle(RList.get(i).song)
-//                                                    .allowScanningByMediaScanner();
-//                                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//                                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, RList.get(i).song + ".mp3");
-//                                            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-//                                            manager.enqueue(request);
-//                                            Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
-//                                              } catch (Exception e) {
-//                                            Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//                                })
-//                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.cancel();
-//                                    }
-//                                })
-//                                .setIcon(R.mipmap.album_placeholder)
-//                                .show();
-//
-//                    }
-//                    return true;
-//                }
-//
-//            }
-
-
         }
         RadioAdapter(List<history_objs> RList){
             this.RList = RList;
@@ -451,8 +406,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             this.arturl = arturl;
         }
     }
-
-
     //RecyclerView callback methods for swipe to delete effects
 
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -487,10 +440,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         if(lastplayed!=null)  lastplayed.getAdapter().notifyItemChanged(position);
                     }
                 });
-
                 sn.show();
-
-
             //Remove swiped item from list and notify the RecyclerView
 
         }
