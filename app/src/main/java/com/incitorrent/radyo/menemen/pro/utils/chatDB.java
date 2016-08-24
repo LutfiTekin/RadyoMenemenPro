@@ -49,7 +49,7 @@ public class chatDB extends SQLiteOpenHelper {
         values.put(_TIME, chat.get_TIME());
         SQLiteDatabase db = getWritableDatabase();
         try {
-            db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         }catch (Exception e){
             e.printStackTrace();
             Log.v(DATABASE_NAME,e.toString());
