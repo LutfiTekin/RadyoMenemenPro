@@ -238,4 +238,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="pref_summary_sync_channels">If radio does not play, click here for manuel channel info update</string>
     <string name="pref_title_sync_channels">Manuel Channel Sync</string>
     <string name="toast_manuel_sync_finished">Manuel sync completed</string>
+    <string name="hint_write_something">Write something...</string>
 </resources>
