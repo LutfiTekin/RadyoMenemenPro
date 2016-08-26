@@ -145,7 +145,7 @@ public class login extends Fragment {
                             if(durum.equals("ok")){
                                 m.kaydet("username",nick);
                                 m.kaydet("mkey",J.getString("mkey"));
-                                m.kaydet("logged", "evet");
+                                m.bool_kaydet("loggedin", true);
                                 m.setToken();
                                 if(aksiyon.equals("giris")) return "loggedin";
                                 else if(aksiyon.equals("kayit")) return "signedup";

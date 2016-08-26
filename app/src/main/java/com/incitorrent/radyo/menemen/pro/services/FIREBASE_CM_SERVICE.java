@@ -61,7 +61,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean notify_when_on_air = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air", true);
     final Boolean notify_new_podcast = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_podcast", true);
     final Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true);
-    final Boolean logged = m.oku("logged").equals("evet");
+    final Boolean logged = m.isLoggedIn();
     final Boolean mutechatnotification = m.isNotificationMuted();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
@@ -134,7 +134,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
             m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
             m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-            if(m.oku("logged").equals("evet") && m.isFirstTime("tokenset")) m.setToken();
+            if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
         } catch (final Exception e) {
             e.printStackTrace();
         }

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
               if(intent!=null) {
                 play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                 fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                if((m.oku("caliyor").equals("evet") || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                if((m.isPlaying() || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                     setNPHeader();
                   else setHeaderDefault();
               }
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         header_sub_txt = (TextView) hview.findViewById(R.id.header_sub_txt);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
-            if(m.oku("logged").equals("yok")) {
+            if(!m.isLoggedIn()) {
                 navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);
                 navigationView.getMenu().findItem(R.id.nav_shout).setEnabled(false);
                 header_txt.setText(m.oku("username").toUpperCase());
@@ -137,12 +137,12 @@ public class MainActivity extends AppCompatActivity
            }
         }
 
-Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
+
         if(savedInstanceState == null) {
-            if(m.oku("logged").equals("yok") && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
+            if(!m.isLoggedIn() && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
             //Sadece müzik modu açık ve giriş yapılmamış
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-            }else if (m.oku("logged").equals("yok")) {
+            }else if (!m.isLoggedIn()) {
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
             } else {
                if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
@@ -150,7 +150,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                 else
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
             }
-            if(m.oku("logged").equals("yok")){
+            if(m.isLoggedIn()){
                 //sohbet haykır giriş çıkış butonlarını gizle
                 if (navigationView != null){
                     navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
@@ -162,7 +162,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
 
 
-        if (m.oku("logged").equals("evet") && navigationView != null) {
+        if (m.isLoggedIn() && navigationView != null) {
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
@@ -172,7 +172,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
     private void setHeaderDefault() {
         header_img.setImageResource(R.mipmap.ic_launcher);
-        if(m.oku("logged").equals("evet"))
+        if(m.isLoggedIn())
             header_txt.setText(m.oku("username").toUpperCase());
         else header_txt.setText(getString(R.string.app_name));
         header_sub_txt.setText(R.string.site_adress);
@@ -248,7 +248,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
     }
 
     private void defaultAction() {
-        if (m.oku("logged").equals("yok")) {
+        if (!m.isLoggedIn()) {
             fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
         } else {
             if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat", true))
@@ -293,8 +293,8 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
 
     @Override
     protected void onResume() {
-        fab.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-        if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+        fab.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+        if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
             setNPHeader();
         else setHeaderDefault();
         super.onResume();
@@ -366,7 +366,7 @@ Log.v(TAG,"FRA"+ " "+ m.oku("logged"));
                             //DELETE username and key
                             m.kaydet("username","yok");
                             m.kaydet("mkey","yok");
-                            m.kaydet("logged", "yok");
+                            m.bool_kaydet("loggedin",true);
                             m.kaydet(RadyoMenemenPro.HAYKIRCACHE,"yok");
                             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
                             //REOPEN Activity

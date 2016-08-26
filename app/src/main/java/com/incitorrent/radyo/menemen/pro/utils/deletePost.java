@@ -2,16 +2,9 @@ package com.incitorrent.radyo.menemen.pro.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +34,7 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
     protected Void doInBackground(Void... params) {
         m = new Menemen(context);
         if(!m.isInternetAvailable()) return null;
-        if(m.oku("logged").equals("yok")) return null;
+        if(!m.isLoggedIn()) return null;
         Map<String,String> dataToSend = new HashMap<>();
         dataToSend.put("nick", m.oku("username"));
         dataToSend.put("mkey", m.oku("mkey"));

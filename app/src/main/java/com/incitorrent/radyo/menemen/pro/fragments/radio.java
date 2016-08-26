@@ -139,7 +139,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-              if(m.oku("caliyor").equals("evet") && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+              if(m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           m.runExitAnimation(nowplayingbox, 400);
@@ -229,7 +229,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         adapter = new RadioAdapter(RList);
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
-        if(m.oku("caliyor").equals("evet") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+        if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             setNP();
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();

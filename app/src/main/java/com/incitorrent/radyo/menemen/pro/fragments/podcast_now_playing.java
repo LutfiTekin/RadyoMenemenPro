@@ -167,7 +167,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                if(m.oku("caliyor").equals("evet")) {
+                if(m.isPlaying()) {
                     seekBar.setProgress(seekBar.getProgress() + 1);
                 }
             }
@@ -181,8 +181,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             if(fab!=null) fab.setVisibility(View.GONE);
         }
        if(placeholder != null)
-        placeholder.setImageResource(m.oku("caliyor").equals("evet") ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-       if(m.oku("caliyor").equals("evet") && seekBar.getMax() > 100)
+        placeholder.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+       if(m.isPlaying() && seekBar.getMax() > 100)
            progressBar.setVisibility(View.GONE);
         super.onResume();
     }

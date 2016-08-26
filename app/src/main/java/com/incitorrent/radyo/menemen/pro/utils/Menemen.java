@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
@@ -42,10 +41,6 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -96,7 +91,7 @@ public class Menemen {
     public Boolean bool_oku(String title){
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         Log.v("Kayıt", "okunuyor " + title);
-        return oku.getBoolean(title, false); //Değer boş ise "yok"
+        return oku.getBoolean(title, false); //Değer boş ise false
     }
 
     //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
@@ -233,38 +228,7 @@ public class Menemen {
         }
         return "";
     }
-    //Eğer resim hali hazırda resim kayıtlı değilse indirir
-    public void downloadImageIfNecessary(String songid,String url){
-        try {
-            String root = Environment.getExternalStorageDirectory().toString();
-            File myDir = new File(root + "/Satbax/Radio/artworks");
-            myDir.mkdirs();
-            String fname = songid + ".jpg";
-            File file = new File(myDir, fname);
-            File nomedia = new File(myDir, ".nomedia");
-            nomedia.createNewFile();  //Nomedia Oluştur, artworklerin telefon galerisinde görünmemesi için
-            //Dosya işlemleri end
-            if (!url.equals("default")) {
-                if(!file.exists()){//Eğer dbde yoksa
-                    Log.i("RADYO SERVİSİ", "Yeni artwork indiriliyor" + url + "saved" + oku("savedurl"));
-                    URL urlConnection = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) urlConnection
-                            .openConnection();
-                    connection.setDoInput(true);
-                    connection.connect();
-                    InputStream input = connection.getInputStream();
-                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                    //Artwork İndir
-                    FileOutputStream out = new FileOutputStream(file);
-                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-                    out.flush();
-                    out.close();
-                }else Log.v("Radyo Servisi", "Dosya var " + file.exists());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public String getElapsed(String Sdate){
         try {
@@ -564,6 +528,7 @@ public class Menemen {
         }
     }
 
+    public Boolean isPlaying() { return oku("caliyor").equals("evet"); }
 
     public String getMobilKey(){
         return oku("mkey");
@@ -573,5 +538,5 @@ public class Menemen {
         return oku("username");
     }
 
-    public Boolean isLogged() { return oku("logged").equals("evet"); }
+    public Boolean isLoggedIn() { return bool_oku("loggedin"); }
 }

@@ -128,7 +128,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-               if(m.oku("caliyor").equals("evet") && !isPodcast) {
+               if(m.isPlaying() && !isPodcast) {
                    setMusicMeta();
                    new Thread(new Runnable() {
                        @Override
@@ -202,7 +202,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             stopService(new Intent(this, MUSIC_PLAY_SERVICE.class)); //DURDUR
             return START_NOT_STICKY;
         }
-        if(!m.oku("caliyor").equals("evet")){
+        if(!m.isPlaying()){
             //MUSIC_INFO_SERVICE başlat
             if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
             else {
@@ -216,7 +216,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
            if(dataSource!=null)  play(dataSource);
             else resume(true);
             Log.v(TAG,"DATA SOURCE " +dataSource);
-        }else if(m.oku("caliyor").equals("evet")) pause(true);
+        }else if(m.isPlaying()) pause(true);
 
         return START_NOT_STICKY;
     }
@@ -372,7 +372,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         stop.putExtra("stop",true);
         PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
-        if(m.oku("caliyor").equals("evet")) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
+        if(m.isPlaying()) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
         else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
         notification.addAction(R.mipmap.ic_media_stop,getString(R.string.media_stop),stopIntent);
         notification.setDeleteIntent(stopIntent);
