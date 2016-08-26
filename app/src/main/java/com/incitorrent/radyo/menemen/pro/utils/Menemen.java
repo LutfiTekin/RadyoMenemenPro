@@ -572,4 +572,6 @@ public class Menemen {
     public String getUsername(){
         return oku("username");
     }
+
+    public Boolean isLogged() { return oku("logged").equals("evet"); }
 }
