@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Uploader"
+        android:textAllCaps="true"
         android:textColor="@color/textColorPrimary"
         android:id="@+id/uploader"
         android:layout_margin="8dp"

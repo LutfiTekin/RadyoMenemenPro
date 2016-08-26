@@ -191,7 +191,7 @@ public class galeri extends Fragment {
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
            if(getActivity()!=null) Glide.with(getActivity()).load(Glist.get(i).capsurl).placeholder(R.drawable.default_image).centerCrop().into(viewHolder.image);
-            viewHolder.uploader.setText(Glist.get(i).uploader.toUpperCase());
+            viewHolder.uploader.setText(Glist.get(i).uploader);
             final int count = capsSql.commentCount(Glist.get(i).capsurl);
             if(count < 1)
                 viewHolder.comments.setVisibility(View.GONE);

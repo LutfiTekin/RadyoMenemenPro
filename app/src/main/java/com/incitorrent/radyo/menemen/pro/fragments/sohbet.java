@@ -69,7 +69,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -523,7 +522,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
         @Override
         public void onBindViewHolder(chatViewHolder chatViewHolder, final int i) {
-            chatViewHolder.nick.setText(sohbetList.get(i).nick.toUpperCase(Locale.US));
+            chatViewHolder.nick.setText(sohbetList.get(i).nick);
             chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
             chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
