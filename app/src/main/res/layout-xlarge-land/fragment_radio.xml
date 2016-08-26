@@ -20,6 +20,7 @@
         android:layout_margin="16dp"
         android:layout_gravity="start|top"
         android:id="@+id/emptyview"
+        app:cardBackgroundColor="@color/cardviewBG"
         android:visibility="gone"
         >
         <LinearLayout
@@ -40,7 +41,7 @@
                 android:maxLines="2"
                 android:text="@string/lastplayed_emptyview"
                 android:textSize="16sp"
-                android:textColor="@color/primary_dark_material_dark"
+                android:textColor="@color/textColorPrimary"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
