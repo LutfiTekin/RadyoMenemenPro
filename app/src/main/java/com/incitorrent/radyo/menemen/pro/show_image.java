@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 
 import java.io.File;
@@ -34,6 +35,7 @@ public class show_image extends AppCompatActivity {
     private TouchImageView image;
     private String imageurl;
     private ProgressBar progressBar;
+    Menemen m;
     final String root = Environment.getExternalStorageDirectory().toString();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class show_image extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_image);
+        m = new Menemen(this);
         progressBar = (ProgressBar) findViewById(R.id.loading);
         image = (TouchImageView) findViewById(R.id.show_image);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -55,6 +58,10 @@ public class show_image extends AppCompatActivity {
         if (c_fab != null) c_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!m.isLoggedIn()){
+                    Toast.makeText(show_image.this, R.string.toast_caps_comment_required_login, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
                 showimagecomment.putExtra("url", imageurl);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

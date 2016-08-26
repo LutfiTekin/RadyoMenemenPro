@@ -166,4 +166,5 @@
     <string name="pref_summary_sync_channels">Eğer radyo çalmıyorsa, kanal bilgilerini elle güncellemek için tıklayın</string>
     <string name="toast_manuel_sync_finished">Elle güncelleme tamamlandı</string>
     <string name="hint_write_something">Bir şeyler yaz...</string>
+    <string name="toast_caps_comment_required_login">Capslere yorum yapmak için giriş yapmalısınız</string>
 </resources>

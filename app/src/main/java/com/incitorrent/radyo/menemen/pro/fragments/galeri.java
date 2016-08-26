@@ -155,7 +155,10 @@ public class galeri extends Fragment {
             public void onClick(View view) {
                 Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
                 Intent image_intent;
-                if(showcomments) {
+                if(!m.isLoggedIn()){
+                    image_intent = new Intent(getActivity(), show_image.class);
+                    image_intent.setData(Uri.parse(Glist.get(getAdapterPosition()).capsurl));
+                }else if(showcomments) {
                     image_intent = new Intent(getActivity(), show_image_comments.class);
                     image_intent.putExtra("url", Glist.get(getAdapterPosition()).capsurl);
                 }else {
@@ -200,7 +203,7 @@ public class galeri extends Fragment {
                    .into(viewHolder.image);
             viewHolder.uploader.setText(Glist.get(i).uploader);
             final int count = capsSql.commentCount(Glist.get(i).capsurl);
-            if(count < 1)
+            if(count < 1 || !m.isLoggedIn())
                 viewHolder.comments.setVisibility(View.GONE);
             else {
                 viewHolder.comments.setVisibility(View.VISIBLE);
