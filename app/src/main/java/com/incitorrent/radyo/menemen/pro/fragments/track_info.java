@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.util.concurrent.ExecutionException;
@@ -102,7 +103,12 @@ public class track_info extends Fragment implements View.OnClickListener{
                     @Override
                     protected Integer[] doInBackground(Void... voids) {
                         try {
-                            resim = Glide.with(getActivity()).load(arturl).asBitmap().error(R.mipmap.album_placeholder).into(300,300).get();
+                            resim = Glide.with(getActivity())
+                                    .load(arturl)
+                                    .asBitmap()
+                                    .error(R.mipmap.album_placeholder)
+                                    .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                                    .get();
                             Palette palette = Palette.from(resim).generate();
                             int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
                             int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);

@@ -17,6 +17,8 @@ public final class RadyoMenemenPro {
     public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 720;
     public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 480;
 
+    public final static int ARTWORK_IMAGE_OVERRIDE_DIM = 300;
+
 
 
     public final static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo_pro.php";

@@ -328,16 +328,19 @@ public class Menemen {
         if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             return bitmap;
         try {
-
-           int dim = 48; //Bildirim için resim boyutu (yükseklik & genişlik)
             final float scale = context.getResources().getDisplayMetrics().density;
-            dim = (int) (48 * scale + 0.5f); // dp olarak
+            int dim = RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM;
             int fallback = R.mipmap.album_placeholder;
             if(locksreen) {
                 dim = 500; //pixel olarak
                 fallback = R.mipmap.ic_header_background;
             }
-            return Glide.with(context).load(songurl).asBitmap().error(fallback).into(dim,dim).get();
+            return Glide.with(context)
+                    .load(songurl)
+                    .asBitmap()
+                    .error(fallback)
+                    .into(dim,dim)
+                    .get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

@@ -345,7 +345,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             else title = Html.fromHtml(title).toString();
             personViewHolder.song.setText(title);
             if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
-                Glide.with(getActivity().getApplicationContext()).load(RList.get(i).arturl).error(R.mipmap.album_placeholder).into(personViewHolder.art);
+                Glide.with(getActivity().getApplicationContext())
+                        .load(RList.get(i).arturl)
+                        .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                        .error(R.mipmap.album_placeholder)
+                        .into(personViewHolder.art);
             int delay = i*100;
           m.runEnterAnimation(personViewHolder.card,delay);
         }
