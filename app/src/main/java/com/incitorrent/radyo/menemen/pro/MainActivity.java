@@ -366,7 +366,7 @@ public class MainActivity extends AppCompatActivity
                             //DELETE username and key
                             m.kaydet("username","yok");
                             m.kaydet("mkey","yok");
-                            m.bool_kaydet("loggedin",true);
+                            m.bool_kaydet("loggedin",false);
                             m.kaydet(RadyoMenemenPro.HAYKIRCACHE,"yok");
                             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
                             //REOPEN Activity
