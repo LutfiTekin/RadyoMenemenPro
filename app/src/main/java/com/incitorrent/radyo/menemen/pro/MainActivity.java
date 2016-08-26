@@ -150,14 +150,7 @@ public class MainActivity extends AppCompatActivity
                 else
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
             }
-            if(m.isLoggedIn()){
-                //sohbet haykır giriş çıkış butonlarını gizle
-                if (navigationView != null){
-                    navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
-                    navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
-                }
-            }
+
         }
 
 
@@ -293,6 +286,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        if(!m.isLoggedIn()){
+            //sohbet haykır giriş çıkış butonlarını gizle
+            if (navigationView != null){
+                navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
+            }
+        }
         fab.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
             setNPHeader();
