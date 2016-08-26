@@ -21,4 +21,13 @@
         android:layout_gravity="right|bottom"
         android:layout_margin="16dp"
         android:src="@mipmap/ic_chat" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loading"
+        android:indeterminate="true"
+        style="?android:progressBarStyleLarge"
+        android:layout_gravity="center"
+        />
 </FrameLayout>

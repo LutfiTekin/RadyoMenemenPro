@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ import java.util.concurrent.ExecutionException;
 public class show_image extends AppCompatActivity {
     private TouchImageView image;
     private String imageurl;
+    private ProgressBar progressBar;
     final String root = Environment.getExternalStorageDirectory().toString();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class show_image extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_image);
+        progressBar = (ProgressBar) findViewById(R.id.loading);
         image = (TouchImageView) findViewById(R.id.show_image);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             image.setTransitionName("show_image");
@@ -97,6 +100,7 @@ public class show_image extends AppCompatActivity {
                                    @Override
                                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                                        image.setImageDrawable(resource);
+                                       progressBar.setVisibility(View.GONE);
                                    }
                                });
                    } catch (Exception e) {
