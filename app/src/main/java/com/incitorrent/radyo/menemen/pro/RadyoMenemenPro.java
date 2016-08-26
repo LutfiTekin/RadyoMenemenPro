@@ -14,6 +14,9 @@ public final class RadyoMenemenPro {
     public final static int ON_AIR_NOTIFICATION = 28052016;
     public final static int PODCAST_NOTIFICATION = 19072016;
 
+    public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 720;
+    public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 480;
+
 
 
     public final static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo_pro.php";

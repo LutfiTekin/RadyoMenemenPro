@@ -252,6 +252,7 @@ public class show_image_comments extends AppCompatActivity {
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + imageurl,true); //Sohbet ön planda: bildirim gelmeyecek
         Glide.with(show_image_comments.this)
                 .load(imageurl)
+                .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
                 .error(android.R.color.holo_red_light)
                 .into(toolbar_image);
     }

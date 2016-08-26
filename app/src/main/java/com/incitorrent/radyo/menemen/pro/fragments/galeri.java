@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -190,7 +191,13 @@ public class galeri extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-           if(getActivity()!=null) Glide.with(getActivity()).load(Glist.get(i).capsurl).placeholder(R.drawable.default_image).centerCrop().into(viewHolder.image);
+           if(getActivity()!=null)
+               Glide.with(getActivity())
+                   .load(Glist.get(i).capsurl)
+                   .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH,RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
+                   .placeholder(R.drawable.default_image)
+                   .centerCrop()
+                   .into(viewHolder.image);
             viewHolder.uploader.setText(Glist.get(i).uploader);
             final int count = capsSql.commentCount(Glist.get(i).capsurl);
             if(count < 1)
