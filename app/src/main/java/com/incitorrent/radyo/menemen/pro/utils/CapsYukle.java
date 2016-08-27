@@ -93,16 +93,16 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             notification = new NotificationCompat.Builder(context)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.ic_upload);
-            notification.setContentTitle(context.getString(android.R.string.dialog_alert_title));
-            notification.setContentText(context.getString(R.string.error_occured));
+                    .setSmallIcon(R.drawable.ic_upload)
+                    .setContentTitle(context.getString(android.R.string.dialog_alert_title))
+                    .setContentText(context.getString(R.string.error_occured));
             NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(unid, notification.build());
             e.printStackTrace();
         } finally {
             if(reader != null) {
                 try {
-                    reader.close();     //Closing the
+                    reader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -112,8 +112,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
         return null;
     }
-
-
 
     @Override
     protected void onPostExecute(final String s) {
