@@ -57,7 +57,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         if(byteSizeOf(bit)>3440000){
             bit = resizeBitmap(bit,720);
         }
-        bit.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        bit.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
         String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
         Map<String,String> dataToSend = new HashMap<>();
         dataToSend.put("source", encodedImage);
