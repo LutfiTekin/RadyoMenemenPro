@@ -519,6 +519,15 @@ public class Menemen {
         return PreferenceManager.getDefaultSharedPreferences(context).getLong(RadyoMenemenPro.SAVED_TIME, System.currentTimeMillis());
     }
 
+    public void saveTime(String key){
+        final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
+        kaydet.edit().putLong(key,System.currentTimeMillis()).apply();
+    }
+
+    public long getSavedTime(String key){
+      return context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE).getLong(key,0);
+    }
+
     public boolean isNotificationMuted(){
         return savedTime() > System.currentTimeMillis();
     }

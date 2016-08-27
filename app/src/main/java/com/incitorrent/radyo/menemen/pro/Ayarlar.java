@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.downloadMessages;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
 
 import java.util.List;
@@ -221,6 +222,16 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                 e.printStackTrace();
             }
             if(version != null) findPreference("versiyon").setSummary(version);
+
+            Preference download_all = findPreference("download_all");
+                download_all.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //TODO download messages
+                        new downloadMessages(RMPRO.context).execute();
+                        return true;
+                    }
+                });
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }

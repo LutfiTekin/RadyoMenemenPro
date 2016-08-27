@@ -167,4 +167,10 @@
     <string name="toast_manuel_sync_finished">Elle güncelleme tamamlandı</string>
     <string name="hint_write_something">Bir şeyler yaz...</string>
     <string name="toast_caps_comment_required_login">Capslere yorum yapmak için giriş yapmalısınız</string>
+    <string name="pref_title_download_all">Tüm Mesajları İndir</string>
+    <string name="pref_summary_download_all">Siteye gönderilen son (yaklaşık) 1 ayın tüm sohbet mesajlarını indir</string>
+    <string name="downloading_messages">Mesajlar indiriliyor</string>
+    <string name="download_success">Mesajlar başarıyla indirildi</string>
+    <string name="toast_download_progress_msg">Mesajlar indiriliyor, ilerlemeyi bildirim panelinden takip edebilirsiniz.</string>
+    <string name="toast_download_msg_flood_warn">Bu işlemi bu kadar sık yapamazsınız, son 20 mesajı almak için sohbet ekranında aşağı çekip bırakma hareketini uygulayın</string>
 </resources>

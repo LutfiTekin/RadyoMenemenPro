@@ -240,4 +240,10 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="toast_manuel_sync_finished">Manuel sync completed</string>
     <string name="hint_write_something">Write something...</string>
     <string name="toast_caps_comment_required_login">You must be logged in to comment on caps</string>
+    <string name="pref_summary_download_all">Download all the messages that sent in last month</string>
+    <string name="pref_title_download_all">Download All Messages</string>
+    <string name="downloading_messages">Downloading messages</string>
+    <string name="download_success">All messages downloaded successfully</string>
+    <string name="toast_download_progress_msg">Downloading messages, you can see the progress at notification panel</string>
+    <string name="toast_download_msg_flood_warn">You cannot execute this very often, to get last 20 messages simply make swipe to refresh on chat screen</string>
 </resources>
