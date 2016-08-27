@@ -246,18 +246,16 @@ public class Menemen {
             _date = cal.getTime();
             long diff = _now.getTime() - _date.getTime();
             int diffMinutes = (int)diff / (60 * 1000);
-            String mesaj = "";
             if(diffMinutes < 60 && diffMinutes>1)
-                mesaj = String.valueOf(diffMinutes) + context.getString(R.string.time_mins) + " " + context.getString(R.string.time_ago);
+                return String.valueOf(diffMinutes) + context.getString(R.string.time_mins) + " " + context.getString(R.string.time_ago);
             else if(60 <= diffMinutes && diffMinutes < 60*24)
-                mesaj = String.valueOf(diffMinutes / 60) + context.getString(R.string.time_hrs) + " " + context.getString(R.string.time_ago);
-            else if(60*24 <= diffMinutes && diffMinutes < 30*60*24)
-                mesaj = String.valueOf(diffMinutes / (60 * 24)) + context.getString(R.string.time_days) + " " + context.getString(R.string.time_ago);
+                return String.valueOf(diffMinutes / 60) + context.getString(R.string.time_hrs) + " " + context.getString(R.string.time_ago);
+            else if((60 * 24) <= diffMinutes)
+                return String.valueOf(diffMinutes / (60 * 24)) + context.getString(R.string.time_days) + " " + context.getString(R.string.time_ago);
             else if(diffMinutes<1)
-                mesaj = context.getString(R.string.time_moment); //Az önce
+                return context.getString(R.string.time_moment); //Az önce
             else
-                mesaj = context.getString(R.string.time_moments); //Biraz önce (Belli değil)
-            return mesaj;
+                return context.getString(R.string.time_moments); //Biraz önce (Belli değil)
         } catch (Exception e) {
             Log.v(TAG,"getElapsed " + Sdate);
             return context.getString(R.string.time_moments); //Biraz önce (Belli değil)

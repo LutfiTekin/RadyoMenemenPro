@@ -493,16 +493,25 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Context context;
         List<Sohbet_Objects> sohbetList;
 
-        public class chatViewHolder extends RecyclerView.ViewHolder{
+        public class chatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView nick,mesaj,zaman;
+            CardView card;
             chatViewHolder(View itemView) {
                 super(itemView);
                 nick = (TextView) itemView.findViewById(R.id.username);
                 mesaj = (TextView) itemView.findViewById(R.id.mesaj);
                 zaman = (TextView) itemView.findViewById(R.id.zaman);
-
+                card = (CardView) itemView.findViewById(R.id.sohbetcard);
+                card.setOnClickListener(this);
             }
 
+            @Override
+            public void onClick(View view) {
+                String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
+                if(zaman.getText().toString().equals(zaman_val))
+                    zaman.setText(m.getElapsed(zaman_val));
+                else zaman.setText(zaman_val);
+            }
         }
         SohbetAdapter(List<Sohbet_Objects> sohbetList){
             this.sohbetList = sohbetList;
