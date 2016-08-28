@@ -183,7 +183,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
-                        if(getActivity()!=null) getActivity().setTitle(m.getElapsed(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman));
+                        if(getActivity()!=null)
+                            getActivity().setTitle(Menemen.getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman,getActivity().getApplicationContext()));
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
@@ -509,7 +510,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             public void onClick(View view) {
                 String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                 if(zaman.getText().toString().equals(zaman_val))
-                    zaman.setText(m.getElapsed(zaman_val));
+                    zaman.setText(Menemen.getTimeAgo(zaman_val,context));
                 else zaman.setText(zaman_val);
             }
         }
@@ -534,7 +535,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             chatViewHolder.nick.setText(sohbetList.get(i).nick);
             chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
-            chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
+            chatViewHolder.zaman.setText(Menemen.getTimeAgo(sohbetList.get(i).zaman,context));
         }
 
         @Override

@@ -246,4 +246,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="download_success">All messages downloaded successfully</string>
     <string name="toast_download_progress_msg">Downloading messages, you can see the progress at notification panel</string>
     <string name="toast_download_msg_flood_warn">You cannot execute this very often, to get last 20 messages simply make swipe to refresh on chat screen</string>
+    <string name="hour_ago">an hour ago</string>
+    <string name="time_yesterday">yesterday</string>
 </resources>

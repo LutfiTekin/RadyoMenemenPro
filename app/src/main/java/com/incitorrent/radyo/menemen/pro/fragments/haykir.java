@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -239,11 +238,8 @@ public class haykir extends Fragment implements View.OnClickListener {
             else personViewHolder.shoutcard.setCardBackgroundColor(Color.WHITE);
             personViewHolder.nick.setText((ShoutList.get(i).nick.equals("Dj")) ? ShoutList.get(i).nick : context.getString(R.string.me));
             String title = ShoutList.get(i).shout;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-                title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
-            else title = Html.fromHtml(title).toString();
-            personViewHolder.shout.setText(title);
-            personViewHolder.zaman.setText(m.getElapsed(ShoutList.get(i).zaman));
+            personViewHolder.shout.setText(Menemen.fromHtmlCompat(title));
+            personViewHolder.zaman.setText(Menemen.getTimeAgo(ShoutList.get(i).zaman,context));
         }
 
         @Override

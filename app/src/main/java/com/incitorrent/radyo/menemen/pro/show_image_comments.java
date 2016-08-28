@@ -420,7 +420,7 @@ public class show_image_comments extends AppCompatActivity {
             chatViewHolder.nick.setText(sohbetList.get(i).nick);
             chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
-            chatViewHolder.zaman.setText(m.getElapsed(sohbetList.get(i).zaman));
+            chatViewHolder.zaman.setText(Menemen.getTimeAgo(sohbetList.get(i).zaman,context));
         }
 
         @Override

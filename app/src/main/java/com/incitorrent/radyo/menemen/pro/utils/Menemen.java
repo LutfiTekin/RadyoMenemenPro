@@ -230,37 +230,7 @@ public class Menemen {
     }
 
 
-    public String getElapsed(String Sdate){
-        try {
-            if(Sdate==null) return context.getString(R.string.time_moment);
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date _date = null;
-            try {
-                _date = df.parse(Sdate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Date _now = new Date(System.currentTimeMillis());
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(_date);
-            _date = cal.getTime();
-            long diff = _now.getTime() - _date.getTime();
-            int diffMinutes = (int)diff / (60 * 1000);
-            if(diffMinutes < 60 && diffMinutes>1)
-                return String.valueOf(diffMinutes) + context.getString(R.string.time_mins) + " " + context.getString(R.string.time_ago);
-            else if(60 <= diffMinutes && diffMinutes < 60*24)
-                return String.valueOf(diffMinutes / 60) + context.getString(R.string.time_hrs) + " " + context.getString(R.string.time_ago);
-            else if((60 * 24) <= diffMinutes)
-                return String.valueOf(diffMinutes / (60 * 24)) + context.getString(R.string.time_days) + " " + context.getString(R.string.time_ago);
-            else if(diffMinutes<1)
-                return context.getString(R.string.time_moment); //Az önce
-            else
-                return context.getString(R.string.time_moments); //Biraz önce (Belli değil)
-        } catch (Exception e) {
-            Log.v(TAG,"getElapsed " + Sdate);
-            return context.getString(R.string.time_moments); //Biraz önce (Belli değil)
-        }
-    }
+
     //site kullanılan smileylerın BBcode karşılıkları
     public static String getIncitorrentSmileys(String post){
         String smileys[] = {"gmansmile","YSB",":arap:","\\(gc\\)","SBH",":lan\\!","aygötüm","\\(S\\)",":cahil",":NS:","lan\\!\\?",":ypm:","\\[i\\]","\\[b\\]","\\[\\/i\\]","\\[\\/b\\]",":\\)",":D","\n","(hl\\?)","\\*nopanic","\\:V\\:","demeya\\!\\?","\\:hmm"};
@@ -549,4 +519,69 @@ public class Menemen {
     }
 
     public Boolean isLoggedIn() { return bool_oku("loggedin"); }
+
+    /*
+ * Copyright 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+    private static final int SECOND_MILLIS = 1000;
+    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    /**
+     * Get time in prettier formatted string
+     * @param Sdate date in string format
+     * @param c Context instance for localized strings
+     * @return pretty formatted string
+     */
+    public static String getTimeAgo(String Sdate, Context c) {
+        if(Sdate==null) return c.getString(R.string.time_moment);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date _date = null;
+        try {
+            _date = df.parse(Sdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(_date);
+        _date = cal.getTime();
+        long time = _date.getTime();
+
+
+        long now = System.currentTimeMillis();
+        if (time > now || time <= 0) {
+            return c.getString(R.string.time_moments);
+        }
+
+        final long diff = now - time;
+        if (diff < MINUTE_MILLIS) {
+            return c.getString(R.string.time_moment);
+        } else if (diff < 2 * MINUTE_MILLIS) {
+            return c.getString(R.string.time_moments);
+        } else if (diff < 50 * MINUTE_MILLIS) {
+            return diff / MINUTE_MILLIS + c.getString(R.string.time_mins) + " " + c.getString(R.string.time_ago);
+        } else if (diff < 90 * MINUTE_MILLIS) {
+            return c.getString(R.string.hour_ago);
+        } else if (diff < 24 * HOUR_MILLIS) {
+            return diff / HOUR_MILLIS + c.getString(R.string.time_hrs) + " " + c.getString(R.string.time_ago);
+        } else if (diff < 48 * HOUR_MILLIS) {
+            return c.getString(R.string.time_yesterday);
+        } else {
+            return diff / DAY_MILLIS + c.getString(R.string.time_days) + " " + c.getString(R.string.time_ago);
+        }
+    }
 }
