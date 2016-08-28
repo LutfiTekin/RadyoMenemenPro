@@ -550,16 +550,16 @@ public class Menemen {
     public static String getTimeAgo(String Sdate, Context c) {
         if(Sdate==null) return c.getString(R.string.time_moment);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date _date = null;
+        Date date = null;
         try {
-            _date = df.parse(Sdate);
+            date = df.parse(Sdate);
         } catch (ParseException e) {
             e.printStackTrace();
             }
         Calendar cal = Calendar.getInstance();
-        cal.setTime(_date);
-        _date = cal.getTime();
-        long time = _date.getTime();
+        cal.setTime(date);
+        date = cal.getTime();
+        long time = date.getTime();
 
 
         long now = System.currentTimeMillis();
