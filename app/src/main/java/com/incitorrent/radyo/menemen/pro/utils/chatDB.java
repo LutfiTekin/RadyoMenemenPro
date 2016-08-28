@@ -69,7 +69,7 @@ public class chatDB extends SQLiteOpenHelper {
 
     public Cursor getHistoryOnScroll(String msgid){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","20");
+        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","10");
     }
 
     public void deleteMSG(String msgid){
@@ -84,8 +84,12 @@ public class chatDB extends SQLiteOpenHelper {
 
     public Cursor getCapsGallery(int limit){
         SQLiteDatabase db = getReadableDatabase();
-        if(limit < 20) limit = 20;
         return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%'",null,null,null,_MSGID + " DESC",String.valueOf(limit));
+    }
+
+    public Cursor loadCapsGalleryOnScroll(String msgid){
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%' AND " + _MSGID + " < '" + msgid + "'",null,null,null,_MSGID + " DESC","10");
     }
 
 

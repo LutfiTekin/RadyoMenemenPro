@@ -12,9 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
+import com.incitorrent.radyo.menemen.pro.utils.EndlessParentScrollListener;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
@@ -46,7 +48,7 @@ public class galeri extends Fragment {
     chatDB sql;
     capsDB capsSql;
     LinearLayoutManager llm;
-    StaggeredGridLayoutManager sglm;
+    NestedScrollView nestedScrollView;
     public galeri() {
         // Required empty public constructor
     }
@@ -67,18 +69,22 @@ public class galeri extends Fragment {
         View galeri = inflater.inflate(R.layout.fragment_galeri, container, false);
         if(getActivity() != null) getActivity().setTitle(getString(R.string.nav_galeri));
         recyclerView = (RecyclerView) galeri.findViewById(R.id.galeriR);
-        if(getResources().getBoolean(R.bool.xlarge_landscape_mode)) {
-            sglm = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(sglm);
-        }else  if(getResources().getBoolean(R.bool.landscape_mode)) {
-            sglm = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        }else {
-            llm = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(llm);
-        }
-        recyclerView.setHasFixedSize(false);
+        nestedScrollView = (NestedScrollView) galeri.findViewById(R.id.nestedscroll);
+        recyclerView.setHasFixedSize(true);
+        llm = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(llm);
         recyclerView.setNestedScrollingEnabled(false);
+        nestedScrollView.setOnScrollChangeListener(new EndlessParentScrollListener(llm) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                Log.v(TAG,"load");
+                if(Glist == null || Glist.size()<1) return;
+                String lastid = Glist.get(totalItemsCount - 1).msgid;
+                Log.v(TAG,"last" + Glist.get(totalItemsCount - 1).uploader + lastid + Glist.size());
+                new loadMore(lastid, Glist.size()).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+            }
+        });
+
         new loadGaleri().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return galeri;
     }
@@ -106,7 +112,7 @@ public class galeri extends Fragment {
         protected Void doInBackground(Void... params) {
             try {
                 Glist = new ArrayList<>();
-                Cursor cursor = sql.getCapsGallery(50);
+                Cursor cursor = sql.getCapsGallery(10);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()){
@@ -127,10 +133,61 @@ public class galeri extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-           if(Glist != null) recyclerView.setAdapter(new GaleriAdapter(Glist));
+           if(Glist != null) {
+               recyclerView.setAdapter(new GaleriAdapter(Glist));
+
+           }
             super.onPostExecute(aVoid);
         }
     }
+
+    class loadMore extends AsyncTask<Void,Void,Void>{
+        String lastid;
+        int listSize;
+
+        public loadMore(String lastid, int listSize) {
+            this.lastid = lastid;
+            this.listSize = listSize;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Cursor cursor = sql.loadCapsGalleryOnScroll(lastid);
+                if(cursor == null) return null;
+                cursor.moveToFirst();
+                while(!cursor.isAfterLast()){
+                    String uploader,capsurl,msgid;
+                    uploader = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                    capsurl = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                    msgid = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
+                    Glist.add(new galeri_objects(uploader,"http://"+ Menemen.fromHtmlCompat(capsurl),msgid));
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                sql.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(Glist == null) return;
+            if(recyclerView != null && recyclerView.getAdapter() != null){
+                try {
+//                    recyclerView.getAdapter().notifyItemRangeInserted(listSize + 1,10);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
     public class GaleriAdapter extends RecyclerView.Adapter<GaleriAdapter.ViewHolder> {
         Context context;
         List<galeri_objects> Glist;
