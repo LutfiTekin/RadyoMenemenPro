@@ -749,11 +749,15 @@ public class sohbet extends Fragment implements View.OnClickListener{
             super.onPostExecute(aVoid);
             if(sohbetList == null) return;
             if(sohbetRV != null && sohbetRV.getAdapter() != null){
-                try {
-                    sohbetRV.getAdapter().notifyItemRangeInserted(listSize,20);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+              notifyItemsSync();
+            }
+        }
+
+        private synchronized void notifyItemsSync() {
+            try {
+                sohbetRV.getAdapter().notifyItemRangeInserted(listSize,20);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

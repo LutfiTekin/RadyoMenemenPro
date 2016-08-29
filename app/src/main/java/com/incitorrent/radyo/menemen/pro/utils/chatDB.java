@@ -69,7 +69,7 @@ public class chatDB extends SQLiteOpenHelper {
 
     public Cursor getHistoryOnScroll(String msgid){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","10");
+        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","20");
     }
 
     public void deleteMSG(String msgid){
