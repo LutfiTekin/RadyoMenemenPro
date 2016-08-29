@@ -36,8 +36,8 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
         if(!m.isInternetAvailable()) return null;
         if(!m.isLoggedIn()) return null;
         Map<String,String> dataToSend = new HashMap<>();
-        dataToSend.put("nick", m.oku("username"));
-        dataToSend.put("mkey", m.oku("mkey"));
+        dataToSend.put("nick", m.getUsername());
+        dataToSend.put("mkey", m.getMobilKey());
         dataToSend.put("post", postid);
         String encodedStr = Menemen.getEncodedData(dataToSend);
 
