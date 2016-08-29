@@ -87,6 +87,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     FloatingActionButton resimekle,scrollTop;
     private RecyclerView smileRV,sohbetRV;
     private FloatingActionButton mesaj_gonder;
+    private Boolean first_visit = true;
     Menemen m;
     List<Satbax_Smiley_Objects> satbaxSmileList;
     List<Sohbet_Objects> sohbetList;
@@ -256,7 +257,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
-        new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       if(first_visit) new initsohbet(20,0).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         if(getActivity()!=null) {
@@ -318,8 +319,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Log.d(TAG, "onActivityCreated");
         if(savedInstanceState != null && sohbetRV != null && sohbetList != null){
             first_visible_view = savedInstanceState.getInt("first_visible_view");
+            first_visit = true;
             if(first_visible_view > 0){
                     new initsohbet(first_visible_view + 20, first_visible_view).execute();
+                    first_visit = false;
             }
         }
         super.onActivityCreated(savedInstanceState);
