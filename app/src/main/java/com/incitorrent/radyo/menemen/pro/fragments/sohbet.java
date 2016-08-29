@@ -264,7 +264,21 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 if(fab!=null)  fab.setVisibility(View.INVISIBLE);
             m.runEnterAnimation(resimekle,250);
         }
+        iAmOnline();
         super.onResume();
+    }
+
+    private void iAmOnline() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map<String,String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.getUsername());
+                dataToSend.put("mkey", m.getMobilKey());
+                String encodedStr = Menemen.getEncodedData(dataToSend);
+                Menemen.postMenemenData(RadyoMenemenPro.PUSH_ONLINE_SIGNAL, encodedStr);
+            }
+        }).start();
     }
 
     @Override
