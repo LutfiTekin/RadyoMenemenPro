@@ -43,6 +43,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
     public static final String CATEGORY_CAPS = "caps";
     public static final String CATEGORY_HAYKIR = "haykir";
+    public static final String CATEGORY_CHAT = "generalchat";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
     final Context context = RMPRO.getContext();
@@ -85,12 +86,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.v(TAG,"onMessageReceived " + remoteMessage.getFrom());
         notification_intent.setAction("radyo.menemen.chat");
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
-        if(topic.equals(RadyoMenemenPro.FCMTopics.GENERAL)){
-            generalChat(remoteMessage);
-        }else if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
+        if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
             //OLAN BITEN
            if(notify) updateNews(remoteMessage);
         }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
@@ -114,6 +114,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     break;
                 case CATEGORY_HAYKIR:
                     haykirbildirim(remoteMessage);
+                    break;
+                case CATEGORY_CHAT:
+                    generalChat(remoteMessage);
                     break;
             }
 

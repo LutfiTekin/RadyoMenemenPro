@@ -36,7 +36,7 @@ public class RMPRO extends Application {
         mInstance = this;
         RMPRO.context = getApplicationContext();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        FirebaseMessaging.getInstance().subscribeToTopic("general");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         FirebaseMessaging.getInstance().subscribeToTopic("sync");
         FirebaseMessaging.getInstance().subscribeToTopic("onair");
