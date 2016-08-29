@@ -269,6 +269,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void iAmOnline() {
+        if(m.getSavedTime("online_push") + (1000 * 60 * 2) > System.currentTimeMillis()) return;
+        m.saveTime("online_push");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -303,8 +305,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Log.d(TAG, "onSavedInstanceState");
         if(linearLayoutManager != null){
             first_visible_view = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
-            outState.putInt("first_visible_view",first_visible_view);
-            Log.d(TAG, "onSavedInstanceState last visible view position saved");
+            if(first_visible_view > 20) {
+                outState.putInt("first_visible_view", first_visible_view);
+                Log.d(TAG, "onSavedInstanceState last visible view position saved " + first_visible_view );
+            }
         }
         super.onSaveInstanceState(outState);
     }
