@@ -173,6 +173,6 @@
     <string name="download_success">Mesajlar başarıyla indirildi</string>
     <string name="toast_download_progress_msg">Mesajlar indiriliyor, ilerlemeyi bildirim panelinden takip edebilirsiniz.</string>
     <string name="toast_download_msg_flood_warn">Bu işlemi bu kadar sık yapamazsınız, son 20 mesajı almak için sohbet ekranında aşağı çekip bırakma hareketini uygulayın</string>
-    <string name="hour_ago">bir saat önce</string>
+    <string name="hour_ago">Bir saat önce</string>
     <string name="time_yesterday">Dün</string>
 </resources>
