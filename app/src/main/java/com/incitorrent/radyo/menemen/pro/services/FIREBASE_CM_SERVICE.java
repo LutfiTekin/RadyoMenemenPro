@@ -26,6 +26,7 @@ import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
+import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +45,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String CATEGORY_CAPS = "caps";
     public static final String CATEGORY_HAYKIR = "haykir";
     public static final String CATEGORY_CHAT = "generalchat";
+    public static final String CATEGORY_ONLINE = "online";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
     final Context context = RMPRO.getContext();
@@ -66,10 +68,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean mutechatnotification = m.isNotificationMuted();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
-    LocalBroadcastManager broadcasterForChat = LocalBroadcastManager.getInstance(context);
+    public static final  String USERS_ONLINE_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
+    LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
     chatDB sql;
     capsDB sql_caps;
+    trackonlineusersDB sql_online;
     @SuppressLint("ServiceCast")
     @Override
     public void onCreate() {
@@ -81,6 +85,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
+        sql_online = new trackonlineusersDB(context,null,null,1);
         super.onCreate();
     }
 
@@ -118,11 +123,24 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 case CATEGORY_CHAT:
                     generalChat(remoteMessage);
                     break;
+                case CATEGORY_ONLINE:
+                    onlineUser(remoteMessage);
+                    break;
             }
 
         }
         super.onMessageReceived(remoteMessage);
     }
+
+    private void onlineUser(RemoteMessage rm) {
+        String nick = getDATA(rm, "user");
+        long now = System.currentTimeMillis();
+        sql_online.addToHistory(nick, now);
+        Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
+        onlineusers.putExtra("count", sql_online.getOnlineUserCount());
+        broadcastManager.sendBroadcast(onlineusers);
+    }
+
     //TODO use remote message parameter
     private void sync(RemoteMessage remoteMessage) {
         try {
@@ -171,7 +189,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             sql.deleteMSG(msgid);
             chat.putExtra("action",DELETE);
             chat.putExtra("msgid",msgid);
-            broadcasterForChat.sendBroadcast(chat);
+            broadcastManager.sendBroadcast(chat);
             return;
         }
         //CHAT mesajı geldi
@@ -184,7 +202,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         chat.putExtra("msgid",msgid);
         chat.putExtra("time",time);
         chat.putExtra("action",ADD);
-        broadcasterForChat.sendBroadcast(chat);
+        broadcastManager.sendBroadcast(chat);
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
         Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
@@ -208,7 +226,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .putExtra("time", time)
                 .putExtra("caps_url", caps_url)
                 .putExtra("action", ADD);
-        broadcasterForChat.sendBroadcast(caps_comment);
+        broadcastManager.sendBroadcast(caps_comment);
         //Add to sql
         sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
         //Build notification

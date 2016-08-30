@@ -38,10 +38,12 @@ import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast_now_playing;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
+import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
+import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
@@ -80,11 +82,22 @@ public class MainActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 Boolean play;
               if(intent!=null) {
-                play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
-                fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                if((m.isPlaying() || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-                    setNPHeader();
+                  Log.v(TAG, intent.getAction());
+                  String action = intent.getAction();
+                  if (action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)) {
+                  play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
+                  fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                  if ((m.isPlaying() || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                      setNPHeader();
                   else setHeaderDefault();
+              }else if(action.equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)){
+                      int count = intent.getExtras().getInt("count",0);
+                      if(count > 0){
+                          final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                                  findItem(R.id.nav_chat));
+                          m.setBadge(badge,String.valueOf(count));
+                      }
+                  }
               }
             }
         };
@@ -256,9 +269,11 @@ public class MainActivity extends AppCompatActivity
         IntentFilter filter = new IntentFilter();
         filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
         filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
+        filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((receiver),filter);
         super.onStart();
     }
+
 
     @Override
     protected void onStop() {
@@ -298,7 +313,18 @@ public class MainActivity extends AppCompatActivity
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
             setNPHeader();
         else setHeaderDefault();
+        initOnlineUsersCountBadge();
         super.onResume();
+    }
+
+    private void initOnlineUsersCountBadge() {
+        trackonlineusersDB sql = new trackonlineusersDB(MainActivity.this,null,null,1);
+        if(sql.getOnlineUserCount() > 0) {
+            final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                    findItem(R.id.nav_chat));
+            m.setBadge(badge, String.valueOf(sql.getOnlineUserCount()));
+        }
+        sql.close();
     }
 
     @Override
