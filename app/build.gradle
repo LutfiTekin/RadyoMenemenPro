@@ -21,8 +21,8 @@ android {
         applicationId "com.incitorrent.radyo.menemen.pro"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 86
-        versionName '1.0.86'
+        versionCode 87
+        versionName '1.0.87'
         multiDexEnabled true
     }
     buildTypes.release {
