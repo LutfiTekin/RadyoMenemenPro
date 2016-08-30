@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
@@ -196,21 +195,12 @@ public class track_info extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
-        if(getActivity()!=null) {
-            //track info ekranına geçince oynatma tuşunu animastonla gizle
-            final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.hide();
-        }
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if(getActivity()!=null) {
-            //track info ekranına geçince oynatma tuşunu animasyonla göster
-            final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.show();
             //Renkleri eski haline getir
             Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));

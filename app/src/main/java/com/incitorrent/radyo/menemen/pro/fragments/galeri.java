@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -88,23 +87,8 @@ public class galeri extends Fragment {
         new loadGaleri().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return galeri;
     }
-    @Override
-    public void onStop() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)  fab.setVisibility(View.VISIBLE);
-        }
-        super.onStop();
-    }
 
-    @Override
-    public void onResume() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.INVISIBLE);
-        }
-        super.onResume();
-    }
+
 
     class loadGaleri extends AsyncTask<Void,Void,Void> {
 

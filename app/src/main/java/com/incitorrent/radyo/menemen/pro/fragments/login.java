@@ -177,11 +177,6 @@ public class login extends Fragment {
         return rootview;
     }
 
-    @Override
-    public void onResume() {
-
-        super.onResume();
-    }
 
 
 }

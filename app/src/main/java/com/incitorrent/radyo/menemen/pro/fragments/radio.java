@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
@@ -74,7 +75,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     LinearLayout nowplayingbox;
     AnimationDrawable frameAnimation;
     BroadcastReceiver NPreceiver;
-    BroadcastReceiver NPUpdatereceiver;
+    FloatingActionButton fab;
 
 
 
@@ -100,6 +101,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         emptyview = (CardView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
@@ -139,16 +141,19 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-              if(m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+                Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
-                          m.runExitAnimation(nowplayingbox, 400);
+                          if(isPlayingValid) m.runExitAnimation(nowplayingbox, 400);
+                          if(fab != null) fab.hide();
                           break;
+                      case RecyclerView.SCROLL_STATE_IDLE:
                       case RecyclerView.SCROLL_STATE_SETTLING:
-                          m.runEnterAnimation(nowplayingbox, 200);
+                          if(isPlayingValid) m.runEnterAnimation(nowplayingbox, 200);
+                          if(fab != null) fab.show();
                           break;
                   }
-              }
+
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
@@ -207,6 +212,12 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     @Override
+    public void onDestroyView() {
+        if(fab!=null) fab.hide();
+        super.onDestroyView();
+    }
+
+    @Override
     public void onResume() {
         setNP();
         RList = new ArrayList<>();
@@ -234,7 +245,12 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);
-
+        if(getActivity() != null) {
+            if (fab != null) {
+                fab.show();
+                fab.setVisibility(View.VISIBLE);
+            }
+        }
         super.onResume();
     }
 

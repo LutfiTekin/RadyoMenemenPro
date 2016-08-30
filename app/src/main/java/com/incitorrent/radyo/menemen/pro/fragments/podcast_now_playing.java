@@ -176,10 +176,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onResume() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.GONE);
-        }
        if(placeholder != null)
         placeholder.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
        if(m.isPlaying() && seekBar.getMax() > 100)
@@ -201,13 +197,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStop() {
-        if(getActivity() != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
-
-                FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-                if(fab!=null) fab.setVisibility(View.VISIBLE);
-
-        }
         try {
             exec.shutdown();
         } catch (Exception e) {

@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -114,21 +113,9 @@ public class podcast extends Fragment {
     }
 
 
-    @Override
-    public void onStop() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.VISIBLE);
-        }
-        super.onStop();
-    }
 
     @Override
     public void onResume() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.INVISIBLE);
-        }
         Bundle bundle = new Bundle();
         bundle.putString("podcast","onresume");
         inf.trackEvent("Podcast",bundle);

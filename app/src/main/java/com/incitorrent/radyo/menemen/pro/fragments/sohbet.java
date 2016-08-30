@@ -260,11 +260,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
        if(first_visit) new initsohbet(20,0).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-                if(fab!=null)  fab.setVisibility(View.INVISIBLE);
-            m.runEnterAnimation(resimekle,250);
-        }
+        m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
     }
@@ -288,11 +284,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public void onStop() {
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)
-         m.runEnterAnimation(fab,200);
-        }
         super.onStop();
     }
 
