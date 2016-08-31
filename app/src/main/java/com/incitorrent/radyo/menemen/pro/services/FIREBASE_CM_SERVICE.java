@@ -124,7 +124,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     generalChat(remoteMessage);
                     break;
                 case CATEGORY_ONLINE:
-                    onlineUser(remoteMessage);
+                    String nick = getDATA(remoteMessage, "user");
+                    onlineUser(nick);
                     break;
             }
 
@@ -132,8 +133,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         super.onMessageReceived(remoteMessage);
     }
 
-    private void onlineUser(RemoteMessage rm) {
-        String nick = getDATA(rm, "user");
+    private void onlineUser(String nick) {
+        Log.v(TAG,nick + " added to online users list");
         long now = System.currentTimeMillis();
         sql_online.addToHistory(nick, now);
         Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
@@ -205,6 +206,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         broadcastManager.sendBroadcast(chat);
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
+        onlineUser(nick);
         Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
         buildNotification(nick,msg);
