@@ -540,6 +540,7 @@ public class Menemen {
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+    public static final String PENDING = "pending";
 
     /**
      * Get time in prettier formatted string
@@ -549,6 +550,7 @@ public class Menemen {
      */
     public static String getTimeAgo(String Sdate, Context c) {
         if(Sdate==null) return c.getString(R.string.time_moment);
+        if(Sdate.equals(PENDING)) return c.getString(R.string.sending);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {

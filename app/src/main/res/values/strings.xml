@@ -224,4 +224,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="hour_ago">An hour ago</string>
     <string name="time_yesterday">Yesterday</string>
     <string name="toolbar_online_subtitle">%d people is now online</string>
+    <string name="sending">Sending...</string>
 </resources>

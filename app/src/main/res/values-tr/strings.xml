@@ -176,4 +176,5 @@
     <string name="hour_ago">Bir saat önce</string>
     <string name="time_yesterday">Dün</string>
     <string name="toolbar_online_subtitle">%d kişi şu anda çevirimiçi</string>
+    <string name="sending">Gönderiliyor...</string>
 </resources>
