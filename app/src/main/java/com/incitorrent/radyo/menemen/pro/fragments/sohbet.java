@@ -196,7 +196,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
-                        if(getActivity()!=null && toolbar != null) toolbar.setSubtitle("");
+                        if(getActivity()!=null && toolbar != null) {
+                            trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
+                            final int count = sql.getOnlineUserCount();
+                            if(count > 0 && toolbar !=null) {
+                                toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+                            }else toolbar.setSubtitle("");
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -738,13 +744,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             if(sohbetRV != null) sohbetRV.scrollToPosition(scroll);
-            if(scroll == 0 && getActivity() != null) {
-                trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
-                final int count = sql.getOnlineUserCount();
-                if(count > 0 && toolbar !=null) {
-                    toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
-                }
-            }
             super.onPostExecute(aVoid);
         }
     }
