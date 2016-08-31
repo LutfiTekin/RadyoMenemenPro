@@ -465,7 +465,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         new AsyncTask<Void,Void,Boolean>(){
             @Override
             protected void onPreExecute() {
-                //TODO add to list
                 if(sohbetList != null && sohbetRV != null){
                     sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.PENDING));
                     if(sohbetRV.getAdapter() != null)
@@ -511,6 +510,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
             protected void onPostExecute(Boolean success) {
                 if (!success) {
                     Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                    if(sohbetList != null && sohbetRV != null){
+                        if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
+                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.NOT_DELIVERED));
+                        if(sohbetRV.getAdapter() != null)
+                            sohbetRV.getAdapter().notifyDataSetChanged();
+                        if(m.isFirstTime(Menemen.NOT_DELIVERED))
+                            Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+                    }
                 }
                 super.onPostExecute(success);
             }
@@ -553,6 +560,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 zaman = (TextView) itemView.findViewById(R.id.zaman);
                 card = (CardView) itemView.findViewById(R.id.sohbetcard);
                 card.setOnClickListener(this);
+                mesaj.setOnClickListener(this);
             }
 
             @Override
@@ -560,6 +568,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                 try {
                     if(zaman_val.equals(Menemen.PENDING)) return;
+                    if(zaman_val.equals(Menemen.NOT_DELIVERED)){
+                        final String mesaj = sohbetList.get(getAdapterPosition()).mesaj;
+                        sohbetList.remove(getAdapterPosition());
+                        sohbetRV.getAdapter().notifyItemRemoved(getAdapterPosition());
+                        postToMenemen(mesaj);
+                        return;
+                    }
                     if(zaman.getText().toString().equals(zaman_val))
                         zaman.setText(Menemen.getTimeAgo(zaman_val,context));
                     else zaman.setText(zaman_val);

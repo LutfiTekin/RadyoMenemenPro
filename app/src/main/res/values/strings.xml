@@ -225,4 +225,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="time_yesterday">Yesterday</string>
     <string name="toolbar_online_subtitle">%d people is now online</string>
     <string name="sending">Sending...</string>
+    <string name="not_delivered">Failed to send</string>
+    <string name="toast_msg_not_sent">Failed to send message, click the message to try again</string>
 </resources>

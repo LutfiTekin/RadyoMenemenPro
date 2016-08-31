@@ -177,4 +177,6 @@
     <string name="time_yesterday">Dün</string>
     <string name="toolbar_online_subtitle">%d kişi şu anda çevirimiçi</string>
     <string name="sending">Gönderiliyor...</string>
+    <string name="not_delivered">Gönderilemedi</string>
+    <string name="toast_msg_not_sent">Mesaj gönderilemedi, tekrar denemek için mesaja tıklayın</string>
 </resources>
