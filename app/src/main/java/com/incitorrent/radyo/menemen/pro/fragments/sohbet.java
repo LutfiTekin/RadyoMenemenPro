@@ -31,6 +31,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -54,6 +55,7 @@ import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
+import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,6 +101,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     LinearLayoutManager linearLayoutManager;
     CardView image_pick;
     ImageView take_photo,pick_gallery,cancel_image_pick;
+    Toolbar toolbar;
     public sohbet() {
         // Required empty public constructor
     }
@@ -114,7 +117,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
-        if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
+        if(getActivity()!=null) {
+            getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
+            toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        }
         m = new Menemen(getActivity().getApplicationContext());
         sql = new chatDB(getActivity().getApplicationContext(),null,null,1);
         resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
@@ -184,12 +190,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
-                        if(getActivity()!=null)
-                            getActivity().setTitle(Menemen.getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman,getActivity().getApplicationContext()));
+                        if(getActivity()!=null) {
+                            toolbar.setSubtitle(Menemen.getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman, getActivity().getApplicationContext()));
+                        }
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
-                        if(getActivity()!=null) getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
+                        if(getActivity()!=null && toolbar != null) toolbar.setSubtitle("");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -215,24 +222,33 @@ public class sohbet extends Fragment implements View.OnClickListener{
               if(bundle==null)
                 new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 else {
+                  if (intent.getAction().equals(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER)) {
                   String action = bundle.getString("action");
-                  if(action==null) return;
+                  if (action == null) return;
                   String id = bundle.getString("msgid");
-                  if(action.equals(FIREBASE_CM_SERVICE.ADD)) {
+                  if (action.equals(FIREBASE_CM_SERVICE.ADD)) {
                       String nick = bundle.getString("nick");
                       String mesaj = bundle.getString("msg");
                       if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
                           return;
                       sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
                       sohbetRV.getAdapter().notifyDataSetChanged();
-                      m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,id);
-                  }else if(action.equals(FIREBASE_CM_SERVICE.DELETE)){
+                      m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
+                  } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                       sql.deleteMSG(id);
-                      for(int i=0;i<sohbetList.size();i++) {
+                      for (int i = 0; i < sohbetList.size(); i++) {
                           if (sohbetList.get(i).id.equals(id)) {
                               Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
                               sohbetList.remove(i);
                               sohbetRV.getAdapter().notifyItemRemoved(i);
+                          }
+                      }
+                  }
+              }else {
+                      if (intent.getAction().equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)) {
+                          int count = intent.getExtras().getInt("count", 0);
+                          if (count > 0 && toolbar != null) {
+                              toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
                           }
                       }
                   }
@@ -250,6 +266,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(getActivity()!=null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
+            filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
             LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((Chatreceiver),filter);
         }
         super.onStart();
@@ -284,6 +301,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public void onStop() {
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
+        if(toolbar != null) toolbar.setSubtitle("");
         super.onStop();
     }
 
@@ -720,6 +738,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             if(sohbetRV != null) sohbetRV.scrollToPosition(scroll);
+            if(scroll == 0 && getActivity() != null) {
+                trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
+                final int count = sql.getOnlineUserCount();
+                if(count > 0 && toolbar !=null) {
+                    toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+                }
+            }
             super.onPostExecute(aVoid);
         }
     }
