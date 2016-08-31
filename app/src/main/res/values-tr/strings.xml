@@ -175,5 +175,5 @@
     <string name="toast_download_msg_flood_warn">Bu işlemi bu kadar sık yapamazsınız, son 20 mesajı almak için sohbet ekranında aşağı çekip bırakma hareketini uygulayın</string>
     <string name="hour_ago">Bir saat önce</string>
     <string name="time_yesterday">Dün</string>
-    <string name="toolbar_online_subtitle">%d kişi şuanda çevirimiçi</string>
+    <string name="toolbar_online_subtitle">%d kişi şu anda çevirimiçi</string>
 </resources>
