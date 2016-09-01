@@ -112,7 +112,11 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         int currentsec = intent.getExtras().getInt("current")/1000;
                         seekBar.setProgress(currentsec);
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_TERMINATE)){
-                        getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
+                        try {
+                            getFragmentManager().beginTransaction().replace(R.id.Fcontent, new podcast()).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }else if(action.equals(RadyoMenemenPro.PLAY)){
                         Boolean play = intent.getExtras().getBoolean(RadyoMenemenPro.PLAY);
                         placeholder.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
@@ -164,14 +168,18 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     private void startTimer() {
         chronometer.start();
-        exec.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if(m.isPlaying()) {
-                    seekBar.setProgress(seekBar.getProgress() + 1);
+        try {
+            exec.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    if(m.isPlaying()) {
+                        seekBar.setProgress(seekBar.getProgress() + 1);
+                    }
                 }
-            }
-        },0,1, TimeUnit.SECONDS);
+            },0,1, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
