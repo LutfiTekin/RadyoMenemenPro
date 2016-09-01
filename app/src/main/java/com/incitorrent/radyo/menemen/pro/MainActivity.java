@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //Menemen yardımcı sınıfı
-        m = new Menemen(this);
+        m = new Menemen(getApplicationContext());
         //İlk açılışta intro göster
         if(m.isFirstTime("intro")) startActivity(new Intent(this, Intro.class));
 
@@ -167,10 +167,15 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
-        if (m.isLoggedIn() && navigationView != null) {
-            navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
-            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+        if (navigationView != null) {
+            if (m.isLoggedIn()) {
+                navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+            } else {
+                navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
+            }
         }
       if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
 
@@ -300,15 +305,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onResume() {
-        if(!m.isLoggedIn()){
-            //sohbet haykır giriş çıkış butonlarını gizle
-            if (navigationView != null){
-                navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
-                navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
-                navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
-            }
-        }
         fab.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
             setNPHeader();
