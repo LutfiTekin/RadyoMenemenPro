@@ -136,12 +136,6 @@ public class MainActivity extends AppCompatActivity
         header_sub_txt = (TextView) hview.findViewById(R.id.header_sub_txt);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
-            if(!m.isLoggedIn()) {
-                navigationView.getMenu().findItem(R.id.nav_chat).setEnabled(false);
-                navigationView.getMenu().findItem(R.id.nav_shout).setEnabled(false);
-                header_txt.setText(m.oku("username").toUpperCase());
-            }
-
             final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                     findItem(R.id.nav_olanbiten));
            if(!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB))) {
@@ -173,8 +167,9 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             } else {
                 navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
-                navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
                 navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             }
         }
       if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();

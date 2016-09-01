@@ -11,4 +11,5 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="cardview_in_appbar_margin">16dp</dimen>
     <dimen name="galeri_imageview_height">250dp</dimen>
+    <dimen name="login_input_margin">72dp</dimen>
 </resources>

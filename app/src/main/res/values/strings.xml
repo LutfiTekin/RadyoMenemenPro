@@ -102,7 +102,7 @@
     <string name="downloading_file">Downloading file</string>
     <string name="music_not_found">Music not found</string>
     <string name="toast_logged_out">Logged out</string>
-    <string name="descr_login_logout">If you have an account sign in \n if you don\'t sign up</string>
+    <string name="descr_login_logout">If you have an account sign in, if you don\'t sign up</string>
     <string name="notification_onair_title">Radyo Menemen is Live</string>
     <string name="notification_onair_content">" is on air"</string>
     <string name="licence_title">Licences of graphics that used in this app</string>
@@ -227,4 +227,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="sending">Sending...</string>
     <string name="not_delivered">Failed to send</string>
     <string name="toast_msg_not_sent">Failed to send message, click the message to try again</string>
+    <string name="error_password">Password length cannot be less than 6</string>
+    <string name="error_empty_username">Username cannot be empty</string>
+    <string name="error_long_username">Username length cannot be greater than 16</string>
 </resources>

@@ -52,7 +52,7 @@
     <string name="downloading_file">Dosya indiriliyor</string>
     <string name="music_not_found">Müzik bulunamadı</string>
     <string name="toast_logged_out">Çıkış Yapıldı</string>
-    <string name="descr_login_logout">Üyeliğin varsa gir \n Yoksa kayıt ol!</string>
+    <string name="descr_login_logout">Üyeliğin varsa gir, yoksa kayıt ol!</string>
     <string name="notification_onair_content">" yayına girdi"</string>
     <string name="notification_onair_title">Radyo Menemende yayın başladı</string>
     <string name="licence_title">Uygulamada kullanılan grafik öğelerinin lisanları</string>
@@ -179,4 +179,7 @@
     <string name="sending">Gönderiliyor...</string>
     <string name="not_delivered">Gönderilemedi</string>
     <string name="toast_msg_not_sent">Mesaj gönderilemedi, tekrar denemek için mesaja tıklayın</string>
+    <string name="error_password">Şifre 6 karakterden az olamaz</string>
+    <string name="error_empty_username">Kullanıcı adı boş bırakılamaz</string>
+    <string name="error_long_username">Kullanıcı adı 16 karakter uzun olamaz</string>
 </resources>

@@ -7,72 +7,80 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/colorBackgroundF">
+      android:background="@color/colorBackgroundsoft">
 
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Üyeliğin varsa gir \n
-Yoksa kayıt ol!"
+          android:text="@string/descr_login_logout"
           android:id="@+id/textView"
-          android:layout_marginTop="79dp"
+          android:textColor="@color/textColor"
           android:gravity="center_horizontal"
           android:layout_alignParentTop="true"
           android:layout_centerHorizontal="true"
-          android:textColor="@color/textColor" />
-
-      <EditText
-          android:layout_width="wrap_content"
+          android:layout_margin="16dp" />
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/til_username"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:inputType="textPersonName"
-          android:hint="@string/hint_username"
-          android:ems="10"
-          android:id="@+id/usernameET"
-          android:layout_below="@+id/textView"
-          android:layout_centerHorizontal="true"
-          android:textColor="@color/textColor"
-          android:textColorHint="@color/textColorHint" />
+          android:layout_above="@+id/til_password"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_marginLeft="@dimen/login_input_margin"
+          android:layout_marginRight="@dimen/login_input_margin">
 
-      <EditText
-          android:layout_width="wrap_content"
+          <EditText
+              android:id="@+id/usernameET"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:singleLine="true"
+              android:textColorHint="@color/textColorHint"
+              android:hint="@string/hint_username" />
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/til_password"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:inputType="textPassword"
-          android:ems="10"
-          android:hint="@string/hint_password"
-          android:id="@+id/passET"
-          android:layout_below="@+id/usernameET"
-          android:layout_alignStart="@+id/usernameET"
-          android:layout_alignLeft="@+id/usernameET"
-          android:textColorHint="@color/textColorHint" />
+          android:layout_centerVertical="true"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_marginLeft="@dimen/login_input_margin"
+          android:layout_marginRight="@dimen/login_input_margin">
+
+          <EditText
+              android:id="@+id/passET"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:inputType="textPassword"
+              android:textColorHint="@color/textColorHint"
+              android:hint="@string/hint_password" />
+      </android.support.design.widget.TextInputLayout>
 
       <Button
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/button_login_signup"
+          android:textColor="@color/textColorPrimary"
           android:id="@+id/submit"
-          android:layout_below="@+id/passET"
-          android:layout_centerHorizontal="true" />
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/login_screen_descr"
-          android:id="@+id/textView2"
+          android:background="?android:attr/selectableItemBackground"
           android:layout_alignParentBottom="true"
-          android:layout_centerHorizontal="true"
-          android:layout_marginBottom="120dp"
-          android:layout_marginLeft="16dp"
-          android:layout_marginRight="16dp"
-          android:gravity="center_horizontal"
-          android:textColor="@color/textColor" />
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_margin="16dp" />
 
       <Button
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/button_no_login"
+          android:textColor="@color/textColorPrimary"
           android:id="@+id/no_login"
-          android:layout_below="@+id/submit"
-          android:layout_centerHorizontal="true"/>
+          android:background="?android:attr/selectableItemBackground"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:layout_alignParentEnd="true"
+          android:layout_margin="16dp" />
 
   </RelativeLayout>
+
 </FrameLayout>
