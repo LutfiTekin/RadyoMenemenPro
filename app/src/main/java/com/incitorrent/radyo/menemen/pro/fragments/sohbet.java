@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,10 +77,6 @@ import java.util.Map;
 
 public class sohbet extends Fragment implements View.OnClickListener{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "SOHBETFRAG";
     private static final int RESULT_LOAD_IMAGE_CAM = 2063;
     private static final int RESULT_LOAD_IMAGE = 2064;
@@ -88,7 +85,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private ImageView smilegoster;
     FloatingActionButton resimekle,scrollTop;
     private RecyclerView smileRV,sohbetRV;
-    private FloatingActionButton mesaj_gonder;
     private Boolean first_visit = true;
     Menemen m;
     List<Satbax_Smiley_Objects> satbaxSmileList;
@@ -140,7 +136,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 return false;
             }
         });
-        mesaj_gonder = (FloatingActionButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
+        ImageButton mesaj_gonder = (ImageButton) sohbetView.findViewById(R.id.mesaj_gonder_button);
         scrollTop = (FloatingActionButton) sohbetView.findViewById(R.id.scrolltoTop);
         image_pick = (CardView) sohbetView.findViewById(R.id.image_picker_card);
         take_photo =  (ImageView) sohbetView.findViewById(R.id.take_photo);
