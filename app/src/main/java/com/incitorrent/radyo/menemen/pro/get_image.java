@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.io.IOException;
 
@@ -25,8 +26,10 @@ public class get_image extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
+        Menemen m = new Menemen(this);
+        Intent main = new Intent(this, MainActivity.class);
         Log.v("GET IMAGE"," action:" + intent.getAction() + " type" + type );
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
+        if (Intent.ACTION_SEND.equals(action) && type != null && m.isLoggedIn()) {
             if (type.startsWith("image/")) {
                 try {
         Uri image = intent.getParcelableExtra(Intent.EXTRA_STREAM);
@@ -43,9 +46,9 @@ public class get_image extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }
-        Intent main = new Intent(this, MainActivity.class);
-        main.setAction("radyo.menemen.chat");
+            main.setAction("radyo.menemen.chat");
+        }else
+            Toast.makeText(get_image.this, R.string.toast_log_in_before_upload, Toast.LENGTH_SHORT).show();
         startActivity(main);
     }
     public String getRealPathFromURI(Uri uri) {

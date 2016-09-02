@@ -230,4 +230,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="error_password">Password length cannot be less than 6</string>
     <string name="error_empty_username">Username cannot be empty</string>
     <string name="error_long_username">Username length cannot be greater than 16</string>
+    <string name="toast_log_in_before_upload">You must be logged in before uploading an image</string>
 </resources>
