@@ -183,4 +183,5 @@
     <string name="error_empty_username">Kullanıcı adı boş bırakılamaz</string>
     <string name="error_long_username">Kullanıcı adı 16 karakter uzun olamaz</string>
     <string name="toast_log_in_before_upload">Resim yüklemek için önce giriş yapmalısınız</string>
+    <string name="toolbar_online_subtitle_one">Bir tek sen varsın</string>
 </resources>

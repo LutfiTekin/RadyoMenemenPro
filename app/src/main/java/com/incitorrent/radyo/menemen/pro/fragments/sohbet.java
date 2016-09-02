@@ -196,7 +196,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
                             final int count = sql.getOnlineUserCount();
                             if(count > 0 && toolbar !=null) {
-                                toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+                                if(count == 1)
+                                    toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
+                                else
+                                    toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
                             }else toolbar.setSubtitle("");
                         }
                     }
@@ -253,7 +256,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
                       if (intent.getAction().equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)) {
                           int count = intent.getExtras().getInt("count", 0);
                           if (count > 0 && toolbar != null) {
-                              toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
+                              if(count == 1)
+                                  toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
+                              else
+                                  toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+
                           }
                       }
                   }
