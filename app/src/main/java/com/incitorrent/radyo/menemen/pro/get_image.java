@@ -44,8 +44,9 @@ public class get_image extends AppCompatActivity {
                 }
             }
         }
-
-        startActivity(new Intent(this,MainActivity.class));
+        Intent main = new Intent(this, MainActivity.class);
+        main.setAction("radyo.menemen.chat");
+        startActivity(main);
     }
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
