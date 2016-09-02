@@ -238,8 +238,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           return;
                       if(sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
                           sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, null));
-                      else
-                        sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                      else {
+                          //Fallback and search for it
+                          for (int i = 0; i < sohbetList.size(); i++) {
+                              if (sohbetList.get(i).mesaj.equals(mesaj)) {
+                                  sohbetList.remove(i);
+                                  sohbetRV.getAdapter().notifyItemRemoved(i);
+                              }
+                          }
+                          sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                      }
                       sohbetRV.getAdapter().notifyDataSetChanged();
                       m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                   } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
@@ -516,6 +524,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     if(sohbetList != null && sohbetRV != null){
                         if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
                             sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.NOT_DELIVERED));
+                        else {
+                            for (int i = 0; i < sohbetList.size(); i++) {
+                                if (sohbetList.get(i).mesaj.equals(mesaj)) {
+                                    sohbetList.set(i,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.NOT_DELIVERED));
+                                    sohbetRV.getAdapter().notifyDataSetChanged();
+                                }
+                            }
+                        }
                         if(sohbetRV.getAdapter() != null)
                             sohbetRV.getAdapter().notifyDataSetChanged();
                         if(m.isFirstTime(Menemen.NOT_DELIVERED))
