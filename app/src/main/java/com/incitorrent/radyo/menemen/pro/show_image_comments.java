@@ -123,31 +123,31 @@ public class show_image_comments extends AppCompatActivity {
         sohbetAdapter = new SohbetAdapter(sohbetList);
 //        itemTouchHelper.attachToRecyclerView(sohbetRV); //şimdilik kapalı
 //Onscroll Listener
-        sohbetRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(sohbetList == null) return;
-                try {
-                    int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
-                    int LIST_SIZE = sohbetList.size();
-                    String lastid = sohbetList.get(LIST_SIZE - 1).id;
-                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
-                        //TODO LoadMore
-                        Log.v("onScroll", "LAST" + LAST_POSITION_COMP_VISIBLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        sohbetRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if(sohbetList == null) return;
+//                try {
+//                    int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
+//                    int LIST_SIZE = sohbetList.size();
+//                    String lastid = sohbetList.get(LIST_SIZE - 1).id;
+//                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
+//                        //TODO LoadMore
+//                        Log.v("onScroll", "LAST" + LAST_POSITION_COMP_VISIBLE);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         //Onscroll Listener End
         Chatreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle bundle = intent.getExtras();
                 if(bundle==null)
-                   Log.v(TAG,"init"); //TODO init chat messages
+                   Log.v(TAG,"init");
                 else {
                     String action = bundle.getString("action");
                     if(action==null) return;
