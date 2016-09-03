@@ -146,18 +146,11 @@ public class MainActivity extends AppCompatActivity
 
 
         if(savedInstanceState == null) {
-            if(!m.isLoggedIn() && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
-            //Sadece müzik modu açık ve giriş yapılmamış
-                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-            }else if (!m.isLoggedIn()) {
-                fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
-            } else {
-               if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
-                   fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
-                else
-                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
-            }
-
+            defaultAction();
+        }
+        if(getIntent()!=null){
+            String action = getIntent().getAction();
+            goToFragmentByIntentAction(action, getIntent());
         }
 
 
@@ -175,6 +168,7 @@ public class MainActivity extends AppCompatActivity
       if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
 
     }
+
 
     private void setHeaderDefault() {
         header_img.setImageResource(R.mipmap.ic_launcher);
@@ -198,7 +192,6 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         //Bildirimden gelen aksiyonları doğru fragmente yolla
-        final String main = "android.intent.action.MAIN";
         if(intent!=null){
            String action = intent.getAction();
             if(action == null) {
@@ -206,35 +199,40 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
             Log.v("ACTION",action);
-            if(!action.equals(main)) {
-                try {
-                    switch (action) {
-                        case "radyo.menemen.chat":
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.Fcontent, new sohbet()).commit();
-                            break;
-                        case "radyo.menemen.podcast":
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.Fcontent, new podcast()).commit();
-                            break;
-                        case "radyo.menemen.podcast.play":
-                            podcastPlay(intent);
-                            break;
-                        case "radyo.menemen.news":
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.Fcontent, new olan_biten()).commit();
-                            break;
-                        case "radyo.menemen.haykir":
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.Fcontent, new haykir()).commit();
-                            break;
-                        default:
-                            defaultAction();
-                            break;
-                    }
-                } catch (Exception e) {
-                    Log.v("ACTION", e.toString());
+            goToFragmentByIntentAction(action, intent);
+        }
+    }
+
+    private void goToFragmentByIntentAction(String action, Intent intent) {
+        final String main = "android.intent.action.MAIN";
+        if(!action.equals(main)) {
+            try {
+                switch (action) {
+                    case "radyo.menemen.chat":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new sohbet()).commit();
+                        break;
+                    case "radyo.menemen.podcast":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new podcast()).commit();
+                        break;
+                    case "radyo.menemen.podcast.play":
+                        podcastPlay(intent);
+                        break;
+                    case "radyo.menemen.news":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new olan_biten()).commit();
+                        break;
+                    case "radyo.menemen.haykir":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new haykir()).commit();
+                        break;
+                    default:
+                        defaultAction();
+                        break;
                 }
+            } catch (Exception e) {
+                Log.v("ACTION", e.toString());
             }
         }
     }
@@ -254,10 +252,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultAction() {
-        if (!m.isLoggedIn()) {
+        if(!m.isLoggedIn() && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
+            //Sadece müzik modu açık ve giriş yapılmamış
+            fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+        }else if (!m.isLoggedIn()) {
             fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
         } else {
-            if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat", true))
+            if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
             else
                 fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
