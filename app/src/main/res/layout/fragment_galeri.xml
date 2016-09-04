@@ -20,6 +20,7 @@
                 android:layout_marginLeft="@dimen/cardview_in_appbar_margin"
                 android:layout_marginRight="@dimen/cardview_in_appbar_margin"
                 android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:cardBackgroundColor="@color/cardviewBG"
                 app:layout_collapseMode="parallax">
