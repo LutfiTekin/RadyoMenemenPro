@@ -65,7 +65,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean notify_new_podcast = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_podcast", true);
     final Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true);
     final Boolean logged = m.isLoggedIn();
-    final Boolean mutechatnotification = m.isNotificationMuted();
+    final Boolean mutechatnotification = m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
     public static final  String USERS_ONLINE_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
@@ -380,6 +380,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         Notification summary = SUM_Notification.build();
         notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
+       if(!mutechatnotification)
+           m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
     }
 
 
