@@ -63,6 +63,8 @@ public final class RadyoMenemenPro {
     public static final String LAST_ID_SEEN_ON_CHAT = "lastseenid"; //Bildirim gruplaması için gerekli
     public static final String LAST_ID_SEEN_ON_CAPS = "lastseenidOnCaps_";
     public static final String SAVED_TIME = "savedtime";
+    public static final String MUTE_NOTIFICATION = "mute_notif";
+
 
     public final static class broadcastinfo{
         public final static String DJ = "dj";

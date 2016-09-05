@@ -488,10 +488,6 @@ public class Menemen {
       return context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE).getLong(key,0);
     }
 
-    public boolean isNotificationMuted(){
-        return getSavedTime("mute_notif") > System.currentTimeMillis();
-    }
-
     public void trackEvent(String event, Bundle bundle){
         try {
             FirebaseAnalytics.getInstance(context).logEvent(event, bundle);

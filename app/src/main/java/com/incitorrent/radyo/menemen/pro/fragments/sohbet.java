@@ -362,7 +362,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         menu.clear();
         inflater.inflate(R.menu.sohbet_menu,menu);
        MenuItem silentN = menu.findItem(R.id.action_silent_notification);
-        if(m.isNotificationMuted()) silentN.setVisible(false);
+        if(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis())
+            silentN.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
