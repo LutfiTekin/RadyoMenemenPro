@@ -285,10 +285,26 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     }
 
+    /**
+     * Activate/Deactivate secret chat sound
+     */
+    private void setChatSound(){
+        if(m.bool_oku("catcut")){
+            m.bool_kaydet("catcut",false);
+            Toast.makeText(getActivity().getApplicationContext(), android.R.string.no , Toast.LENGTH_SHORT).show();
+        }else {
+            m.bool_kaydet("catcut",true);
+            Toast.makeText(getActivity().getApplicationContext(), android.R.string.yes , Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Play secret chat sound
+     */
     private void playChatSound() {
         if(getActivity() != null)
         if(PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getBoolean("chat_sound",false)){
-            int sound = new Random().nextInt(3);
+            int sound = new Random().nextInt(5);
             try {
                 MediaPlayer mPlayer;
                 mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
@@ -497,16 +513,20 @@ public class sohbet extends Fragment implements View.OnClickListener{
         new AsyncTask<Void,Void,Boolean>(){
             @Override
             protected void onPreExecute() {
-                if(sohbetList != null && sohbetRV != null){
+                if(mesaj.toLowerCase().equals("çatçut")) {
+                    setChatSound();
+                }else if(sohbetList != null && sohbetRV != null){
                     sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.PENDING));
                     if(sohbetRV.getAdapter() != null)
                         sohbetRV.getAdapter().notifyDataSetChanged();
                 }
+
                 super.onPreExecute();
             }
 
             @Override
             protected Boolean doInBackground(Void... params) {
+                if(mesaj.toLowerCase().equals("çatçut")) return true;
                 Map<String, String> dataToSend = new HashMap<>();
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("mkey", m.getMobilKey());

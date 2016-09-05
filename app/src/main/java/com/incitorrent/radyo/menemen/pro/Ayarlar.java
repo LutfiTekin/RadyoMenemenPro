@@ -227,11 +227,15 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                 download_all.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        //TODO download messages
                         new downloadMessages(RMPRO.context).execute();
                         return true;
                     }
                 });
+            Boolean show_chat_sound = new Menemen(RMPRO.context).bool_oku("catcut");
+            if(!show_chat_sound){
+                Preference chat_sound = findPreference("chat_sound");
+                getPreferenceScreen().removePreference(chat_sound);
+            }
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }
