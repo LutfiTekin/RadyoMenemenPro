@@ -38,8 +38,7 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
     protected void onPreExecute() {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         m = new Menemen(context);
-        long period = (1000*60*60*2);
-        is_not_flood = (m.getSavedTime("download_msg") + period) < System.currentTimeMillis();
+        is_not_flood = (m.getSavedTime("download_msg")) < System.currentTimeMillis();
         if(is_not_flood)
             Toast.makeText(context, R.string.toast_download_progress_msg, Toast.LENGTH_LONG).show();
         else
@@ -81,7 +80,7 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         if(is_not_flood) {
             downloadFinished();
-            m.saveTime("download_msg");
+            m.saveTime("download_msg",(1000*60*60*2));
         }
         super.onPostExecute(aVoid);
     }

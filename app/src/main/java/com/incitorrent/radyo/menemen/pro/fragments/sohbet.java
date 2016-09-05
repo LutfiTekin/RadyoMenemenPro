@@ -303,8 +303,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void iAmOnline() {
-        if(m.getSavedTime("online_push") + (1000 * 60 * 2) > System.currentTimeMillis()) return;
-        m.saveTime("online_push");
+        if(m.getSavedTime("online_push") > System.currentTimeMillis()) return;
+        m.saveTime("online_push",(1000 * 60 * 2));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -371,7 +371,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         int itemid = item.getItemId();
         switch (itemid){
             case R.id.action_silent_notification:
-                m.muteChatNotification();
+                m.saveTime("mute_notif",(1000*60*10));
                 Snackbar.make(resimekle, R.string.mute_chat_notificaitions_for_10_min,Snackbar.LENGTH_LONG).show();
                 item.setVisible(false);
                 break;

@@ -478,18 +478,10 @@ public class Menemen {
         }
     }
 
-    public void muteChatNotification(){
-        long time = (1000*60*10) + System.currentTimeMillis(); //şuanki zamana 10dk ekle
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putLong(RadyoMenemenPro.SAVED_TIME,time).apply();
-    }
 
-    public long savedTime(){
-        return PreferenceManager.getDefaultSharedPreferences(context).getLong(RadyoMenemenPro.SAVED_TIME, System.currentTimeMillis());
-    }
-
-    public void saveTime(String key){
+    public void saveTime(String key, long period){
         final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        kaydet.edit().putLong(key,System.currentTimeMillis()).apply();
+        kaydet.edit().putLong(key,System.currentTimeMillis() + period).apply();
     }
 
     public long getSavedTime(String key){
@@ -497,7 +489,7 @@ public class Menemen {
     }
 
     public boolean isNotificationMuted(){
-        return savedTime() > System.currentTimeMillis();
+        return getSavedTime("mute_notif") > System.currentTimeMillis();
     }
 
     public void trackEvent(String event, Bundle bundle){
