@@ -16,10 +16,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -73,6 +75,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 public class sohbet extends Fragment implements View.OnClickListener{
@@ -249,6 +252,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
                       }
                       sohbetRV.getAdapter().notifyDataSetChanged();
+                      playChatSound();
                       m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                   } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                       sql.deleteMSG(id);
@@ -279,6 +283,22 @@ public class sohbet extends Fragment implements View.OnClickListener{
         setHasOptionsMenu(true);
         return sohbetView;
 
+    }
+
+    private void playChatSound() {
+        if(getActivity() != null)
+        if(PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getBoolean("chat_sound",false)){
+            int sound = new Random().nextInt(3);
+            try {
+                MediaPlayer mPlayer;
+                mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                        + "://" + getActivity().getApplicationContext().getPackageName() + "/raw/s" + sound ));
+                if(mPlayer!=null) mPlayer.start();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
