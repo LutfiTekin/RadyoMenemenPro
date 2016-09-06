@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -37,6 +38,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,9 +53,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
+import com.incitorrent.radyo.menemen.pro.show_image;
+import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
@@ -613,33 +618,60 @@ public class sohbet extends Fragment implements View.OnClickListener{
         public class chatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView nick,mesaj,zaman;
             CardView card;
+            ImageView caps;
             chatViewHolder(View itemView) {
                 super(itemView);
                 nick = (TextView) itemView.findViewById(R.id.username);
                 mesaj = (TextView) itemView.findViewById(R.id.mesaj);
                 zaman = (TextView) itemView.findViewById(R.id.zaman);
                 card = (CardView) itemView.findViewById(R.id.sohbetcard);
+                caps = (ImageView) itemView.findViewById(R.id.caps);
+                caps.setOnClickListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    caps.setTransitionName("show_image");
                 card.setOnClickListener(this);
                 mesaj.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View view) {
-                String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
-                try {
-                    if(zaman_val.equals(Menemen.PENDING)) return;
-                    if(zaman_val.equals(Menemen.NOT_DELIVERED)){
-                        final String mesaj = sohbetList.get(getAdapterPosition()).mesaj;
-                        sohbetList.remove(getAdapterPosition());
-                        sohbetRV.getAdapter().notifyItemRemoved(getAdapterPosition());
-                        postToMenemen(mesaj);
-                        return;
+                if (view == caps) {
+                    Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
+                    Intent image_intent;
+                    String capsurl = getCapsUrl(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj));
+                    if(!m.isLoggedIn()){
+                        image_intent = new Intent(getActivity(), show_image.class);
+                        image_intent.setData(Uri.parse(capsurl));
+                    }else if(showcomments) {
+                        image_intent = new Intent(getActivity(), show_image_comments.class);
+                        image_intent.putExtra("url", capsurl);
+                    }else {
+                        image_intent = new Intent(getActivity(), show_image.class);
+                        image_intent.setData(Uri.parse(capsurl));
                     }
-                    if(zaman.getText().toString().equals(zaman_val))
-                        zaman.setText(Menemen.getTimeAgo(zaman_val,context));
-                    else zaman.setText(zaman_val);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                                new Pair<View, String>(caps, caps.getTransitionName()));
+                        startActivity(image_intent, options.toBundle());
+                    }else
+                        startActivity(image_intent);
+                } else {
+                    String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
+                    try {
+                        if (zaman_val.equals(Menemen.PENDING)) return;
+                        if (zaman_val.equals(Menemen.NOT_DELIVERED)) {
+                            final String mesaj = sohbetList.get(getAdapterPosition()).mesaj;
+                            sohbetList.remove(getAdapterPosition());
+                            sohbetRV.getAdapter().notifyItemRemoved(getAdapterPosition());
+                            postToMenemen(mesaj);
+                            return;
+                        }
+                        if (zaman.getText().toString().equals(zaman_val))
+                            zaman.setText(Menemen.getTimeAgo(zaman_val, context));
+                        else zaman.setText(zaman_val);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -660,11 +692,39 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
 
         @Override
-        public void onBindViewHolder(chatViewHolder chatViewHolder, final int i) {
+        public void onBindViewHolder(chatViewHolder chatViewHolder, int i) {
             chatViewHolder.nick.setText(sohbetList.get(i).nick);
             chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
             chatViewHolder.zaman.setText(Menemen.getTimeAgo(sohbetList.get(i).zaman,context));
+        }
+
+
+        @Override
+        public void onViewAttachedToWindow(chatViewHolder chatViewHolder) {
+            if(chatViewHolder.mesaj.getText().toString().contains("radyomenemen.com/images")){
+                //resim urlsi içeriyorum
+                loadCapsinChat(chatViewHolder, Menemen.fromHtmlCompat(chatViewHolder.mesaj.getText().toString()));
+            }else chatViewHolder.caps.setImageDrawable(null);
+            super.onViewAttachedToWindow(chatViewHolder);
+        }
+
+        private void loadCapsinChat(chatViewHolder chatViewHolder, String mesaj) {
+            try {
+                Glide.with(context)
+                        .load(Menemen.getThumbnail(getCapsUrl(mesaj)))
+                        .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
+                        .into(chatViewHolder.caps);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private String getCapsUrl(String mesaj) {
+            String capsurl = mesaj.split("caps")[1];
+            capsurl = capsurl.split(" ")[0];
+            Log.v(TAG, "getCapsurl" + capsurl);
+            return "http://caps" +capsurl.trim();
         }
 
         @Override
