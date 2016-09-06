@@ -21,6 +21,11 @@
         android:summary="@string/settings_music_only_summary"
         android:disableDependentsState="true"
         />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="show_thumbnail"
+        android:summary="@string/settings_thumbnail_summary"
+        android:title="@string/settings_thumbnail_title" />
 
     <SwitchPreference
         android:defaultValue="false"

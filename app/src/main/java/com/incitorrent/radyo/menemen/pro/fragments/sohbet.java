@@ -702,10 +702,12 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
         @Override
         public void onViewAttachedToWindow(chatViewHolder chatViewHolder) {
-            if(chatViewHolder.mesaj.getText().toString().contains("radyomenemen.com/images")){
-                //resim urlsi içeriyorum
-                loadCapsinChat(chatViewHolder, Menemen.fromHtmlCompat(chatViewHolder.mesaj.getText().toString()));
-            }else chatViewHolder.caps.setImageDrawable(null);
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_thumbnail", true)) {
+                if(chatViewHolder.mesaj.getText().toString().contains("radyomenemen.com/images")){
+                    //resim urlsi içeriyorum
+                    loadCapsinChat(chatViewHolder, Menemen.fromHtmlCompat(chatViewHolder.mesaj.getText().toString()));
+                }else chatViewHolder.caps.setImageDrawable(null);
+            }
             super.onViewAttachedToWindow(chatViewHolder);
         }
 
