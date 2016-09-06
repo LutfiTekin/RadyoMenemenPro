@@ -235,9 +235,10 @@ public class galeri extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+//            Log.v(TAG,"medium image " + Menemen.getThumbnail(Glist.get(i).capsurl));
            if(getActivity()!=null)
                Glide.with(getActivity())
-                   .load(Glist.get(i).capsurl)
+                   .load(Menemen.getThumbnail(Glist.get(i).capsurl))
                    .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH,RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
                    .placeholder(R.drawable.default_image)
                    .centerCrop()

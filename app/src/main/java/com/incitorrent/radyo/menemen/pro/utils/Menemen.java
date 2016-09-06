@@ -194,6 +194,14 @@ public class Menemen {
         }
         return s;
     }
+
+    public static String getThumbnail(String capsurl) {
+        String mediumurl = capsurl.substring(capsurl.length() - 4);
+        if(!capsurl.contains(".th."))
+            return capsurl.replaceAll(mediumurl,".th" + mediumurl);
+        else return capsurl;
+    }
+
     public static String radiodecodefix(String s){
         String search[] = new String[] {"&#xC3;&#x87;", "&#xC3;&#xA7;", "&#xC4;&#x9E;", "&#xC4;&#x9F;", "&#xC4;&#xB1;", "&#xC4;&#xB0;", "&#xC3;&#x96;", "&#xC3;&#xB6;", "&#xC5;&#x9E;", "&#xC5;&#x9F;", "&#xC3;&#x9C;", "&#xC3;&#xBC;"};
         String replace[] = new String[] {"Ç","ç","Ğ","ğ","ı","İ","Ö","ö","Ş","ş","Ü","ü"};

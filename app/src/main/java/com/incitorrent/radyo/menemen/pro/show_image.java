@@ -97,7 +97,24 @@ public class show_image extends AppCompatActivity {
                    super.onRestoreInstanceState(savedInstanceState);
                }
 
-               @Override
+    @Override
+    protected void onStart() {
+        try {
+            Glide.with(show_image.this)
+                    .load(Menemen.getThumbnail(imageurl))
+                    .into(new SimpleTarget<GlideDrawable>() {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                            image.setImageDrawable(resource);
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onStart();
+    }
+
+    @Override
                protected void onResume() {
                    super.onResume();
                    try {
