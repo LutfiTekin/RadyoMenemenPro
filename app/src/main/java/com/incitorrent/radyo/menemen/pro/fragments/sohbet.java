@@ -715,7 +715,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             try {
                 Glide.with(context)
                         .load(Menemen.getThumbnail(Menemen.getCapsUrl(mesaj)))
-                        .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
+                        .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH / 2, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT / 2)
                         .into(chatViewHolder.caps);
             } catch (Exception e) {
                 e.printStackTrace();
