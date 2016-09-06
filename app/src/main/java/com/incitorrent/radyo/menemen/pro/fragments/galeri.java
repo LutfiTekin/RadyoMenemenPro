@@ -104,7 +104,7 @@ public class galeri extends Fragment {
                     uploader = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                     capsurl = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                     msgid = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
-                    Glist.add(new galeri_objects(uploader,"http://"+ Menemen.fromHtmlCompat(capsurl),msgid));
+                    Glist.add(new galeri_objects(uploader,Menemen.getCapsUrl(Menemen.fromHtmlCompat(capsurl)),msgid));
                     cursor.moveToNext();
                 }
                 cursor.close();
@@ -145,7 +145,7 @@ public class galeri extends Fragment {
                     uploader = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                     capsurl = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                     msgid = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
-                    Glist.add(new galeri_objects(uploader,"http://"+ Menemen.fromHtmlCompat(capsurl),msgid));
+                    Glist.add(new galeri_objects(uploader,Menemen.getCapsUrl(Menemen.fromHtmlCompat(capsurl)),msgid));
                     cursor.moveToNext();
                 }
                 cursor.close();
