@@ -15,8 +15,8 @@ public final class RadyoMenemenPro {
     public final static int PODCAST_NOTIFICATION = 19072016;
     public final static int MSG_DOWNLOAD_PROGRESS_NOTIFICATION = 27082016;
 
-    public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 300;
-    public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 300;
+    public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 600;
+    public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 600;
 
     public final static int ARTWORK_IMAGE_OVERRIDE_DIM = 300;
 
