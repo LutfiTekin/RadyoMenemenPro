@@ -267,6 +267,13 @@ public class Menemen {
         return line;
     }
 
+    public static String getCapsUrl(String mesaj) {
+        String capsurl = mesaj.split("caps")[1];
+        capsurl = capsurl.split(" ")[0];
+        Log.v(TAG, "getCapsurl" + capsurl);
+        return "http://caps" +capsurl.trim();
+    }
+
     //POST methodu ile veri gönder ve JSON döndür
     /**
      * Posts data to server using post method with httpurlconnection

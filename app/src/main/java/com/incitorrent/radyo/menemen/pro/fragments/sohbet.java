@@ -638,7 +638,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 if (view == caps) {
                     Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
                     Intent image_intent;
-                    String capsurl = getCapsUrl(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj));
+                    String capsurl = Menemen.getCapsUrl(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj));
                     if(!m.isLoggedIn()){
                         image_intent = new Intent(getActivity(), show_image.class);
                         image_intent.setData(Uri.parse(capsurl));
@@ -714,7 +714,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         private void loadCapsinChat(chatViewHolder chatViewHolder, String mesaj) {
             try {
                 Glide.with(context)
-                        .load(Menemen.getThumbnail(getCapsUrl(mesaj)))
+                        .load(Menemen.getThumbnail(Menemen.getCapsUrl(mesaj)))
                         .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT)
                         .into(chatViewHolder.caps);
             } catch (Exception e) {
@@ -722,12 +722,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             }
         }
 
-        private String getCapsUrl(String mesaj) {
-            String capsurl = mesaj.split("caps")[1];
-            capsurl = capsurl.split(" ")[0];
-            Log.v(TAG, "getCapsurl" + capsurl);
-            return "http://caps" +capsurl.trim();
-        }
+
 
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
