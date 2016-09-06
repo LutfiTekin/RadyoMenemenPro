@@ -19,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.text.Html;
 import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -237,11 +236,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             artist = getString(R.string.app_name) + " Podcast";
             mdBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,BitmapFactory.decodeResource(getResources(),R.mipmap.locksreen_podcast_art));
         }
-        //fromHtml method is depracated in android N
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-            title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
-        else title = Html.fromHtml(title).toString();
-        mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,title);
+        mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE,Menemen.fromHtmlCompat(title));
         mdBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST,artist);
         mediaSessionCompat.setMetadata(mdBuilder.build());
     }
@@ -356,13 +351,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     .putExtra("duration", (long) mediaPlayer.getDuration())
                     .putExtra("current", (long) mediaPlayer.getCurrentPosition());
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-            calan = Html.fromHtml(calan, Html.FROM_HTML_MODE_LEGACY).toString();
-        else calan = Html.fromHtml(calan).toString();
         notification = new NotificationCompat.Builder(this);
         notification
         .setContentTitle(contentTitle)
-        .setContentText(calan)
+        .setContentText(Menemen.fromHtmlCompat(calan))
         .setSmallIcon((isPodcast) ? R.drawable.podcast : R.mipmap.ic_equalizer)
         .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), intent, PendingIntent.FLAG_UPDATE_CURRENT))
@@ -444,7 +436,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG,intent.getAction());
-//        stopSelf(); //kulaklık çıkınca durdur
             pause(true);
         }
     };
