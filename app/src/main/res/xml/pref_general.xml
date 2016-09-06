@@ -10,9 +10,8 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="open_gallery"
-        android:title="Galeri Resimlerini Açma Şekli"
-        android:summaryOn="Galerideki resimlere tıklayınca direkt yorumlar görüntülenir"
-        android:summaryOff="Galerideki resimlere tıklayınca direkt olarak resim görüntülenir"/>
+        android:title="@string/setting_gallery_title"
+        android:summary="@string/setting_gallery_summary"/>
 
     <SwitchPreference
         android:defaultValue="false"

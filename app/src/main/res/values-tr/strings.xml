@@ -186,4 +186,6 @@
     <string name="toolbar_online_subtitle_one">Bir tek sen varsın</string>
     <string name="settings_thumbnail_title">Resim Önizlemesi</string>
     <string name="settings_thumbnail_summary">Sohbet ekranına gönderilen caps.radyomenemen.com a yüklenmiş resimlerin önizlemesini göster.</string>
+    <string name="setting_gallery_title">Galeri Resimlerini Açma Şekli</string>
+    <string name="setting_gallery_summary">Galerideki resimlere tıklayınca direkt yorumlar görüntüle</string>
 </resources>

@@ -234,4 +234,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="toolbar_online_subtitle_one">You are the only user who is online now</string>
     <string name="settings_thumbnail_title">Thumbnail</string>
     <string name="settings_thumbnail_summary">Show thumbnail of images that hosted at caps.radyomenemen.com in chat </string>
+    <string name="setting_gallery_title">Gallery Launch Behaviour</string>
+    <string name="setting_gallery_summary">Go directly to the comments when clicked on image</string>
 </resources>
