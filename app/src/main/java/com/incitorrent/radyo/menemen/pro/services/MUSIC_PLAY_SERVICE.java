@@ -291,8 +291,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            nowPlayingNotification();
                             try {
+                                nowPlayingNotification();
                                 startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
                             } catch (Exception e) {
                                 e.printStackTrace();
