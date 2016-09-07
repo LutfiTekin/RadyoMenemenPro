@@ -365,15 +365,6 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().addToBackStack("ob").replace(R.id.Fcontent,new olan_biten()).commit();
         }else if (id == R.id.nav_podcast) {
             fragmentManager.beginTransaction().addToBackStack("podcast").replace(R.id.Fcontent,new podcast()).commit();
-        } else if (id == R.id.nav_share) {
-            String googleplaylink = "https://play.google.com/store/apps/details?id=com.incitorrent.radyo.menemen.pro";
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT,
-                    getString(R.string.app_share_text) + googleplaylink);
-            shareIntent.setType("text/plain");
-            startActivity(shareIntent);
-
         }  else if(id == R.id.nav_logout){
 
             new AlertDialog.Builder(this)
