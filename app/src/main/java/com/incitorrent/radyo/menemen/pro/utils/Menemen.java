@@ -1,6 +1,10 @@
 package com.incitorrent.radyo.menemen.pro.utils;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +13,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,6 +24,7 @@ import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +38,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +46,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.show_image;
+import com.incitorrent.radyo.menemen.pro.show_image_comments;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -274,6 +283,52 @@ public class Menemen {
         return "http://caps" +capsurl.trim();
     }
 
+    public static String getYoutubeId(String post){
+        Log.v("TAG", "youtube " + post);
+        if(post.contains("youtube.com/watch")){
+            post = post.split("v=")[1];
+            return post.split(" ")[0];
+        }else if(post.contains("youtu.be/")){
+            post = post.split("youtu.be/")[1];
+            return post.split(" ")[0];
+        }else return null;
+    }
+
+    public static String getYoutubeThumbnail(String id){
+        return "http://img.youtube.com/vi/" + id + "/0.jpg";
+    }
+
+    public void openYoutubeLink(String id){
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + id));
+            context.startActivity(intent);
+        }
+    }
+
+    public void goToCapsIntent(String capsurl, ImageView caps, Activity activity) {
+        Intent image_intent;
+        Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery", false);
+        if (!isLoggedIn()) {
+            image_intent = new Intent(context, show_image.class);
+            image_intent.setData(Uri.parse(capsurl));
+        } else if (showcomments) {
+            image_intent = new Intent(context, show_image_comments.class);
+            image_intent.putExtra("url", capsurl);
+        } else {
+            image_intent = new Intent(context, show_image.class);
+            image_intent.setData(Uri.parse(capsurl));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                    new Pair<View, String>(caps, caps.getTransitionName()));
+            activity.startActivity(image_intent, options.toBundle());
+        } else
+            activity.startActivity(image_intent);
+    }
     //POST methodu ile veri gönder ve JSON döndür
     /**
      * Posts data to server using post method with httpurlconnection

@@ -3,7 +3,6 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -38,7 +37,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,8 +55,6 @@ import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
-import com.incitorrent.radyo.menemen.pro.show_image;
-import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
@@ -81,6 +77,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.NOT_DELIVERED;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.PENDING;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.fromHtmlCompat;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getCapsUrl;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getEncodedData;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getMenemenData;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getThumbnail;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getTimeAgo;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeId;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeThumbnail;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.postMenemenData;
 
 
 public class sohbet extends Fragment implements View.OnClickListener{
@@ -195,7 +203,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
                         if(getActivity()!=null) {
-                            toolbar.setSubtitle(Menemen.getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman, getActivity().getApplicationContext()));
+                            toolbar.setSubtitle(getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman, getActivity().getApplicationContext()));
                         }
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
@@ -352,8 +360,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Map<String,String> dataToSend = new HashMap<>();
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("mkey", m.getMobilKey());
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                Menemen.postMenemenData(RadyoMenemenPro.PUSH_ONLINE_SIGNAL, encodedStr);
+                String encodedStr = getEncodedData(dataToSend);
+                postMenemenData(RadyoMenemenPro.PUSH_ONLINE_SIGNAL, encodedStr);
             }
         }).start();
     }
@@ -521,7 +529,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 if(mesaj.toLowerCase().equals("çatçut")) {
                     setChatSound();
                 }else if(sohbetList != null && sohbetRV != null){
-                    sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.PENDING));
+                    sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj, PENDING));
                     if(sohbetRV.getAdapter() != null)
                         sohbetRV.getAdapter().notifyDataSetChanged();
                 }
@@ -536,7 +544,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("mkey", m.getMobilKey());
                 dataToSend.put("mesaj", mesaj);
-                String encodedStr = Menemen.getEncodedData(dataToSend);
+                String encodedStr = getEncodedData(dataToSend);
                 BufferedReader reader = null;
                 try {
                     HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.MESAJ_GONDER).openConnection();
@@ -569,18 +577,18 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
                     if(sohbetList != null && sohbetRV != null){
                         if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
-                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.NOT_DELIVERED));
+                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
                         else {
                             for (int i = 0; i < sohbetList.size(); i++) {
                                 if (sohbetList.get(i).mesaj.equals(mesaj)) {
-                                    sohbetList.set(i,new Sohbet_Objects(null,m.getUsername(),mesaj,Menemen.NOT_DELIVERED));
+                                    sohbetList.set(i,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
                                     sohbetRV.getAdapter().notifyDataSetChanged();
                                 }
                             }
                         }
                         if(sohbetRV.getAdapter() != null)
                             sohbetRV.getAdapter().notifyDataSetChanged();
-                        if(m.isFirstTime(Menemen.NOT_DELIVERED))
+                        if(m.isFirstTime(NOT_DELIVERED))
                             Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -636,30 +644,17 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View view) {
                 if (view == caps) {
-                    Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
-                    Intent image_intent;
-                    String capsurl = Menemen.getCapsUrl(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj));
-                    if(!m.isLoggedIn()){
-                        image_intent = new Intent(getActivity(), show_image.class);
-                        image_intent.setData(Uri.parse(capsurl));
-                    }else if(showcomments) {
-                        image_intent = new Intent(getActivity(), show_image_comments.class);
-                        image_intent.putExtra("url", capsurl);
-                    }else {
-                        image_intent = new Intent(getActivity(), show_image.class);
-                        image_intent.setData(Uri.parse(capsurl));
+                    if(sohbetList.get(getAdapterPosition()).mesaj.contains("radyomenemen.com/images")) {
+                        String capsurl = getCapsUrl(fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj));
+                        m.goToCapsIntent(capsurl,caps,getActivity());
+                    }else if(sohbetList.get(getAdapterPosition()).mesaj.contains("youtube.com/watch") || sohbetList.get(getAdapterPosition()).mesaj.contains("youtu.be/")){
+                        m.openYoutubeLink(getYoutubeId(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj)));
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                                new Pair<View, String>(caps, caps.getTransitionName()));
-                        startActivity(image_intent, options.toBundle());
-                    }else
-                        startActivity(image_intent);
                 } else {
                     String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                     try {
-                        if (zaman_val.equals(Menemen.PENDING)) return;
-                        if (zaman_val.equals(Menemen.NOT_DELIVERED)) {
+                        if (zaman_val.equals(PENDING)) return;
+                        if (zaman_val.equals(NOT_DELIVERED)) {
                             final String mesaj = sohbetList.get(getAdapterPosition()).mesaj;
                             sohbetList.remove(getAdapterPosition());
                             sohbetRV.getAdapter().notifyItemRemoved(getAdapterPosition());
@@ -667,13 +662,15 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             return;
                         }
                         if (zaman.getText().toString().equals(zaman_val))
-                            zaman.setText(Menemen.getTimeAgo(zaman_val, context));
+                            zaman.setText(getTimeAgo(zaman_val, context));
                         else zaman.setText(zaman_val);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+
+
         }
         SohbetAdapter(List<Sohbet_Objects> sohbetList){
             this.sohbetList = sohbetList;
@@ -696,7 +693,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             chatViewHolder.nick.setText(sohbetList.get(i).nick);
             chatViewHolder.mesaj.setText(m.getSpannedTextWithSmileys(sohbetList.get(i).mesaj));
             chatViewHolder.mesaj.setMovementMethod(LinkMovementMethod.getInstance());
-            chatViewHolder.zaman.setText(Menemen.getTimeAgo(sohbetList.get(i).zaman,context));
+            chatViewHolder.zaman.setText(getTimeAgo(sohbetList.get(i).zaman,context));
         }
 
 
@@ -705,7 +702,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_thumbnail", true)) {
                 if(chatViewHolder.mesaj.getText().toString().contains("radyomenemen.com/images")){
                     //resim urlsi içeriyorum
-                    loadCapsinChat(chatViewHolder, Menemen.fromHtmlCompat(chatViewHolder.mesaj.getText().toString()));
+                    loadCapsinChat(chatViewHolder, getThumbnail(getCapsUrl(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))) );
+                }else if(chatViewHolder.mesaj.getText().toString().contains("youtube.com/watch") || chatViewHolder.mesaj.getText().toString().contains("youtu.be/")){
+                    Log.v(TAG,"youtube " + getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
+                    loadCapsinChat(chatViewHolder, getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                 }else chatViewHolder.caps.setImageDrawable(null);
             }
             super.onViewAttachedToWindow(chatViewHolder);
@@ -714,7 +714,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         private void loadCapsinChat(chatViewHolder chatViewHolder, String mesaj) {
             try {
                 Glide.with(context)
-                        .load(Menemen.getThumbnail(Menemen.getCapsUrl(mesaj)))
+                        .load(mesaj)
                         .override(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH / 2, RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT / 2)
                         .into(chatViewHolder.caps);
             } catch (Exception e) {
@@ -817,7 +817,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected Void doInBackground(Void... voids) {
             if(!m.isInternetAvailable()) return null;
-            String line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
+            String line = getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
             try {
                 JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
                 JSONObject c;
