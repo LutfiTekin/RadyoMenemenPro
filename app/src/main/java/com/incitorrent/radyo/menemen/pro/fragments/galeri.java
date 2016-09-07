@@ -1,21 +1,16 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
-import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +20,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
-import com.incitorrent.radyo.menemen.pro.show_image;
-import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.EndlessParentScrollListener;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
@@ -194,24 +187,7 @@ public class galeri extends Fragment {
 
             @Override
             public void onClick(View view) {
-                Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery",false);
-                Intent image_intent;
-                if(!m.isLoggedIn()){
-                    image_intent = new Intent(getActivity(), show_image.class);
-                    image_intent.setData(Uri.parse(Glist.get(getAdapterPosition()).capsurl));
-                }else if(showcomments) {
-                    image_intent = new Intent(getActivity(), show_image_comments.class);
-                    image_intent.putExtra("url", Glist.get(getAdapterPosition()).capsurl);
-                }else {
-                    image_intent = new Intent(getActivity(), show_image.class);
-                    image_intent.setData(Uri.parse(Glist.get(getAdapterPosition()).capsurl));
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                            new Pair<View, String>(image, image.getTransitionName()));
-                    startActivity(image_intent, options.toBundle());
-                }else
-                    startActivity(image_intent);
+               m.goToCapsIntent(Glist.get(getAdapterPosition()).capsurl,image,getActivity());
             }
         }
 
