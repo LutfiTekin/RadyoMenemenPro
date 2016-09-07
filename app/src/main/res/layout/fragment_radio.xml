@@ -133,7 +133,8 @@
                     android:layout_weight="1"
                     android:src="@drawable/spotify"
                     android:background="#00ffffff"
-                    android:contentDescription="@string/search_on_spotify" />
+                    android:contentDescription="@string/search_on_spotify"
+                    android:foreground="?android:attr/selectableItemBackground" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -143,7 +144,8 @@
                     android:layout_weight="1"
                     android:src="@drawable/youtube"
                     android:background="#00ffffff"
-                    android:contentDescription="@string/search_on_youtube" />
+                    android:contentDescription="@string/search_on_youtube"
+                    android:foreground="?android:attr/selectableItemBackground" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -153,7 +155,8 @@
                     android:layout_weight="1"
                     android:background="#00ffffff"
                     android:src="@drawable/lyrics"
-                    android:contentDescription="@string/search_lyrics" />
+                    android:contentDescription="@string/search_lyrics"
+                    android:foreground="?android:attr/selectableItemBackground" />
             </LinearLayout>
             </LinearLayout>
         </FrameLayout>

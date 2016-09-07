@@ -56,9 +56,7 @@
         android:layout_height="128dp"
         android:layout_gravity="start|bottom"
         android:background="@color/colorBackgroundsoft"
-        android:id="@+id/nowplaying_box"
-        android:layout_marginRight="74dp"
-       >
+        android:id="@+id/nowplaying_box">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -104,7 +102,7 @@
                 android:layout_width="@dimen/now_playing_anim_dim"
                 android:layout_height="@dimen/now_playing_anim_dim"
                 android:layout_gravity="right"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:id="@+id/nowplaying_equ"
                 android:src="@drawable/equilizer_anim"
                 tools:ignore="ContentDescription" />
@@ -124,21 +122,23 @@
                 android:textColor="@color/primary_dark_material_dark"
                 android:layout_marginTop="16dp"
                 android:textSize="20sp"
-                android:layout_marginRight="32dp" />
+                android:layout_marginRight="46dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="72dp">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp">
+                    android:layout_marginRight="8dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true">
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -163,7 +163,8 @@
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    >
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true">
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -188,7 +189,8 @@
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    >
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:clickable="true">
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
