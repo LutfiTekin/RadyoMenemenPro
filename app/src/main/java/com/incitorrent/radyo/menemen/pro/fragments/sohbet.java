@@ -704,7 +704,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     //resim urlsi içeriyorum
                     loadCapsinChat(chatViewHolder, getThumbnail(getCapsUrl(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))) );
                 }else if(chatViewHolder.mesaj.getText().toString().contains("youtube.com/watch") || chatViewHolder.mesaj.getText().toString().contains("youtu.be/")){
-                    Log.v(TAG,"youtube " + getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                     loadCapsinChat(chatViewHolder, getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                 }else chatViewHolder.caps.setImageDrawable(null);
             }

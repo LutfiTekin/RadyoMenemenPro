@@ -283,8 +283,12 @@ public class Menemen {
         return "http://caps" +capsurl.trim();
     }
 
+    /**
+     * Get Youtube Id from chat post
+     * @param post
+     * @return youtube id string
+     */
     public static String getYoutubeId(String post){
-        Log.v("TAG", "youtube " + post);
         if(post.contains("youtube.com/watch")){
             post = post.split("v=")[1];
             return post.split(" ")[0];
@@ -294,10 +298,19 @@ public class Menemen {
         }else return null;
     }
 
+    /**
+     * Get youtube thumbnail from youtube video id
+     * @param id
+     * @return thumbnail image link
+     */
     public static String getYoutubeThumbnail(String id){
         return "http://img.youtube.com/vi/" + id + "/0.jpg";
     }
 
+    /**
+     * Lauch youtube app
+     * @param id
+     */
     public void openYoutubeLink(String id){
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
@@ -309,7 +322,13 @@ public class Menemen {
         }
     }
 
-    public void goToCapsIntent(String capsurl, ImageView caps, Activity activity) {
+    /**
+     * Go to caps intent relative to condition
+     * @param capsurl
+     * @param ımageView
+     * @param activity
+     */
+    public void goToCapsIntent(String capsurl, ImageView ımageView, Activity activity) {
         Intent image_intent;
         Boolean showcomments = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("open_gallery", false);
         if (!isLoggedIn()) {
@@ -324,7 +343,7 @@ public class Menemen {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
-                    new Pair<View, String>(caps, caps.getTransitionName()));
+                    new Pair<View, String>(ımageView, ımageView.getTransitionName()));
             activity.startActivity(image_intent, options.toBundle());
         } else
             activity.startActivity(image_intent);
