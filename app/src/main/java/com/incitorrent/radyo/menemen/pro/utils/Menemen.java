@@ -1,6 +1,7 @@
 package com.incitorrent.radyo.menemen.pro.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -596,6 +597,16 @@ public class Menemen {
     }
 
     public Boolean isLoggedIn() { return bool_oku("loggedin"); }
+
+    public boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /*
  * Copyright 2012 Google Inc.

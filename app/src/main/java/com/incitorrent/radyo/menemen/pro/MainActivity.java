@@ -312,6 +312,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
         fab.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
             setNPHeader();
