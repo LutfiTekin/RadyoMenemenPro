@@ -18,12 +18,12 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Html;
 import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,6 +238,7 @@ public class podcast extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("title",RList.get(getAdapterPosition()).title);
                     bundle.putString("descr",RList.get(getAdapterPosition()).description);
+                    inf.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
                     podcast_now_playing.setArguments(bundle);
 
 
@@ -266,7 +267,7 @@ public class podcast extends Fragment {
             public boolean onLongClick(View v) {
 
 
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
                         .setTitle(RList.get(getAdapterPosition()).title)
                         .setMessage(getString(R.string.download_file))
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -320,10 +321,7 @@ public class podcast extends Fragment {
             personViewHolder.cv.setCardElevation(10);
             personViewHolder.title.setText(RList.get(i).title);
             String title = RList.get(i).description;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-                title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
-            else title = Html.fromHtml(title).toString();
-            personViewHolder.descr.setText(title);
+            personViewHolder.descr.setText(Menemen.fromHtmlCompat(title));
             personViewHolder.duration.setText(RList.get(i).duration);
             inf.runEnterAnimation(personViewHolder.cv,i*180);
         }

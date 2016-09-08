@@ -102,4 +102,16 @@
         android:contentDescription="@string/cd_forward"
         />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/download"
+        android:src="@drawable/ic_cloud_download_black_24dp"
+        android:padding="16dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/cd_rewind"
+        android:layout_alignTop="@+id/rewind"
+        android:layout_toLeftOf="@+id/rewind"
+        android:layout_toStartOf="@+id/rewind" />
+
 </RelativeLayout>

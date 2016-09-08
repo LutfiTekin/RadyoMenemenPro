@@ -71,6 +71,7 @@ public final class RadyoMenemenPro {
         public final static String CALAN = "calan";
         public final static String ARTWORK = "artwork";
         public final static String PODCAST_DESCR = "podcastD";
+        public final static String PODCAST_URL = "podcastU";
     }
 
     public final static class transitionname {

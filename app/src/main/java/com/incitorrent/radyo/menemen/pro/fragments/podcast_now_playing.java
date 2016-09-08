@@ -1,19 +1,25 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.transition.AutoTransition;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -34,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarChangeListener,View.OnClickListener{
     TextView title,descr;
-    ImageView rewind,forward;
+    ImageView rewind,forward,download;
     CardView podcastcard;
     SeekBar seekBar;
     FloatingActionButton placeholder;
@@ -71,10 +78,12 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         chronometer = (Chronometer) podcastview.findViewById(R.id.chr);
         rewind = (ImageView) podcastview.findViewById(R.id.rewind);
         forward = (ImageView) podcastview.findViewById(R.id.forward);
+        download = (ImageView) podcastview.findViewById(R.id.download);
         placeholder = (FloatingActionButton) podcastview.findViewById(R.id.placeholder);
         placeholder.setOnClickListener(this);
         rewind.setOnClickListener(this);
         forward.setOnClickListener(this);
+        download.setOnClickListener(this);
         if(bundle != null){
             podcast_title = bundle.getString("title");
             podcast_descr = bundle.getString("descr");
@@ -263,6 +272,40 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             case R.id.forward:
                 seekTo(seekBar.getProgress() + 5);
                 break;
+            case R.id.download:
+                downloadPodcast(getActivity().getApplicationContext(), title.getText().toString(), m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL));
+                break;
         }
+    }
+
+    private void downloadPodcast(final Context context,final String title,final String url) {
+        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
+                .setTitle(title)
+                .setMessage(getString(R.string.download_file))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                            request.setDescription(context.getString(R.string.downloading_file))
+                                    .setTitle(title)
+                                    .allowScanningByMediaScanner();
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + ".mp3");
+                            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                            manager.enqueue(request);
+                            Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(R.drawable.podcast)
+                .show();
     }
 }
