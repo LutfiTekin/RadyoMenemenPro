@@ -46,6 +46,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String CATEGORY_HAYKIR = "haykir";
     public static final String CATEGORY_CHAT = "generalchat";
     public static final String CATEGORY_ONLINE = "online";
+    public static final String CATEGORY_SONG_CHANGE = "songchange";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
     final Context context = RMPRO.getContext();
@@ -91,7 +92,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.v(TAG,"onMessageReceived " + remoteMessage.getFrom());
         notification_intent.setAction("radyo.menemen.chat");
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
@@ -108,6 +108,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }else{
             //Topic yok
             String category = remoteMessage.getData().get("cat");
+            Log.v(TAG,"cat " + category);
             if(category == null) return;
             switch (category) {
                 case CATEGORY_CAPS:
@@ -126,6 +127,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 case CATEGORY_ONLINE:
                     String nick = getDATA(remoteMessage, "user");
                     onlineUser(nick);
+                    break;
+                case CATEGORY_SONG_CHANGE:
+                    if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+                        startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
+                    }
                     break;
             }
 

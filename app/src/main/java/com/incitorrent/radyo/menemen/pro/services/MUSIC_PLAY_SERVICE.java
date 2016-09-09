@@ -127,22 +127,30 @@ public class MUSIC_PLAY_SERVICE extends Service {
         exec.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-               if(m.isPlaying() && !isPodcast) {
-                   setMusicMeta();
-                   new Thread(new Runnable() {
-                       @Override
-                       public void run() {
-                           nowPlayingNotification();
-                       }
-                   }).start();
-
-               }
+               updateMediaInfoIfNecessary();
                 Log.v(TAG, "COMPLETED TASK COUNT " + exec.getCompletedTaskCount());
             }
         },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /2, TimeUnit.SECONDS);
-
-        podcastReceiver();
+        MusicPlayServiceReceiver();
+        registerReceiver();
         super.onCreate();
+    }
+
+    private void updateMediaInfoIfNecessary() {
+        if(m.isPlaying() && !isPodcast) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        setMusicMeta();
+                        nowPlayingNotification();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        }
     }
 
 
@@ -203,7 +211,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
         }
         if(!m.isPlaying()){
             //MUSIC_INFO_SERVICE başlat
-            if(!isPodcast)  startService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
+            if(!isPodcast) {
+                startService(new Intent(MUSIC_PLAY_SERVICE.this, MUSIC_INFO_SERVICE.class));
+            }
             else {
                 try {
                     if(intent.hasExtra("descr"))
@@ -277,7 +287,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                             }
                         });
                         broadcastPodcastDuration();
-                        registerPodcastReceiver();
                     }
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
@@ -407,25 +416,32 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
 
 
-    private void podcastReceiver() {
+    private void MusicPlayServiceReceiver() {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent!=null) {
-                int msec = intent.getExtras().getInt("seek");
-                    try {
-                        mediaPlayer.seekTo(msec);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String action = intent.getExtras().getString("action");
+                    if(action == null) return;
+                    if (action.equals("seek")){
+                        int msec = intent.getExtras().getInt("seek");
+                        try {
+                            mediaPlayer.seekTo(msec);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }else if(action.equals("update")){
+                        updateMediaInfoIfNecessary();
                     }
                 }
             }
         };
     }
 
-    private void registerPodcastReceiver() {
+    private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(PODCAST_SEEK_FILTER);
+        filter.addAction(MUSIC_INFO_SERVICE.SERVICE_FILTER);
         LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).registerReceiver((receiver), filter);
     }
     @Override

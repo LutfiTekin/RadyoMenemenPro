@@ -243,6 +243,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         Intent seek = new Intent(MUSIC_PLAY_SERVICE.PODCAST_SEEK_FILTER);
         int progress = i < seekBar.getSecondaryProgress() ? i * 1000 : (seekBar.getSecondaryProgress() * 1000) - 1000;
         seek.putExtra("seek",progress);
+        seek.putExtra("action","seek");
         seekBar.setProgress(progress/1000);
         if(chronometer != null)
             chronometer.setBase(SystemClock.elapsedRealtime() - progress);
