@@ -257,7 +257,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                       else {
                           //Fallback and search for it
                           for (int i = 0; i < sohbetList.size(); i++) {
-                              if (sohbetList.get(i).mesaj.equals(mesaj)) {
+                              if (sohbetList.get(i).mesaj.equals(mesaj) || (sohbetList.get(i).mesaj.contains("http")) && sohbetList.get(i).zaman.equals(Menemen.PENDING)) {
                                   sohbetList.remove(i);
                                   sohbetRV.getAdapter().notifyItemRemoved(i);
                               }
