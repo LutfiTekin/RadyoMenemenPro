@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.online"
+    android:background="@color/colorBackgroundsoft">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textSize="24sp"
+        android:id="@+id/onlineusers"
+        android:textColor="@color/textColorPrimary"
+        />
+</ScrollView>
+
+</FrameLayout>

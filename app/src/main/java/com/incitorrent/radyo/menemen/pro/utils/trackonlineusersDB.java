@@ -66,9 +66,9 @@ public class trackonlineusersDB extends SQLiteOpenHelper {
         return count;
     }
 //TODO online üye listesi
-    public Cursor getOnlineUserList(){
+    public Cursor getOnlineUserList(String cur_user){
         SQLiteDatabase db = getReadableDatabase();
         long period = System.currentTimeMillis() - (1000*60*3);
-        return db.query(TABLE_NAME,null,_TIME + " >'" + period + "' ",null,null,null,_TIME + " DESC");
+        return db.query(TABLE_NAME,null,_TIME + " >'" + period + "' AND " + _NICK +" != '" + cur_user + "'",null,null,null,_TIME + " DESC");
     }
 }

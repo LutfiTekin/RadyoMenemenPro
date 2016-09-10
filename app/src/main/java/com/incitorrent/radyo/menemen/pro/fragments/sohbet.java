@@ -425,6 +425,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Snackbar.make(resimekle, R.string.mute_chat_notificaitions_for_10_min,Snackbar.LENGTH_LONG).show();
                 item.setVisible(false);
                 break;
+            case R.id.go_to_online_users:
+                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new online(), "online").addToBackStack("online").commit();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

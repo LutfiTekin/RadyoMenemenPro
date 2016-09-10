@@ -188,4 +188,7 @@
     <string name="settings_thumbnail_summary">Sohbet ekranına gönderilen caps.radyomenemen.com a yüklenmiş resimlerin önizlemesini göster.</string>
     <string name="setting_gallery_title">Galeri Resimlerini Açma Şekli</string>
     <string name="setting_gallery_summary">Galerideki resimlere tıklayınca direkt yorumlar görüntüle</string>
+    <string name="online_members">Çevirimiçi Üyeler</string>
+    <string name="online_user_none">Başka Hiç Kimse Yok :(</string>
+    <string name="who_is_online">Kimler çevirimiçi?</string>
 </resources>
