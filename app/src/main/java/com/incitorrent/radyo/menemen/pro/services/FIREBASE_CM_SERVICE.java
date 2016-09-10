@@ -94,43 +94,50 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification_intent.setAction("radyo.menemen.chat");
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
-        if(topic.equals(RadyoMenemenPro.FCMTopics.NEWS)){
-            //OLAN BITEN
-           if(notify) updateNews(remoteMessage);
-        }else if(topic.equals(RadyoMenemenPro.FCMTopics.ONAIR)){
-            //Onair bildirimi
-          if(notify && notify_when_on_air) onAir(remoteMessage);
-        }else if(topic.equals(RadyoMenemenPro.FCMTopics.PODCAST)){
-          if(notify && notify_new_podcast)  notify_new_podcast(remoteMessage);
-        }else if(topic.equals(RadyoMenemenPro.FCMTopics.SYNC)){
-            sync(remoteMessage);
-        }else if(topic.equals(RadyoMenemenPro.FCMTopics.SONG_CHANGE_EVENT)){
-            if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-                startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
-        }else{
-            //Topic yok
-            String category = remoteMessage.getData().get("cat");
-            if(category == null) return;
-            switch (category) {
-                case CATEGORY_CAPS:
-                    //RECEIVE CAPS COMMENTS
-                    String action = getDATA(remoteMessage, "action");
-                    if (action == null) break;
-                    if (action.equals(ADD))
-                        addCapsComments(remoteMessage);
-                    break;
-                case CATEGORY_HAYKIR:
-                    haykirbildirim(remoteMessage);
-                    break;
-                case CATEGORY_CHAT:
-                    generalChat(remoteMessage);
-                    break;
-                case CATEGORY_ONLINE:
-                    String nick = getDATA(remoteMessage, "user");
-                    onlineUser(nick);
-                    break;
-            }
+        switch (topic) {
+            case RadyoMenemenPro.FCMTopics.NEWS:
+                //OLAN BITEN
+                if (notify) updateNews(remoteMessage);
+                break;
+            case RadyoMenemenPro.FCMTopics.ONAIR:
+                //Onair bildirimi
+                if (notify && notify_when_on_air) onAir(remoteMessage);
+                break;
+            case RadyoMenemenPro.FCMTopics.PODCAST:
+                if (notify && notify_new_podcast) notify_new_podcast(remoteMessage);
+                break;
+            case RadyoMenemenPro.FCMTopics.SYNC:
+                sync(remoteMessage);
+                break;
+            case RadyoMenemenPro.FCMTopics.SONG_CHANGE_EVENT:
+                if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                    startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
+                break;
+            default:
+                //Topic yok
+                String category = remoteMessage.getData().get("cat");
+                if (category == null) return;
+                switch (category) {
+                    case CATEGORY_CAPS:
+                        //RECEIVE CAPS COMMENTS
+                        String action = getDATA(remoteMessage, "action");
+                        if (action == null) break;
+                        if (action.equals(ADD))
+                            addCapsComments(remoteMessage);
+                        break;
+                    case CATEGORY_HAYKIR:
+                        haykirbildirim(remoteMessage);
+                        break;
+                    case CATEGORY_CHAT:
+                        generalChat(remoteMessage);
+                        break;
+                    case CATEGORY_ONLINE:
+                        String nick = getDATA(remoteMessage, "user");
+                        onlineUser(nick);
+                        break;
+                }
 
+                break;
         }
         super.onMessageReceived(remoteMessage);
     }
