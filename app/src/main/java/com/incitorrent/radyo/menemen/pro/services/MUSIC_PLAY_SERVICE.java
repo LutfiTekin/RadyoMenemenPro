@@ -21,6 +21,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -298,6 +299,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                             try {
                                 nowPlayingNotification();
                                 startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
+                                FirebaseMessaging.getInstance().subscribeToTopic("songchange");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -335,6 +337,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             exec.shutdown();
             unregisterReceiver(PlugReceiver);
             LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).unregisterReceiver(receiver);
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
         } catch (Exception e) {
             Log.v(TAG, "onDestroy "+ e.toString());
