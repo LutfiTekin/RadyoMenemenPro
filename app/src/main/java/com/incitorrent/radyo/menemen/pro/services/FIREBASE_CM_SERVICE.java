@@ -107,7 +107,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 if (notify && notify_new_podcast) notify_new_podcast(remoteMessage);
                 break;
             case RadyoMenemenPro.FCMTopics.SYNC:
-                sync(remoteMessage);
+                sync();
                 break;
             case RadyoMenemenPro.FCMTopics.SONG_CHANGE_EVENT:
                 if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
@@ -143,7 +143,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void onlineUser(String nick) {
-        Log.v(TAG,nick + " added to online users list");
         long now = System.currentTimeMillis();
         sql_online.addToHistory(nick, now);
         Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
@@ -152,7 +151,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     //TODO use remote message parameter
-    private void sync(RemoteMessage remoteMessage) {
+    private void sync() {
         try {
             String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
             Log.d(TAG, "Alınan JSON:\n"+ line);
