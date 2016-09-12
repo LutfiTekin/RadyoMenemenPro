@@ -257,7 +257,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                       else {
                           //Fallback and search for it
                           for (int i = 0; i < sohbetList.size(); i++) {
-                              if (sohbetList.get(i).mesaj.equals(mesaj) || sohbetList.get(i).zaman.equals(Menemen.PENDING)) {
+                              if (sohbetList.get(i).mesaj.equals(mesaj) || (sohbetList.get(i).zaman != null && sohbetList.get(i).zaman.equals(Menemen.PENDING))) {
                                   sohbetList.remove(i);
                                   sohbetRV.getAdapter().notifyItemRemoved(i);
                               }
@@ -397,11 +397,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Log.d(TAG, "onActivityCreated");
         if(savedInstanceState != null && sohbetRV != null && sohbetList != null){
             first_visible_view = savedInstanceState.getInt("first_visible_view");
-            first_visit = true;
-            if(first_visible_view > 0){
-                    new initsohbet(first_visible_view + 20, first_visible_view).execute();
-                    first_visit = false;
-            }
+            new initsohbet(first_visible_view + 20, first_visible_view).execute();
+            first_visit = false;
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -895,7 +892,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if(SohbetAdapter!=null) sohbetRV.setAdapter(SohbetAdapter);
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1 && sohbetList.get(0).id != null) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
-            if(sohbetRV != null) sohbetRV.scrollToPosition(scroll);
+            if(sohbetRV != null && scroll != 0) sohbetRV.scrollToPosition(scroll);
             super.onPostExecute(aVoid);
         }
     }
