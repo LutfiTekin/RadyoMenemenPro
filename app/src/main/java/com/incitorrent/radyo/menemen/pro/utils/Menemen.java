@@ -344,6 +344,7 @@ public class Menemen {
             image_intent = new Intent(context, show_image.class);
             image_intent.setData(Uri.parse(capsurl));
         }
+        image_intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
                     new Pair<View, String>(ımageView, ımageView.getTransitionName()));

@@ -332,6 +332,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStart() {
+        Log.v(TAG,"onStart");
         if(getActivity()!=null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
@@ -343,7 +344,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
-       if(first_visit) new initsohbet(20,0).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        Log.v(TAG,"onResume");
+        //Eğer önceden liste oluşturuldu ise yeniden yükleme
+       if(first_visit && (sohbetList == null || sohbetList.size() < 1))
+           new initsohbet(20,0).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         m.runEnterAnimation(resimekle,250);
@@ -368,6 +372,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStop() {
+        Log.v(TAG,"onStop");
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
@@ -376,6 +381,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onDestroyView() {
+        Log.v(TAG,"onDestroyView");
         super.onDestroyView();
     }
     int first_visible_view;
