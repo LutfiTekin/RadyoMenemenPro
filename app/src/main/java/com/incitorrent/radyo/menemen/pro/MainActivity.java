@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         if(header_txt != null) header_txt.setText(m.oku(DJ));
         if(header_sub_txt != null) header_sub_txt.setText(title);
         if(header_img != null)
-            Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.ic_equalizer).into(header_img);
+            Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM).error(R.mipmap.ic_equalizer).into(header_img);
     }
 
 
