@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -494,6 +495,7 @@ public class Menemen {
         }
     }
 
+    @NonNull
     public static String fromHtmlCompat(String title){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
             return Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();

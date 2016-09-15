@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.transition.AutoTransition;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,10 +83,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-                trackName = Html.fromHtml(trackName, Html.FROM_HTML_MODE_LEGACY).toString();
-            else trackName = Html.fromHtml(trackName).toString();
-            track.setText(trackName);
+            track.setText(Menemen.fromHtmlCompat(trackName));
             final String arturl = bundle.getString("arturl", null);
             if(arturl != null && getActivity() != null) {
                 //Arkaplan rengini artworkten al
