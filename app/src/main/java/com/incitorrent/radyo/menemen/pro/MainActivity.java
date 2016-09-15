@@ -86,10 +86,7 @@ public class MainActivity extends AppCompatActivity
                   String action = intent.getAction();
                   if (action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)) {
                   play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
-                  fab.setImageResource((play) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                  if ((m.isPlaying() || play) && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-                      setNPHeader();
-                  else setHeaderDefault();
+                      setNP(m.isPlaying() || play);
               }else if(action.equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)){
                       int count = intent.getExtras().getInt("count",0);
                       if(count > 0){
@@ -170,23 +167,29 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void setHeaderDefault() {
-        header_img.setImageResource(R.mipmap.ic_launcher);
-        if(m.isLoggedIn())
-            header_txt.setText(m.oku("username").toUpperCase());
-        else header_txt.setText(getString(R.string.app_name));
-        header_sub_txt.setText(R.string.site_adress);
 
+    private void setNP(Boolean isPlaying){
+        fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+        if(isPlaying){
+            if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+                //Podcast çalmıyorsa sol headerı düzenle
+                String title = Menemen.fromHtmlCompat(m.oku(CALAN));
+                if (header_txt != null) header_txt.setText(m.oku(DJ));
+                if (header_sub_txt != null) header_sub_txt.setText(title);
+                if (header_img != null)
+                    Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
+                            .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM, RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                            .error(R.mipmap.ic_equalizer)
+                            .into(header_img);
+            }
+        }else{
+            header_img.setImageResource(R.mipmap.ic_launcher);
+            if(m.isLoggedIn())
+                header_txt.setText(m.getUsername().toUpperCase());
+            else header_txt.setText(getString(R.string.app_name));
+            header_sub_txt.setText(R.string.site_adress);
+        }
     }
-
-    private void setNPHeader() {
-        String title = Menemen.fromHtmlCompat(m.oku(CALAN));
-        if(header_txt != null) header_txt.setText(m.oku(DJ));
-        if(header_sub_txt != null) header_sub_txt.setText(title);
-        if(header_img != null)
-            Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM).error(R.mipmap.ic_equalizer).into(header_img);
-    }
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -313,10 +316,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
-        fab.setImageResource(m.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-        if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-            setNPHeader();
-        else setHeaderDefault();
+        setNP(m.isPlaying());
         initOnlineUsersCountBadge();
         super.onResume();
     }
