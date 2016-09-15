@@ -7,10 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -19,6 +23,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -44,6 +49,8 @@ import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
+
+import java.util.concurrent.ExecutionException;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
@@ -176,11 +183,7 @@ public class MainActivity extends AppCompatActivity
                 String title = Menemen.fromHtmlCompat(m.oku(CALAN));
                 if (header_txt != null) header_txt.setText(m.oku(DJ));
                 if (header_sub_txt != null) header_sub_txt.setText(title);
-                if (header_img != null)
-                    Glide.with(this).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
-                            .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM, RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
-                            .error(R.mipmap.ic_equalizer)
-                            .into(header_img);
+                setNPimage(header_img);
             }
         }else{
             header_img.setImageResource(R.mipmap.ic_launcher);
@@ -189,6 +192,41 @@ public class MainActivity extends AppCompatActivity
             else header_txt.setText(getString(R.string.app_name));
             header_sub_txt.setText(R.string.site_adress);
         }
+    }
+
+    private void setNPimage(final ImageView header_img) {
+        new AsyncTask<Void,Void,Integer[]>() {
+            Bitmap resim = null;
+            final int accentcolor = ContextCompat.getColor(MainActivity.this,R.color.colorAccent);
+            @Override
+            protected Integer[] doInBackground(Void... voids) {
+                try {
+                    resim = Glide.with(MainActivity.this)
+                            .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
+                            .asBitmap()
+                            .error(R.mipmap.album_placeholder)
+                            .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                            .get();
+                    Palette palette = Palette.from(resim).generate();
+                        int color_1 = palette.getVibrantColor(accentcolor);
+                        int color_2 = palette.getLightVibrantColor(accentcolor);
+                    return new Integer[]{color_1,color_2};
+                } catch (InterruptedException | ExecutionException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Integer[] color) {
+                if(color != null) {
+                        fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
+                        fab.setRippleColor(color[1]);
+                }
+                if(resim != null && header_img != null)
+                    header_img.setImageBitmap(resim);
+                super.onPostExecute(color);
+            }
+        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
     @Override
