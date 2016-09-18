@@ -169,8 +169,26 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getExtras()!=null) {
-                    Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
-                    setNP(isPlaying);
+                    String action = intent.getAction();
+                    if (action == null) return;
+                        if (action.equals(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)) {
+                            progressbar.setVisibility(View.INVISIBLE);
+                            Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
+                            fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                            if (isPlaying) {
+                                if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                                    m.runEnterAnimation(nowplayingbox, 200);
+                                m.runEnterAnimation(NPtrack, 400);
+                                m.runEnterAnimation(NPcard, 400);
+                                m.runEnterAnimation(NPdj, 600);
+                                m.runEnterAnimation(NPspotify, 700);
+                                m.runEnterAnimation(NPyoutube, 800);
+                                m.runEnterAnimation(NPlyric, 900);
+                                frameAnimation.start();
+                            } else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                                m.runExitAnimation(nowplayingbox, 500);
+                    }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_INFO_SERVICE.SERVICE_FILTER))
+                        setNP();
                 }
             }
         };
@@ -179,32 +197,21 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         return radioview;
     }
 
-    private void setNP(Boolean isPlaying) {
-        fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+    private void setNP() {
         progressbar.setVisibility(View.INVISIBLE);
         String title = Menemen.fromHtmlCompat(m.oku(CALAN));
         NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
         if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             setNPimage(NPart);
-        if(isPlaying) {
-            if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
-            m.runEnterAnimation(NPtrack,400);
-            m.runEnterAnimation(NPcard,400);
-            m.runEnterAnimation(NPdj,600);
-            m.runEnterAnimation(NPspotify,700);
-            m.runEnterAnimation(NPyoutube,800);
-            m.runEnterAnimation(NPlyric,900);
-            frameAnimation.start();
-        }
-        else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-            m.runExitAnimation(nowplayingbox, 500);
     }
 
     private void setNPimage(final ImageView ımageView) {
         new AsyncTask<Void,Void,Integer[]>() {
             Bitmap resim = null;
             final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
+            final int colorbgsofter = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
+            final int textcolor = ContextCompat.getColor(context,R.color.textColorPrimary);
             @Override
             protected Integer[] doInBackground(Void... voids) {
                 try {
@@ -217,7 +224,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     Palette palette = Palette.from(resim).generate();
                     int color_1 = palette.getVibrantColor(accentcolor);
                     int color_2 = palette.getLightVibrantColor(accentcolor);
-                    return new Integer[]{color_1,color_2};
+                    int color_3 = palette.getDarkMutedColor(colorbgsofter);
+                    int color_4 = palette.getLightVibrantColor(textcolor);
+                    return new Integer[]{color_1,color_2,color_3,color_4};
                 } catch (InterruptedException | ExecutionException | NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -228,6 +237,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 if(color != null) {
                     fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
                     fab.setRippleColor(color[1]);
+                    nowplayingbox.setBackgroundColor(color[2]);
+                    NPtrack.setTextColor(color[3]);
+                    NPdj.setTextColor(color[3]);
                 }
                 if(resim != null && ımageView != null)
                     ımageView.setImageBitmap(resim);
@@ -243,6 +255,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
           IntentFilter filter = new IntentFilter();
           filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
           filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
+          filter.addAction(MUSIC_INFO_SERVICE.SERVICE_FILTER);
           LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((NPreceiver),filter);
       }
         super.onStart();
@@ -284,7 +297,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
-            setNP(m.isPlaying());
+            fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+            setNP();
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);
