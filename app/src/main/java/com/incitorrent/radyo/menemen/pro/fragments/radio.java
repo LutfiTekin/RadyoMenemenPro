@@ -8,21 +8,25 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
@@ -49,6 +53,7 @@ import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
@@ -101,7 +106,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab = (FloatingActionButton) radioview.findViewById(R.id.fab);
         emptyview = (CardView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
@@ -127,6 +132,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         NPyoutube.setOnLongClickListener(this);
         NPart.setOnClickListener(this);
         NPtrack.setOnClickListener(this);
+        fab.setOnClickListener(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             NPart.setTransitionName(RadyoMenemenPro.transitionname.ART);
             NPtrack.setTransitionName(RadyoMenemenPro.transitionname.CALAN);
@@ -162,7 +168,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             @Override
             public void onReceive(Context context, Intent intent) {
                 if(intent.getExtras()!=null) {
-                    if(intent.getBooleanExtra(RadyoMenemenPro.PLAY, true)) {
+                    Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
+                    setNP(isPlaying);
+                    if(isPlaying) {
                       if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
                         m.runEnterAnimation(NPtrack,400);
                         m.runEnterAnimation(NPcard,400);
@@ -175,7 +183,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                         m.runExitAnimation(nowplayingbox, 500);
                 }
-                setNP();
+
 
             }
         };
@@ -184,13 +192,49 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         return radioview;
     }
 
-    private void setNP() {
+    private void setNP(Boolean isPlaying) {
+        fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
         String title = Menemen.fromHtmlCompat(m.oku(CALAN));
         NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
-        if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true)) {
-            Glide.with(getActivity()).load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL)).error(R.mipmap.album_placeholder).into(NPart);
-        }
+        if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+            setNPimage(NPart);
+
+    }
+
+    private void setNPimage(final ImageView ımageView) {
+        new AsyncTask<Void,Void,Integer[]>() {
+            Bitmap resim = null;
+            final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
+            @Override
+            protected Integer[] doInBackground(Void... voids) {
+                try {
+                    resim = Glide.with(getActivity())
+                            .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
+                            .asBitmap()
+                            .error(R.mipmap.album_placeholder)
+                            .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                            .get();
+                    Palette palette = Palette.from(resim).generate();
+                    int color_1 = palette.getVibrantColor(accentcolor);
+                    int color_2 = palette.getLightVibrantColor(accentcolor);
+                    return new Integer[]{color_1,color_2};
+                } catch (InterruptedException | ExecutionException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Integer[] color) {
+                if(color != null) {
+                    fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
+                    fab.setRippleColor(color[1]);
+                }
+                if(resim != null && ımageView != null)
+                    ımageView.setImageBitmap(resim);
+                super.onPostExecute(color);
+            }
+        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
 
@@ -219,7 +263,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     @Override
     public void onResume() {
-        setNP();
+        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
         RList = new ArrayList<>();
         cursor = sql.getHistory(20);
         cursor.moveToFirst();
@@ -241,16 +285,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.setAdapter(adapter);
         if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
-            setNP();
+            setNP(m.isPlaying());
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);
-        if(getActivity() != null) {
             if (fab != null) {
                 fab.show();
                 fab.setVisibility(View.VISIBLE);
             }
-        }
         super.onResume();
     }
 
@@ -278,11 +320,23 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 startActivity(intent);
             }else if(v == NPart || v == NPtrack){
                 String title = m.oku(CALAN);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
-                    title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
-                else title = Html.fromHtml(title).toString();
-               String arturl = m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL);
-                openTrackInfo(title,arturl,NPart,NPtrack);
+                String arturl = m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL);
+                openTrackInfo(Menemen.fromHtmlCompat(title),arturl,NPart,NPtrack);
+            }else if(v == fab){
+                if(!m.isInternetAvailable()){
+                    Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //Podcast çalmıyor
+                m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
+                Intent  radyoservis = new Intent(context, MUSIC_PLAY_SERVICE.class);
+                //Ayarlardan seçilmiş kanalı bul
+                String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
+                String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
+                //Oluşturulan servis intentine datasource ekle
+                radyoservis.putExtra("dataSource",dataSource);
+                //data source ile servisi başlat
+                context.startService(radyoservis);
             }
         } catch (Exception e) {
             e.printStackTrace();

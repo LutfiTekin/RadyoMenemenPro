@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.CardView;
@@ -55,23 +54,8 @@ public class olan_biten extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
-    public void onStop() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null)  fab.setVisibility(View.VISIBLE);
-        }
-        super.onStop();
-    }
 
-    @Override
-    public void onResume() {
-        if(getActivity()!=null) {
-            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-            if(fab!=null) fab.setVisibility(View.INVISIBLE);
-        }
-        super.onResume();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
