@@ -333,6 +333,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     private void buildNotification(String nick, String mesaj) {
         Boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
+        if(isUser)
+            nick = getString(R.string.me);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
