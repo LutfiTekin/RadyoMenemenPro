@@ -185,8 +185,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         try {
             mediaPlayer.start();
             m.kaydet("caliyor","evet");
-                    nowPlayingNotification();
-                    startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
+            nowPlayingNotification();
+            startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
             mediaSessionCompat.setActive(true);
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
@@ -255,9 +255,14 @@ public class MUSIC_PLAY_SERVICE extends Service {
     private void play(final String dataSource) {
         new AsyncTask<Void, Void, Void>() {
             @Override
+            protected void onPostExecute(Void aVoid) {
+                broadcastToUi(true);
+                super.onPostExecute(aVoid);
+            }
+
+            @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    broadcastToUi(true);
                         mediaPlayer.setDataSource(dataSource);
                         mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);

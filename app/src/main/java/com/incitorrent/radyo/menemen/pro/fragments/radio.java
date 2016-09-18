@@ -40,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,9 +82,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     AnimationDrawable frameAnimation;
     BroadcastReceiver NPreceiver;
     FloatingActionButton fab;
-
-
-
+    ProgressBar progressbar;
 
     public radio() {
         // Required empty public constructor
@@ -107,6 +106,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
         fab = (FloatingActionButton) radioview.findViewById(R.id.fab);
+        progressbar = (ProgressBar) radioview.findViewById(R.id.progressbar);
+        progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context,R.color.BufferingPBcolor), android.graphics.PorterDuff.Mode.MULTIPLY);
         emptyview = (CardView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
@@ -170,21 +171,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 if(intent.getExtras()!=null) {
                     Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                     setNP(isPlaying);
-                    if(isPlaying) {
-                      if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
-                        m.runEnterAnimation(NPtrack,400);
-                        m.runEnterAnimation(NPcard,400);
-                        m.runEnterAnimation(NPdj,600);
-                        m.runEnterAnimation(NPspotify,700);
-                        m.runEnterAnimation(NPyoutube,800);
-                        m.runEnterAnimation(NPlyric,900);
-                        frameAnimation.start();
-                    }
-                    else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
-                        m.runExitAnimation(nowplayingbox, 500);
                 }
-
-
             }
         };
 
@@ -194,12 +181,24 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     private void setNP(Boolean isPlaying) {
         fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+        progressbar.setVisibility(View.INVISIBLE);
         String title = Menemen.fromHtmlCompat(m.oku(CALAN));
         NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
         if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             setNPimage(NPart);
-
+        if(isPlaying) {
+            if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) m.runEnterAnimation(nowplayingbox, 200);
+            m.runEnterAnimation(NPtrack,400);
+            m.runEnterAnimation(NPcard,400);
+            m.runEnterAnimation(NPdj,600);
+            m.runEnterAnimation(NPspotify,700);
+            m.runEnterAnimation(NPyoutube,800);
+            m.runEnterAnimation(NPlyric,900);
+            frameAnimation.start();
+        }
+        else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+            m.runExitAnimation(nowplayingbox, 500);
     }
 
     private void setNPimage(final ImageView ımageView) {
@@ -327,6 +326,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
                     return;
                 }
+                progressbar.setVisibility(View.VISIBLE);
                 //Podcast çalmıyor
                 m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
                 Intent  radyoservis = new Intent(context, MUSIC_PLAY_SERVICE.class);

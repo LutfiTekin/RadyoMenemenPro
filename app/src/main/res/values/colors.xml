@@ -16,6 +16,7 @@
     <color name="textColorHint">#bdbdbd</color>
     <color name="cardviewBG">#616161</color>
     <color name="select">#fff</color>
+    <color name="BufferingPBcolor">#FFC400</color>
     <!--navbar items-->
     <color name="itemText">@color/textColorPrimary</color>
     <color name="itemBackground">@color/cardviewBG</color>
