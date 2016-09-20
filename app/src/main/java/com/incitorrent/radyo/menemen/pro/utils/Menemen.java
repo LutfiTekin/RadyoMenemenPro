@@ -390,7 +390,6 @@ public class Menemen {
         if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             return bitmap;
         try {
-            final float scale = context.getResources().getDisplayMetrics().density;
             int dim = RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM;
             int fallback = R.mipmap.album_placeholder;
             if(locksreen) {
