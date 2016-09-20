@@ -15,10 +15,12 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -368,12 +370,21 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     .putExtra("duration", (long) mediaPlayer.getDuration())
                     .putExtra("current", (long) mediaPlayer.getCurrentPosition());
         }
+        Bitmap artwork = m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false);
+        int notificationcolor = ContextCompat.getColor(MUSIC_PLAY_SERVICE.this,R.color.colorBackgroundsofter);
+        try {
+            Palette palette = Palette.from(artwork).generate();
+            notificationcolor = palette.getVibrantColor(notificationcolor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         notification = new NotificationCompat.Builder(this);
         notification
         .setContentTitle(contentTitle)
         .setContentText(Menemen.fromHtmlCompat(calan))
+        .setColor(notificationcolor)
         .setSmallIcon((isPodcast) ? R.drawable.podcast : R.mipmap.ic_equalizer)
-        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false))
+        .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : artwork)
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), intent, PendingIntent.FLAG_UPDATE_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
         Intent playpause = new Intent(this,NotificationControls.class);
