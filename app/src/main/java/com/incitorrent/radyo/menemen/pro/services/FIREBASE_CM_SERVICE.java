@@ -357,6 +357,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             while(!cursor.isAfterLast()){
                 String user,post;
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
+                if(user.equals(m.getUsername()))
+                    user = getString(R.string.me);
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                 inbox.addLine(String.format("%s: %s", user, m.getSpannedTextWithSmileys(post)));
                 cursor.moveToNext();
