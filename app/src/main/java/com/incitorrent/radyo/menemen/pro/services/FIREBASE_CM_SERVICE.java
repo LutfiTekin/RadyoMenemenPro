@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -347,6 +348,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
+        builder.setLights(Color.RED, 1000, 500);
         builder.setAutoCancel(true);
         Notification notification = builder.build();
        notificationManager.notify(new Random().nextInt(200), notification);
