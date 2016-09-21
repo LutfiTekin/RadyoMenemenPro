@@ -26,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
@@ -37,6 +38,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -207,11 +210,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNPimage(final ImageView ımageView) {
+        final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         new AsyncTask<Void,Void,Integer[]>() {
             Bitmap resim = null;
             final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
             final int colorbgsofter = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
             final int textcolor = ContextCompat.getColor(context,R.color.textColorPrimary);
+            final int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
+            final int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
             @Override
             protected Integer[] doInBackground(Void... voids) {
                 try {
@@ -226,7 +232,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     int color_2 = palette.getLightVibrantColor(accentcolor);
                     int color_3 = palette.getDarkMutedColor(colorbgsofter);
                     int color_4 = palette.getLightVibrantColor(textcolor);
-                    return new Integer[]{color_1,color_2,color_3,color_4};
+                    int color_5 = palette.getMutedColor(backgroundcolor);
+                    int color_6 = palette.getDarkVibrantColor(statusbarcolor);
+                    if(color_5 == backgroundcolor && color_6 == statusbarcolor){
+                        color_5 = palette.getVibrantColor(backgroundcolor);
+                        color_6 = palette.getDarkVibrantColor(statusbarcolor);
+                    }
+                    return new Integer[]{color_1,color_2,color_3,color_4,color_5,color_6};
                 } catch (InterruptedException | ExecutionException | NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -240,6 +252,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     nowplayingbox.setBackgroundColor(color[2]);
                     NPtrack.setTextColor(color[3]);
                     NPdj.setTextColor(color[3]);
+                    if(toolbar!=null)
+                        toolbar.setBackgroundColor(color[4]);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
+                        Window window = getActivity().getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(color[5]);
+                    }
                 }
                 if(resim != null && ımageView != null)
                     ımageView.setImageBitmap(resim);
@@ -263,7 +282,17 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     @Override
     public void onStop() {
-        if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(NPreceiver);
+        if(getActivity()!=null) {
+            LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(NPreceiver);
+            //Renkleri eski haline getir
+            final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
+                Window window = getActivity().getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark));
+            }
+        }
         super.onStop();
     }
 

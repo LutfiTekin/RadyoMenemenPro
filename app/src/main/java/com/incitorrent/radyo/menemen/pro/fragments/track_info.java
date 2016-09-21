@@ -42,7 +42,9 @@ public class track_info extends Fragment implements View.OnClickListener{
     private TextView track,tv_spotify,tv_youtube,tv_lyric;
     private CardView card_spotify,card_youtube,card_lyric;
     Menemen m;
-
+    String arturl;
+    FrameLayout frame;
+    Toolbar toolbar;
     public track_info() {
         // Required empty public constructor
     }
@@ -74,6 +76,8 @@ public class track_info extends Fragment implements View.OnClickListener{
         card_spotify = (CardView) trackview.findViewById(R.id.spotify_card);
         card_youtube = (CardView) trackview.findViewById(R.id.youtube_card);
         card_lyric = (CardView) trackview.findViewById(R.id.lyric_card);
+        frame = (FrameLayout) trackview.findViewById(R.id.rel_track_info);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if(getActivity() != null){
             m = new Menemen(getActivity().getApplicationContext());
             m.runEnterAnimation(card_spotify,200);
@@ -84,65 +88,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         if (bundle != null) {
             String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
             track.setText(Menemen.fromHtmlCompat(trackName));
-            final String arturl = bundle.getString("arturl", null);
-            if(arturl != null && getActivity() != null) {
-                //Arkaplan rengini artworkten al
-                final FrameLayout frame = (FrameLayout) trackview.findViewById(R.id.rel_track_info);
-                final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-                new AsyncTask<Void,Void,Integer[]>() {
-                    Bitmap resim = null;
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                    }
-                    @Override
-                    protected Integer[] doInBackground(Void... voids) {
-                        try {
-                            resim = Glide.with(getActivity())
-                                    .load(arturl)
-                                    .asBitmap()
-                                    .error(R.mipmap.album_placeholder)
-                                    .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
-                                    .get();
-                            Palette palette = Palette.from(resim).generate();
-                            int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
-                            int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
-                            int accentcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorAccent);
-//                            return palette.getMutedColor(backgroundcolor);
-                            int color_1 = palette.getMutedColor(backgroundcolor);
-                            int color_2 = palette.getDarkMutedColor(statusbarcolor);
-                            int color_3 = palette.getLightVibrantColor(accentcolor);
-                            if(color_1 == backgroundcolor && color_2 == statusbarcolor){
-                                //Muted renk bulunamadı vibrant renk ata
-                                color_1 = palette.getVibrantColor(backgroundcolor);
-                                color_2 = palette.getDarkVibrantColor(statusbarcolor);
-                            }
-                            return new Integer[]{color_1,color_2,color_3};
-                        } catch (InterruptedException | ExecutionException | NullPointerException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                    @Override
-                    protected void onPostExecute(Integer[] color) {
-                        if(color != null) {
-                            frame.setBackgroundColor(color[0]);
-                            toolbar.setBackgroundColor(color[0]);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
-                                Window window = getActivity().getWindow();
-                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                window.setStatusBarColor(color[1]);
-                            }
-                            card_spotify.setCardBackgroundColor(color[2]);
-                            card_youtube.setCardBackgroundColor(color[2]);
-                            card_lyric.setCardBackgroundColor(color[2]);
-                        }
-                        if(resim != null)art.setImageBitmap(resim);
-                        super.onPostExecute(color);
-                    }
-                }.execute();
-            }
-
+            arturl = bundle.getString("arturl", null);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSharedElementEnterTransition(new AutoTransition());
@@ -190,7 +136,61 @@ public class track_info extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
+        loadArtwork();
         super.onResume();
+    }
+
+    private void loadArtwork() {
+        if(arturl != null && getActivity() != null) {
+            //Arkaplan rengini artworkten al
+            new AsyncTask<Void,Void,Integer[]>() {
+                Bitmap resim = null;
+                @Override
+                protected Integer[] doInBackground(Void... voids) {
+                    try {
+                        resim = Glide.with(getActivity())
+                                .load(arturl)
+                                .asBitmap()
+                                .error(R.mipmap.album_placeholder)
+                                .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                                .get();
+                        Palette palette = Palette.from(resim).generate();
+                        int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
+                        int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
+                        int accentcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorAccent);
+                        int color_1 = palette.getMutedColor(backgroundcolor);
+                        int color_2 = palette.getDarkMutedColor(statusbarcolor);
+                        int color_3 = palette.getLightVibrantColor(accentcolor);
+                        if(color_1 == backgroundcolor && color_2 == statusbarcolor){
+                            //Muted renk bulunamadı vibrant renk ata
+                            color_1 = palette.getVibrantColor(backgroundcolor);
+                            color_2 = palette.getDarkVibrantColor(statusbarcolor);
+                        }
+                        return new Integer[]{color_1,color_2,color_3};
+                    } catch (InterruptedException | ExecutionException | NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+                @Override
+                protected void onPostExecute(Integer[] color) {
+                    if(color != null) {
+                        frame.setBackgroundColor(color[0]);
+                        toolbar.setBackgroundColor(color[0]);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
+                            Window window = getActivity().getWindow();
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(color[1]);
+                        }
+                        card_spotify.setCardBackgroundColor(color[2]);
+                        card_youtube.setCardBackgroundColor(color[2]);
+                        card_lyric.setCardBackgroundColor(color[2]);
+                    }
+                    if(resim != null)art.setImageBitmap(resim);
+                    super.onPostExecute(color);
+                }
+            }.execute();
+        }
     }
 
     @Override
@@ -198,7 +198,7 @@ public class track_info extends Fragment implements View.OnClickListener{
         super.onStop();
         if(getActivity()!=null) {
             //Renkleri eski haline getir
-            Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
             toolbar.setBackgroundColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimary));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
                 Window window = getActivity().getWindow();
