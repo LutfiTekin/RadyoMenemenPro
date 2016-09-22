@@ -244,40 +244,46 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
               else {
                   if (intent.getAction().equals(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER)) {
-                  String action = bundle.getString("action");
-                  if (action == null) return;
-                  String id = bundle.getString("msgid");
-                  if (action.equals(FIREBASE_CM_SERVICE.ADD)) {
-                      String nick = bundle.getString("nick");
-                      String mesaj = bundle.getString("msg");
-                      if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
-                          return;
-                      if(sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
-                          sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, null));
-                      else {
-                          //Fallback and search for it
-                          for (int i = 0; i < sohbetList.size(); i++) {
-                              if (sohbetList.get(i).mesaj.equals(mesaj) || (sohbetList.get(i).zaman != null && sohbetList.get(i).zaman.equals(Menemen.PENDING))) {
-                                  sohbetList.remove(i);
-                                  sohbetRV.getAdapter().notifyItemRemoved(i);
+                      try {
+                          String action = bundle.getString("action");
+                          if (action == null) return;
+                          String id = bundle.getString("msgid");
+                          if (action.equals(FIREBASE_CM_SERVICE.ADD)) {
+                              String nick = bundle.getString("nick");
+                              String mesaj = bundle.getString("msg");
+                              if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
+                                  return;
+                              if(sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
+                                  sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, null));
+                              else {
+                                  //Fallback and search for it
+                                  for (int i = 0; i < sohbetList.size(); i++) {
+                                      if (sohbetList.get(i).mesaj.equals(mesaj) || (sohbetList.get(i).zaman != null && sohbetList.get(i).zaman.equals(Menemen.PENDING))) {
+                                          sohbetList.remove(i);
+                                          sohbetRV.getAdapter().notifyItemRemoved(i);
+                                      }
+                                  }
+                                  sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                              }
+                              sohbetRV.getAdapter().notifyDataSetChanged();
+                              playChatSound();
+                              m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
+                          } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
+                              sql.deleteMSG(id);
+                              for (int i = 0; i < sohbetList.size(); i++) {
+                                  if (sohbetList.get(i).id.equals(id)) {
+                                      Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
+                                      sohbetList.remove(i);
+                                      sohbetRV.getAdapter().notifyItemRemoved(i);
+                                  }
                               }
                           }
-                          sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                      } catch (Exception e) {
+                          if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_full_error",false))
+                              Toast.makeText(context, e.getMessage() , Toast.LENGTH_SHORT).show();
+                          e.printStackTrace();
                       }
-                      sohbetRV.getAdapter().notifyDataSetChanged();
-                      playChatSound();
-                      m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
-                  } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
-                      sql.deleteMSG(id);
-                      for (int i = 0; i < sohbetList.size(); i++) {
-                          if (sohbetList.get(i).id.equals(id)) {
-                              Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
-                              sohbetList.remove(i);
-                              sohbetRV.getAdapter().notifyItemRemoved(i);
-                          }
-                      }
-                  }
-              }else {
+                  }else {
                       if (intent.getAction().equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)) {
                           int count = intent.getExtras().getInt("count", 0);
                           if (count > 0 && toolbar != null) {
