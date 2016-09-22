@@ -2,9 +2,9 @@
     <style name="splashScreenTheme" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_fit</item>
     </style>
-    <!-- TODO landscape versionu resimi değiştir-->
+    <!-- TODO xlarge landscape versionu resimi değiştir-->
 
     <style name="NowPlayingTextAppereance">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">26sp</item>
     </style>
 </resources>

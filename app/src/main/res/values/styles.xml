@@ -55,4 +55,7 @@
         <item name="android:textColor">@android:color/transparent</item>
         <item name="android:textSize">0.1sp</item>
     </style>
+    <style name="NowPlayingTextAppereance">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

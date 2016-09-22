@@ -21,6 +21,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -35,17 +36,22 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
@@ -75,7 +81,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     RadioAdapter adapter;
     List<history_objs> RList;
     CardView emptyview;
-    TextView NPtrack;
+    TextSwitcher NPtrack;
     TextView NPdj;
     ImageView NPart,NPequ;
     View hview;
@@ -86,6 +92,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     BroadcastReceiver NPreceiver;
     FloatingActionButton fab;
     ProgressBar progressbar;
+
 
     public radio() {
         // Required empty public constructor
@@ -120,7 +127,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         itemTouchHelper.attachToRecyclerView(lastplayed); //Swipe to remove itemtouchhelper
         nowplayingbox = (LinearLayout) radioview.findViewById(R.id.nowplaying_box);
         nowplayingbox.setVisibility(View.GONE); //initialy hidden
-        NPtrack = (TextView) radioview.findViewById(R.id.nowplaying_track);
+        NPtrack = (TextSwitcher) radioview.findViewById(R.id.nowplaying_track);
+        NPtrack.setFactory(mFactory);
+        NPtrack.setText(getString(R.string.ph_np_track));
+        Animation in = AnimationUtils.loadAnimation(context,android.R.anim.fade_in);
+        Animation out = AnimationUtils.loadAnimation(context,android.R.anim.fade_out);
+        NPtrack.setInAnimation(in);
+        NPtrack.setOutAnimation(out);
         NPdj = (TextView) radioview.findViewById(R.id.nowplaying_dj);
         NPart = (ImageView) radioview.findViewById(R.id.nowplaying_art);
         NPequ = (ImageView) radioview.findViewById(R.id.nowplaying_equ);
@@ -202,14 +215,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     private void setNP() {
         progressbar.setVisibility(View.INVISIBLE);
-        String title = Menemen.fromHtmlCompat(m.oku(CALAN));
-        NPtrack.setText(title);
         NPdj.setText(m.oku(DJ));
         if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             setNPimage(NPart);
+        else
+            NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
     }
 
-    private void setNPimage(final ImageView ımageView) {
+    private void setNPimage(final ImageView imageView) {
         final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         new AsyncTask<Void,Void,Integer[]>() {
             Bitmap resim = null;
@@ -250,8 +263,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
                     fab.setRippleColor(color[1]);
                     nowplayingbox.setBackgroundColor(color[2]);
-                    NPtrack.setTextColor(color[3]);
                     NPdj.setTextColor(color[3]);
+                    ((TextView)NPtrack.getNextView()).setTextColor(color[3]);
                     if(toolbar!=null)
                         toolbar.setBackgroundColor(color[4]);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
@@ -260,8 +273,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         window.setStatusBarColor(color[5]);
                     }
                 }
-                if(resim != null && ımageView != null)
-                    ımageView.setImageBitmap(resim);
+
+                NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
+
+                if(imageView != null) {
+                    if (resim != null)
+                        imageView.setImageBitmap(resim);
+                    else imageView.setImageResource(R.mipmap.album_placeholder);
+                }
                 super.onPostExecute(color);
             }
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
@@ -340,7 +359,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     @Override
     public void onClick(View v) {
-        final String track = NPtrack.getText().toString();
+        final String track = Menemen.fromHtmlCompat(m.oku(CALAN));
         try {
             if(v == NPyoutube) {
                 Intent intent = new Intent(Intent.ACTION_SEARCH);
@@ -363,7 +382,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }else if(v == NPart || v == NPtrack){
                 String title = m.oku(CALAN);
                 String arturl = m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL);
-                openTrackInfo(Menemen.fromHtmlCompat(title),arturl,NPart,NPtrack);
+                openTrackInfo(Menemen.fromHtmlCompat(title),arturl,NPart);
             }else if(v == fab){
                 if(!m.isInternetAvailable()){
                     Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
@@ -430,7 +449,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             public void onClick(View view) {
                 final String trackName = RList.get(getAdapterPosition()).song;
                 final String artUrl = RList.get(getAdapterPosition()).arturl;
-               openTrackInfo(trackName,artUrl,art,song);
+               openTrackInfo(trackName,artUrl,art);
             }
 
         }
@@ -473,7 +492,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     }
 
-    private void openTrackInfo(String trackName, String artUrl, ImageView art, TextView song) {
+    private void openTrackInfo(String trackName, String artUrl, ImageView art) {
         Fragment track_info = new track_info();
         Bundle bundle = new Bundle();
         bundle.putString("trackname", trackName);
@@ -489,7 +508,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             getFragmentManager()
                     .beginTransaction()
                     .addSharedElement(art, art.getTransitionName())
-                    .addSharedElement(song, song.getTransitionName())
                     .replace(R.id.Fcontent, track_info)
                     .addToBackStack(null)
                     .commit();
@@ -561,4 +579,22 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     };
 
     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+
+    /**
+     * The {@link android.widget.ViewSwitcher.ViewFactory} used to create {@link android.widget.TextView}s that the
+     * {@link android.widget.TextSwitcher} will switch between.
+     */
+    private ViewSwitcher.ViewFactory mFactory = new ViewSwitcher.ViewFactory() {
+        @Override
+        public View makeView() {
+            // Create a new TextView
+            TextView t = new TextView(getActivity());
+            t.setMaxLines(2);
+            t.setMinLines(2);
+            t.setGravity(Gravity.CENTER_HORIZONTAL);
+            TextViewCompat.setTextAppearance(t,R.style.NowPlayingTextAppereance);
+            return t;
+        }
+    };
+
 }
