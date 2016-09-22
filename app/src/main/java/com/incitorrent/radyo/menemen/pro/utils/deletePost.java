@@ -21,8 +21,7 @@ import java.util.Map;
 public class deletePost extends AsyncTask<Void,Void,Void> {
     private static final String TAG = "deletePost";
     private Context context;
-    private Menemen m;
-    String postid;
+    private String postid;
 
 
     public deletePost(Context context, String postid) {
@@ -32,18 +31,17 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        m = new Menemen(context);
+        Menemen m = new Menemen(context);
         if(!m.isInternetAvailable()) return null;
         if(!m.isLoggedIn()) return null;
         Map<String,String> dataToSend = new HashMap<>();
         dataToSend.put("nick", m.getUsername());
         dataToSend.put("mkey", m.getMobilKey());
         dataToSend.put("post", postid);
-        String encodedStr = Menemen.getEncodedData(dataToSend);
-
         BufferedReader reader = null;
 
         try {
+            String encodedStr = Menemen.getEncodedData(dataToSend);
             //Converting address String to URL
             URL url = new URL(RadyoMenemenPro.MESAJ_SIL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
