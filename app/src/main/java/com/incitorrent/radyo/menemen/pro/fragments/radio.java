@@ -585,6 +585,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
      * {@link android.widget.TextSwitcher} will switch between.
      */
     private ViewSwitcher.ViewFactory mFactory = new ViewSwitcher.ViewFactory() {
+
         @Override
         public View makeView() {
             // Create a new TextView
