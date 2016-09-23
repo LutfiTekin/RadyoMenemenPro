@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -17,7 +16,6 @@ import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -34,13 +32,9 @@ public class MUSIC_INFO_SERVICE extends Service {
     public static final  String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
     public static final  String SERVICE_FILTER = "com.incitorrent.radyo.menemen.PLAYERSERVICE";
     public static final String LAST_ARTWORK_URL = "lastartwork";
-    public static final String LAST_MSG = "&print_last_msg";
-    public static final String LAST_USER = "&print_last_user";
-    public static final int CHAT_NOTIFICATON = 8888;
     final Context context = this;
     Menemen inf;
     radioDB sql;
-    NotificationCompat.Builder notification;
     Intent notification_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcaster;
@@ -95,7 +89,6 @@ public class MUSIC_INFO_SERVICE extends Service {
             try {
                 if (inf.isPlaying()) {
                     //Şarkı bilgisi kontrolü
-
                         String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
                         Log.v(TAG, line);
                         JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
@@ -132,7 +125,6 @@ public class MUSIC_INFO_SERVICE extends Service {
         protected Boolean doInBackground(String... params) {
             Log.v(TAG, "UpdateNOW");
             if (!inf.isInternetAvailable()) return null;
-            BufferedReader reader = null;
 
             try {
                 //Şarkı bilgisi kontrolü

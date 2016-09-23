@@ -122,7 +122,7 @@ public class galeri extends Fragment {
         String lastid;
         int listSize;
 
-        public loadMore(String lastid, int listSize) {
+        loadMore(String lastid, int listSize) {
             this.lastid = lastid;
             this.listSize = listSize;
         }
@@ -170,7 +170,7 @@ public class galeri extends Fragment {
         List<galeri_objects> Glist;
 
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             ImageView image;
             TextView uploader,comments;
 
@@ -240,7 +240,7 @@ public class galeri extends Fragment {
     class galeri_objects{
         String uploader,capsurl,msgid;
 
-        public galeri_objects(String uploader, String capsurl, String msgid) {
+        galeri_objects(String uploader, String capsurl, String msgid) {
             this.uploader = uploader;
             this.capsurl = capsurl;
             this.msgid = msgid;

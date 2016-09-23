@@ -25,7 +25,7 @@ import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
  * A simple {@link Fragment} subclass.
  */
 public class online extends Fragment {
-    private static final String TAG = "Online";
+//    private static final String TAG = "Online";
     trackonlineusersDB sql;
     Context context;
     BroadcastReceiver receiver;

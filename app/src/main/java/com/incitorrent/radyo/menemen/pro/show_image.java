@@ -72,14 +72,6 @@ public class show_image extends AppCompatActivity {
                     startActivity(showimagecomment, options.toBundle());
                 }else
                 startActivity(showimagecomment);
-//             final Snackbar snackbar =  Snackbar.make(c_fab, R.string.snackbar_feature_under_development, Snackbar.LENGTH_INDEFINITE);
-//                snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        snackbar.dismiss();
-//                    }
-//                });
-//                snackbar.show();
             }
         });
     }

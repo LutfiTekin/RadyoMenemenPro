@@ -126,7 +126,7 @@ public class podcast extends Fragment {
     public class LoadXML extends AsyncTask<Void, Void, Boolean> {
     String podcast,podcastlink;
 
-        public LoadXML(String podcast, String podcastlink) {
+        LoadXML(String podcast, String podcastlink) {
             this.podcast = podcast;
             this.podcastlink = podcastlink;
         }
@@ -201,7 +201,7 @@ public class podcast extends Fragment {
     public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PersonViewHolder> {
         Context context;
         List<podcast_objs> RList;
-        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
+        class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
             TextView title, duration, descr;
             CardView cv;
             RelativeLayout rel;
@@ -335,7 +335,7 @@ public class podcast extends Fragment {
 
     public class podcast_objs {
         String title,description,duration,url;
-        public podcast_objs(String title, String description, String duration, String url) {
+        podcast_objs(String title, String description, String duration, String url) {
             this.title = title;
             this.description = description;
             this.duration = duration;
@@ -344,7 +344,7 @@ public class podcast extends Fragment {
     }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public class DetailsTransition extends TransitionSet {
-        public DetailsTransition() {
+        DetailsTransition() {
             setOrdering(ORDERING_TOGETHER);
             addTransition(new ChangeBounds()).
                     addTransition(new ChangeTransform());

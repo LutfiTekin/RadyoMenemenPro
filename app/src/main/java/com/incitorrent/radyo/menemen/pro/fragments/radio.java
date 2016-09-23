@@ -70,9 +70,7 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 
 
 public class radio extends Fragment implements View.OnClickListener,View.OnLongClickListener{
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     Context context;
     Menemen m;
     private RecyclerView lastplayed;
@@ -84,7 +82,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     TextSwitcher NPtrack;
     TextView NPdj;
     ImageView NPart,NPequ;
-    View hview;
     CardView NPcard;
     ImageButton NPspotify,NPyoutube,NPlyric;
     LinearLayout nowplayingbox;
@@ -426,7 +423,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         List<history_objs> RList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView song;
             ImageView art;
             CardView card;
@@ -521,7 +518,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public class DetailsTransition extends TransitionSet {
-        public DetailsTransition() {
+        DetailsTransition() {
             setOrdering(ORDERING_TOGETHER);
             addTransition(new ChangeBounds()).
                     addTransition(new ChangeTransform()).
@@ -531,7 +528,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     public class history_objs{
         String song,songhash,url,arturl;
 
-        public history_objs(String song, String songhash, String url, String arturl) {
+        history_objs(String song, String songhash, String url, String arturl) {
             this.song = song;
             this.songhash = songhash;
             this.url = url;

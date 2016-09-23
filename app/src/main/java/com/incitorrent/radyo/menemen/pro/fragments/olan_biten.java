@@ -31,7 +31,7 @@ import java.util.List;
 
 public class olan_biten extends Fragment {
 
-    private static final String TAG = "OLANBITEN";
+//    private static final String TAG = "OLANBITEN";
     Context context;
     RecyclerView recyclerView;
     TextView title,content,time,author;
@@ -128,7 +128,7 @@ public class olan_biten extends Fragment {
         List<ob_objs> OBList;
 
 
-        public class PersonViewHolder extends RecyclerView.ViewHolder {
+        class PersonViewHolder extends RecyclerView.ViewHolder {
             TextView title,content,author,time;
             CardView obcard;
             PersonViewHolder(View itemView) {
@@ -183,7 +183,7 @@ public class olan_biten extends Fragment {
     public class ob_objs {
         String title,content,author,time;
 
-        public ob_objs(String title, String content, String author, String time) {
+        ob_objs(String title, String content, String author, String time) {
             this.title = title;
             this.content = content;
             this.author = author;

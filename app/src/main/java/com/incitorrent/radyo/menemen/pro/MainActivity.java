@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -327,7 +328,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if(id== R.id.nav_login){

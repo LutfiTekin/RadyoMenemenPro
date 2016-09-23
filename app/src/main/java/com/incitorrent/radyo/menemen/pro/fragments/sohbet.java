@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
@@ -480,11 +481,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void takePhoto() {
-//        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            requestPermissions(new String[]{Manifest.permission.CAMERA},
-//                    CAM_PERMISSION_REQUEST_ID);
-//            return;
-//        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Uri uri = tempUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -519,7 +515,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(getActivity(), R.string.toast_permission_read_storage_granted, Toast.LENGTH_SHORT)
@@ -552,13 +548,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             protected Boolean doInBackground(Void... params) {
                 if(mesaj.toLowerCase().equals("çatçut")) return true;
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.getUsername());
-                dataToSend.put("mkey", m.getMobilKey());
-                dataToSend.put("mesaj", mesaj);
-                String encodedStr = getEncodedData(dataToSend);
-                BufferedReader reader = null;
+
                 try {
+                    Map<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("nick", m.getUsername());
+                    dataToSend.put("mkey", m.getMobilKey());
+                    dataToSend.put("mesaj", mesaj);
+                    String encodedStr = getEncodedData(dataToSend);
                     HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.MESAJ_GONDER).openConnection();
                     connection.setRequestMethod("POST");
                     connection.setDoOutput(true);
@@ -566,11 +562,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     writer.write(encodedStr);
                     writer.flush();
                     StringBuilder sb = new StringBuilder();
-                    reader = new BufferedReader(new InputStreamReader(
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(
                             connection.getInputStream(), "iso-8859-9"), 8);
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
+                        sb.append(line).append("\n");
                     }
                     line = sb.toString();
                     Log.v(TAG,"POST "+ line);
@@ -613,7 +609,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     /**
      * Creates a uri before picking image from camera
-     * @return temproray image uri
+     * @return temporary image uri
      */
     private Uri tempUri(){
         ContentResolver cr = getActivity().getContentResolver();
@@ -624,7 +620,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     //SOHBET adaptör ve sınıfı
     public class Sohbet_Objects {
         String id,nick,mesaj,zaman;
-        public Sohbet_Objects(String id, String nick, String mesaj, String zaman) {
+        Sohbet_Objects(String id, String nick, String mesaj, String zaman) {
             this.id = id;
             this.nick = nick;
             this.mesaj = mesaj;
@@ -635,7 +631,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Context context;
         List<Sohbet_Objects> sohbetList;
 
-        public class chatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class chatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView nick,mesaj,zaman;
             CardView card;
             ImageView caps;
@@ -773,7 +769,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 //Smiley yardımcı sınıfı & adaptörü
     public class Satbax_Smiley_Objects {
         String smile,smileid;
-        public Satbax_Smiley_Objects(String smile, String smileid) {
+        Satbax_Smiley_Objects(String smile, String smileid) {
             this.smile = smile;
             this.smileid = smileid;
         }
@@ -781,7 +777,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public class SatbaxSmileAdapter extends RecyclerView.Adapter<SatbaxSmileAdapter.PersonViewHolder> {
         Context context;
         List<Satbax_Smiley_Objects> satbaxSmileList;
-        public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             ImageView smiley;
             PersonViewHolder(View itemView) {
                 super(itemView);
@@ -862,7 +858,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         int limit;
         int scroll;
 
-        public initsohbet(int limit, int scroll) {
+        initsohbet(int limit, int scroll) {
             this.limit = limit;
             this.scroll = scroll;
         }
@@ -913,7 +909,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         String lastid;
         int listSize;
 
-        public loadMore(String lastid, int listSize) {
+        loadMore(String lastid, int listSize) {
             this.lastid = lastid;
             this.listSize = listSize;
         }
