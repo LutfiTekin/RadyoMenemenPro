@@ -1,14 +1,20 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.transition.Explode;
 import android.util.Log;
 import android.util.Pair;
@@ -16,13 +22,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 
@@ -36,6 +45,8 @@ public class show_image extends AppCompatActivity {
     private String imageurl;
     private ProgressBar progressBar;
     Menemen m;
+    Context context;
+    FloatingActionButton c_fab;
     final String root = Environment.getExternalStorageDirectory().toString();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +55,9 @@ public class show_image extends AppCompatActivity {
             getWindow().setExitTransition(new Explode());
         }
         super.onCreate(savedInstanceState);
+        context = show_image.this;
         setContentView(R.layout.activity_show_image);
-        m = new Menemen(this);
+        m = new Menemen(context);
         progressBar = (ProgressBar) findViewById(R.id.loading);
         image = (TouchImageView) findViewById(R.id.show_image);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -54,7 +66,8 @@ public class show_image extends AppCompatActivity {
         final Intent mintent = getIntent();
         final Uri imageUri = mintent.getData();
         imageurl = imageUri.toString().trim();
-        final FloatingActionButton c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
+
+        c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
         if (c_fab != null) c_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +87,24 @@ public class show_image extends AppCompatActivity {
                 startActivity(showimagecomment);
             }
         });
+        try {
+            Glide.with(show_image.this)
+                    .load(Menemen.getThumbnail(imageurl))
+                    .into(new SimpleTarget<GlideDrawable>() {
+                        @Override
+                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                            image.setImageDrawable(resource);
+                            try {
+                                new SetColors().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -89,15 +120,18 @@ public class show_image extends AppCompatActivity {
                    super.onRestoreInstanceState(savedInstanceState);
                }
 
+
     @Override
     protected void onStart() {
         try {
             Glide.with(show_image.this)
-                    .load(Menemen.getThumbnail(imageurl))
+                    .load(imageurl)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(new SimpleTarget<GlideDrawable>() {
                         @Override
                         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                             image.setImageDrawable(resource);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
         } catch (Exception e) {
@@ -106,30 +140,13 @@ public class show_image extends AppCompatActivity {
         super.onStart();
     }
 
+
+
     @Override
-               protected void onResume() {
-                   super.onResume();
-                   try {
-                       Glide.with(show_image.this)
-                               .load(imageurl)
-                               .into(new SimpleTarget<GlideDrawable>() {
-                                   @Override
-                                   public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                       image.setImageDrawable(resource);
-                                       progressBar.setVisibility(View.GONE);
-                                   }
-                               });
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               }
-
-
-               @Override
-               public boolean onCreateOptionsMenu(Menu menu) {
-                   getMenuInflater().inflate(R.menu.image_menu, menu);
-                   return true;
-               }
+     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.image_menu, menu);
+        return true;
+    }
 
                @Override
                public boolean onOptionsItemSelected(MenuItem item) {
@@ -185,5 +202,48 @@ public class show_image extends AppCompatActivity {
                        Toast.makeText(show_image.this, R.string.toast_image_saved, Toast.LENGTH_SHORT).show();
                    return compressed + "/" + fname;
                }
+
+    class SetColors extends AsyncTask<Void,Void,Integer[]>{
+
+        final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
+        final int backgroundcolor = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
+        final int statusbarcolor = ContextCompat.getColor(context,R.color.colorPrimaryDark);
+        final int primary = ContextCompat.getColor(context,R.color.colorPrimary);
+
+
+        @Override
+        protected Integer[] doInBackground(Void... voids) {
+            try {
+                Bitmap bitmap = Glide.with(show_image.this).load(Menemen.getThumbnail(imageurl)).asBitmap().into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
+                Palette palette = Palette.from(bitmap).generate();
+                int accent = palette.getVibrantColor(accentcolor);
+                int background = palette.getDominantColor(backgroundcolor);
+                int bar = palette.getDarkVibrantColor(statusbarcolor);
+                int actionbar = palette.getVibrantColor(primary);
+                return new Integer[]{accent,background,bar,actionbar};
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Integer[] colors) {
+            if(colors!=null){
+                  c_fab.setBackgroundTintList(ColorStateList.valueOf(colors[0]));
+                if(progressBar!=null)
+                    progressBar.getIndeterminateDrawable().setColorFilter(colors[0], android.graphics.PorterDuff.Mode.MULTIPLY);
+                image.setBackgroundColor(colors[1]);
+                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(colors[2]);
+                  }
+                  if(getSupportActionBar()!=null)
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colors[3]));
+            }
+
+            super.onPostExecute(colors);
+        }
+    }
            }
 
