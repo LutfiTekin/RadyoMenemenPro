@@ -197,9 +197,13 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String msgid = getDATA(remoteMessage,"msgid");
         if(action.equals(DELETE)){
             sql.deleteMSG(msgid);
-            chat.putExtra("action",DELETE);
-            chat.putExtra("msgid",msgid);
-            broadcastManager.sendBroadcast(chat);
+            if(is_chat_foreground) {
+                chat.putExtra("action", DELETE);
+                chat.putExtra("msgid", msgid);
+                broadcastManager.sendBroadcast(chat);
+            }else
+            notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
+
             return;
         }
         //CHAT mesajı geldi
@@ -207,12 +211,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String nick = getDATA(remoteMessage,"nick");
         String msg = getDATA(remoteMessage,"msg");
         String time = getDATA(remoteMessage, "time");
-        chat.putExtra("nick",nick);
-        chat.putExtra("msg",msg);
-        chat.putExtra("msgid",msgid);
-        chat.putExtra("time",time);
-        chat.putExtra("action",ADD);
-        broadcastManager.sendBroadcast(chat);
+        if(is_chat_foreground) {
+            //Update ui only if chat is foreground
+            chat.putExtra("nick", nick);
+            chat.putExtra("msg", msg);
+            chat.putExtra("msgid", msgid);
+            chat.putExtra("time", time);
+            chat.putExtra("action", ADD);
+            broadcastManager.sendBroadcast(chat);
+        }
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
         onlineUser(nick);
