@@ -236,22 +236,26 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String time = getDATA(remoteMessage, "time");
         String caps_url = getDATA(remoteMessage, "caps_url");
         String caps_id = getDATA(remoteMessage, "caps_id");
+        //Check if caps comments screen is in foreground
+        Boolean is_caps_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND + caps_url);
         //Create ıntent
-        Intent caps_comment = new Intent(CAPS_BROADCAST_FILTER);
-        caps_comment.putExtra("msgid",msgid)
-                .putExtra("nick", nick)
-                .putExtra("comment", comment)
-                .putExtra("time", time)
-                .putExtra("caps_url", caps_url)
-                .putExtra("action", ADD);
-        broadcastManager.sendBroadcast(caps_comment);
+        if (is_caps_foreground) {
+            //Only broadcast if caps is in foreground
+            Intent caps_comment = new Intent(CAPS_BROADCAST_FILTER);
+            caps_comment.putExtra("msgid",msgid)
+                    .putExtra("nick", nick)
+                    .putExtra("comment", comment)
+                    .putExtra("time", time)
+                    .putExtra("caps_url", caps_url)
+                    .putExtra("action", ADD);
+            broadcastManager.sendBroadcast(caps_comment);
+        }
         //Add to sql
         sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
         //Build notification
         notification_intent = new Intent(context, show_image_comments.class);
         notification_intent.setAction("radyo.menemen.caps")
                 .putExtra("url",caps_url);
-        Boolean is_caps_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND + caps_url);
         if(!nick.equals(m.getUsername()) && notify_new_comment_caps && !is_caps_foreground)
             buildNotificationforCaps(nick,comment,caps_id);
     }
