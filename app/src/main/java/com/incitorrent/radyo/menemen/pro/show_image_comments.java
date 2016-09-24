@@ -172,7 +172,7 @@ public class show_image_comments extends AppCompatActivity {
             }
         };
 
-        //TODO Load Comments
+
         new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

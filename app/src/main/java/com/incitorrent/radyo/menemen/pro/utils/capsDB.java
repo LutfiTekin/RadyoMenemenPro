@@ -62,8 +62,22 @@ public class capsDB extends SQLiteOpenHelper {
     }
     public Cursor getHistory(int limit, String capsurl){
         SQLiteDatabase db = getReadableDatabase();
-        if(limit < 20) limit = 20;
+        if(limit < 1) limit = 20;
         return db.query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" DESC", String.valueOf(limit));
+    }
+    public String getFirstComment(String capsurl){
+        String firscomment = null;
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" ASC", "1");
+            c.moveToFirst();
+            firscomment = c.getString(c.getColumnIndex(_NICK)).toUpperCase() + ": " + c.getString(c.getColumnIndex(_POST));
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return firscomment;
     }
 
     public Boolean isHistoryExist(String capsurl,String nick){
@@ -72,15 +86,16 @@ public class capsDB extends SQLiteOpenHelper {
         return rownum > 0;
     }
 
-    public Cursor getHistoryById(String msgid){
-        SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,_MSGID + ">=\'" + msgid + "\'",null,null,null,_MSGID+" DESC");
-    }
-
-    public Cursor getHistoryOnScroll(String msgid){
-        SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","20");
-    }
+    //TODO implement onScroll Load More
+//    public Cursor getHistoryById(String msgid){
+//        SQLiteDatabase db = getReadableDatabase();
+//        return db.query(TABLE_NAME,null,_MSGID + ">=\'" + msgid + "\'",null,null,null,_MSGID+" DESC");
+//    }
+//
+//    public Cursor getHistoryOnScroll(String msgid){
+//        SQLiteDatabase db = getReadableDatabase();
+//        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","20");
+//    }
 
     public void deleteMSG(String msgid){
         try {

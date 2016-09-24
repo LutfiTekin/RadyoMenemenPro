@@ -155,7 +155,6 @@ public class galeri extends Fragment {
             if(Glist == null) return;
             if(recyclerView != null && recyclerView.getAdapter() != null){
                 try {
-//                    recyclerView.getAdapter().notifyItemRangeInserted(listSize + 1,10);
                     recyclerView.getAdapter().notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -168,7 +167,7 @@ public class galeri extends Fragment {
     public class GaleriAdapter extends RecyclerView.Adapter<GaleriAdapter.ViewHolder> {
         Context context;
         List<galeri_objects> Glist;
-
+        final Boolean isLoggedIn = m.isLoggedIn();
 
         class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             ImageView image;
@@ -211,7 +210,6 @@ public class galeri extends Fragment {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-//            Log.v(TAG,"medium image " + Menemen.getThumbnail(Glist.get(i).capsurl));
            if(getActivity()!=null)
                Glide.with(getActivity())
                    .load(Menemen.getThumbnail(Glist.get(i).capsurl))
@@ -219,13 +217,19 @@ public class galeri extends Fragment {
                    .placeholder(R.drawable.default_image)
                    .centerCrop()
                    .into(viewHolder.image);
-            viewHolder.uploader.setText(Glist.get(i).uploader);
+
             final int count = capsSql.commentCount(Glist.get(i).capsurl);
-            if(count < 1 || !m.isLoggedIn())
+            if(count < 1 || !isLoggedIn) {
                 viewHolder.comments.setVisibility(View.GONE);
-            else {
+                viewHolder.uploader.setText(Glist.get(i).uploader.toUpperCase());
+            }else {
                 viewHolder.comments.setVisibility(View.VISIBLE);
                 viewHolder.comments.setText(String.valueOf(count));
+                String firstcomment = capsSql.getFirstComment(Glist.get(i).capsurl);
+                if(firstcomment != null)
+                    viewHolder.uploader.setText(firstcomment);
+                else
+                    viewHolder.uploader.setText(Glist.get(i).uploader.toUpperCase());
             }
         }
 
