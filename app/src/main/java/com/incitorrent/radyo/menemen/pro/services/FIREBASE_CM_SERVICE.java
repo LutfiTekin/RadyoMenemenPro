@@ -66,7 +66,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     final Boolean notify_new_podcast = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_podcast", true);
     final Boolean vibrate = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_on_air_vibrate", true);
     final Boolean logged = m.isLoggedIn();
-    final Boolean mutechatnotification = m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis();
+    Boolean mutechatnotification = m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
     public static final  String USERS_ONLINE_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
@@ -218,7 +218,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         onlineUser(nick);
         Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
-        buildNotification(nick,msg);
+        buildChatNotification(nick,msg);
     }
 
     private void addCapsComments(RemoteMessage remoteMessage) {
@@ -332,7 +332,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         Log.v(TAG, " Notification built");
     }
 
-    private void buildNotification(String nick, String mesaj) {
+    private void buildChatNotification(String nick, String mesaj) {
         Boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
         if(isUser)
             nick = getString(R.string.me);
@@ -386,16 +386,16 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setGroupSummary(true)
                 .setOnlyAlertOnce(true);
         if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
-        if(!mutechatnotification && !isUser && !m.isPlaying()) {
+        if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser && !m.isPlaying()) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
                 SUM_Notification.setVibrate(new long[]{500, 500, 500});
         }
+        if(!mutechatnotification)
+            m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
         Notification summary = SUM_Notification.build();
         notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
-       if(!mutechatnotification)
-           m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
     }
 
 

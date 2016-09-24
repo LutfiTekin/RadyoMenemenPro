@@ -578,7 +578,7 @@ public class Menemen {
         kaydet.edit().putLong(key,System.currentTimeMillis() + period).apply();
     }
 
-    public long getSavedTime(String key){
+    public synchronized long getSavedTime(String key){
       return context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE).getLong(key,0);
     }
 
