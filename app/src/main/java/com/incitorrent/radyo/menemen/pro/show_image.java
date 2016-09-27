@@ -1,6 +1,7 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.app.ActivityOptions;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,20 +36,30 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
+import com.incitorrent.radyo.menemen.pro.utils.capsDB;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class show_image extends AppCompatActivity {
+    private static final String TAG = "show_image";
     private TouchImageView image;
     private String imageurl;
     private ProgressBar progressBar;
     Menemen m;
     Context context;
     FloatingActionButton c_fab;
+    capsDB sql;
     final String root = Environment.getExternalStorageDirectory().toString();
+    ContentResolver contentResolver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -58,6 +70,8 @@ public class show_image extends AppCompatActivity {
         context = show_image.this;
         setContentView(R.layout.activity_show_image);
         m = new Menemen(context);
+        sql = new capsDB(context,null,null,1);
+        contentResolver = this.getContentResolver();
         progressBar = (ProgressBar) findViewById(R.id.loading);
         image = (TouchImageView) findViewById(R.id.show_image);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -140,7 +154,11 @@ public class show_image extends AppCompatActivity {
         super.onStart();
     }
 
-
+    @Override
+    protected void onResume() {
+        new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        super.onResume();
+    }
 
     @Override
      public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,15 +183,26 @@ public class show_image extends AppCompatActivity {
                }
 
                public void share() {
-                   String pic = save(false);
-                   Uri pictureUri = Uri.parse(pic);
-                   Log.v("URI", "BUILD " + pictureUri);
-                   Intent shareIntent = new Intent();
-                   shareIntent.setAction(Intent.ACTION_SEND);
-                   shareIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
-                   shareIntent.setType("image/*");
-                   shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                   startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+                   new Thread(new Runnable() {
+                       @Override
+                       public void run() {
+                           try {
+                               String msg = (sql.getFirstComment(imageurl) != null) ? sql.getFirstComment(imageurl) : imageurl;
+                               Intent intent = new Intent();
+                               intent.setAction(Intent.ACTION_SEND);
+                               Bitmap bit = Glide.with(show_image.this).load(imageurl).asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                               intent.putExtra(Intent.EXTRA_TEXT, msg);
+                               String url = MediaStore.Images.Media.insertImage(contentResolver, bit, "Radyo Menemen", msg);
+                               Log.v(TAG,url);
+                               intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(url));
+                               intent.setType("image/*");
+                               intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                               startActivity(Intent.createChooser(intent, getString(R.string.share)));
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+                       }
+                   }).start();
                }
 
                public String save(final Boolean toast) {
@@ -245,5 +274,40 @@ public class show_image extends AppCompatActivity {
             super.onPostExecute(colors);
         }
     }
-           }
 
+
+    class loadcomments extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String id,nick,post,time;
+            if(!sql.isHistoryExist(imageurl, m.getUsername())){
+                Map<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("capsurl", imageurl);
+                String encodedStr = Menemen.getEncodedData(dataToSend);
+                String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
+                Log.v(TAG, "isHistoryExist "+ line);
+                try {
+                    JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
+                    JSONObject c;
+                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                        JSONArray innerJarr = arr.getJSONArray(0);
+                        c = innerJarr.getJSONObject(i);
+                        id = c.getString("id");
+                        nick = c.getString("nick");
+                        post = c.getString("post");
+                        time = c.getString("time");
+                        //db ye ekle
+                        sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
+                        Log.v(TAG,"add to history " + id + " " + nick);
+                    }
+                }catch (JSONException e){
+                    m.resetFirstTime("loadmessages");
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+    }
+           }
