@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static String TAG = "RMPRO";
     private Menemen m;
-    Fragment fragment;
     FragmentManager fragmentManager;
     BroadcastReceiver receiver;
     NavigationView navigationView;
@@ -73,9 +72,7 @@ public class MainActivity extends AppCompatActivity
         m = new Menemen(getApplicationContext());
         //İlk açılışta intro göster
         if(m.isFirstTime("intro")) startActivity(new Intent(this, Intro.class));
-
         fragmentManager = getFragmentManager();
-
         //Radyo durumunu buton ile senkronize tut
         receiver = new BroadcastReceiver() {
             @Override
@@ -98,14 +95,11 @@ public class MainActivity extends AppCompatActivity
               }
             }
         };
-
-
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
        if(drawer!=null) drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         hview = navigationView.getHeaderView(0);
         header_img = (ImageView) hview.findViewById(R.id.header_img);
@@ -148,8 +142,6 @@ public class MainActivity extends AppCompatActivity
                m.kaydet(RadyoMenemenPro.SAVEDOB,m.oku(RadyoMenemenPro.LASTOB));//Yeni gelen veriyi kaydet
            }
         }
-
-
         if(savedInstanceState == null) {
             defaultAction();
         }
@@ -157,8 +149,6 @@ public class MainActivity extends AppCompatActivity
             String action = getIntent().getAction();
             goToFragmentByIntentAction(action, getIntent());
         }
-
-
         if (navigationView != null) {
             if (m.isLoggedIn()) {
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
@@ -171,7 +161,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
       if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
-
     }
 
 
