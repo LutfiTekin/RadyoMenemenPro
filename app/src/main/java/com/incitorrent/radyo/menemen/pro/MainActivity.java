@@ -177,17 +177,16 @@ public class MainActivity extends AppCompatActivity
         //Bildirimden gelen aksiyonları doğru fragmente yolla
         if(intent!=null){
            String action = intent.getAction();
-            if(action == null) {
-                defaultAction();
-                return;
-            }
-            Log.v("ACTION",action);
-            goToFragmentByIntentAction(action, intent);
+           goToFragmentByIntentAction(action, intent);
         }
     }
 
     private void goToFragmentByIntentAction(String action, Intent intent) {
         final String main = "android.intent.action.MAIN";
+        if(action == null) {
+            defaultAction();
+            return;
+        }
         if(!action.equals(main)) {
             try {
                 switch (action) {
