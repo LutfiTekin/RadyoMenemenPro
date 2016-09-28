@@ -38,6 +38,7 @@ import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast_now_playing;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
+import com.incitorrent.radyo.menemen.pro.fragments.track_info;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         };
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
        if(drawer!=null) drawer.addDrawerListener(toggle);
@@ -108,8 +109,36 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         hview = navigationView.getHeaderView(0);
         header_img = (ImageView) hview.findViewById(R.id.header_img);
+        header_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                    fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+                if(drawer == null) return;
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+            }
+        });
         header_txt = (TextView) hview.findViewById(R.id.header_txt);
         header_sub_txt = (TextView) hview.findViewById(R.id.header_sub_txt);
+        header_sub_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!m.isPlaying() || m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                    return;
+                Fragment track_info = new track_info();
+                Bundle bundle = new Bundle();
+                bundle.putString("trackname", Menemen.fromHtmlCompat(m.oku(CALAN)));
+                bundle.putString("arturl",m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL));
+                track_info.setArguments(bundle);
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.Fcontent, track_info)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
