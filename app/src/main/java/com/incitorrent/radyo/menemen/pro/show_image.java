@@ -79,12 +79,18 @@ public class show_image extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             image.setTransitionName("show_image");
         }
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         final Intent mintent = getIntent();
         final Uri imageUri = mintent.getData();
         imageurl = imageUri.toString().trim();
-
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+        String firscomment = m.getCapsDB().getFirstComment(imageurl);
+        if(getSupportActionBar() != null && firscomment != null) {
+            getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
+            firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
+            getSupportActionBar().setSubtitle(firscomment);
+        }
         c_fab = (FloatingActionButton) findViewById(R.id.comment_fab);
         if (c_fab != null) c_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,6 +248,7 @@ public class show_image extends AppCompatActivity {
         final int backgroundcolor = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
         final int statusbarcolor = ContextCompat.getColor(context,R.color.colorPrimaryDark);
         final int primary = ContextCompat.getColor(context,R.color.colorPrimary);
+        final int primaryText = ContextCompat.getColor(context,R.color.textColorPrimary);
 
 
         @Override
@@ -253,7 +260,8 @@ public class show_image extends AppCompatActivity {
                 int background = palette.getDominantColor(backgroundcolor);
                 int bar = palette.getDarkVibrantColor(statusbarcolor);
                 int actionbar = palette.getVibrantColor(primary);
-                return new Integer[]{accent,background,bar,actionbar};
+                int title = palette.getVibrantSwatch() == null ? primaryText : palette.getVibrantSwatch().getTitleTextColor();
+                return new Integer[]{accent,background,bar,actionbar,title};
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -271,8 +279,11 @@ public class show_image extends AppCompatActivity {
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                         window.setStatusBarColor(colors[2]);
                   }
-                  if(getSupportActionBar()!=null)
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Menemen.adjustAlpha(colors[3],0.1f)));
+                  if(getSupportActionBar()!=null) {
+                      getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Menemen.adjustAlpha(colors[3], 0.4f)));
+                      toolbar.setTitleTextColor(colors[4]);
+                      toolbar.setSubtitleTextColor(Menemen.adjustAlpha(colors[4], 0.7f));
+                  }
             }
 
             super.onPostExecute(colors);
