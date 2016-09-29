@@ -87,6 +87,21 @@ public class chatDB extends SQLiteOpenHelper {
         return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%'",null,null,null,_MSGID + " DESC",String.valueOf(limit));
     }
 
+    public String getCapsUploader(String capsurl){
+        SQLiteDatabase db = getReadableDatabase();
+        String uploader = null;
+        try {
+            Cursor c = db.query(TABLE_NAME,null,_POST + " LIKE '%"+ capsurl +"%'",null,null,null,_MSGID + " DESC","1");
+            c.moveToFirst();
+            uploader = c.getString(c.getColumnIndex(_NICK)).toUpperCase();
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return uploader;
+    }
+
     public Cursor loadCapsGalleryOnScroll(String msgid){
         SQLiteDatabase db = getReadableDatabase();
         return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%' AND " + _MSGID + " < '" + msgid + "'",null,null,null,_MSGID + " DESC","10");
