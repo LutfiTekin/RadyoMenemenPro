@@ -689,4 +689,11 @@ public class Menemen {
         int blue = Color.blue(color);
         return Color.argb(alpha, red, green, blue);
     }
+    public capsDB getCapsDB(){
+        return new capsDB(context,null,null,1);
+    }
+
+    public chatDB getChatDB(){
+        return new chatDB(context,null,null,1);
+    }
 }
