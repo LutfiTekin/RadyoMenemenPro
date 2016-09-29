@@ -145,10 +145,7 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState == null) {
             defaultAction();
         }
-        if(getIntent()!=null){
-            String action = getIntent().getAction();
-            goToFragmentByIntentAction(action, getIntent());
-        }
+         goToFragmentByIntentAction(getIntent());
         if (navigationView != null) {
             if (m.isLoggedIn()) {
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
@@ -192,22 +189,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //Bildirimden gelen aksiyonları doğru fragmente yolla
-        if(intent!=null){
-           String action = intent.getAction();
-           goToFragmentByIntentAction(action, intent);
-        }
+        goToFragmentByIntentAction(intent);
+
     }
 
-    private void goToFragmentByIntentAction(String action, Intent intent) {
+    /**
+     * Bildirimden gelen aksiyonları doğru fragmente yolla
+     * @param intent
+     */
+    private void goToFragmentByIntentAction(Intent intent) {
         final String main = "android.intent.action.MAIN";
-        if(action == null) {
+        if(intent == null || intent.getAction() == null) {
             defaultAction();
             return;
         }
-        if(!action.equals(main)) {
+        if(!intent.getAction().equals(main)) {
             try {
-                switch (action) {
+                switch (intent.getAction()) {
                     case "radyo.menemen.chat":
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new sohbet()).commit();
