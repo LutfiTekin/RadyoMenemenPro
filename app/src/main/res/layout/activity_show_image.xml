@@ -30,4 +30,13 @@
         style="?android:progressBarStyleLarge"
         android:layout_gravity="center"
         />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?android:attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        />
 </FrameLayout>
