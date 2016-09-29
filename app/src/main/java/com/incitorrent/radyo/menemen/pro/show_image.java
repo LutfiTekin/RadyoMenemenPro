@@ -17,6 +17,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.util.Log;
 import android.util.Pair;
@@ -60,6 +61,7 @@ public class show_image extends AppCompatActivity {
     capsDB sql;
     final String root = Environment.getExternalStorageDirectory().toString();
     ContentResolver contentResolver;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -77,6 +79,8 @@ public class show_image extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             image.setTransitionName("show_image");
         }
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         final Intent mintent = getIntent();
         final Uri imageUri = mintent.getData();
         imageurl = imageUri.toString().trim();
@@ -268,7 +272,7 @@ public class show_image extends AppCompatActivity {
                         window.setStatusBarColor(colors[2]);
                   }
                   if(getSupportActionBar()!=null)
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(colors[3]));
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Menemen.adjustAlpha(colors[3],0.1f)));
             }
 
             super.onPostExecute(colors);
