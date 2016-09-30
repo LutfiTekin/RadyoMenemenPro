@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -79,6 +80,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.DELIVERED;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.NOT_DELIVERED;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.PENDING;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.fromHtmlCompat;
@@ -584,24 +586,42 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
             @Override
             protected void onPostExecute(Boolean success) {
-                if (!success) {
+                if(sohbetList == null || sohbetRV == null) {
                     Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-                    if(sohbetList != null && sohbetRV != null){
-                        if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
-                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
-                        else {
-                            for (int i = 0; i < sohbetList.size(); i++) {
-                                if (sohbetList.get(i).mesaj.equals(mesaj)) {
-                                    sohbetList.set(i,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
-                                    sohbetRV.getAdapter().notifyDataSetChanged();
-                                }
+                    return;
+                }
+                if(sohbetList.size()<1) return;
+                try {
+                    if (!success) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                            if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
+                                sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
+                            else {
+                                for (int i = 0; i < sohbetList.size(); i++)
+                                    if (sohbetList.get(i).mesaj.equals(mesaj))
+                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
                             }
+
+                            if(m.isFirstTime(NOT_DELIVERED))
+                                Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+
+                    }else {
+                        if(sohbetList.get(0).zaman != null)
+                            if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).zaman.equals(PENDING))
+                                sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, DELIVERED));
+                        else {
+                            for (int i = 0; i < sohbetList.size(); i++)
+                                if(sohbetList.get(i).zaman != null)
+                                    if (sohbetList.get(i).mesaj.equals(mesaj) && sohbetList.get(i).zaman.equals(PENDING))
+                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, DELIVERED));
                         }
-                        if(sohbetRV.getAdapter() != null)
-                            sohbetRV.getAdapter().notifyDataSetChanged();
-                        if(m.isFirstTime(NOT_DELIVERED))
-                            Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
                     }
+
+                    if(sohbetRV.getAdapter() != null)
+                          sohbetRV.getAdapter().notifyDataSetChanged();
+                } catch (Resources.NotFoundException e) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
                 super.onPostExecute(success);
             }
@@ -664,7 +684,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 } else {
                     String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                     try {
-                        if (zaman_val.equals(PENDING)) return;
+                        if (zaman_val.equals(PENDING) || zaman_val.equals(DELIVERED)) return;
                         if (zaman_val.equals(NOT_DELIVERED)) {
                             final String mesaj = sohbetList.get(getAdapterPosition()).mesaj;
                             sohbetList.remove(getAdapterPosition());

@@ -635,6 +635,7 @@ public class Menemen {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
     public static final String PENDING = "pending";
     public static final String NOT_DELIVERED = "notdelivered";
+    public static final String DELIVERED = "delivered";
 
     /**
      * Get time in prettier formatted string
@@ -646,6 +647,7 @@ public class Menemen {
         if(Sdate==null) return c.getString(R.string.time_moment);
         if(Sdate.equals(PENDING)) return c.getString(R.string.sending);
         if(Sdate.equals(NOT_DELIVERED)) return c.getString(R.string.not_delivered);
+        if(Sdate.equals(DELIVERED)) return c.getString(R.string.deliverd);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {

@@ -239,4 +239,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="online_members">Online Members</string>
     <string name="online_user_none">Nobody Else Is Here :(</string>
     <string name="who_is_online">Who is online?</string>
+    <string name="deliverd">Sent</string>
 </resources>

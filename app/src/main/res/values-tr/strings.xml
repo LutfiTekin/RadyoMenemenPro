@@ -191,4 +191,5 @@
     <string name="online_members">Çevirimiçi Üyeler</string>
     <string name="online_user_none">Başka Hiç Kimse Yok :(</string>
     <string name="who_is_online">Kimler çevirimiçi?</string>
+    <string name="deliverd">Gönderildi</string>
 </resources>
