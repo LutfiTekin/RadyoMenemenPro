@@ -7,8 +7,15 @@
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="adaptive_quality"
+        android:summary="@string/settings_autp_c_summary"
+        android:disableDependentsState="true"
+        android:title="@string/settings_autp_c_title" />
     <ListPreference
         android:defaultValue="180"
+        android:dependency="adaptive_quality"
         android:entries="@array/pref_channels"
         android:entryValues="@array/pref_channel_values"
         android:key="radio_channel"

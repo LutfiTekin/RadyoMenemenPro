@@ -698,4 +698,25 @@ public class Menemen {
     public chatDB getChatDB(){
         return new chatDB(context,null,null,1);
     }
+
+    public boolean isReachable(String siteurl){
+        if(!isInternetAvailable()) return false;
+        try {
+            URL url = new URL(siteurl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            int code = connection.getResponseCode();
+            connection.disconnect();
+            if(code == 200) {
+                Log.v("RespCode","200");
+                return true;
+            } else {
+                Log.v("RespCode", "code: " + code);
+                return false;
+            }
+        } catch (Exception e) {
+            Log.v("RespCode", e.toString());
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
