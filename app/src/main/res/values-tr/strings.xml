@@ -195,4 +195,5 @@
     <string name="settings_autp_c_title">Otomatik Kanal</string>
     <string name="settings_autp_c_summary">Radyo kanalını telefonun ağ durumuna (Mobil Ağ veya Wi-Fi) göre ayarla. (Radyo zaten çalıyorsa değiştirilmez)</string>
     <string name="toast_channel_change_auto">Kanal otomatik olarak değişti</string>
+    <string name="media_play_now">Şimdi Çal</string>
 </resources>

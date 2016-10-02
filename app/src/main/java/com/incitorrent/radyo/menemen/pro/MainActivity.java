@@ -206,6 +206,10 @@ public class MainActivity extends AppCompatActivity
         if(!intent.getAction().equals(main)) {
             try {
                 switch (intent.getAction()) {
+                    case "radyo.menemen.play":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new radio()).commit();
+                        break;
                     case "radyo.menemen.chat":
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new sohbet()).commit();

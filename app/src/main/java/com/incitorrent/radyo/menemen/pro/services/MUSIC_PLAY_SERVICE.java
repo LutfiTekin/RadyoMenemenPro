@@ -204,7 +204,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String dataSource =null;
+        String dataSource = null;
         isPodcast = m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
@@ -220,7 +220,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             else {
                 try {
                     if(intent.hasExtra("descr"))
-                    m.kaydet(PODCAST_DESCR,intent.getExtras().getString("descr"));
+                        m.kaydet(PODCAST_DESCR,intent.getExtras().getString("descr"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

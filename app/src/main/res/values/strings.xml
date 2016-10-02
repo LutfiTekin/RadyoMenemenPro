@@ -243,4 +243,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="settings_autp_c_summary">Adjust stream quality depending on network status of the phone.  (Mobile Netork or Wi-Fi). Ps. If radio is playing already channel will not changed.</string>
     <string name="settings_autp_c_title">Select Channel Automatically</string>
     <string name="toast_channel_change_auto">Channel changed automatically</string>
+    <string name="media_play_now">Play Now</string>
 </resources>

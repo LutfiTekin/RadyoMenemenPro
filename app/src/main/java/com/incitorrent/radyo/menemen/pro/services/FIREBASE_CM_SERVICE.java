@@ -25,6 +25,7 @@ import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
@@ -332,14 +333,25 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        //Play radio action
+        if(!m.isPlaying()) {
+            Intent playpause = new Intent(this, NotificationControls.class);
+            String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
+            String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
+            playpause.putExtra("dataSource",dataSource);
+            PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
+            notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_play_now),ppIntent);
+        }
         //Main activity yi aç
-        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        notification_intent.setAction("radyo.menemen.play");
+        int notificationid = (m.isPlaying()) ? RadyoMenemenPro.ON_AIR_NOTIFICATION : RadyoMenemenPro.NOW_PLAYING_NOTIFICATION;
+        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
             notification.setVibrate(new long[]{500, 500, 500});
         notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notification.setAutoCancel(true);
-        notificationManager.notify(RadyoMenemenPro.ON_AIR_NOTIFICATION, notification.build());
+        notificationManager.notify(notificationid, notification.build());
         Log.v(TAG, " Notification built");
     }
 
