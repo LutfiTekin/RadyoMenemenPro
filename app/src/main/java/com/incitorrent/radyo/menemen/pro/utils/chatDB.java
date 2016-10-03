@@ -107,6 +107,20 @@ public class chatDB extends SQLiteOpenHelper {
         return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%' AND " + _MSGID + " < '" + msgid + "'",null,null,null,_MSGID + " DESC","10");
     }
 
+    public String lastMsgId(){
+        String lastid = "0";
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(TABLE_NAME, new String[]{_MSGID},null,null,null,null,_MSGID + " DESC","1");
+            c.moveToFirst();
+            lastid = c.getString(c.getColumnIndex(_MSGID));
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return lastid;
+    }
 
 
     public static class CHAT {

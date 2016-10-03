@@ -358,6 +358,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
        if((sohbetList == null || sohbetList.size() < 1))
            new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else if(sohbetList != null && sohbetList.size() > 1){
+           try {
+               if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(sql.lastMsgId())){
+                   new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+               }
+           }catch (Exception e){e.printStackTrace();}
+       }
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         m.runEnterAnimation(resimekle,250);
