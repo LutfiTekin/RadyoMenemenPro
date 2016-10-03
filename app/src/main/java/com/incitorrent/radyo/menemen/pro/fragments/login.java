@@ -110,8 +110,7 @@ public class login extends Fragment {
                final String nick = username.getText().toString().trim();
                 String pass = password.getText().toString();
                final String pash = Menemen.md5(Menemen.md5("radyomenemen"+ Menemen.md5(pass)));
-                if(!validatePass()) return;
-                if(!validateName()) return;
+                if(!validatePass() || !validateName()) return;
                 new AsyncTask<Void,Void,String>(){
                     @Override
                     protected void onPreExecute() {
