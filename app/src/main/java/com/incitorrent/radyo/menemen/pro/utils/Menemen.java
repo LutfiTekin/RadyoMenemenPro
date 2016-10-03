@@ -704,6 +704,7 @@ public class Menemen {
         try {
             URL url = new URL(siteurl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(500);
             int code = connection.getResponseCode();
             connection.disconnect();
             if(code == 200) {
