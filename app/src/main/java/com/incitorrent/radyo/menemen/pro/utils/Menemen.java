@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,6 +44,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -719,5 +721,52 @@ public class Menemen {
             e.printStackTrace();
         }
         return false;
+    }
+    public void selectChannelAuto() {
+        final String selected_channel = oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
+        if(!isInternetAvailable()) return; //internet is unavailable
+        if(isPlaying()) return; //Radio is playing do not touch channels
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("adaptive_quality",true)){
+                    //Wi-Fi connected switch to highest channel
+                    if(isConnectedWifi()){
+                        if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL) +  "/")){
+                            PreferenceManager.getDefaultSharedPreferences(context)
+                                    .edit()
+                                    .putString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)
+                                    .apply();
+                        }else setDefaultChannel(); //Fallback channel
+                    }else{
+                        //Not connected via Wi-Fi lower the quality
+                        if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.LOW_CHANNEL) +  "/")){
+                            PreferenceManager.getDefaultSharedPreferences(context)
+                                    .edit()
+                                    .putString("radio_channel",RadyoMenemenPro.LOW_CHANNEL)
+                                    .apply();
+                        }else setDefaultChannel();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(!oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)).equals(selected_channel))
+                    Toast.makeText(context, R.string.toast_channel_change_auto, Toast.LENGTH_SHORT).show();
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+
+    }
+    private void setDefaultChannel() {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString("radio_channel",RadyoMenemenPro.MID_CHANNEL)
+                .apply();
     }
 }
