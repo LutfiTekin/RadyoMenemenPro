@@ -198,10 +198,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
                     int LIST_SIZE = sohbetList.size();
                     String lastid = sohbetList.get(LIST_SIZE - 1).id;
-                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
-                        Log.v(TAG, "loadmore" + lastid);
+                    if(LAST_POSITION_COMP_VISIBLE == (LIST_SIZE - 10) )
                         new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-                    }
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
                         if(getActivity()!=null) {
@@ -341,8 +339,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     @Override
     public void onStart() {
         Log.v(TAG,"onStart");
-        if(sohbetList == null)
-            new initsohbet(20,0).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         if(getActivity()!=null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
@@ -357,7 +353,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         Log.v(TAG,"onResume");
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
        if((sohbetList == null || sohbetList.size() < 1))
-           new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+           new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else if(sohbetList != null && sohbetList.size() > 1){
            try {
                if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(sql.lastMsgId())){
@@ -956,7 +952,15 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                     post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                     time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
-                    sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                    int exist = 0;
+                    //Prevent duplicate values being added to the array list
+                    for (int i = 0; i < sohbetList.size(); i++) {
+                        if (sohbetList.get(i).mesaj.equals(post)) {
+                           exist++;
+                            break;
+                        }
+                    }
+                    if(exist < 1) sohbetList.add(new Sohbet_Objects(id,nick,post,time));
                     cursor.moveToNext();
                 }
                 cursor.close();
