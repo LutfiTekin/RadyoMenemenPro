@@ -102,7 +102,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".show_image"
+        <activity
+            android:name=".show_image"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -110,8 +111,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="caps.radyomenemen.com"
-                    android:scheme="http"
-                    android:pathPrefix="/images"/>
+                    android:pathPrefix="/images"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
