@@ -3,4 +3,5 @@
     <dimen name="cardview_in_appbar_margin">72dp</dimen>
     <dimen name="galeri_imageview_height">300dp</dimen>
     <dimen name="login_input_margin">120dp</dimen>
+    <dimen name="image_picker_margin">72dp</dimen>
 </resources>
