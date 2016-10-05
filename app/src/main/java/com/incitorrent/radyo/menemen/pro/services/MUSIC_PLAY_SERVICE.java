@@ -369,7 +369,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     .putExtra("descr", m.oku(PODCAST_DESCR))
                     .putExtra("duration", (long) mediaPlayer.getDuration())
                     .putExtra("current", (long) mediaPlayer.getCurrentPosition());
-        }
+        }else intent.setAction("radyo.menemen.play");
         Bitmap artwork = m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false);
         int notificationcolor = ContextCompat.getColor(MUSIC_PLAY_SERVICE.this,R.color.colorBackgroundsofter);
         try {
