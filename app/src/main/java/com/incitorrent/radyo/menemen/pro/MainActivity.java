@@ -172,12 +172,12 @@ public class MainActivity extends AppCompatActivity
                 if(PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("download_artwork",true))
                     Glide.with(MainActivity.this)
                         .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
-                        .asBitmap()
-                        .error(R.mipmap.album_placeholder)
+                        .dontAnimate()
+                        .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM, RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
                         .into(header_img);
             }
         }else{
-            header_img.setImageResource(R.mipmap.ic_launcher);
+            header_img.setImageDrawable(null);
             if(m.isLoggedIn())
                 header_txt.setText(m.getUsername().toUpperCase());
             else header_txt.setText(getString(R.string.app_name));
