@@ -265,7 +265,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
                         Window window = getActivity().getWindow();
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(color[5]);
+                        window.setStatusBarColor(Menemen.adjustAlpha(color[5],0.5f));
                     }
                 }
 
@@ -304,7 +304,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
                 Window window = getActivity().getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark));
+                window.setStatusBarColor(Menemen.adjustAlpha(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark),0.5f));
             }
         }
         super.onStop();
