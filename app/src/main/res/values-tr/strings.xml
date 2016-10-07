@@ -196,4 +196,6 @@
     <string name="settings_autp_c_summary">Radyo kanalını telefonun ağ durumuna (Mobil Ağ veya Wi-Fi) göre ayarla. (Radyo zaten çalıyorsa değiştirilmez)</string>
     <string name="toast_channel_change_auto">Kanal otomatik olarak değişti</string>
     <string name="media_play_now">Şimdi Çal</string>
+    <string name="setting_preloadifwifi_title">Resimleri Önceden Yükle</string>
+    <string name="setting_preloadifwifi_summary">Eğer wi-fi açıksa sohbetteki resimleri önceden yükle</string>
 </resources>

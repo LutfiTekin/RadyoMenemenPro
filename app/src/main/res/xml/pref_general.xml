@@ -14,6 +14,12 @@
         android:summary="@string/setting_gallery_summary"/>
 
     <SwitchPreference
+        android:defaultValue="true"
+        android:key="preload_if_wifi"
+        android:title="@string/setting_preloadifwifi_title"
+        android:summary="@string/setting_preloadifwifi_summary"/>
+
+    <SwitchPreference
         android:defaultValue="false"
         android:key="music_only"
         android:title="@string/settings_music_only_title"

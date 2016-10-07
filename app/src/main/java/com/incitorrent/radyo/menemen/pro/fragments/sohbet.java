@@ -54,6 +54,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
@@ -735,8 +736,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
         public void onViewAttachedToWindow(chatViewHolder chatViewHolder) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_thumbnail", true)) {
                 if(chatViewHolder.mesaj.getText().toString().contains("radyomenemen.com/images")){
-                    //resim urlsi içeriyorum
                     loadCapsinChat(chatViewHolder, getThumbnail(getCapsUrl(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))) );
+                    //Preload if wifi enabled
+                   if(m.isConnectedWifi() && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("preload_if_wifi",true)) {
+                       Glide.with(context).load(getCapsUrl(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
+                   }
                 }else if(chatViewHolder.mesaj.getText().toString().contains("youtube.com/watch") || chatViewHolder.mesaj.getText().toString().contains("youtu.be/")){
                     loadCapsinChat(chatViewHolder, getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                 }else chatViewHolder.caps.setImageDrawable(null);
