@@ -103,7 +103,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 break;
             case RadyoMenemenPro.FCMTopics.ONAIR:
                 //Onair bildirimi
-                if (notify && notify_when_on_air) onAir(remoteMessage);
+                if (notify) onAir(remoteMessage);
                 break;
             case RadyoMenemenPro.FCMTopics.PODCAST:
                 if (notify && notify_new_podcast) notify_new_podcast(remoteMessage);
@@ -346,9 +346,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification_intent.setAction("radyo.menemen.play");
         int notificationid = (m.isPlaying()) ? RadyoMenemenPro.ON_AIR_NOTIFICATION : RadyoMenemenPro.NOW_PLAYING_NOTIFICATION;
         notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-        if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-        if (vibrate)
-            notification.setVibrate(new long[]{500, 500, 500});
+        if (notify_when_on_air) {
+            if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                notification.setVibrate(new long[]{500, 500, 500});
+        }
         notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notification.setAutoCancel(true);
         notificationManager.notify(notificationid, notification.build());
