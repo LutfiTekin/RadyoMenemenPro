@@ -17,10 +17,6 @@ public class RMPRO extends Application {
     public static Context context;
     public static final String TAG = RMPRO.class
             .getSimpleName();
-//    static {
-//        AppCompatDelegate.setDefaultNightMode(
-//                AppCompatDelegate.MODE_NIGHT_YES);
-//    }
     private static RMPRO mInstance;
     private FirebaseAnalytics mFirebaseAnalytics;
     @Override
@@ -51,7 +47,4 @@ public class RMPRO extends Application {
         return mInstance;
     }
 
-    public FirebaseAnalytics getFireBase() {
-        return mFirebaseAnalytics;
-    }
 }
