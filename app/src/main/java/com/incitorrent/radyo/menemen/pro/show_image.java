@@ -256,7 +256,8 @@ public class show_image extends AppCompatActivity{
 
     @Override
     protected void onResume() {
-        new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(getSupportActionBar() != null && getSupportActionBar().getSubtitle() == null)
+            new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         super.onResume();
     }
 
