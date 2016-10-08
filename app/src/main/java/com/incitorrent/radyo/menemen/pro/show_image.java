@@ -36,6 +36,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.OnSwipeTouchListener;
 import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 
@@ -50,7 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class show_image extends AppCompatActivity {
+public class show_image extends AppCompatActivity{
     private static final String TAG = "show_image";
     private TouchImageView image;
     private String imageurl;
@@ -105,6 +106,75 @@ public class show_image extends AppCompatActivity {
                 startActivity(showimagecomment);
             }
         });
+        loadThumbnail();
+        image.setOnTouchListener(new OnSwipeTouchListener(show_image.this){
+        @Override
+        public void onSwipeRight() {
+            loadNextCaps(true);
+            Log.v(TAG,"t");
+            super.onSwipeRight();
+        }
+
+        @Override
+        public void onSwipeLeft() {
+            loadNextCaps(false);
+            Log.v(TAG,"f");
+            super.onSwipeLeft();
+        }
+
+            void loadNextCaps(Boolean next) {
+                if(image.getCurrentZoom() == 1 && progressBar.getVisibility() == View.GONE) {
+                    Log.v(TAG," önce " + imageurl);
+                    imageurl = m.getChatDB().getNextCaps(imageurl, next);
+                    Log.v(TAG," sonra " +  imageurl);
+                    new AsyncTask<Void,Void,Void>(){
+                        @Override
+                        protected void onPreExecute() {
+                            toolbar.setSubtitle("");
+                            new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            loadThumbnail();
+                            progressBar.setVisibility(View.VISIBLE);
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            loadImage();
+                            super.onPostExecute(aVoid);
+                        }
+
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            return null;
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+
+            @Override
+            public void onSwipeTop() {
+                if(image.getCurrentZoom() == 1){
+                    if(!m.isLoggedIn()){
+                        Toast.makeText(show_image.this, R.string.toast_caps_comment_required_login, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
+                    showimagecomment.putExtra("url", imageurl);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        c_fab.setTransitionName("fab");
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image.this,
+                                new Pair<View, String>(image, image.getTransitionName()),
+                                new Pair<View, String>(c_fab, c_fab.getTransitionName()));
+                        startActivity(showimagecomment, options.toBundle());
+                    }else
+                        startActivity(showimagecomment);
+                }
+                super.onSwipeTop();
+            }
+        });
+    }
+
+    private void loadThumbnail() {
         try {
             Glide.with(show_image.this)
                     .load(Menemen.getThumbnail(imageurl))
@@ -122,25 +192,52 @@ public class show_image extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
-               @Override
-               protected void onSaveInstanceState(Bundle outState) {
-                   outState.putString("url", imageurl);
-                   super.onSaveInstanceState(outState);
-               }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("url", imageurl);
+        super.onSaveInstanceState(outState);
+    }
 
-               @Override
-               protected void onRestoreInstanceState(Bundle savedInstanceState) {
-                   if (savedInstanceState != null) imageurl = savedInstanceState.getString("url");
-                   super.onRestoreInstanceState(savedInstanceState);
-               }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            imageurl = savedInstanceState.getString("url");
+            new AsyncTask<Void,Void,Void>(){
+                @Override
+                protected void onPreExecute() {
+                    toolbar.setSubtitle("");
+                    new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    loadThumbnail();
+                    progressBar.setVisibility(View.VISIBLE);
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    loadImage();
+                    super.onPostExecute(aVoid);
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    return null;
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
 
     @Override
     protected void onStart() {
+        loadImage();
+        super.onStart();
+    }
+
+    private void loadImage() {
         try {
             Glide.with(show_image.this)
                     .load(imageurl)
@@ -155,7 +252,6 @@ public class show_image extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.onStart();
     }
 
     @Override
@@ -288,11 +384,16 @@ public class show_image extends AppCompatActivity {
     class loadcomments extends AsyncTask<Void,Void,Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
-            String firscomment = m.getCapsDB().getFirstComment(imageurl);
-            if(getSupportActionBar() != null && firscomment != null) {
-                getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
-                firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
-                getSupportActionBar().setSubtitle(firscomment);
+            try {
+                String firscomment = m.getCapsDB().getFirstComment(imageurl);
+                if(getSupportActionBar() != null && firscomment != null) {
+                    getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
+                    firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
+                    getSupportActionBar().setSubtitle(firscomment);
+                }
+            } catch (Exception e) {
+                getSupportActionBar().setSubtitle("");
+                e.printStackTrace();
             }
             super.onPostExecute(aVoid);
         }

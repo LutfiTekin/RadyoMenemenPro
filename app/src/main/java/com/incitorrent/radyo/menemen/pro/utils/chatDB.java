@@ -87,6 +87,27 @@ public class chatDB extends SQLiteOpenHelper {
         return db.query(TABLE_NAME,null,_POST + " LIKE '%caps.radyomenemen.com/images%'",null,null,null,_MSGID + " DESC",String.valueOf(limit));
     }
 
+    public String getNextCaps(String capsurl, Boolean next){
+        SQLiteDatabase db = getReadableDatabase();
+        String caps = null;
+        String condition = (next) ? " > " : " < ";
+        String order = (next) ? " ASC" : " DESC";
+        try {
+            Cursor c = db.query(TABLE_NAME,new String[]{_MSGID},_POST + " LIKE '%"+ capsurl +"%'",null,null,null,_MSGID + " DESC","1");
+            c.moveToFirst();
+            String id = c.getString(c.getColumnIndex(_MSGID));
+            c = db.query(TABLE_NAME,new String[]{_POST},_MSGID + condition + id + " AND " + _POST + " LIKE '%caps.radyomenemen.com/images%'", null,null,null,_MSGID + order, "1");
+            c.moveToFirst();
+            caps = c.getString(c.getColumnIndex(_POST));
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        Log.v("nextcaps",caps);
+        return (caps != null) ? Menemen.getCapsUrl(Menemen.fromHtmlCompat(caps)) : capsurl;
+    }
+
     public String getCapsUploader(String capsurl){
         SQLiteDatabase db = getReadableDatabase();
         String uploader = null;
