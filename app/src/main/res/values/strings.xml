@@ -246,4 +246,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="media_play_now">Play Now</string>
     <string name="setting_preloadifwifi_summary">Preload images shown in chat if wi-fi enabled</string>
     <string name="setting_preloadifwifi_title">Preload Images</string>
+    <string name="loading">Loading</string>
 </resources>
