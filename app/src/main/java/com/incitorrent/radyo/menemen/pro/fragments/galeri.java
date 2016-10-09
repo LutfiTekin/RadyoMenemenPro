@@ -138,7 +138,16 @@ public class galeri extends Fragment {
                     uploader = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                     capsurl = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                     msgid = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
-                    Glist.add(new galeri_objects(uploader,Menemen.getCapsUrl(Menemen.fromHtmlCompat(capsurl)),msgid));
+                    int exist = 0;
+                    //Prevent duplicate values being added to the array list
+                    for (int i = 0; i < Glist.size(); i++) {
+                        if (Glist.get(i).msgid.equals(msgid)) {
+                            exist++;
+                            break;
+                        }
+                    }
+                    Log.v(TAG,"is" + exist);
+                    if(exist < 1) Glist.add(new galeri_objects(uploader,Menemen.getCapsUrl(Menemen.fromHtmlCompat(capsurl)),msgid));
                     cursor.moveToNext();
                 }
                 cursor.close();
