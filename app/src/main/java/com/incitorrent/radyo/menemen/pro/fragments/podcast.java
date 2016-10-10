@@ -148,33 +148,37 @@ public class podcast extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            XMLParser parser = new XMLParser();
-            xml = parser.getXmlFromUrl(podcast); // getting XML
-            if(xml==null) return false;
-            if (xml.isEmpty()) {
-                return false;
-            } else {
-                Document doc = parser.getDomElement(xml); // getting DOM element
-                NodeList nl = doc.getElementsByTagName(KEY_ITEM);
-                // looping through all item nodes <item>
-                int maxlength = nl.getLength();
-                RList = new ArrayList<>();
-                for (int i = 0; i < maxlength; i++) {
-                    Element e = (Element) nl.item(i);
-                    try {
-                        String phrase = parser.getValue(e, KEY_LINK).toString();
-                        String delims = "=";
-                        String[] tokens = phrase.split(delims);
-                        String real_mp3_link = podcastlink + tokens[1];
-                        String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
-                        String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
-                        String duration = parser.getValue(e, KEY_DURATION);
-                        RList.add(i, new podcast_objs(title, desc, duration, real_mp3_link));
-                    } catch (NullPointerException e1) {
-                        e1.printStackTrace();
-                    }
+            try {
+                XMLParser parser = new XMLParser();
+                xml = parser.getXmlFromUrl(podcast); // getting XML
+                if(xml==null) return false;
+                if (xml.isEmpty()) {
+                    return false;
+                } else {
+                    Document doc = parser.getDomElement(xml); // getting DOM element
+                    NodeList nl = doc.getElementsByTagName(KEY_ITEM);
+                    // looping through all item nodes <item>
+                    int maxlength = nl.getLength();
+                    RList = new ArrayList<>();
+                    for (int i = 0; i < maxlength; i++) {
+                        Element e = (Element) nl.item(i);
+                        try {
+                            String phrase = parser.getValue(e, KEY_LINK).toString();
+                            String delims = "=";
+                            String[] tokens = phrase.split(delims);
+                            String real_mp3_link = podcastlink + tokens[1];
+                            String title = Menemen.decodefix(parser.getValue(e, KEY_TITLE));
+                            String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
+                            String duration = parser.getValue(e, KEY_DURATION);
+                            RList.add(i, new podcast_objs(title, desc, duration, real_mp3_link));
+                        } catch (NullPointerException e1) {
+                            e1.printStackTrace();
+                        }
 
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return true;
 
