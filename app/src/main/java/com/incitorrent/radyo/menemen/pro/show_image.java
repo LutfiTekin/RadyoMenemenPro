@@ -41,7 +41,6 @@ import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -402,13 +401,12 @@ public class show_image extends AppCompatActivity{
         @Override
         protected Void doInBackground(Void... params) {
             String id,nick,post,time;
-            if(!sql.isHistoryExist(imageurl, m.getUsername())){
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("capsurl", imageurl);
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
-                Log.v(TAG, "isHistoryExist "+ line);
-                try {
+            try {
+                if(!sql.isHistoryExist(imageurl, m.getUsername())){
+                    Map<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("capsurl", imageurl);
+                    String encodedStr = Menemen.getEncodedData(dataToSend);
+                    String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
                     JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
                     JSONObject c;
                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
@@ -420,12 +418,11 @@ public class show_image extends AppCompatActivity{
                         time = c.getString("time");
                         //db ye ekle
                         sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
-                        Log.v(TAG,"add to history " + id + " " + nick);
-                    }
-                }catch (JSONException e){
-                    m.resetFirstTime("loadmessages");
-                    e.printStackTrace();
-                }
+                        }
+            }
+            }catch (Exception e){
+                m.resetFirstTime("loadmessages");
+                e.printStackTrace();
             }
             return null;
         }
