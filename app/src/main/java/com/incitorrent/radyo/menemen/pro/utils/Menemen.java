@@ -1,12 +1,16 @@
 package com.incitorrent.radyo.menemen.pro.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -19,16 +23,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.util.Pair;
+import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -768,5 +775,50 @@ public class Menemen {
                 .edit()
                 .putString("radio_channel",RadyoMenemenPro.MID_CHANNEL)
                 .apply();
+    }
+
+    /**
+     * Download podcast files or else with alertdialog
+     * @param url
+     * @param filename
+     * @param icon
+     * @param dir
+     * @param ext
+     * @param activity
+     */
+    public void downloadMenemenFile(final String url, final String filename, int icon, final String dir, final String ext, Activity activity) {
+        new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.alertDialogTheme))
+                .setTitle(filename)
+                .setMessage(context.getString(R.string.download_file))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                            request.setDescription(context.getString(R.string.downloading_file))
+                                    .setTitle(filename)
+                                    .allowScanningByMediaScanner();
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                            String sanitized = filename.replaceAll("[^\\w.-]", "_");
+                            Log.v(TAG," Sanitized string " + sanitized);
+                            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, sanitized + ext);
+                            else
+                                request.setDestinationInExternalPublicDir(dir, sanitized + ext);
+                            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                            manager.enqueue(request);
+                            Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(icon)
+                .show();
     }
 }

@@ -1,19 +1,14 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.annotation.TargetApi;
-import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +18,6 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -269,38 +263,10 @@ public class podcast extends Fragment {
 
             @Override
             public boolean onLongClick(View v) {
-
-
-                new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
-                        .setTitle(RList.get(getAdapterPosition()).title)
-                        .setMessage(getString(R.string.download_file))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    DownloadManager.Request request = new DownloadManager.Request(Uri.parse(RList.get(getAdapterPosition()).url));
-                                    request.setDescription(context.getString(R.string.downloading_file))
-                                            .setTitle(RList.get(getAdapterPosition()).title)
-                                            .allowScanningByMediaScanner();
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, RList.get(getAdapterPosition()).title + ".mp3");
-                                    DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-                                    manager.enqueue(request);
-                                    Toast.makeText(context, context.getString(R.string.downloading_file), Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    Toast.makeText(context, android.R.string.httpErrorBadUrl, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setIcon(R.drawable.podcast)
-                        .show();
+                inf.downloadMenemenFile(RList.get(getAdapterPosition()).url, RList.get(getAdapterPosition()).title, R.drawable.podcast, "/RadyoMemenen/podcast", ".mp3", getActivity());
                 return false;
             }
+
         }
 
         PodcastAdapter(List<podcast_objs> RList) {
