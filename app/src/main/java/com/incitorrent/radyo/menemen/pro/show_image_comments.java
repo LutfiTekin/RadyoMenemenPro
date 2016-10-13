@@ -276,13 +276,11 @@ public class show_image_comments extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             String id,nick,post,time;
             if(sql.isHistoryExist(imageurl, m.getUsername())){
-               Log.v(TAG, "isHistoryExist dbde kayıt var");
             //Getfrom db
             Cursor cursor = sql.getHistory(20,imageurl);
             if(cursor == null) return null;
             cursor.moveToFirst();
             while(!cursor.isAfterLast()){
-
                 id = cursor.getString(cursor.getColumnIndex(capsDB._MSGID));
                 nick = cursor.getString(cursor.getColumnIndex(capsDB._NICK));
                 post = cursor.getString(cursor.getColumnIndex(capsDB._POST));
@@ -293,13 +291,11 @@ public class show_image_comments extends AppCompatActivity {
             cursor.close();
             sql.close();
             }else{
-                Log.v(TAG, "isHistoryExist internetten yüklendi");
                 //dbde kayıt yok internette yükle
                 Map<String, String> dataToSend = new HashMap<>();
                 dataToSend.put("capsurl", imageurl);
                 String encodedStr = Menemen.getEncodedData(dataToSend);
                 String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
-                Log.v(TAG, "isHistoryExist "+ line);
                 try {
                     JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
                     JSONObject c;
@@ -313,7 +309,6 @@ public class show_image_comments extends AppCompatActivity {
                         //db ye ekle
                         sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
                         sohbetList.add(new Sohbet_Objects(id,nick,post,time));
-                        Log.v(TAG,"add to history " + id + " " + nick);
                     }
                 }catch (JSONException e){
                     m.resetFirstTime("loadmessages");
@@ -396,7 +391,6 @@ public class show_image_comments extends AppCompatActivity {
                 nick = (TextView) itemView.findViewById(R.id.username);
                 mesaj = (TextView) itemView.findViewById(R.id.mesaj);
                 zaman = (TextView) itemView.findViewById(R.id.zaman);
-
             }
 
         }
