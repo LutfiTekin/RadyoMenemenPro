@@ -200,4 +200,5 @@
     <string name="setting_preloadifwifi_summary">Eğer wi-fi açıksa sohbetteki resimleri önceden yükle</string>
     <string name="loading">Yükleniyor</string>
     <string name="nav_topics">Konular</string>
+    <string name="description_topic">Burda diğer Radyo Menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık, Özel veya Korumalı olmak üzere 3 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin.</string>
 </resources>
