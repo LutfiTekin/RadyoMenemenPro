@@ -9,11 +9,17 @@
             android:id="@+id/nav_radio"
             android:icon="@mipmap/ic_radio"
             android:title="@string/nav_radio" />
+
         <item
             android:id="@+id/nav_chat"
             app:actionViewClass="android.widget.TextView"
             android:icon="@mipmap/ic_chat"
             android:title="@string/nav_sohbet" />
+
+        <item
+            android:id="@+id/nav_topic"
+            android:icon="@drawable/ic_topic_discussion"
+            android:title="@string/nav_topics" />
 
         <item
             android:id="@+id/nav_galeri"

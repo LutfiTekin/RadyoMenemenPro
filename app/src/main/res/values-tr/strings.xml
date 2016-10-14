@@ -199,4 +199,5 @@
     <string name="setting_preloadifwifi_title">Resimleri Önceden Yükle</string>
     <string name="setting_preloadifwifi_summary">Eğer wi-fi açıksa sohbetteki resimleri önceden yükle</string>
     <string name="loading">Yükleniyor</string>
+    <string name="nav_topics">Konular</string>
 </resources>
