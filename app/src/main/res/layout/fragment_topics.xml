@@ -1,9 +1,90 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBackgroundsoft"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.galeri">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/cardview_in_appbar_margin"
+                android:layout_marginRight="@dimen/cardview_in_appbar_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                app:cardElevation="@dimen/cardview_default_elevation"
+                app:cardBackgroundColor="@color/cardviewBG"
+                app:layout_collapseMode="parallax">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:contentDescription="@string/nav_topics"
+                        android:id="@+id/imageView"
+                        android:src="@drawable/ic_topic_discussion"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_margin="16dp"
+                        android:adjustViewBounds="false"
+                        android:layout_height="100dp"
+                        android:layout_width="90dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Burda diğer radyo menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık, Özel veya Korumalı olmak üzere 3 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin."
+                        android:id="@+id/description_topics"
+                        android:textSize="10sp"
+                        android:layout_marginRight="16dp"
+                        android:layout_alignBottom="@+id/imageView"
+                        android:layout_toEndOf="@+id/imageView"
+                        android:textColor="@color/textColorPrimary"
+                        android:layout_below="@+id/textView3"
+                        android:layout_marginTop="4dp" />
 
-
-</FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/nav_topics"
+                        android:id="@+id/textView3"
+                        android:textColor="@color/textColorPrimary"
+                        android:textStyle="bold"
+                        android:layout_alignTop="@+id/imageView"
+                        android:layout_toRightOf="@+id/imageView"
+                        android:layout_toEndOf="@+id/imageView" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:visibility="gone"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+                />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedscroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical"
+        android:fillViewport="true"
+        app:behavior_overlapTop="32dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/topicR"
+            />
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

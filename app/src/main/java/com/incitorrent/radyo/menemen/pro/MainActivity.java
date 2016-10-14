@@ -38,6 +38,7 @@ import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast_now_playing;
 import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
+import com.incitorrent.radyo.menemen.pro.fragments.topics;
 import com.incitorrent.radyo.menemen.pro.fragments.track_info;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
@@ -356,6 +357,8 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
         else if (id == R.id.nav_chat)
             fragmentManager.beginTransaction().addToBackStack("sohbet").replace(R.id.Fcontent,new sohbet()).commit();
+        else if (id == R.id.nav_topic)
+            fragmentManager.beginTransaction().addToBackStack("topics").replace(R.id.Fcontent, new topics()).commit();
         else if (id == R.id.nav_galeri)
             fragmentManager.beginTransaction().addToBackStack("galeri").replace(R.id.Fcontent, new galeri()).commit();
         else if (id == R.id.nav_shout) {
