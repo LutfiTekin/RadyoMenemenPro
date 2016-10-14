@@ -1,11 +1,11 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.content.pm.PackageInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.widget.TextView;
+
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 public class Licence extends AppCompatActivity {
 
@@ -43,11 +43,7 @@ public class Licence extends AppCompatActivity {
                 "<div>Icons made by <a href=\"http://www.freepik.com\" title=\"Freepik\">Freepik</a> from <a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a> is licensed by <a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a></div>at\n" + " settings <div>Icons made by <a href=\"http://www.flaticon.com/authors/pavel-kozlov\" title=\"Pavel Kozlov\">Pavel Kozlov</a> from <a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a> is licensed by <a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a></div>" +
                 "Topic\n" +
                 "<div>Icons made by <a href=\"http://www.freepik.com\" title=\"Freepik\">Freepik</a> from <a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a> is licensed by <a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a></div>";
-        if (textView != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                textView.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
-            }else textView.setText(Html.fromHtml(html));
-        }
+        if (textView != null) textView.setText(Menemen.fromHtmlCompat(html));
         final TextView version = (TextView) findViewById(R.id.version);
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
