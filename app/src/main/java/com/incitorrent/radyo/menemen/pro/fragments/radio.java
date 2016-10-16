@@ -318,6 +318,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     @Override
     public void onDestroyView() {
         if(fab!=null) fab.hide();
+        if(getActivity()!=null)
+            getActivity().setVolumeControlStream(AudioManager.USE_DEFAULT_STREAM_TYPE);
         super.onDestroyView();
     }
 
