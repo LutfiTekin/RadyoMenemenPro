@@ -21,7 +21,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -96,28 +95,24 @@ public class MUSIC_PLAY_SERVICE extends Service {
         mediaSessionCompat.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-                Log.v("TAG","MediaButtonEvent " + mediaButtonEvent.getAction());
                 return super.onMediaButtonEvent(mediaButtonEvent);
             }
 
             @Override
             public void onPlay() {
                 resume(true);
-                Log.v(TAG,"MediaSession callback onPlay");
                 super.onPlay();
             }
 
             @Override
             public void onPause() {
                 pause(true);
-                Log.v(TAG,"MediaSession callback onPause");
                 super.onPause();
             }
 
             @Override
             public void onStop() {
                 pause(true);
-                Log.v(TAG,"MediaSession callback onStop");
                 super.onStop();
             }
         });
@@ -131,7 +126,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             public void run() {
                updateMediaInfoIfNecessary();
-                Log.v(TAG, "COMPLETED TASK COUNT " + exec.getCompletedTaskCount());
             }
         },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /2, TimeUnit.SECONDS);
         MusicPlayServiceReceiver();
@@ -182,7 +176,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
             public void run() {
         if(resumedbyUser) { //regain focus if resumed by user
         int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-       Log.v(TAG,"AUDIOFOCUS " + res);
         if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
         }
         try {
@@ -194,10 +187,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
             mediaSessionCompat.setPlaybackState(stateBuilder.build());
             broadcastToUi(true);
-        } catch (IllegalStateException e) {
+        } catch (Exception e){
             e.printStackTrace();
-        }catch (Exception e){
-            Log.v(TAG, "ERROR  " + e.getMessage());
         }
             }
         }).start();
@@ -209,7 +200,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
         isPodcast = m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
-            Log.v(TAG,"STOP");
             stopService(new Intent(this, MUSIC_PLAY_SERVICE.class)); //DURDUR
             return START_NOT_STICKY;
         }
@@ -228,7 +218,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
             }
            if(dataSource!=null)  play(dataSource);
             else resume(true);
-            Log.v(TAG,"DATA SOURCE " +dataSource);
         }else if(m.isPlaying()) pause(true);
 
         return START_NOT_STICKY;
@@ -266,15 +255,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                        mediaPlayer.setDataSource(dataSource);
-                        mediaPlayer.prepare();
+                    mediaPlayer.setDataSource(dataSource);
+                    mediaPlayer.prepare();
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
-                } catch (IOException | IllegalStateException e) {
-                    Log.e(TAG, e.toString());
-//                    stopSelf();
-                }catch (NullPointerException e){
-                    //Houston we have a problem
+                } catch (IOException | IllegalStateException | NullPointerException e) {
                     e.printStackTrace();
                 }
 
@@ -285,7 +270,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                             @Override
                             public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
-                                Log.v("current", "pos" + mediaPlayer.getCurrentPosition());
                                 broadcastPodcastBuffering(i, mediaPlayer.getCurrentPosition());
                             }
                         });
@@ -314,8 +298,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         }
                     }).start();
                     audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-                } catch (IllegalStateException e) {
-                    Log.e(TAG,"HATA ILLEGAL STATE "+ e.toString());
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -332,7 +314,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     @Override
     public void onDestroy() {
-        Log.v(TAG,"onDestroy");
         m.kaydet("caliyor","hayır");
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
@@ -348,7 +329,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
         } catch (Exception e) {
-            Log.v(TAG, "onDestroy "+ e.toString());
+           e.printStackTrace();
         }
 
         super.onDestroy();
@@ -399,7 +380,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
         notification.setDeleteIntent(stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
-        Log.v(TAG, " Notification built");
     }
     //Activity de şimdi çalıyor butonunu değiştir
     public void broadcastToUi(Boolean play) {
@@ -471,7 +451,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
     private BroadcastReceiver PlugReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.v(TAG,intent.getAction());
             pause(true);
         }
     };

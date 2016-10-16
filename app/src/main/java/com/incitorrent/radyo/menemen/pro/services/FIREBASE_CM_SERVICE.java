@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -156,11 +155,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private void sync() {
         try {
             String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
-            Log.d(TAG, "Alınan JSON:\n"+ line);
             JSONObject J = new JSONObject(line);
             JSONArray JARR = J.getJSONArray("info");
             JSONObject Jo = JARR.getJSONObject(0);
-            Log.v("SERVER",Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
             m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
             m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
             m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
@@ -223,7 +220,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
         onlineUser(nick);
-        Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
         final Boolean isUser = nick.equals(m.getUsername());
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || !isUser) return; //Create notification condition
         buildChatNotification(nick,msg);
@@ -282,7 +278,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notification.setAutoCancel(true);
         notificationManager.notify(RadyoMenemenPro.PODCAST_NOTIFICATION, notification.build());
-        Log.v(TAG, " Notification built");
     }
 
     private void updateNews(RemoteMessage remoteMessage) {
@@ -355,7 +350,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notification.setAutoCancel(true);
         notificationManager.notify(notificationid, notification.build());
-        Log.v(TAG, " Notification built");
     }
 
     private void buildChatNotification(String nick, String mesaj) {

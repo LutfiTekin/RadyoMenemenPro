@@ -274,7 +274,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                               sql.deleteMSG(id);
                               for (int i = 0; i < sohbetList.size(); i++) {
                                   if (sohbetList.get(i).id.equals(id)) {
-                                      Log.v(TAG, "sohbetList " + id + sohbetList.get(i).mesaj);
                                       sohbetList.remove(i);
                                       sohbetRV.getAdapter().notifyItemRemoved(i);
                                   }
@@ -340,7 +339,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStart() {
-        Log.v(TAG,"onStart");
         if(getActivity()!=null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
@@ -352,7 +350,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
-        Log.v(TAG,"onResume");
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
        if((sohbetList == null || sohbetList.size() < 1))
            new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -387,7 +384,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStop() {
-        Log.v(TAG,"onStop");
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
@@ -396,18 +392,15 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onDestroyView() {
-        Log.v(TAG,"onDestroyView");
         super.onDestroyView();
     }
     int first_visible_view;
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, "onSavedInstanceState");
         if(linearLayoutManager != null){
             first_visible_view = linearLayoutManager.findFirstCompletelyVisibleItemPosition();
             if(first_visible_view > 20) {
                 outState.putInt("first_visible_view", first_visible_view);
-                Log.d(TAG, "onSavedInstanceState last visible view position saved " + first_visible_view );
             }
         }
         super.onSaveInstanceState(outState);
@@ -415,11 +408,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "onActivityCreated");
         if(savedInstanceState != null && sohbetRV != null && sohbetList != null){
             first_visible_view = savedInstanceState.getInt("first_visible_view");
             new initsohbet(first_visible_view + 20, first_visible_view).execute();
-
         }
         super.onActivityCreated(savedInstanceState);
     }
@@ -579,7 +570,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         sb.append(line).append("\n");
                     }
                     line = sb.toString();
-                    Log.v(TAG,"POST "+ line);
                     JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
 
             if(j.get("status").equals("ok")) return true;
@@ -782,7 +772,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
             try {
                 final Uri saveduri = Uri.parse(m.oku(RadyoMenemenPro.LASTURI));
-                Log.v(TAG,"temp " + saveduri);
                 Bitmap bitmap;
                 InputStream image_stream = getActivity().getContentResolver().openInputStream(saveduri);
                 bitmap= BitmapFactory.decodeStream(image_stream);
@@ -869,7 +858,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     zaman = c.getString("time");
                     //db ye ekle
                     sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
-                    Log.v(TAG,"add to sql " + id + " " + nick);
                 }
             }catch (Exception e){
                 m.resetFirstTime("loadmessages");

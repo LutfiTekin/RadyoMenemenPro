@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -45,7 +44,6 @@ public class MUSIC_INFO_SERVICE extends Service {
     @Override
     public void onDestroy() {
         exec.shutdown();
-        Log.v(TAG,"Destroy called");
         super.onDestroy();
     }
 
@@ -61,8 +59,7 @@ public class MUSIC_INFO_SERVICE extends Service {
         exec = new ScheduledThreadPoolExecutor(1);
         exec.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                Log.v(TAG,"Update");
-                    new UpdateOnBackground().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                new UpdateOnBackground().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             }
         }, 10, RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL, TimeUnit.SECONDS); // execute every ** seconds
         super.onCreate();
@@ -70,7 +67,6 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
-        Log.v(TAG, "ID: " +startId);
         new UpdateNow().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         return START_NOT_STICKY;
     }
@@ -84,13 +80,11 @@ public class MUSIC_INFO_SERVICE extends Service {
     public class UpdateOnBackground extends AsyncTask<String,String,String>{
         @Override
         protected String doInBackground(String... params) {
-            Log.v(TAG, "UpdateOnBackground");
             if (!inf.isInternetAvailable()) return null;
             try {
                 if (inf.isPlaying()) {
                     //Şarkı bilgisi kontrolü
                         String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
-                        Log.v(TAG, line);
                         JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
                         String calan = c.getString(CALAN);
                         inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
@@ -102,7 +96,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                 }
             }
             catch (Exception e){
-                Log.v(TAG,"ERROR" + e.toString());
+                e.printStackTrace();
             }
 
 
@@ -123,13 +117,11 @@ public class MUSIC_INFO_SERVICE extends Service {
     public class UpdateNow extends AsyncTask<String,String,Boolean>{
         @Override
         protected Boolean doInBackground(String... params) {
-            Log.v(TAG, "UpdateNOW");
             if (!inf.isInternetAvailable()) return null;
 
             try {
                 //Şarkı bilgisi kontrolü
                 String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
-                Log.v(TAG, line);
                 JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
                 String calan = c.getString(CALAN);
                 inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
@@ -140,7 +132,6 @@ public class MUSIC_INFO_SERVICE extends Service {
                 saveTrackAndNotifyNP(calan,songid,artwork);
                 return true;
             }catch (Exception e){
-                Log.v(TAG,"ERROR" + e.toString());
                 return false;
             }
         }

@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 Boolean play;
               if(intent!=null) {
-                  Log.v(TAG, intent.getAction());
                   String action = intent.getAction();
                   if (action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)) {
                   play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
