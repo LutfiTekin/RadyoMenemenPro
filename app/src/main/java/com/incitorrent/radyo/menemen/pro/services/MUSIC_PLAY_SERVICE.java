@@ -157,7 +157,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
 
-    private void pause(final Boolean abandonfocus) {
+    private void pause(final Boolean pausedbyUser) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -169,18 +169,19 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     stopForeground(false);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
-                    if(abandonfocus) audioManager.abandonAudioFocus(focusChangeListener); //if paused by user
+                    if(pausedbyUser) //abandonfocus if paused by user
+                        audioManager.abandonAudioFocus(focusChangeListener);
                 } catch (Exception e){ e.printStackTrace(); }
             }
         }).start();
     }
 
-    private void resume(final Boolean regainfocus) {
+    private void resume(final Boolean resumedbyUser) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-        if(regainfocus) {
-        int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN); //resumed by user
+        if(resumedbyUser) { //regain focus if resumed by user
+        int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
        Log.v(TAG,"AUDIOFOCUS " + res);
         if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
         }
