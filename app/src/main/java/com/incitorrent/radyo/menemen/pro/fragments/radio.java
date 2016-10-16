@@ -12,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -109,7 +110,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                              Bundle savedInstanceState) {
 
         View radioview = inflater.inflate(R.layout.fragment_radio,container,false);
-        if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
+        if(getActivity()!=null) {
+            getActivity().setTitle(getString(R.string.app_name));
+            //pressing the volume keys changes media volume even if not playing
+            getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        }
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
         fab = (FloatingActionButton) radioview.findViewById(R.id.fab);
