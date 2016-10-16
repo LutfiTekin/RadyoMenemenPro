@@ -60,6 +60,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
@@ -1048,22 +1049,4 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 
-    /**
-     * Fix for "java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter"
-     */
-    public class WrapContentLinearLayoutManager extends LinearLayoutManager {
-
-        WrapContentLinearLayoutManager(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-            try {
-                super.onLayoutChildren(recycler, state);
-            } catch (IndexOutOfBoundsException e) {
-                Log.v(TAG, "IndexOutOfBoundsException is catched " + e.toString());
-            }
-        }
-    }
 }
