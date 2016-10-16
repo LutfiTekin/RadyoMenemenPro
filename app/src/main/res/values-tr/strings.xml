@@ -201,4 +201,6 @@
     <string name="loading">Yükleniyor</string>
     <string name="nav_topics">Konular</string>
     <string name="description_topic">Burda diğer Radyo Menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık, Özel veya Korumalı olmak üzere 3 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin.</string>
+    <string name="settings_pp_mode_title">Radyoyu kaldığı yerden devam et</string>
+    <string name="settings_pp_mode_summary">Yayını dinlerken duraklatırsanız, devam et tuşu kaldığı yerden devam edecektir. (Bu durum çalan şarkı bilgisinin yanlış gösterilmesine yol açabilir.)</string>
 </resources>
