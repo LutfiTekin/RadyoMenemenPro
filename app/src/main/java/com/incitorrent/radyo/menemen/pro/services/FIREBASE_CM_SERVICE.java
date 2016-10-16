@@ -204,7 +204,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 broadcastManager.sendBroadcast(chat);
             }else
             notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
-
             return;
         }
         //CHAT mesajı geldi
@@ -225,7 +224,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
         onlineUser(nick);
         Log.v(TAG, "message received"+ nick + " " + msg + " " + msgid + " " + time);
-        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged) return; //Create notification condition
+        final Boolean isUser = nick.equals(m.getUsername());
+        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || !isUser) return; //Create notification condition
         buildChatNotification(nick,msg);
     }
 
@@ -366,7 +366,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);
            builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
-        if(!mutechatnotification && !isUser && !m.isPlaying()) {
+        if(!mutechatnotification && !m.isPlaying()) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
@@ -374,8 +374,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
-        if(!isUser)
-            builder.setLights(Color.RED, 1000, 500);
+        builder.setLights(Color.RED, 1000, 500);
         builder.setAutoCancel(true);
         Notification notification = builder.build();
        notificationManager.notify(new Random().nextInt(200), notification);
