@@ -185,7 +185,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
         sohbetList = new ArrayList<>();
         sohbetRV.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager = new WrapContentLinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
@@ -199,7 +199,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
                     int LIST_SIZE = sohbetList.size();
                     String lastid = sohbetList.get(LIST_SIZE - 1).id;
-                    if(LAST_POSITION_COMP_VISIBLE == (LIST_SIZE - 10) )
+                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) )
                         new loadMore(lastid, LIST_SIZE).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
@@ -986,7 +986,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
         private synchronized void notifyItemsSync() {
             try {
-                sohbetRV.getAdapter().notifyItemRangeInserted(listSize,20);
+                sohbetRV.getAdapter().notifyItemRangeInserted(listSize,40);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1048,4 +1048,22 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 
+    /**
+     * Fix for "java.lang.IndexOutOfBoundsException: Inconsistency detected. Invalid view holder adapter"
+     */
+    public class WrapContentLinearLayoutManager extends LinearLayoutManager {
+
+        WrapContentLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                super.onLayoutChildren(recycler, state);
+            } catch (IndexOutOfBoundsException e) {
+                Log.v(TAG, "IndexOutOfBoundsException is catched " + e.toString());
+            }
+        }
+    }
 }
