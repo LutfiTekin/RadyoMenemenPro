@@ -10,8 +10,9 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -21,7 +22,21 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
@@ -29,7 +44,6 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +67,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
     AudioManager audioManager;
     int amgr_result;
     AudioManager.OnAudioFocusChangeListener focusChangeListener;
-    MediaPlayer mediaPlayer;
+    ExoPlayer exoPlayer;
+    ExoPlayer.EventListener exolistener;
     IntentFilter filter;
     MediaSessionCompat mediaSessionCompat;
     MediaMetadataCompat.Builder mdBuilder;
@@ -74,7 +89,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
         mediaSessionCompat = new MediaSessionCompat(this,TAG);
         m = new Menemen(this);
         filter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        mediaPlayer = new MediaPlayer();
+        // 1. Create a default TrackSelector
+        Handler handler = new Handler();
+        TrackSelector trackSelector = new DefaultTrackSelector(handler);
+        LoadControl loadControl = new DefaultLoadControl();
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         focusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
@@ -119,7 +138,39 @@ public class MUSIC_PLAY_SERVICE extends Service {
         mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         stateBuilder = new PlaybackStateCompat.Builder();
         stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
+        //Exoplayerlistener
+        exolistener = new ExoPlayer.EventListener() {
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                Log.d(TAG,"isLoading " + isLoading);
+            }
 
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                if(playbackState == ExoPlayer.STATE_READY){
+                    broadcastPodcastDuration();
+                }else if(playbackState == ExoPlayer.STATE_ENDED){
+                    terminatePodcast();
+                }
+                if(isPodcast)
+                    updateProgress();
+            }
+
+            @Override
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                Log.e(TAG, "onPlayerError " + error.toString());
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
+                Log.e(TAG, "onPositionDiscontinuity");
+            }
+        };
 
         //Çalan şarkıyı kontrol et
         exec.scheduleAtFixedRate(new Runnable() {
@@ -156,7 +207,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             public void run() {
                 try {
-                    mediaPlayer.pause();
+                    exoPlayer.setPlayWhenReady(false);
                     broadcastToUi(false);
                     m.kaydet("caliyor","hayır");
                     nowPlayingNotification();
@@ -179,7 +230,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
         }
         try {
-            mediaPlayer.start();
+            exoPlayer.setPlayWhenReady(true);
             m.kaydet("caliyor","evet");
             nowPlayingNotification();
             startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
@@ -255,32 +306,36 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    mediaPlayer.setDataSource(dataSource);
-                    mediaPlayer.prepare();
+                    DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("Menemen");
+                    ExtractorsFactory extractor = new DefaultExtractorsFactory();
+                    MediaSource audioSource = new ExtractorMediaSource(Uri.parse(dataSource), dataSourceFactory, extractor, null, null);
+                    exoPlayer.prepare(audioSource);
                     registerReceiver(PlugReceiver,filter);
                     setMusicMeta();
-                } catch (IOException | IllegalStateException | NullPointerException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 //ONPOST
                 try {
-                    mediaPlayer.start();
-                    if(isPodcast) {
-                        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-                            @Override
-                            public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
-                                broadcastPodcastBuffering(i, mediaPlayer.getCurrentPosition());
-                            }
-                        });
-                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mediaPlayer) {
-                                pause(true);
-                            }
-                        });
-                        broadcastPodcastDuration();
-                    }
+                    exoPlayer.setPlayWhenReady(true);
+
+                    exoPlayer.addListener(exolistener);
+//                    if(isPodcast) {
+//                        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+//                            @Override
+//                            public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
+//                                broadcastPodcastBuffering(i, mediaPlayer.getCurrentPosition());
+//                            }
+//                        });
+//                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                            @Override
+//                            public void onCompletion(MediaPlayer mediaPlayer) {
+//                                pause(true);
+//                            }
+//                        });
+
+//                    }
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -318,8 +373,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
             stopForeground(true);
-            mediaPlayer.stop();
-            mediaPlayer.release();
+            exoPlayer.stop();
+            exoPlayer.removeListener(exolistener);
+            exoPlayer.release();
             if(isPodcast) terminatePodcast();
             broadcastToUi(false);
             mediaSessionCompat.release();
@@ -349,8 +405,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
             intent.setAction("radyo.menemen.podcast.play");
             intent.putExtra("title", calan)
                     .putExtra("descr", m.oku(PODCAST_DESCR))
-                    .putExtra("duration", (long) mediaPlayer.getDuration())
-                    .putExtra("current", (long) mediaPlayer.getCurrentPosition());
+                    .putExtra("duration", exoPlayer.getDuration())
+                    .putExtra("current", exoPlayer.getCurrentPosition());
         }else intent.setAction("radyo.menemen.play");
         Bitmap artwork = m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false);
         int notificationcolor = ContextCompat.getColor(MUSIC_PLAY_SERVICE.this,R.color.colorBackgroundsofter);
@@ -391,9 +447,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     //Podcast Şimdi Çalıyor Fragmentine Bilgileri Gönder
     public void broadcastPodcastDuration(){
+        if(!isPodcast) return;
         Intent intent = new Intent(PODCAST_PLAY_FILTER);
-        long duration = mediaPlayer.getDuration();
-        long currentpos = mediaPlayer.getCurrentPosition();
+        long duration = exoPlayer.getDuration();
+        long currentpos = exoPlayer.getCurrentPosition();
         intent.putExtra("action",PODCAST_GET_DURATION);
         intent.putExtra("duration",duration);
         intent.putExtra("current", currentpos);
@@ -401,6 +458,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
     private void broadcastPodcastBuffering(int buffer, int current) {
+        if(!isPodcast) return;
         Intent intent = new Intent(PODCAST_PLAY_FILTER);
         intent.putExtra("action",PODCAST_SEEKBAR_BUFFERING_UPDATE);
         intent.putExtra("buffer",buffer);
@@ -409,6 +467,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
     private void terminatePodcast() {
+        if(!isPodcast) return;
         Intent intent = new Intent(PODCAST_PLAY_FILTER);
         intent.putExtra("action",PODCAST_TERMINATE);
         broadcasterForUi.sendBroadcast(intent);
@@ -426,7 +485,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     if (action.equals("seek")){
                         int msec = intent.getExtras().getInt("seek");
                         try {
-                            mediaPlayer.seekTo(msec);
+                            exoPlayer.seekTo(msec);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -454,7 +513,35 @@ public class MUSIC_PLAY_SERVICE extends Service {
             pause(true);
         }
     };
+    final Handler handler = new Handler();
+    private void updateProgress() {
+        long position = exoPlayer == null ? 0 : exoPlayer.getCurrentPosition();
+        long bufferedPosition = exoPlayer == null ? 0 : exoPlayer.getBufferedPosition();
+        broadcastPodcastBuffering((int)bufferedPosition,(int)position);
+        // Remove scheduled updates.
+        handler.removeCallbacks(updateProgressAction);
+        // Schedule an update if necessary.
+        int playbackState = exoPlayer == null ? ExoPlayer.STATE_IDLE : exoPlayer.getPlaybackState();
+        if (playbackState != ExoPlayer.STATE_IDLE && playbackState != ExoPlayer.STATE_ENDED) {
+            long delayMs;
+            if (exoPlayer.getPlayWhenReady() && playbackState == ExoPlayer.STATE_READY) {
+                delayMs = 1000 - (position % 1000);
+                if (delayMs < 200) {
+                    delayMs += 1000;
+                }
+            } else {
+                delayMs = 1000;
+            }
+            if(m.isPlaying())
+                handler.postDelayed(updateProgressAction, delayMs);
+        }
+    }
 
-
+    private final Runnable updateProgressAction = new Runnable() {
+        @Override
+        public void run() {
+            updateProgress();
+        }
+    };
 
 }

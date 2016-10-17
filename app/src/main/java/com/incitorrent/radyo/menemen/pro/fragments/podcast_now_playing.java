@@ -28,8 +28,6 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarChangeListener,View.OnClickListener{
@@ -41,7 +39,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     Chronometer chronometer;
     ProgressBar progressBar;
     BroadcastReceiver receiver;
-    ScheduledThreadPoolExecutor exec;
     Menemen m;
     long timeWhenStopped = 0;
     LocalBroadcastManager localBroadcastManager;
@@ -55,7 +52,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View podcastview = inflater.inflate(R.layout.fragment_podcast_now_playing, container, false);
-        exec = new ScheduledThreadPoolExecutor(1);
         m = new Menemen(getActivity().getApplicationContext());
         Bundle bundle = this.getArguments();
         String podcast_title,podcast_descr;
@@ -107,11 +103,9 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                         placeholder.setImageResource(android.R.drawable.ic_media_pause);
                         startTimer();
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE)){
-                        int buffer = intent.getExtras().getInt("buffer");
-                        int max = seekBar.getMax();
-                        int seconds = (max * buffer) / 100;
-                        seekBar.setSecondaryProgress(seconds);
+                        int buffer = intent.getExtras().getInt("buffer")/1000;
                         int currentsec = intent.getExtras().getInt("current")/1000;
+                        seekBar.setSecondaryProgress(buffer);
                         seekBar.setProgress(currentsec);
                     }else if(action.equals(MUSIC_PLAY_SERVICE.PODCAST_TERMINATE)){
                         try {
@@ -170,18 +164,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     private void startTimer() {
         chronometer.start();
-        try {
-            exec.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    if(m.isPlaying()) {
-                        seekBar.setProgress(seekBar.getProgress() + 1);
-                    }
-                }
-            },0,1, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -207,11 +189,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStop() {
-        try {
-            exec.shutdown();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onStop();
     }
 
@@ -246,11 +223,6 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onDestroy() {
-        try {
-            exec.shutdown();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
     }
 
