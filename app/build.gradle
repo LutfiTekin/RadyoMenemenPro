@@ -47,6 +47,7 @@ dependencies {
     compile 'com.github.paolorotolo:appintro:4.0.0'
     compile 'com.google.firebase:firebase-core:9.6.1'
     compile 'com.google.firebase:firebase-messaging:9.6.1'
+    compile 'com.google.android.exoplayer:exoplayer:r2.0.2'
     testCompile 'junit:junit:4.12'
 }
 
