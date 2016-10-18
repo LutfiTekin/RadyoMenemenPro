@@ -36,7 +36,6 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -327,26 +326,43 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     public void onResume() {
         m.selectChannelAuto();
         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
-        RList = new ArrayList<>();
-        cursor = sql.getHistory(20);
-        cursor.moveToFirst();
-        while(cursor!=null && !cursor.isAfterLast()) {
-            if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
-                String song = cursor.getString(cursor.getColumnIndex("song"));
-                String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-                String url = cursor.getString(cursor.getColumnIndex("url"));
-                String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
-                Log.v("ARTURL",cursor.getString(cursor.getColumnIndex("arturl")));
-                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
-                RList.add(new history_objs(song,songhash,url,arturl));
-            }
-            cursor.moveToNext();
-        }
-        cursor.close();
-        sql.close();
-        adapter = new RadioAdapter(RList);
-        lastplayed.setAdapter(adapter);
-        if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
+        if(RList == null || RList.size() < 1)
+            new AsyncTask<Void,Void,Void>(){
+                @Override
+                protected void onPreExecute() {
+                    RList = new ArrayList<>();
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    cursor = sql.getHistory(20);
+                    cursor.moveToFirst();
+                    while(cursor!=null && !cursor.isAfterLast()) {
+                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                            String song = cursor.getString(cursor.getColumnIndex("song"));
+                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                            String url = cursor.getString(cursor.getColumnIndex("url"));
+                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                            if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
+                                RList.add(new history_objs(song,songhash,url,arturl));
+                        }
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
+                    sql.close();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    adapter = new RadioAdapter(RList);
+                    lastplayed.setAdapter(adapter);
+                    if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
+                    super.onPostExecute(aVoid);
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
             setNP();
@@ -360,9 +376,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         super.onResume();
     }
 
-    /**
-     * Change stream adress depending on phones net stat and streams availability
-     */
+
 
 
     @Override
