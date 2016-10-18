@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -53,7 +52,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         m = new Menemen(context);
         uploadingimg();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Log.v(TAG,"ByteSize " + byteSizeOf(bit));
         if(byteSizeOf(bit)>3440000){
             bit = resizeBitmap(bit,720);
         }
@@ -80,11 +78,9 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 sb.append(line + "\n");
             }
             line = sb.toString();
-            Log.v(TAG, "register " + line);
             JSONObject J = new JSONObject(line);
             JSONObject Jo = J.getJSONObject("image");
             if(!J.getString("status_code").equals("200")) throw new Exception(context.getString(R.string.image_not_uploaded));
-            Log.v(TAG,"JSON" + Jo.getString("date") + " " + Jo.getString("url"));
             bit.recycle();
             bit= null;
             System.gc();
@@ -139,7 +135,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                         sb.append(line + "\n");
                     }
                     line = sb.toString();
-                    Log.v(TAG,"POST "+ line);
                     JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
 
                     if(j.get("status").equals("ok")) return true;
@@ -160,7 +155,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         if(s!=null) uploadedimg();
     }
     private void registerCaps(final String name) {
-        Log.v("registerCaps",name);
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected Void doInBackground(Void... voids) {

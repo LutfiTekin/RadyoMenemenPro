@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,10 +68,8 @@ public class galeri extends Fragment {
         nestedScrollView.setOnScrollChangeListener(new EndlessParentScrollListener(llm) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                Log.v(TAG,"load");
                 if(Glist == null || Glist.size()<1) return;
                 String lastid = Glist.get(totalItemsCount - 1).msgid;
-                Log.v(TAG,"last" + Glist.get(totalItemsCount - 1).uploader + lastid + Glist.size());
                 new loadMore(lastid, Glist.size()).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
             }
         });
@@ -146,7 +143,6 @@ public class galeri extends Fragment {
                             break;
                         }
                     }
-                    Log.v(TAG,"is" + exist);
                     if(exist < 1) Glist.add(new galeri_objects(uploader,Menemen.getCapsUrl(Menemen.fromHtmlCompat(capsurl)),msgid));
                     cursor.moveToNext();
                 }

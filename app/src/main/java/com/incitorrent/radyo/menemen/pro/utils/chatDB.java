@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Radyo Menemen Pro Created by lutfi on 21.07.2016.
@@ -41,7 +40,6 @@ public class chatDB extends SQLiteOpenHelper {
     }
 
     public void addtoHistory(CHAT chat){
-        Log.v(DATABASE_NAME,chat.get_NICK() + " " + chat._POST);
         ContentValues values = new ContentValues();
         values.put(_MSGID, chat.get_MSGID());
         values.put(_NICK, chat.get_NICK());
@@ -52,7 +50,6 @@ public class chatDB extends SQLiteOpenHelper {
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         }catch (Exception e){
             e.printStackTrace();
-            Log.v(DATABASE_NAME,e.toString());
         }
         db.close();
     }
@@ -104,7 +101,6 @@ public class chatDB extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         db.close();
-        Log.v("nextcaps",caps);
         return (caps != null) ? Menemen.getCapsUrl(Menemen.fromHtmlCompat(caps)) : capsurl;
     }
 

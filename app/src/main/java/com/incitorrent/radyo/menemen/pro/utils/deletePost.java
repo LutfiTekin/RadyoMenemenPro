@@ -2,7 +2,6 @@ package com.incitorrent.radyo.menemen.pro.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
@@ -57,7 +56,6 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
                 sb.append(line + "\n");
             }
             line = sb.toString();
-            Log.v(TAG,  line);
         } catch (final Exception e) {
             e.printStackTrace();
         } finally {

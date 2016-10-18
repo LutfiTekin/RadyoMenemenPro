@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
@@ -44,7 +43,6 @@ public class capsDB extends SQLiteOpenHelper {
     }
 
     public void addtoHistory(CAPS caps){
-        Log.v(DATABASE_NAME,caps.get_NICK() + " " + caps._POST);
         ContentValues values = new ContentValues();
         values.put(_MSGID, caps.get_MSGID());
         values.put(_CAPSURL, caps.get_CAPSURL());
@@ -56,7 +54,6 @@ public class capsDB extends SQLiteOpenHelper {
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }catch (Exception e){
             e.printStackTrace();
-            Log.v(DATABASE_NAME,e.toString());
         }
         db.close();
     }
