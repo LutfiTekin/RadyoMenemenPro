@@ -729,6 +729,9 @@ public class Menemen {
         }
         return false;
     }
+    /**
+     * Change stream adress depending on phones net stat and streams availability
+     */
     public void selectChannelAuto() {
         final String selected_channel = oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
         if(!isInternetAvailable()) return; //internet is unavailable
