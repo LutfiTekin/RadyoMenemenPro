@@ -77,7 +77,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     radioDB sql;
     Cursor cursor;
     RadioAdapter adapter;
-    List<history_objs> RList;
+    List<trackHistory> RList;
     CardView emptyview;
     TextSwitcher NPtrack;
     TextView NPdj;
@@ -272,7 +272,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         window.setStatusBarColor(Menemen.adjustAlpha(color[5],0.5f));
                     }
                 }
-
+               //TODO Add old trac kto the list ((TextView)NPtrack.getCurrentView()).getText().toString()
+                addOneTrackToList();
                 NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
 
                 if(imageView != null) {
@@ -285,6 +286,55 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
+    /**
+     *Add  previously played track to recyclerview
+     */
+    private void addOneTrackToList(){
+        new AsyncTask<Void,Void,Boolean>(){
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... voids) {
+                if(RList != null) {
+                    cursor = sql.getHistory(2);
+                    cursor.moveToFirst();
+                    Boolean added = false;
+                    while(cursor!=null && !cursor.isAfterLast()) {
+                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                            String song = cursor.getString(cursor.getColumnIndex("song"));
+                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                            if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))){
+                                trackHistory lastTrack = new trackHistory(song, songhash, arturl);
+                                if(!RList.get(0).song.equals(song)) {
+                                    RList.add(0, lastTrack);
+                                    added = true;
+                                    break;
+                                }
+                            }
+                        }
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
+                    sql.close();
+                    return added;
+                }
+                return false;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                if(lastplayed.getAdapter() != null && RList != null && result) {
+                    lastplayed.getAdapter().notifyItemInserted(0);
+                    lastplayed.scrollToPosition(0);
+                }
+                super.onPostExecute(result);
+            }
+        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+    }
 
     @Override
     public void onStart() {
@@ -326,7 +376,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     public void onResume() {
         m.selectChannelAuto();
         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
-        if(RList == null || RList.size() < 1)
             new AsyncTask<Void,Void,Void>(){
                 @Override
                 protected void onPreExecute() {
@@ -342,10 +391,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
                             String song = cursor.getString(cursor.getColumnIndex("song"));
                             String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-                            String url = cursor.getString(cursor.getColumnIndex("url"));
                             String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
                             if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
-                                RList.add(new history_objs(song,songhash,url,arturl));
+                                RList.add(new trackHistory(song,songhash,arturl));
                         }
                         cursor.moveToNext();
                     }
@@ -445,7 +493,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     public class RadioAdapter extends RecyclerView.Adapter<RadioAdapter.PersonViewHolder>{
         Context context;
-        List<history_objs> RList;
+        List<trackHistory> RList;
 
 
         class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -475,7 +523,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }
 
         }
-        RadioAdapter(List<history_objs> RList){
+        RadioAdapter(List<trackHistory> RList){
             this.RList = RList;
         }
 
@@ -501,8 +549,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
                         .error(R.mipmap.album_placeholder)
                         .into(personViewHolder.art);
-            int delay = i*100;
-          m.runEnterAnimation(personViewHolder.card,delay);
+//            int delay = i*100;
+//          m.runEnterAnimation(personViewHolder.card,delay);
         }
 
 
@@ -550,13 +598,12 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     addTransition(new ChangeImageTransform());
         }
     }
-    public class history_objs{
-        String song,songhash,url,arturl;
+    public class trackHistory {
+        String song,songhash,arturl;
 
-        history_objs(String song, String songhash, String url, String arturl) {
+        trackHistory(String song, String songhash, String arturl) {
             this.song = song;
             this.songhash = songhash;
-            this.url = url;
             this.arturl = arturl;
         }
     }

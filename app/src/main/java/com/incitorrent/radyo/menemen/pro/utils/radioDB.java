@@ -60,7 +60,6 @@ public class radioDB extends SQLiteOpenHelper {
     }
     public Cursor getHistory(int limit){
         SQLiteDatabase db = getReadableDatabase();
-        if(limit < 8) limit = 8;
         return db.query(TABLE_NAME,null,null,null,null,null,_SONGID+" DESC", String.valueOf(limit));
     }
 
