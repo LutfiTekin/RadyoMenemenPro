@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -33,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -113,6 +116,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             case RadyoMenemenPro.FCMTopics.SONG_CHANGE_EVENT:
                 if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                     startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
+                sendMenemenPointRequest();
                 break;
             default:
                 //Topic yok
@@ -141,6 +145,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void sendMenemenPointRequest() {
+        Map<String, String> dataToSend = new HashMap<>();
+        dataToSend.put("nick", m.oku("username"));
+        dataToSend.put("mkey", m.oku("mkey"));
+        String encodedStr = Menemen.getEncodedData(dataToSend);
+        Menemen.postMenemenData(RadyoMenemenPro.MP_ADD, encodedStr);
+        Log.v(TAG,"MPRequest");
     }
 
     private void onlineUser(String nick) {

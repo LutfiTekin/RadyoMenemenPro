@@ -31,8 +31,8 @@ public final class RadyoMenemenPro {
 
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    public final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
-    public final static String API = "http://api.radyomenemen.com/?"; //Yeni API base urls
+    private final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
+    private final static String API = "http://api.radyomenemen.com/?"; //Yeni API base urls
     public final static String SYNCCHANNEL = APP_INFO + "channels";
     public final static String DJRESPONSE = APP_INFO + "djresponse";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
@@ -47,6 +47,7 @@ public final class RadyoMenemenPro {
     public final static String GET_COMMENT_CAPS = APP_INFO + "get_caps_comments";
     public final static String PUSH_ONLINE_SIGNAL = APP_INFO + "pushonline";
     public final static String BROADCASTINFO_NEW = API + "broadcastinfo";
+    public final static String MP_ADD = API + "mp_add";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
