@@ -93,12 +93,10 @@ public class Menemen {
     public void kaydet(String title,String content){
         final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         kaydet.edit().putString(title,content).apply();
-        Log.v("Kayıt", "yazılıyor " + title + " " + content);
     }
     //Kaydedilen bilgileri okumak için sharedpref metodu
     public String oku(String title){
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        Log.v("Kayıt", "okunuyor " + title);
         return oku.getString(title, "yok"); //Değer boş ise "yok"
     }
 

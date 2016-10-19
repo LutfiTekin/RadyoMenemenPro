@@ -168,7 +168,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
             @Override
             public void onPositionDiscontinuity() {
-                Log.e(TAG, "onPositionDiscontinuity");
+                Log.d(TAG, "onPositionDiscontinuity");
             }
         };
 
@@ -319,23 +319,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 //ONPOST
                 try {
                     exoPlayer.setPlayWhenReady(true);
-
                     exoPlayer.addListener(exolistener);
-//                    if(isPodcast) {
-//                        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-//                            @Override
-//                            public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
-//                                broadcastPodcastBuffering(i, mediaPlayer.getCurrentPosition());
-//                            }
-//                        });
-//                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                            @Override
-//                            public void onCompletion(MediaPlayer mediaPlayer) {
-//                                pause(true);
-//                            }
-//                        });
-
-//                    }
                     m.kaydet("caliyor","evet");
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -515,8 +499,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
     };
     final Handler handler = new Handler();
     private void updateProgress() {
-        long position = exoPlayer == null ? 0 : exoPlayer.getCurrentPosition();
-        long bufferedPosition = exoPlayer == null ? 0 : exoPlayer.getBufferedPosition();
+        final long position = exoPlayer == null ? 0 : exoPlayer.getCurrentPosition();
+        final long bufferedPosition = exoPlayer == null ? 0 : exoPlayer.getBufferedPosition();
         broadcastPodcastBuffering((int)bufferedPosition,(int)position);
         // Remove scheduled updates.
         handler.removeCallbacks(updateProgressAction);

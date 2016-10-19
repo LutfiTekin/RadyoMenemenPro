@@ -32,6 +32,7 @@ public final class RadyoMenemenPro {
 
     public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
     public final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
+    public final static String API = "http://api.radyomenemen.com/?"; //Yeni API base urls
     public final static String SYNCCHANNEL = APP_INFO + "channels";
     public final static String DJRESPONSE = APP_INFO + "djresponse";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
@@ -90,7 +91,7 @@ public final class RadyoMenemenPro {
     }
 
     public final static class FCMTopics{
-        public final static String TOPIC = "/topics/";
+        final static String TOPIC = "/topics/";
         public final static String GENERAL = TOPIC + "general";
         public final static String NEWS = TOPIC + "news";
         public final static String SYNC = TOPIC + "sync";
