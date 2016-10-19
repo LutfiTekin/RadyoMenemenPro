@@ -53,7 +53,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="142dp"
         android:layout_gravity="start|bottom"
         android:background="@color/colorBackgroundsoft"
         android:id="@+id/nowplaying_box">
@@ -67,12 +67,12 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:id="@+id/cardviewart"
             app:cardCornerRadius="4dp">
             <ImageView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:id="@+id/nowplaying_art"
                 android:src="@mipmap/album_placeholder"
                 android:contentDescription="@string/cd_song_artwork"
@@ -117,7 +117,7 @@
                 android:text="@string/ph_np_track"
                 android:id="@+id/nowplaying_track"
                 android:layout_marginTop="16dp"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:layout_marginRight="46dp" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -143,6 +143,7 @@
                         android:background="#00ffffff"
                         android:contentDescription="@string/search_on_spotify"
                         android:layout_gravity="center_horizontal"
+                        android:paddingTop="8dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp" />
                     <TextView
@@ -165,6 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/youtube"
+                        android:paddingTop="8dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:src="@drawable/youtube"
@@ -191,6 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/lyric"
+                        android:paddingTop="8dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:src="@drawable/lyrics"
