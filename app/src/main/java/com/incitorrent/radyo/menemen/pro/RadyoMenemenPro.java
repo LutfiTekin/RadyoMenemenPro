@@ -46,7 +46,7 @@ public final class RadyoMenemenPro {
     public final static String DELETE_COMMENT_CAPS = APP_INFO + "deletecaps_comment";
     public final static String GET_COMMENT_CAPS = APP_INFO + "get_caps_comments";
     public final static String PUSH_ONLINE_SIGNAL = APP_INFO + "pushonline";
-
+    public final static String BROADCASTINFO_NEW = API + "broadcastinfo";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";

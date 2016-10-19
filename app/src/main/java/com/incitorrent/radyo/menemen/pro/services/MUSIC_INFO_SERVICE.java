@@ -84,7 +84,7 @@ public class MUSIC_INFO_SERVICE extends Service {
             try {
                 if (inf.isPlaying()) {
                     //Şarkı bilgisi kontrolü
-                        String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
+                        String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO_NEW);
                         JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
                         String calan = c.getString(CALAN);
                         inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
@@ -121,7 +121,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
             try {
                 //Şarkı bilgisi kontrolü
-                String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO);
+                String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO_NEW);
                 JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
                 String calan = c.getString(CALAN);
                 inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
