@@ -88,7 +88,6 @@ import static com.incitorrent.radyo.menemen.pro.utils.Menemen.PENDING;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.fromHtmlCompat;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getCapsUrl;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getEncodedData;
-import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getMenemenData;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getThumbnail;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getTimeAgo;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeId;
@@ -844,7 +843,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected Void doInBackground(Void... voids) {
             if(!m.isInternetAvailable()) return null;
-            String line = getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
+            String line = m.getMenemenDataVolley(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
             try {
                 JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
                 JSONObject c;
