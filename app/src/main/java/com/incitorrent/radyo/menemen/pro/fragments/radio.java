@@ -301,38 +301,46 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
             @Override
             protected Boolean doInBackground(Void... voids) {
-                if(RList != null) {
-                    cursor = sql.getHistory(2);
-                    cursor.moveToFirst();
-                    Boolean added = false;
-                    while(cursor!=null && !cursor.isAfterLast()) {
-                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
-                            String song = cursor.getString(cursor.getColumnIndex("song"));
-                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
-                            if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))){
-                                trackHistory lastTrack = new trackHistory(song, songhash, arturl);
-                                if(!RList.get(0).song.equals(song)) {
-                                    RList.add(0, lastTrack);
-                                    added = true;
-                                    break;
+                try {
+                    if(RList != null) {
+                        cursor = sql.getHistory(2);
+                        cursor.moveToFirst();
+                        Boolean added = false;
+                        while(cursor!=null && !cursor.isAfterLast()) {
+                            if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                                String song = cursor.getString(cursor.getColumnIndex("song"));
+                                String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                                String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))){
+                                    trackHistory lastTrack = new trackHistory(song, songhash, arturl);
+                                    if(!RList.get(0).song.equals(song)) {
+                                        RList.add(0, lastTrack);
+                                        added = true;
+                                        break;
+                                    }
                                 }
                             }
+                            cursor.moveToNext();
                         }
-                        cursor.moveToNext();
+                        cursor.close();
+                        sql.close();
+                        return added;
                     }
-                    cursor.close();
-                    sql.close();
-                    return added;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return false;
             }
 
             @Override
             protected void onPostExecute(Boolean result) {
-                if(lastplayed.getAdapter() != null && RList != null && result) {
-                    lastplayed.getAdapter().notifyItemInserted(0);
-                    lastplayed.scrollToPosition(0);
+                try {
+                    if(lastplayed.getAdapter() != null && RList != null && result) {
+                        lastplayed.getAdapter().notifyItemInserted(0);
+                        lastplayed.scrollToPosition(0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 super.onPostExecute(result);
             }
