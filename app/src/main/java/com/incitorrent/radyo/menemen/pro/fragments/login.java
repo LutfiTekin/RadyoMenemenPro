@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,7 +13,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +23,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -111,69 +115,63 @@ public class login extends Fragment {
                 String pass = password.getText().toString();
                final String pash = Menemen.md5(Menemen.md5("radyomenemen"+ Menemen.md5(pass)));
                 if(!validatePass() || !validateName()) return;
-                new AsyncTask<Void,Void,String>(){
-                    @Override
-                    protected void onPreExecute() {
-                        Toast.makeText(getActivity(), R.string.toast_connecting, Toast.LENGTH_SHORT).show();
-                        super.onPreExecute();
-                    }
+                RequestQueue queue = Volley.newRequestQueue(context);
+                StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.AUTH,
+                        new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject J = new JSONObject(response);
+                                    String durum = J.getString("durum");
+                                    String aksiyon = J.getString("aksiyon");
+                                    if(durum.equals("ok")){
+                                        m.kaydet("username",nick);
+                                        m.kaydet("mkey",J.getString("mkey"));
+                                        m.bool_kaydet("loggedin", true);
+                                        m.setToken();
+                                        if(aksiyon.equals("giris")) Toast.makeText(getActivity(), getString(R.string.toast_logged_in), Toast.LENGTH_SHORT).show();
+                                        else if(aksiyon.equals("kayit")) Toast.makeText(getActivity(), getString(R.string.toast_signed_up), Toast.LENGTH_SHORT).show();
+                                        getFragmentManager().beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+                                        setNavOnLoggedin();
+                                    }else throw  new Exception(durum);
+
+
+                                } catch (final Exception e) {
+                                    Handler handler = new Handler(Looper.getMainLooper());
+                                    handler.post(new Runnable() {
+                                        public void run() {
+                                            String toastmsg;
+                                            switch (e.getMessage()){
+                                                case "password": toastmsg = getString(R.string.toast_error_password_incorrect); break;
+                                                default: toastmsg = getString(R.string.error_occured) + " " + e.getMessage(); break;
+                                            }
+                                            Toast.makeText(getActivity(), toastmsg, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                ) {
 
                     @Override
-                    protected void onPostExecute(String s) {
-                        if(s!=null) {
-                            if (s.equals("loggedin"))
-                                Toast.makeText(getActivity(), getString(R.string.toast_logged_in), Toast.LENGTH_SHORT).show();
-                            else if (s.equals("signedup"))
-                                Toast.makeText(getActivity(), getString(R.string.toast_signed_up), Toast.LENGTH_SHORT).show();
-                            if(!s.equals("problem"))
-                                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
-                                setNavOnLoggedin();
-                             }
-                        super.onPostExecute(s);
-                    }
-
-                    @Override
-                    protected String doInBackground(Void... params) {
-                        Map<String,String> dataToSend = new HashMap<>();
+                    protected Map<String, String> getParams(){
+                        HashMap<String,String> dataToSend = new HashMap<>();
                         dataToSend.put("uye", nick);
                         dataToSend.put("sifre", pash);
-                        String encodedStr = Menemen.getEncodedData(dataToSend);
-                        try {
-                            String line = Menemen.postMenemenData(RadyoMenemenPro.AUTH,encodedStr);
-                            JSONObject J = new JSONObject(line);
-                            Log.v(TAG, "VERFER "+ J.getString("durum") + " " + J.getString("mkey") + "\n" + line);
-                            String durum = J.getString("durum");
-                            String aksiyon = J.getString("aksiyon");
-                            if(durum.equals("ok")){
-                                m.kaydet("username",nick);
-                                m.kaydet("mkey",J.getString("mkey"));
-                                m.bool_kaydet("loggedin", true);
-                                m.setToken();
-                                if(aksiyon.equals("giris")) return "loggedin";
-                                else if(aksiyon.equals("kayit")) return "signedup";
-                                return "ok";
-                            }else throw  new Exception(durum);
-
-
-                        } catch (final Exception e) {
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new Runnable() {
-                                public void run() {
-                                    String toastmsg;
-                                    switch (e.getMessage()){
-                                        case "password": toastmsg = getString(R.string.toast_error_password_incorrect); break;
-                                        default: toastmsg = getString(R.string.error_occured) + " " + e.getMessage(); break;
-                                    }
-                                    Toast.makeText(getActivity(), toastmsg, Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-                            e.printStackTrace();
-                        }
-
-                        return "problem";
+                        return dataToSend;
                     }
-                }.execute();
+                };
+                queue.add(postRequest);
             }
         });
         return rootview;

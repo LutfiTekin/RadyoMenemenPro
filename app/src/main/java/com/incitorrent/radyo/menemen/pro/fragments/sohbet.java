@@ -53,6 +53,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.incitorrent.radyo.menemen.pro.R;
@@ -92,7 +97,6 @@ import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getThumbnail;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getTimeAgo;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeId;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeThumbnail;
-import static com.incitorrent.radyo.menemen.pro.utils.Menemen.postMenemenData;
 
 
 public class sohbet extends Fragment implements View.OnClickListener{
@@ -234,7 +238,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         swipeRV.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new forceSync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                forceSyncMSGs();
             }
         });
         Chatreceiver = new BroadcastReceiver() {
@@ -304,6 +308,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     }
 
+
+
     /**
      * Activate/Deactivate secret chat sound
      */
@@ -369,16 +375,28 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private void iAmOnline() {
         if(m.getSavedTime("online_push") > System.currentTimeMillis()) return;
         m.saveTime("online_push",(1000 * 60 * 2));
-        new Thread(new Runnable() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.PUSH_ONLINE_SIGNAL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },null){
             @Override
-            public void run() {
-                Map<String,String> dataToSend = new HashMap<>();
+            protected Map<String, String> getParams() {
+                HashMap<String,String> dataToSend = new HashMap<>();
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("mkey", m.getMobilKey());
-                String encodedStr = getEncodedData(dataToSend);
-                postMenemenData(RadyoMenemenPro.PUSH_ONLINE_SIGNAL, encodedStr);
+                return dataToSend;
             }
-        }).start();
+
+            @Override
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
+            }
+        };
+        queue.add(post);
     }
 
     @Override
@@ -838,38 +856,44 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
     }
 
+    private void forceSyncMSGs() {
+        RequestQueue q = Volley.newRequestQueue(getActivity().getApplicationContext());
+        StringRequest r = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                    new AsyncTask<Void,Void,Void>(){
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            try {
+                                JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
+                                JSONObject c;
+                                for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                                    String id,nick,mesaj,zaman;
+                                    JSONArray innerJarr = arr.getJSONArray(0);
+                                    c = innerJarr.getJSONObject(i);
+                                    id = c.getString("id");
+                                    nick = c.getString("nick");
+                                    mesaj = c.getString("post");
+                                    zaman = c.getString("time");
+                                    //db ye ekle
+                                    sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
 
-    class forceSync extends AsyncTask<Void,Void,Void>{
-        @Override
-        protected Void doInBackground(Void... voids) {
-            if(!m.isInternetAvailable()) return null;
-            String line = m.getMenemenDataVolley(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
-            try {
-                JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-                JSONObject c;
-                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                    String id,nick,mesaj,zaman;
-                    JSONArray innerJarr = arr.getJSONArray(0);
-                    c = innerJarr.getJSONObject(i);
-                    id = c.getString("id");
-                    nick = c.getString("nick");
-                    mesaj = c.getString("post");
-                    zaman = c.getString("time");
-                    //db ye ekle
-                    sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
-                }
-            }catch (Exception e){
-                m.resetFirstTime("loadmessages");
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            new initsohbet(20,0).execute();
-            super.onPostExecute(aVoid);
-        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            new initsohbet(20,0).execute();
+                            super.onPostExecute(aVoid);
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }, null);
+        q.add(r);
     }
 
     class initsohbet extends AsyncTask<Void,Void,Void>{

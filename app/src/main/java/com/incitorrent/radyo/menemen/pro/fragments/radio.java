@@ -36,6 +36,7 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -205,20 +206,22 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                             } else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                                 m.runExitAnimation(nowplayingbox, 500);
                     }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_INFO_SERVICE.SERVICE_FILTER))
-                        setNP();
+                        setNP(intent.getExtras().getString("calan",null));
                 }
             }
         };
         return radioview;
     }
 
-    private void setNP() {
+    private void setNP(String calan) {
+        Log.v("TRACK NP RECEIVED",m.oku(CALAN));
+        calan = (calan == null) ? m.oku(CALAN) : calan;
         progressbar.setVisibility(View.INVISIBLE);
         NPdj.setText(m.oku(DJ));
         if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
             setNPimage(NPart);
         else
-            NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
+            NPtrack.setText(Menemen.fromHtmlCompat(calan));
     }
 
     private void setNPimage(final ImageView imageView) {
@@ -233,6 +236,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             @Override
             protected Integer[] doInBackground(Void... voids) {
                 try {
+                    if(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL).equals("default")) return null;
                     resim = Glide.with(getActivity())
                             .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
                             .asBitmap()
@@ -258,6 +262,9 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }
             @Override
             protected void onPostExecute(Integer[] color) {
+                NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
+                //TODO Add old trac kto the list ((TextView)NPtrack.getCurrentView()).getText().toString()
+                addOneTrackToList();
                 if(color != null) {
                     fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
                     fab.setRippleColor(color[1]);
@@ -272,10 +279,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         window.setStatusBarColor(Menemen.adjustAlpha(color[5],0.5f));
                     }
                 }
-               //TODO Add old trac kto the list ((TextView)NPtrack.getCurrentView()).getText().toString()
-                addOneTrackToList();
-                NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
-
                 if(imageView != null) {
                     if (resim != null)
                         imageView.setImageBitmap(resim);
@@ -413,7 +416,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
         if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
             fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-            setNP();
+            setNP(null);
             m.runEnterAnimation(nowplayingbox, 200);
             frameAnimation.start();
         }else nowplayingbox.setVisibility(View.GONE);

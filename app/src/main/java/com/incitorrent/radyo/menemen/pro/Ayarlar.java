@@ -25,6 +25,12 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.downloadMessages;
 import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
@@ -227,8 +233,30 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                 download_all.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        new downloadMessages(RMPRO.context).execute();
+                        dowloadAllMSGS();
                         return true;
+                    }
+
+                    private void dowloadAllMSGS() {
+                        RequestQueue queue = Volley.newRequestQueue(RMPRO.getContext());
+                        StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&downloadall",
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        new downloadMessages(RMPRO.context, response).execute();
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        }){
+                            @Override
+                            public Priority getPriority() {
+                                return Priority.IMMEDIATE;
+                            }
+                        };
+                        queue.add(request);
                     }
                 });
             Boolean show_chat_sound = new Menemen(RMPRO.context).bool_oku("catcut");

@@ -26,12 +26,14 @@ import java.util.Random;
 public class downloadMessages extends AsyncTask<Void,Void,Void> {
     private static final String TAG = "downloadMSG";
     private Context context;
+    private String line;
     private Menemen m;
     private Boolean is_not_flood;
     private NotificationManager notificationManager;
 
-    public downloadMessages(Context context) {
+    public downloadMessages(Context context, String line) {
         this.context = context;
+        this.line = line;
     }
 
     @Override
@@ -51,7 +53,6 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
         if(!m.isInternetAvailable()) return null;
         if(!is_not_flood) return null;
         chatDB sql = new chatDB(context,null,null,1);
-        String line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&downloadall");
         try {
             JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
             JSONObject c;

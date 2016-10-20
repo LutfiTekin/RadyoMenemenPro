@@ -7,16 +7,20 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import org.json.JSONObject;
-
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.ARTWORK;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
@@ -37,13 +41,13 @@ public class MUSIC_INFO_SERVICE extends Service {
     Intent notification_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcaster;
-    ScheduledThreadPoolExecutor exec;
+    private RequestQueue queue;
     public MUSIC_INFO_SERVICE() {
     }
 
     @Override
     public void onDestroy() {
-        exec.shutdown();
+        queue.stop();
         super.onDestroy();
     }
 
@@ -55,13 +59,7 @@ public class MUSIC_INFO_SERVICE extends Service {
         broadcaster = LocalBroadcastManager.getInstance(this);
         inf = new Menemen(context);
         sql = new radioDB(context,null,null,1);
-
-        exec = new ScheduledThreadPoolExecutor(1);
-        exec.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                new UpdateOnBackground().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-            }
-        }, 10, RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL, TimeUnit.SECONDS); // execute every ** seconds
+        queue = Volley.newRequestQueue(context);
         super.onCreate();
     }
 
@@ -77,38 +75,14 @@ public class MUSIC_INFO_SERVICE extends Service {
     }
 
 
-    public class UpdateOnBackground extends AsyncTask<String,String,String>{
-        @Override
-        protected String doInBackground(String... params) {
-            if (!inf.isInternetAvailable()) return null;
-            try {
-                if (inf.isPlaying()) {
-                    //Şarkı bilgisi kontrolü
-                        String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO_NEW);
-                        JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
-                        String calan = c.getString(CALAN);
-                        inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
-                        inf.kaydet(DJ, c.getString(DJ));
-                        String songid = c.getString("songid");
-                        String artwork = c.getString(ARTWORK);
-                        inf.kaydet(LAST_ARTWORK_URL, artwork);
-                        saveTrackAndNotifyNP(calan, songid, artwork);
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
-    }
 
     private void saveTrackAndNotifyNP(String calan, String songid,  String artwork) {
         if (!inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
             sql.addtoHistory(new radioDB.Songs(songid, null, calan, "no url",artwork)); // Şarkıyı kaydet
             inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
             Intent intent = new Intent(NP_FILTER);
+            intent.putExtra("calan",calan);
+            Log.v("TRACK NP",calan);
             broadcaster.sendBroadcast(intent);
         }
     }
@@ -118,23 +92,34 @@ public class MUSIC_INFO_SERVICE extends Service {
         @Override
         protected Boolean doInBackground(String... params) {
             if (!inf.isInternetAvailable()) return null;
-
-            try {
                 //Şarkı bilgisi kontrolü
-                String line = Menemen.getMenemenData(RadyoMenemenPro.BROADCASTINFO_NEW);
-                JSONObject c = new JSONObject(line).getJSONArray("info").getJSONObject(0);
-                String calan = c.getString(CALAN);
-                inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
-                inf.kaydet(DJ, c.getString(DJ));
-                String artwork = c.getString(ARTWORK);
-                inf.kaydet(LAST_ARTWORK_URL, artwork);
-                String songid = c.getString("songid");
-                saveTrackAndNotifyNP(calan,songid,artwork);
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.BROADCASTINFO_NEW,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject c = new JSONObject(response).getJSONArray("info").getJSONObject(0);
+                                    String calan = c.getString(CALAN);
+                                    inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
+                                    inf.kaydet(DJ, c.getString(DJ));
+                                    String songid = c.getString("songid");
+                                    String artwork = c.getString(ARTWORK);
+                                    inf.kaydet(LAST_ARTWORK_URL, artwork);
+                                    saveTrackAndNotifyNP(calan, songid, artwork);
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        },null){
+                    @Override
+                    public Priority getPriority() {
+                        return Priority.IMMEDIATE;
+                    }
+                };
+                stringRequest.setRetryPolicy(new DefaultRetryPolicy(1000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                queue.add(stringRequest);
                 return true;
-            }catch (Exception e){
-                return false;
             }
-        }
 
         @Override
         protected void onPostExecute(Boolean result) {

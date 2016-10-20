@@ -53,24 +53,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -139,7 +135,7 @@ public class Menemen {
      * Resets first time action to true
      * @param action
      */
-    public void resetFirstTime(String action){
+    void resetFirstTime(String action){
         final SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.FIRST_TIME, Context.MODE_PRIVATE);
     sharedPreferences.edit().putBoolean(action,true).apply();
     }
@@ -201,14 +197,6 @@ public class Menemen {
         }
         return sb.toString();
     }
-    public static String encodefix(String s){
-        String search[] = new String[] {"Ç","ç","Ğ","ğ","ı","İ","Ö","ö","Ş","ş","Ü","ü"};
-        String replace[] = new String[] {"&#199","&#231","&#286","&#287","&#305","&#304","&#214","&#246","&#350","&#351","&#220","&#252"};
-        for(int i = 0; i < search.length; i++){
-            s = s.replaceAll(search[i],replace[i]);
-        }
-        return s;
-    }
 
     public static String decodefix(String s){
         //TR karakter sorununa merdiven altı çözüm :)
@@ -266,32 +254,13 @@ public class Menemen {
 
 
     //site kullanılan smileylerın BBcode karşılıkları
-    public static String getIncitorrentSmileys(String post){
+    private static String getIncitorrentSmileys(String post){
         String smileys[] = {"gmansmile","YSB",":arap:","\\(gc\\)","SBH",":lan\\!","aygötüm","\\(S\\)",":cahil",":NS:","lan\\!\\?",":ypm:","\\[i\\]","\\[b\\]","\\[\\/i\\]","\\[\\/b\\]",":\\)",":D","\n","(hl\\?)","\\*nopanic","\\:V\\:","demeya\\!\\?","\\:hmm"};
         String smileyres[] = {"<img src='gmansmile'/>","<img src='YSB'/>","<img src='arap'/>","<img src='gc'/>","<img src='SBH'/>","<img src='lann0lebowski'/>","<img src='ayg'/>","<img src='<sikimizdedegil>'/>","<img src='<cahil>'/>","<img src='<nereyeS>'/>","<img src='000lan000'/>","<img src='<ypm>'/>","<i>","<b>","</i>","</b>","<img src='olumlu'/>","<img src='lol'/>","<br>","<img src='hl'/>","<img src='nopanic'/>","<img src='v'/>","<img src='yds'/>","<img src='eizen'/>"};
         for(int i = 0; i< smileys.length; i++) post =  post.replaceAll(smileys[i],smileyres[i]);
         return post;
     }
 
-    public static String getMenemenData(String url) throws NullPointerException{
-        RequestQueue queue = Volley.newRequestQueue(RMPRO.context);
-        final String[] r = new String[1];
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        r[0] = response;
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                r[0] = null;
-            }
-        });
-        queue.add(stringRequest);
-        return r[0];
-    }
 
     public static String getCapsUrl(String mesaj) {
         String capsurl = mesaj.split("caps")[1];
@@ -317,7 +286,7 @@ public class Menemen {
 
     /**
      * Get youtube thumbnail from youtube video id
-     * @param id
+     * @param id youtube id
      * @return thumbnail image link
      */
     public static String getYoutubeThumbnail(String id){
@@ -326,7 +295,7 @@ public class Menemen {
 
     /**
      * Lauch youtube app
-     * @param id
+     * @param id youtube id
      */
     public void openYoutubeLink(String id){
         try {
@@ -343,9 +312,9 @@ public class Menemen {
 
     /**
      * Go to caps intent relative to condition
-     * @param capsurl
-     * @param ımageView
-     * @param activity
+     * @param capsurl url of the image
+     * @param ımageView imageview to load
+     * @param activity activity required for workaroud
      */
     public void goToCapsIntent(String capsurl, ImageView ımageView, Activity activity) {
         Intent image_intent;
@@ -368,41 +337,12 @@ public class Menemen {
         } else
             activity.startActivity(image_intent);
     }
-    //POST methodu ile veri gönder ve JSON döndür
-    /**
-     * Posts data to server using post method with httpurlconnection
-     * @param url server url
-     * @param encodedstr data to send
-     * @return json string
-     */
-    public static String postMenemenData(String url,String encodedstr){
-        //Json datası döndür
-        String line = null;
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-            con.setRequestMethod("POST");
-            con.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-            writer.write(encodedstr);
-            writer.flush();
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    con.getInputStream(), "iso-8859-9"), 8);
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            line = sb.toString();
-            Log.v("POSTMENEMENDATA",line);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return line;
-    }
+
 //Bildirim, son çalanlar, ve kilit ekranı için şarkı albüm kapağını hafızadan çek
     public Bitmap getMenemenArt(String songurl,Boolean locksreen){
         //Artwork indirilme ayarı açık değilse varsayılan resim döndür
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), (locksreen) ? R.mipmap.ic_header_background : R.mipmap.album_placeholder);
-        if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+        if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) || songurl.equals("default"))
             return bitmap;
         try {
             int dim = RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM;
@@ -440,13 +380,12 @@ public class Menemen {
         }
         view.animate()
                 .translationY(0)
-//                .setInterpolator(new DecelerateInterpolator(3.f))
                 .setInterpolator(enter_anim(anim_id))
                 .setDuration(700 + delay)
                 .start();
     }
 
-    public Interpolator enter_anim(int anim_id){
+    private Interpolator enter_anim(int anim_id){
         switch (anim_id){
             case 1:
                 return new AccelerateDecelerateInterpolator();
@@ -498,12 +437,27 @@ public class Menemen {
 
     public void setToken() {
         try {
-            String token = FirebaseInstanceId.getInstance().getToken();
-            Map<String, String> dataToSend = new HashMap<>();
-            dataToSend.put("nick", oku("username"));
-            dataToSend.put("token", token);
-            String encodedStr = getEncodedData(dataToSend);
-            Menemen.postMenemenData(RadyoMenemenPro.TOKEN_ADD,encodedStr);
+            RequestQueue queue = Volley.newRequestQueue(context);
+            StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.TOKEN_ADD,
+                    new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response) {
+                        }
+                    },null
+            ) {
+
+                @Override
+                protected Map<String, String> getParams(){
+                    String token = FirebaseInstanceId.getInstance().getToken();
+                    HashMap<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("nick", oku("username"));
+                    dataToSend.put("token", token);
+                    return dataToSend;
+                }
+            };
+            postRequest.setRetryPolicy(new DefaultRetryPolicy(2500,10,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            queue.add(postRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }

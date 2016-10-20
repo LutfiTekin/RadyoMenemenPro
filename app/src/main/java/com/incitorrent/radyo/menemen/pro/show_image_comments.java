@@ -31,6 +31,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -171,9 +180,7 @@ public class show_image_comments extends AppCompatActivity {
                 }
             }
         };
-
-
-        new initsohbet().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        initcomments();
     }
 
 
@@ -182,41 +189,40 @@ public class show_image_comments extends AppCompatActivity {
     private void postComment(final String mesaj) {
         if(mesaj == null) return;
         if(mesaj.length() < 1) return;
-        new AsyncTask<Void,Void,Boolean>(){
-
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.POST_COMMENT_CAPS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ETmesaj.setText("");
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            protected void onPreExecute() {
-                ETmesaj.setText("");
-                super.onPreExecute();
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(show_image_comments.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
             }
-
+        }){
             @Override
-            protected Boolean doInBackground(Void... voids) {
-                Map<String, String> dataToSend = new HashMap<>();
+            protected Map<String, String> getParams() {
+                HashMap<String, String> dataToSend = new HashMap<>();
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("capsurl", imageurl);
                 dataToSend.put("comment", mesaj);
                 dataToSend.put("ETmesaj", mesaj);
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                String line = Menemen.postMenemenData(RadyoMenemenPro.POST_COMMENT_CAPS,encodedStr);
-                Log.v(TAG,line);
-                try {
-                    JSONObject json = new JSONObject(line);
-                   String status = json.getString("status");
-                   if(status.equals("ok")) return true;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return false;
+                return dataToSend;
             }
 
             @Override
-            protected void onPostExecute(Boolean ok) {
-                super.onPostExecute(ok);
-                if(!ok)
-                    Toast.makeText(show_image_comments.this, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
             }
-        }.execute();
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return new DefaultRetryPolicy(3000,2,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            }
+        };
+        queue.add(postRequest);
     }
 
     @Override
@@ -263,69 +269,105 @@ public class show_image_comments extends AppCompatActivity {
         return true;
     }
 
-    class initsohbet extends AsyncTask<Void,Void,Void> {
+    private void initcomments(){
+        if(!sql.isHistoryExist(imageurl, m.getUsername())) {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.GET_COMMENT_CAPS,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(final String response) {
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected void onPreExecute() {
+                                    sohbetList = new ArrayList<>();
+                                    super.onPreExecute();
+                                }
 
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        String id, nick, post, time;
+                                        JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
+                                        JSONObject c;
+                                        for (int i = 0; i < arr.getJSONArray(0).length(); i++) {
+                                            JSONArray innerJarr = arr.getJSONArray(0);
+                                            c = innerJarr.getJSONObject(i);
+                                            id = c.getString("id");
+                                            nick = c.getString("nick");
+                                            post = c.getString("post");
+                                            time = c.getString("time");
+                                            //db ye ekle
+                                            sql.addtoHistory(new capsDB.CAPS(id, imageurl, nick, post, time));
+                                            sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
 
-        @Override
-        protected void onPreExecute() {
-            sohbetList = new ArrayList<>();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            String id,nick,post,time;
-            if(sql.isHistoryExist(imageurl, m.getUsername())){
-            //Getfrom db
-            Cursor cursor = sql.getHistory(20,imageurl);
-            if(cursor == null) return null;
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                id = cursor.getString(cursor.getColumnIndex(capsDB._MSGID));
-                nick = cursor.getString(cursor.getColumnIndex(capsDB._NICK));
-                post = cursor.getString(cursor.getColumnIndex(capsDB._POST));
-                time = cursor.getString(cursor.getColumnIndex(capsDB._TIME));
-                sohbetList.add(new Sohbet_Objects(id,nick,post,time));
-                cursor.moveToNext();
-            }
-            cursor.close();
-            sql.close();
-            }else{
-                //dbde kayıt yok internette yükle
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("capsurl", imageurl);
-                String encodedStr = Menemen.getEncodedData(dataToSend);
-                String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
-                try {
-                    JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-                    JSONObject c;
-                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                        JSONArray innerJarr = arr.getJSONArray(0);
-                        c = innerJarr.getJSONObject(i);
-                        id = c.getString("id");
-                        nick = c.getString("nick");
-                        post = c.getString("post");
-                        time = c.getString("time");
-                        //db ye ekle
-                        sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
-                        sohbetList.add(new Sohbet_Objects(id,nick,post,time));
-                    }
-                }catch (JSONException e){
-                    m.resetFirstTime("loadmessages");
-                    e.printStackTrace();
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    if(sohbetList!=null) sohbetAdapter = new SohbetAdapter(sohbetList);
+                                    if(sohbetAdapter!=null) sohbetRV.setAdapter(sohbetAdapter);
+                                    if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
+                                    super.onPostExecute(aVoid);
+                                }
+                            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }
+                    }, null) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("capsurl", imageurl);
+                    return dataToSend;
                 }
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if(sohbetList!=null) sohbetAdapter = new SohbetAdapter(sohbetList);
-            if(sohbetAdapter!=null) sohbetRV.setAdapter(sohbetAdapter);
-            if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
-            super.onPostExecute(aVoid);
+                @Override
+                public Priority getPriority() {
+                    return Priority.IMMEDIATE;
+                }
+            };
+            queue.add(postRequest);
+        }else{
+            new AsyncTask<Void,Void,Void>(){
+                @Override
+                protected void onPreExecute() {
+                    sohbetList = new ArrayList<>();
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    if(sohbetList!=null) sohbetAdapter = new SohbetAdapter(sohbetList);
+                    if(sohbetAdapter!=null) sohbetRV.setAdapter(sohbetAdapter);
+                    if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
+                    super.onPostExecute(aVoid);
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    Cursor cursor = sql.getHistory(20,imageurl);
+                    String id,nick,post,time;
+                    if(cursor == null) return null;
+                    cursor.moveToFirst();
+                    while(!cursor.isAfterLast()){
+                        id = cursor.getString(cursor.getColumnIndex(capsDB._MSGID));
+                        nick = cursor.getString(cursor.getColumnIndex(capsDB._NICK));
+                        post = cursor.getString(cursor.getColumnIndex(capsDB._POST));
+                        time = cursor.getString(cursor.getColumnIndex(capsDB._TIME));
+                        sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
+                    sql.close();
+                    return null;
+                }
+            }.execute();
         }
     }
+
+
 
 
 //    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

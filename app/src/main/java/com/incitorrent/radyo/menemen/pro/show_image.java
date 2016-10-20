@@ -29,6 +29,12 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -41,6 +47,7 @@ import com.incitorrent.radyo.menemen.pro.utils.TouchImageView;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -130,7 +137,7 @@ public class show_image extends AppCompatActivity{
                         @Override
                         protected void onPreExecute() {
                             toolbar.setSubtitle("");
-                            new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            loadcomments();
                             loadThumbnail();
                             progressBar.setVisibility(View.VISIBLE);
                             super.onPreExecute();
@@ -208,7 +215,7 @@ public class show_image extends AppCompatActivity{
                 @Override
                 protected void onPreExecute() {
                     toolbar.setSubtitle("");
-                    new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    loadcomments();
                     loadThumbnail();
                     progressBar.setVisibility(View.VISIBLE);
                     super.onPreExecute();
@@ -256,7 +263,7 @@ public class show_image extends AppCompatActivity{
     @Override
     protected void onResume() {
         if(getSupportActionBar() != null && getSupportActionBar().getSubtitle() == null)
-            new loadcomments().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            loadcomments();
         super.onResume();
     }
 
@@ -379,53 +386,70 @@ public class show_image extends AppCompatActivity{
             super.onPostExecute(colors);
         }
     }
+    private void loadcomments(){
+        if(!sql.isHistoryExist(imageurl, m.getUsername())){
+            RequestQueue queue = Volley.newRequestQueue(context);
+            StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.GET_COMMENT_CAPS,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(final String response) {
+                            new AsyncTask<Void,Void,Void>(){
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        String id,nick,post,time;
+                                        JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
+                                        JSONObject c;
+                                        for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                                            JSONArray innerJarr = arr.getJSONArray(0);
+                                            c = innerJarr.getJSONObject(i);
+                                            id = c.getString("id");
+                                            nick = c.getString("nick");
+                                            post = c.getString("post");
+                                            time = c.getString("time");
+                                            //db ye ekle
+                                            sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
 
-
-    class loadcomments extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            try {
-                String firscomment = m.getCapsDB().getFirstComment(imageurl);
-                if(getSupportActionBar() != null && firscomment != null) {
-                    getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
-                    firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
-                    getSupportActionBar().setSubtitle(firscomment);
-                }
-            } catch (Exception e) {
-                getSupportActionBar().setSubtitle("");
-                e.printStackTrace();
-            }
-            super.onPostExecute(aVoid);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            String id,nick,post,time;
-            try {
-                if(!sql.isHistoryExist(imageurl, m.getUsername())){
-                    Map<String, String> dataToSend = new HashMap<>();
-                    dataToSend.put("capsurl", imageurl);
-                    String encodedStr = Menemen.getEncodedData(dataToSend);
-                    String line = Menemen.postMenemenData(RadyoMenemenPro.GET_COMMENT_CAPS, encodedStr);
-                    JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-                    JSONObject c;
-                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                        JSONArray innerJarr = arr.getJSONArray(0);
-                        c = innerJarr.getJSONObject(i);
-                        id = c.getString("id");
-                        nick = c.getString("nick");
-                        post = c.getString("post");
-                        time = c.getString("time");
-                        //db ye ekle
-                        sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    try {
+                                        String firscomment = m.getCapsDB().getFirstComment(imageurl);
+                                        if(getSupportActionBar() != null && firscomment != null) {
+                                            getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
+                                            firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
+                                            getSupportActionBar().setSubtitle(firscomment);
+                                        }
+                                    } catch (Exception e) {
+                                        getSupportActionBar().setSubtitle("");
+                                        e.printStackTrace();
+                                    }
+                                    super.onPostExecute(aVoid);
+                                }
+                            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
-            }
-            }catch (Exception e){
-                m.resetFirstTime("loadmessages");
-                e.printStackTrace();
-            }
-            return null;
-        }
+                    },null){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("capsurl", imageurl);
+                    return dataToSend;
+                }
 
+                @Override
+                public Priority getPriority() {
+                    if(m.isConnectedWifi())
+                        return Priority.IMMEDIATE;
+                    else
+                        return Priority.NORMAL;
+                }
+            };
+            queue.add(postRequest);
+        }
     }
            }

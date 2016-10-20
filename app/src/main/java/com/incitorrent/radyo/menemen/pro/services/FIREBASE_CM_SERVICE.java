@@ -14,8 +14,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -148,12 +153,25 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void sendMenemenPointRequest() {
-        Map<String, String> dataToSend = new HashMap<>();
-        dataToSend.put("nick", m.oku("username"));
-        dataToSend.put("mkey", m.oku("mkey"));
-        String encodedStr = Menemen.getEncodedData(dataToSend);
-        Menemen.postMenemenData(RadyoMenemenPro.MP_ADD, encodedStr);
-        Log.v(TAG,"MPRequest");
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MP_ADD,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                    }
+                },
+                null
+        ) {
+            @Override
+            protected Map<String, String> getParams(){
+                HashMap<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.oku("username"));
+                dataToSend.put("mkey", m.oku("mkey"));
+                return dataToSend;
+            }
+        };
+        queue.add(postRequest);
     }
 
     private void onlineUser(String nick) {
@@ -166,20 +184,28 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     //TODO use remote message parameter
     private void sync() {
-        try {
-            String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
-            JSONObject J = new JSONObject(line);
-            JSONArray JARR = J.getJSONArray("info");
-            JSONObject Jo = JARR.getJSONObject(0);
-            m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
-            m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
-            m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
-            m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
-            m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-            if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.SYNCCHANNEL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject J = new JSONObject(response);
+                            JSONArray JARR = J.getJSONArray("info");
+                            JSONObject Jo = JARR.getJSONObject(0);
+                            m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
+                            m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
+                            m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
+                            m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
+                            m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
+                            if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },null);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(9000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
     }
 
     private void haykirbildirim(RemoteMessage remoteMessage) {
@@ -295,13 +321,25 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     private void updateNews(RemoteMessage remoteMessage) {
         //Son olan biteni al
-        String lastob = null;
-        try {
-            lastob = new JSONObject(Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN)).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
-            m.kaydet(RadyoMenemenPro.LASTOB,lastob);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.OLAN_BITEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            String lastob = new JSONObject(response).getJSONArray("olan_biten").getJSONArray(0).getJSONObject(0).getString("time");
+                            m.kaydet(RadyoMenemenPro.LASTOB,lastob);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },null){
+            @Override
+            public Priority getPriority() {
+                return Priority.LOW;
+            }
+        };
+        queue.add(request);
         String title,content;
         title = getDATA(remoteMessage, "title");
         content = getDATA(remoteMessage, "content");

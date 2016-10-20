@@ -4,10 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -17,7 +23,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
     private static final String TAG = "syncChannels";
     private Context context;
     private Menemen m;
-
+    private RequestQueue queue;
     /**
      * Kanal değişimi durumlarında güncelleme gereksinimini
      *ortadan kaldırmak için sürekli olara site ile iletişim kurup kanalları çeken class
@@ -30,24 +36,31 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... params) {
         m = new Menemen(context);
+        queue = Volley.newRequestQueue(context);
         if(!m.isInternetAvailable()) return null;
-        try {
-            String line = Menemen.getMenemenData(RadyoMenemenPro.SYNCCHANNEL);
-            Log.d(TAG, "Alınan JSON:\n"+ line);
-            JSONObject J = new JSONObject(line);
-            JSONArray JARR = J.getJSONArray("info");
-            JSONObject Jo = JARR.getJSONObject(0);
-            Log.v("SERVER",Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
-            m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
-            m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
-            m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
-            m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
-            m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-            if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
-            if(m.isFirstTime("loadmessages")) loadMSGs();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.SYNCCHANNEL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject J = new JSONObject(response);
+                                JSONArray JARR = J.getJSONArray("info");
+                                JSONObject Jo = JARR.getJSONObject(0);
+                                Log.v("SERVER",Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
+                                m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
+                                m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
+                                m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
+                                m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
+                                m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
+                                if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
+                                if(m.isFirstTime("loadmessages")) loadMSGs();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },null);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(9000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
         return null;
     }
 
@@ -55,27 +68,36 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
      * Sitedeki son 20 mesajı yükle
      */
     private void loadMSGs() {
-       chatDB sql = new chatDB(context,null,null,1);
-       String line = Menemen.getMenemenData(RadyoMenemenPro.MESAJLAR + "&sonmsg=1");
-        try {
-            JSONArray arr = new JSONObject(line).getJSONArray("mesajlar");
-            JSONObject c;
-            for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                String id,nick,mesaj,zaman;
-                JSONArray innerJarr = arr.getJSONArray(0);
-                c = innerJarr.getJSONObject(i);
-                id = c.getString("id");
-                nick = c.getString("nick");
-                mesaj = c.getString("post");
-                zaman = c.getString("time");
-                //db ye ekle
-              sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
-                Log.v(TAG,"add to history " + id + " " + nick);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
+                            JSONObject c;
+                            for (int i = 0; i < arr.getJSONArray(0).length(); i++) {
+                                String id, nick, mesaj, zaman;
+                                JSONArray innerJarr = arr.getJSONArray(0);
+                                c = innerJarr.getJSONObject(i);
+                                id = c.getString("id");
+                                nick = c.getString("nick");
+                                mesaj = c.getString("post");
+                                zaman = c.getString("time");
+                                //db ye ekle
+                                m.getChatDB().addtoHistory(new chatDB.CHAT(id, nick, mesaj, zaman));
+                            }
+                        } catch (Exception e) {
+                            m.resetFirstTime("loadmessages");
+                            e.printStackTrace();
+                        }
+                    }
+                    }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                m.resetFirstTime("loadmessages");
             }
-        }catch (JSONException e){
-            m.resetFirstTime("loadmessages");
-            e.printStackTrace();
-        }
+        });
+
     }
 
 

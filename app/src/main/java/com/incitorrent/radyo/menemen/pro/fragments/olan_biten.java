@@ -17,6 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
@@ -76,51 +81,62 @@ public class olan_biten extends Fragment {
         else
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         m = new Menemen(context);
-        new olanBiten().execute();
+        olanBiten();
         return obview;
     }
+    private void olanBiten(){
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.OLAN_BITEN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        new AsyncTask<Void,Void,Void>(){
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                try {
+                                    OBList = new ArrayList<>();
+                                    if(response ==null || response.equals("yok")) return null;
+                                    JSONArray arr = new JSONObject(response).getJSONArray("olan_biten");
+                                    JSONObject c;
+                                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                                        JSONArray innerJarr = arr.getJSONArray(0);
+                                        c = innerJarr.getJSONObject(i);
+                                        OBList.add(new ob_objs(c.getString("title"),c.getString("content"),c.getString("author"),c.getString("time")));
+                                    }
+                                    if(m.isInternetAvailable()) {
+                                        m.kaydet(RadyoMenemenPro.SAVEDOB, arr.getJSONArray(0).getJSONObject(0).getString("time"));
+                                        m.kaydet(RadyoMenemenPro.OBCACHE, response);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
+                            }
 
-
-    class olanBiten extends AsyncTask<Void,Void,Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                OBList = new ArrayList<>();
-               String json;
-              if(m.isInternetAvailable())  json = Menemen.getMenemenData(RadyoMenemenPro.OLAN_BITEN);
-                else json = m.oku(RadyoMenemenPro.OBCACHE);
-                if(json ==null || json.equals("yok")) return null;
-                JSONArray arr = new JSONObject(json).getJSONArray("olan_biten");
-                JSONObject c;
-                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                    JSONArray innerJarr = arr.getJSONArray(0);
-                    c = innerJarr.getJSONObject(i);
-                    OBList.add(new ob_objs(c.getString("title"),c.getString("content"),c.getString("author"),c.getString("time")));
-                }
-                if(m.isInternetAvailable()) {
-                    m.kaydet(RadyoMenemenPro.SAVEDOB, arr.getJSONArray(0).getJSONObject(0).getString("time"));
-                    m.kaydet(RadyoMenemenPro.OBCACHE, json);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                //Menü düğmesini güncelle
+                                if(getActivity()!=null) {
+                                    final NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                                    final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                                            findItem(R.id.nav_olanbiten));
+                                    m.setBadge(badge, "");
+                                }
+                                recyclerView.setAdapter(new OBAdapter(OBList));
+                                super.onPostExecute(aVoid);
+                            }
+                        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                },null){
+            @Override
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //Menü düğmesini güncelle
-            if(getActivity()!=null) {
-                final NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-                final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                        findItem(R.id.nav_olanbiten));
-                    m.setBadge(badge, "");
-            }
-            recyclerView.setAdapter(new OBAdapter(OBList));
-            super.onPostExecute(aVoid);
-        }
+        };
+        queue.add(request);
     }
+
+
 
 
     public class OBAdapter extends RecyclerView.Adapter<OBAdapter.PersonViewHolder> {
