@@ -53,10 +53,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
@@ -265,25 +272,25 @@ public class Menemen {
         for(int i = 0; i< smileys.length; i++) post =  post.replaceAll(smileys[i],smileyres[i]);
         return post;
     }
-    //Json stringi döndür
-    public static String getMenemenData(String url){
-        //Json datası döndür
-        String line = null;
-        try {
-            HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-            con.setRequestMethod("GET");
-            con.setDoOutput(true);
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    con.getInputStream(), "iso-8859-9"), 8);
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+
+    public static String getMenemenData(String url) throws NullPointerException{
+        RequestQueue queue = Volley.newRequestQueue(RMPRO.context);
+        final String[] r = new String[1];
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        r[0] = response;
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                r[0] = null;
             }
-           line = sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return line;
+        });
+        queue.add(stringRequest);
+        return r[0];
     }
 
     public static String getCapsUrl(String mesaj) {
@@ -822,4 +829,7 @@ public class Menemen {
                 .setIcon(icon)
                 .show();
     }
+
+
+
 }
