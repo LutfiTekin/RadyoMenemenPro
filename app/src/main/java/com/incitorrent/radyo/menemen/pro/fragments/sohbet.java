@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,9 +52,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -71,16 +74,9 @@ import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +88,6 @@ import static com.incitorrent.radyo.menemen.pro.utils.Menemen.NOT_DELIVERED;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.PENDING;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.fromHtmlCompat;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getCapsUrl;
-import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getEncodedData;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getThumbnail;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getTimeAgo;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeId;
@@ -549,95 +544,93 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
         private void postToMenemen(final String mesaj) {
-        new AsyncTask<Void,Void,Boolean>(){
-            @Override
-            protected void onPreExecute() {
-                if(mesaj.toLowerCase().equals("çatçut")) {
-                    setChatSound();
-                }else if(sohbetList != null && sohbetRV != null){
-                    sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj, PENDING));
-                    if(sohbetRV.getAdapter() != null)
+            if(mesaj.toLowerCase().equals("çatçut")) {
+                setChatSound();
+            }else if(sohbetList != null && sohbetRV != null){
+                sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj, PENDING));
+                if(sohbetRV.getAdapter() != null)
+                    sohbetRV.getAdapter().notifyDataSetChanged();
+            }
+            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject j = new JSONObject(response).getJSONArray("post").getJSONObject(0);
+                                if(j.get("status").equals("ok")) {
+                                    //Başarılı
+                                    if(sohbetList.get(0).zaman != null)
+                                        if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).zaman.equals(PENDING))
+                                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, DELIVERED));
+                                        else {
+                                            for (int i = 0; i < sohbetList.size(); i++)
+                                                if(sohbetList.get(i).zaman != null)
+                                                    if (sohbetList.get(i).mesaj.equals(mesaj) && sohbetList.get(i).zaman.equals(PENDING))
+                                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, DELIVERED));
+                                        }
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
+                                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
+                                    else {
+                                        for (int i = 0; i < sohbetList.size(); i++)
+                                            if (sohbetList.get(i).mesaj.equals(mesaj)) {
+                                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
+                                                break;
+                                            }
+                                    }
+
+                                    if(m.isFirstTime(NOT_DELIVERED))
+                                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+                                }
+                                //notify adapter
+                                if(sohbetRV.getAdapter() != null && sohbetList != null)
+                                    sohbetRV.getAdapter().notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
+                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(), mesaj, NOT_DELIVERED));
+                    else {
+                        for (int i = 0; i < sohbetList.size(); i++)
+                            if (sohbetList.get(i).mesaj.equals(mesaj)) {
+                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
+                                break;
+                            }
+                    }
+
+                    if(m.isFirstTime(NOT_DELIVERED))
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+                    if(sohbetRV.getAdapter() != null && sohbetList != null)
                         sohbetRV.getAdapter().notifyDataSetChanged();
                 }
-
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                if(mesaj.toLowerCase().equals("çatçut")) return true;
-
-                try {
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> dataToSend = new HashMap<>();
                     dataToSend.put("nick", m.getUsername());
                     dataToSend.put("mkey", m.getMobilKey());
                     dataToSend.put("mesaj", mesaj);
-                    String encodedStr = getEncodedData(dataToSend);
-                    HttpURLConnection connection = (HttpURLConnection) new URL(RadyoMenemenPro.MESAJ_GONDER).openConnection();
-                    connection.setRequestMethod("POST");
-                    connection.setDoOutput(true);
-                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                    writer.write(encodedStr);
-                    writer.flush();
-                    StringBuilder sb = new StringBuilder();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            connection.getInputStream(), "iso-8859-9"), 8);
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line).append("\n");
-                    }
-                    line = sb.toString();
-                    JSONObject j = new JSONObject(line).getJSONArray("post").getJSONObject(0);
-
-            if(j.get("status").equals("ok")) return true;
-            }catch (IOException | JSONException e){
-                e.printStackTrace();
+                    return dataToSend;
                 }
-                return false;
-            }
 
-            @Override
-            protected void onPostExecute(Boolean success) {
-                if(sohbetList == null || sohbetRV == null) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-                    return;
+                @Override
+                public Priority getPriority() {
+                    return Priority.IMMEDIATE;
                 }
-                if(sohbetList.size()<1) return;
-                try {
-                    if (!success) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-                            if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
-                                sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
-                            else {
-                                for (int i = 0; i < sohbetList.size(); i++)
-                                    if (sohbetList.get(i).mesaj.equals(mesaj))
-                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
-                            }
 
-                            if(m.isFirstTime(NOT_DELIVERED))
-                                Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
-
-                    }else {
-                        if(sohbetList.get(0).zaman != null)
-                            if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).zaman.equals(PENDING))
-                                sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, DELIVERED));
-                        else {
-                            for (int i = 0; i < sohbetList.size(); i++)
-                                if(sohbetList.get(i).zaman != null)
-                                    if (sohbetList.get(i).mesaj.equals(mesaj) && sohbetList.get(i).zaman.equals(PENDING))
-                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, DELIVERED));
-                        }
-                    }
-
-                    if(sohbetRV.getAdapter() != null)
-                          sohbetRV.getAdapter().notifyDataSetChanged();
-                } catch (Resources.NotFoundException e) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                @Override
+                public RetryPolicy getRetryPolicy() {
+                    return new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
                 }
-                super.onPostExecute(success);
-            }
-        }.execute();
+            };
+            queue.add(post);
     }
 
 
