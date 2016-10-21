@@ -17,6 +17,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -222,6 +223,11 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 dataToSend.put("mkey", m.oku("mkey"));
                 dataToSend.put("mesaj", imageurl);
                 return dataToSend;
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return new DefaultRetryPolicy(10000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             }
         };
         queue.add(postRequest);

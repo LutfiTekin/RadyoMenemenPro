@@ -219,7 +219,7 @@ public class show_image_comments extends AppCompatActivity {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return new DefaultRetryPolicy(3000,2,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                return new DefaultRetryPolicy(7000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             }
         };
         queue.add(postRequest);
