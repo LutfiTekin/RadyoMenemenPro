@@ -263,7 +263,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             @Override
             protected void onPostExecute(Integer[] color) {
                 NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
-                //TODO Add old trac kto the list ((TextView)NPtrack.getCurrentView()).getText().toString()
                 addOneTrackToList();
                 if(color != null) {
                     fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));
