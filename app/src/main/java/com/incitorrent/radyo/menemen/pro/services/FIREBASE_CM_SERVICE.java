@@ -260,7 +260,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
         onlineUser(nick);
         final Boolean isUser = nick.equals(m.getUsername());
-        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || !isUser) return; //Create notification condition
+        //Notification creation condition
+        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;
         buildChatNotification(nick,msg);
     }
 
