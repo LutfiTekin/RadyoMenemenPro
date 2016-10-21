@@ -294,10 +294,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
      */
     private void addOneTrackToList(){
         new AsyncTask<Void,Void,Boolean>(){
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
 
             @Override
             protected Boolean doInBackground(Void... voids) {
