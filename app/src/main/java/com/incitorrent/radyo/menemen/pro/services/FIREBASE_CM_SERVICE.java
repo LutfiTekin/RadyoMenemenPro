@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -119,9 +120,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 sync();
                 break;
             case RadyoMenemenPro.FCMTopics.SONG_CHANGE_EVENT:
-                if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
+                if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
                     startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
-                sendMenemenPointRequest();
+                    sendMenemenPointRequest();
+                }
                 break;
             default:
                 //Topic yok
