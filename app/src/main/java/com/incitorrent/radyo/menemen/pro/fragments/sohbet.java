@@ -34,6 +34,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
@@ -88,6 +89,7 @@ import static com.incitorrent.radyo.menemen.pro.utils.Menemen.NOT_DELIVERED;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.PENDING;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.fromHtmlCompat;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getCapsUrl;
+import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getFormattedDate;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getThumbnail;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getTimeAgo;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.getYoutubeId;
@@ -183,9 +185,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
         //SOHBET
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
         sohbetList = new ArrayList<>();
-        sohbetRV.setHasFixedSize(true);
         linearLayoutManager = new WrapContentLinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
+        sohbetRV.setHasFixedSize(true);
+        ((SimpleItemAnimator) sohbetRV.getItemAnimator()).setSupportsChangeAnimations(false);
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //Onscroll Listener
@@ -254,7 +257,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                               if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
                                   return;
                               if(sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
-                                  sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, null));
+                                  sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(),RadyoMenemenPro.CHAT_DATE_FORMAT)));
                               else {
                                   //Fallback and search for it
                                   for (int i = 0; i < sohbetList.size(); i++) {
@@ -263,7 +266,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                           sohbetRV.getAdapter().notifyItemRemoved(i);
                                       }
                                   }
-                                  sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, null));
+                                  sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(),RadyoMenemenPro.CHAT_DATE_FORMAT)));
                               }
                               sohbetRV.getAdapter().notifyDataSetChanged();
                               playChatSound();
@@ -357,6 +360,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
            try {
                if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(sql.lastMsgId())){
                    new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+               }else{
+                   int firstitempos = linearLayoutManager.findFirstVisibleItemPosition();
+                   sohbetRV.getAdapter().notifyItemRangeChanged(firstitempos,10);
+
                }
            }catch (Exception e){e.printStackTrace();}
        }
@@ -746,6 +753,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     loadCapsinChat(chatViewHolder, getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                 }else chatViewHolder.caps.setImageDrawable(null);
             }
+            chatViewHolder.zaman.invalidate();
             super.onViewAttachedToWindow(chatViewHolder);
         }
 
