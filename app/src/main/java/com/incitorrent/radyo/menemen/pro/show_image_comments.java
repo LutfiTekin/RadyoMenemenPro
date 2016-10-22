@@ -189,12 +189,13 @@ public class show_image_comments extends AppCompatActivity {
     private void postComment(final String mesaj) {
         if(mesaj == null) return;
         if(mesaj.length() < 1) return;
+        ETmesaj.setText("");
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.POST_COMMENT_CAPS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ETmesaj.setText("");
+
                     }
                 }, new Response.ErrorListener() {
             @Override
