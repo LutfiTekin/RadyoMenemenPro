@@ -107,5 +107,7 @@ public final class RadyoMenemenPro {
     public final static String CAPS_API_URL    =   "http://caps.radyomenemen.com/api/1/upload";
     public final static String CAPS_API_KEY    =   "capsapi";
 
+    public static final String CHAT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
 
 }

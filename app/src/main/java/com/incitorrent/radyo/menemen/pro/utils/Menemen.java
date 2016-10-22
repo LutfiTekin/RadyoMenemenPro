@@ -79,6 +79,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -616,7 +617,7 @@ public class Menemen {
         if(Sdate.equals(PENDING)) return c.getString(R.string.sending);
         if(Sdate.equals(NOT_DELIVERED)) return c.getString(R.string.not_delivered);
         if(Sdate.equals(DELIVERED)) return c.getString(R.string.deliverd);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df = new SimpleDateFormat(RadyoMenemenPro.CHAT_DATE_FORMAT, Locale.US);
         Date date = null;
         try {
             date = df.parse(Sdate);
@@ -650,6 +651,23 @@ public class Menemen {
         } else {
             return diff / DAY_MILLIS + c.getString(R.string.time_days) + " " + c.getString(R.string.time_ago);
         }
+    }
+
+    /**
+     * Return date in specified format.
+     * @param milliSeconds Date in milliseconds
+     * @param dateFormat Date format
+     * @return String representing date in specified format
+     */
+    public static String getFormattedDate(long milliSeconds, String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.US);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 
     public static int adjustAlpha(int color, float factor) {
