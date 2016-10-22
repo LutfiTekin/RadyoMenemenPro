@@ -553,6 +553,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         private void postToMenemen(final String mesaj) {
             if(mesaj.toLowerCase().equals("çatçut")) {
                 setChatSound();
+                return;
             }else if(sohbetList != null && sohbetRV != null){
                 sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj, PENDING));
                 if(sohbetRV.getAdapter() != null)
