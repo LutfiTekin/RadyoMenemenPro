@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -112,7 +113,10 @@ public class show_image extends AppCompatActivity{
                 startActivity(showimagecomment);
             }
         });
-        loadThumbnail();
+
+
+
+
         image.setOnTouchListener(new OnSwipeTouchListener(show_image.this){
         @Override
         public void onSwipeRight() {
@@ -133,24 +137,32 @@ public class show_image extends AppCompatActivity{
                     Log.v(TAG," önce " + imageurl);
                     imageurl = m.getChatDB().getNextCaps(imageurl, next);
                     Log.v(TAG," sonra " +  imageurl);
-                    new AsyncTask<Void,Void,Void>(){
+                    new AsyncTask<Void,Void,Bitmap>(){
                         @Override
                         protected void onPreExecute() {
                             toolbar.setSubtitle("");
                             loadcomments();
-                            loadThumbnail();
                             progressBar.setVisibility(View.VISIBLE);
                             super.onPreExecute();
                         }
 
                         @Override
-                        protected void onPostExecute(Void aVoid) {
-                            loadImage();
-                            super.onPostExecute(aVoid);
+                        protected void onPostExecute(Bitmap bitmap) {
+                            if(bitmap != null)
+                                loadImage(bitmap);
+                            super.onPostExecute(bitmap);
                         }
 
                         @Override
-                        protected Void doInBackground(Void... voids) {
+                        protected Bitmap doInBackground(Void... voids) {
+                            try {
+                                return Glide.with(show_image.this)
+                                        .load(Menemen.getThumbnail(imageurl))
+                                        .asBitmap()
+                                        .into(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH,RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT).get();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             return null;
                         }
                     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -178,27 +190,30 @@ public class show_image extends AppCompatActivity{
                 super.onSwipeTop();
             }
         });
+        new AsyncTask<Void,Void,Bitmap>(){
+            @Override
+            protected Bitmap doInBackground(Void... voids) {
+                try {
+                    return Glide.with(show_image.this)
+                            .load(Menemen.getThumbnail(imageurl))
+                            .asBitmap()
+                            .into(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH,RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT).get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if(bitmap != null)
+                    loadImage(bitmap);
+                super.onPostExecute(bitmap);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void loadThumbnail() {
-        try {
-            Glide.with(show_image.this)
-                    .load(Menemen.getThumbnail(imageurl))
-                    .into(new SimpleTarget<GlideDrawable>() {
-                        @Override
-                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                            image.setImageDrawable(resource);
-                            try {
-                                new SetColors().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     @Override
@@ -211,24 +226,32 @@ public class show_image extends AppCompatActivity{
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             imageurl = savedInstanceState.getString("url");
-            new AsyncTask<Void,Void,Void>(){
+            new AsyncTask<Void,Void,Bitmap>(){
                 @Override
                 protected void onPreExecute() {
                     toolbar.setSubtitle("");
                     loadcomments();
-                    loadThumbnail();
                     progressBar.setVisibility(View.VISIBLE);
                     super.onPreExecute();
                 }
 
                 @Override
-                protected void onPostExecute(Void aVoid) {
-                    loadImage();
-                    super.onPostExecute(aVoid);
+                protected void onPostExecute(Bitmap bitmap) {
+                    if(bitmap != null)
+                        loadImage(bitmap);
+                    super.onPostExecute(bitmap);
                 }
 
                 @Override
-                protected Void doInBackground(Void... voids) {
+                protected Bitmap doInBackground(Void... voids) {
+                    try {
+                        return Glide.with(show_image.this)
+                                .load(Menemen.getThumbnail(imageurl))
+                                .asBitmap()
+                                .into(RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_WITDH,RadyoMenemenPro.GALLERY_IMAGE_OVERRIDE_HEIGHT).get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return null;
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -237,27 +260,21 @@ public class show_image extends AppCompatActivity{
     }
 
 
-    @Override
-    protected void onStart() {
-        loadImage();
-        super.onStart();
-    }
 
-    private void loadImage() {
-        try {
-            Glide.with(show_image.this)
-                    .load(imageurl)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(new SimpleTarget<GlideDrawable>() {
-                        @Override
-                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                            image.setImageDrawable(resource);
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void loadImage(final Bitmap thumbnail) {
+        Glide.with(show_image.this)
+                .load(imageurl)
+                .placeholder((thumbnail != null) ? new BitmapDrawable(getResources(), thumbnail) : ContextCompat.getDrawable(show_image.this, R.drawable.default_image))
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .error(R.drawable.default_image)
+                .into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        image.setImageDrawable(resource);
+                        progressBar.setVisibility(View.GONE);
+                        new SetColors(thumbnail).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                });
     }
 
     @Override
@@ -340,6 +357,11 @@ public class show_image extends AppCompatActivity{
                }
 
     class SetColors extends AsyncTask<Void,Void,Integer[]>{
+        Bitmap bitmap;
+
+        SetColors(Bitmap bitmap) {
+            this.bitmap = bitmap;
+        }
 
         final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
         final int backgroundcolor = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
@@ -351,7 +373,6 @@ public class show_image extends AppCompatActivity{
         @Override
         protected Integer[] doInBackground(Void... voids) {
             try {
-                Bitmap bitmap = Glide.with(show_image.this).load(Menemen.getThumbnail(imageurl)).asBitmap().into(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).get();
                 Palette palette = Palette.from(bitmap).generate();
                 int accent = palette.getVibrantColor(accentcolor);
                 int background = palette.getDominantColor(backgroundcolor);
