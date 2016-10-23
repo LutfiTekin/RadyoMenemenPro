@@ -205,7 +205,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                                 frameAnimation.start();
                             } else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                                 m.runExitAnimation(nowplayingbox, 500);
-                    }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_INFO_SERVICE.SERVICE_FILTER))
+                    }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER))
                         setNP(intent.getExtras().getString("calan",null));
                 }
             }
@@ -348,7 +348,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
           IntentFilter filter = new IntentFilter();
           filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
           filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
-          filter.addAction(MUSIC_INFO_SERVICE.SERVICE_FILTER);
           LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((NPreceiver),filter);
       }
         super.onStart();

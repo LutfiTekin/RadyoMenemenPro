@@ -484,7 +484,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(PODCAST_SEEK_FILTER);
-        filter.addAction(MUSIC_INFO_SERVICE.SERVICE_FILTER);
+        filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
         LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).registerReceiver((receiver), filter);
     }
     @Override

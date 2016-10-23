@@ -13,4 +13,10 @@
     <dimen name="galeri_imageview_height">250dp</dimen>
     <dimen name="login_input_margin">72dp</dimen>
     <dimen name="image_picker_margin">16dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 </resources>

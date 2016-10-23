@@ -33,7 +33,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     public static final String TAG = "MUSIC_INFO_SERVICE";
     public static final  String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
-    public static final  String SERVICE_FILTER = "com.incitorrent.radyo.menemen.PLAYERSERVICE";
+//    public static final  String SERVICE_FILTER = "com.incitorrent.radyo.menemen.PLAYERSERVICE";
     public static final String LAST_ARTWORK_URL = "lastartwork";
     final Context context = this;
     Menemen inf;
@@ -81,6 +81,7 @@ public class MUSIC_INFO_SERVICE extends Service {
             sql.addtoHistory(new radioDB.Songs(songid, null, calan, "no url",artwork)); // Şarkıyı kaydet
             inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
             Intent intent = new Intent(NP_FILTER);
+            intent.putExtra("action","update");
             intent.putExtra("calan",calan);
             Log.v("TRACK NP",calan);
             broadcaster.sendBroadcast(intent);
@@ -121,16 +122,6 @@ public class MUSIC_INFO_SERVICE extends Service {
                 return true;
             }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if(result) {
-                Intent intent = new Intent(SERVICE_FILTER);
-                intent.putExtra("action","update");
-                broadcaster.sendBroadcast(intent);
-            }
-
-            super.onPostExecute(result);
-        }
     }
 
 
