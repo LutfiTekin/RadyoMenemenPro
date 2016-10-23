@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -83,8 +82,8 @@ public class MUSIC_INFO_SERVICE extends Service {
             Intent intent = new Intent(NP_FILTER);
             intent.putExtra("action","update");
             intent.putExtra("calan",calan);
-            Log.v("TRACK NP",calan);
             broadcaster.sendBroadcast(intent);
+            inf.updateRadioWidget(context);
         }
     }
 

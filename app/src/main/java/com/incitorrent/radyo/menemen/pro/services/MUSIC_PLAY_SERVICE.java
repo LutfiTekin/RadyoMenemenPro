@@ -426,6 +426,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         intent.putExtra("action",RadyoMenemenPro.PLAY);
         intent.putExtra(RadyoMenemenPro.PLAY,play);
         broadcasterForUi.sendBroadcast(intent);
+        m.updateRadioWidget(MUSIC_PLAY_SERVICE.this);
     }
 
     //Podcast Şimdi Çalıyor Fragmentine Bilgileri Gönder

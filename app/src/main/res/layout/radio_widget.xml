@@ -5,7 +5,7 @@
     android:background="@color/cardviewBG"
     android:padding="@dimen/widget_margin">
     <ImageView
-        android:layout_width="72dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
         android:src="@mipmap/album_placeholder"
         android:contentDescription="@string/cd_artwork"
@@ -53,7 +53,7 @@
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_cancel_black_24dp"
+        android:src="@drawable/ic_stop_black_24dp"
         android:background="#00ffffff"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_marginLeft="8dp"
