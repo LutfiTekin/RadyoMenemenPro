@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardviewBG"
+    android:padding="@dimen/widget_margin">
+    <ImageView
+        android:layout_width="72dp"
+        android:layout_height="match_parent"
+        android:src="@mipmap/album_placeholder"
+        android:contentDescription="@string/cd_artwork"
+        android:id="@+id/artwork"
+        android:layout_alignParentLeft="true"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/media_play_now"
+        android:id="@+id/trackname"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/artwork"
+        android:layout_toEndOf="@+id/artwork"
+        android:textSize="16sp"
+        android:minLines="2"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/trackname"
+    android:layout_alignLeft="@+id/trackname"
+    android:layout_alignStart="@+id/trackname"
+    >
+    <ImageButton
+        android:id="@+id/wplay"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_play_arrow_black_24dp"
+        android:background="#00ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <ImageButton
+        android:id="@+id/wstop"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cancel_black_24dp"
+        android:background="#00ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <ImageButton
+        android:id="@+id/wlastp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_last_played_black_24dp"
+        android:background="#00ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        />
+</LinearLayout>
+
+</RelativeLayout>

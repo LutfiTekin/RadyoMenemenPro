@@ -10,12 +10,13 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 
 public class NotificationControls extends BroadcastReceiver {
+    Menemen m;
     public NotificationControls() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        m = new Menemen(context);
         Intent i = new Intent(context,MUSIC_PLAY_SERVICE.class);
         String dataSource = null;
         if(intent.getExtras() != null) {
@@ -23,9 +24,10 @@ public class NotificationControls extends BroadcastReceiver {
                 dataSource = "stop";
             else if (intent.getExtras().getString("dataSource", null) != null) //dataSource received from on air notification
             {
-                new Menemen(context).kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
-                dataSource = intent.getExtras().getString("dataSource");
-                Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
+                m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
+                dataSource = (m.isPlaying()) ? null : intent.getExtras().getString("dataSource");
+                if(dataSource != null)
+                    Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
             }
         }
         i.putExtra("dataSource", dataSource);
