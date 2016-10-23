@@ -390,20 +390,24 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    cursor = sql.getHistory(20);
-                    cursor.moveToFirst();
-                    while(cursor!=null && !cursor.isAfterLast()) {
-                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
-                            String song = cursor.getString(cursor.getColumnIndex("song"));
-                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
-                            if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
-                                RList.add(new trackHistory(song,songhash,arturl));
+                    try {
+                        cursor = sql.getHistory(20);
+                        cursor.moveToFirst();
+                        while(cursor!=null && !cursor.isAfterLast()) {
+                            if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                                String song = cursor.getString(cursor.getColumnIndex("song"));
+                                String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                                String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
+                                    RList.add(new trackHistory(song,songhash,arturl));
+                            }
+                            cursor.moveToNext();
                         }
-                        cursor.moveToNext();
+                        cursor.close();
+                        sql.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    cursor.close();
-                    sql.close();
                     return null;
                 }
 
