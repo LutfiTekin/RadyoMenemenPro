@@ -9,6 +9,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.AppWidgetTarget;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 
@@ -37,6 +40,11 @@ public class RadioWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.wplay, play);
         views.setTextViewText(R.id.trackname, m.oku(RadyoMenemenPro.broadcastinfo.CALAN));
         //Load image
+        Glide.with(context.getApplicationContext())
+                .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
+                .asBitmap()
+                .error(R.mipmap.album_placeholder)
+                .into(new AppWidgetTarget(context.getApplicationContext(),views,R.id.artwork,appWidgetId));
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
         Log.v("WİDGETUPDATE", dataSource);
