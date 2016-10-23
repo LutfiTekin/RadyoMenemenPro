@@ -256,9 +256,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
         }
         if(!m.isPlaying()){
             //MUSIC_INFO_SERVICE başlat
-            if(!isPodcast) {
+            if(!isPodcast)
                 startService(new Intent(MUSIC_PLAY_SERVICE.this, MUSIC_INFO_SERVICE.class));
-            }
             else {
                 try {
                     if(intent.hasExtra("descr"))
