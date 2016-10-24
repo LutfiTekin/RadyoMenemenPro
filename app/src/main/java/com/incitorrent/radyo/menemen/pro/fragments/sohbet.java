@@ -300,10 +300,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
               }
             }
         };
+        if(m.isFirstTime("downloadmessages")) forceSyncMSGs();
         setRetainInstance(true);
         setHasOptionsMenu(true);
         return sohbetView;
-
     }
 
 

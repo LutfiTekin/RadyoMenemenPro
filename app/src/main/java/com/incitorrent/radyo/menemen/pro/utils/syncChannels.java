@@ -8,7 +8,6 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -53,7 +52,6 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
                                 m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
                                 m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
                                 if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
-                                if(m.isFirstTime("loadmessages")) loadMSGs();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -64,41 +62,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
         return null;
     }
 
-    /**
-     * Sitedeki son 20 mesajı yükle
-     */
-    private void loadMSGs() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
-                            JSONObject c;
-                            for (int i = 0; i < arr.getJSONArray(0).length(); i++) {
-                                String id, nick, mesaj, zaman;
-                                JSONArray innerJarr = arr.getJSONArray(0);
-                                c = innerJarr.getJSONObject(i);
-                                id = c.getString("id");
-                                nick = c.getString("nick");
-                                mesaj = c.getString("post");
-                                zaman = c.getString("time");
-                                //db ye ekle
-                                m.getChatDB().addtoHistory(new chatDB.CHAT(id, nick, mesaj, zaman));
-                            }
-                        } catch (Exception e) {
-                            m.resetFirstTime("loadmessages");
-                            e.printStackTrace();
-                        }
-                    }
-                    }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                m.resetFirstTime("loadmessages");
-            }
-        });
 
-    }
 
 
 }
