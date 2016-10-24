@@ -363,6 +363,7 @@ public class Menemen {
                     .get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            bitmap = BitmapFactory.decodeResource(context.getResources(), (locksreen) ? R.mipmap.ic_header_background : R.mipmap.album_placeholder);
         }
         return bitmap;
     }
@@ -805,14 +806,10 @@ public class Menemen {
                 .show();
     }
 
-    public void updateRadioWidget(Context context) {
-        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-        ComponentName widgetComponent = new ComponentName(context, RadioWidget.class);
-        int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-        Intent update = new Intent();
-        update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
-        update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        context.sendBroadcast(update);
+    public void updateRadioWidget() {
+        int[] ids = AppWidgetManager.getInstance(context.getApplicationContext()).getAppWidgetIds(new ComponentName(context.getApplicationContext(), RadioWidget.class));
+        RadioWidget radioWidget = new RadioWidget();
+        radioWidget.onUpdate(context.getApplicationContext(), AppWidgetManager.getInstance(context.getApplicationContext()),ids);
     }
 
 }

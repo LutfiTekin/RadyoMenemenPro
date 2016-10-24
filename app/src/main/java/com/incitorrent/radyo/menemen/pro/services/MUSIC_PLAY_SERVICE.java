@@ -203,13 +203,14 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
 
     private void pause(final Boolean pausedbyUser) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    m.kaydet("caliyor","hayır");
                     exoPlayer.setPlayWhenReady(false);
                     broadcastToUi(false);
-                    m.kaydet("caliyor","hayır");
                     nowPlayingNotification();
                     stopForeground(false);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
@@ -363,10 +364,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
             broadcastToUi(false);
             mediaSessionCompat.release();
             exec.shutdown();
-            unregisterReceiver(PlugReceiver);
             LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).unregisterReceiver(receiver);
             FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
+            unregisterReceiver(PlugReceiver);
         } catch (Exception e) {
            e.printStackTrace();
         }
@@ -426,7 +427,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         intent.putExtra("action",RadyoMenemenPro.PLAY);
         intent.putExtra(RadyoMenemenPro.PLAY,play);
         broadcasterForUi.sendBroadcast(intent);
-        m.updateRadioWidget(MUSIC_PLAY_SERVICE.this);
+        m.updateRadioWidget();
     }
 
     //Podcast Şimdi Çalıyor Fragmentine Bilgileri Gönder
