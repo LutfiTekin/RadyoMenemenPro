@@ -186,6 +186,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         NPreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                String calan = null;
                 if(intent.getExtras()!=null) {
                     String action = intent.getAction();
                     if (action == null) return;
@@ -206,7 +207,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                             } else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
                                 m.runExitAnimation(nowplayingbox, 500);
                     }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER))
-                        setNP(intent.getExtras().getString("calan",null));
+                        calan = intent.getExtras().getString("calan",null);
+                    setNP(calan);
                 }
             }
         };
@@ -247,7 +249,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     int color_1 = palette.getVibrantColor(accentcolor);
                     int color_2 = palette.getLightVibrantColor(accentcolor);
                     int color_3 = palette.getDarkMutedColor(colorbgsofter);
-                    int color_4 = palette.getLightVibrantColor(textcolor);
+                    int color_4 = palette.getVibrantColor(textcolor);
                     int color_5 = palette.getMutedColor(backgroundcolor);
                     int color_6 = palette.getDarkVibrantColor(statusbarcolor);
                     if(color_5 == backgroundcolor && color_6 == statusbarcolor){
@@ -269,6 +271,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     fab.setRippleColor(color[1]);
                     nowplayingbox.setBackgroundColor(color[2]);
                     NPdj.setTextColor(color[3]);
+                    ((TextView)NPtrack.getCurrentView()).setTextColor(color[3]);
                     ((TextView)NPtrack.getNextView()).setTextColor(color[3]);
                     if(toolbar!=null)
                         toolbar.setBackgroundColor(color[4]);
