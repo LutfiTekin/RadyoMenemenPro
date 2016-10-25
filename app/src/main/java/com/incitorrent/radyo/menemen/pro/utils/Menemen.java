@@ -698,14 +698,14 @@ public class Menemen {
             int code = connection.getResponseCode();
             connection.disconnect();
             if(code == 200) {
-                Log.v("RespCode","200");
+                Log.d("RespCode","200");
                 return true;
             } else {
-                Log.v("RespCode", "code: " + code);
+                Log.d("RespCode", "code: " + code);
                 return false;
             }
         } catch (Exception e) {
-            Log.v("RespCode", e.toString());
+            Log.d("RespCode", e.toString());
             e.printStackTrace();
         }
         return false;
