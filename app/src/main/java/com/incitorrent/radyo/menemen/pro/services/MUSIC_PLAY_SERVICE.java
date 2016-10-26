@@ -416,7 +416,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
         if(m.isPlaying()) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
         else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
-        notification.addAction(R.mipmap.ic_media_stop,getString(R.string.media_stop),stopIntent);
+        notification.addAction(R.drawable.ic_stop_black_24dp,getString(R.string.media_stop),stopIntent);
         notification.setDeleteIntent(stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
