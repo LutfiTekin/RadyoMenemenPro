@@ -99,8 +99,8 @@ public class MUSIC_INFO_SERVICE extends Service {
                             public void onResponse(String response) {
                                 try {
                                     JSONObject c = new JSONObject(response).getJSONArray("info").getJSONObject(0);
-                                    String calan = c.getString(CALAN);
-                                    inf.kaydet(CALAN, Menemen.radiodecodefix(calan));
+                                    String calan = Menemen.radiodecodefix(c.getString(CALAN));
+                                    inf.kaydet(CALAN, calan);
                                     inf.kaydet(DJ, c.getString(DJ));
                                     String songid = c.getString("songid");
                                     String artwork = c.getString(ARTWORK);
