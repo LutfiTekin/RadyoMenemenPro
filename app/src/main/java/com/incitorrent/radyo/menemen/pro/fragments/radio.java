@@ -36,7 +36,6 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -216,7 +215,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNP(String calan) {
-        Log.v("TRACK NP RECEIVED",m.oku(CALAN));
         calan = (calan == null) ? m.oku(CALAN) : calan;
         progressbar.setVisibility(View.INVISIBLE);
         NPdj.setText(m.oku(DJ));
@@ -383,7 +381,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     @Override
     public void onResume() {
         m.selectChannelAuto();
-        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
             new AsyncTask<Void,Void,Void>(){
                 @Override
                 protected void onPreExecute() {
@@ -394,6 +391,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
+                        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
+                            m.kaydet("caliyor","hayır");
                         cursor = sql.getHistory(20);
                         cursor.moveToFirst();
                         while(cursor!=null && !cursor.isAfterLast()) {
@@ -419,24 +418,22 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     adapter = new RadioAdapter(RList);
                     lastplayed.setAdapter(adapter);
                     if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
+                    if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+                        fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                        setNP(null);
+                        m.runEnterAnimation(nowplayingbox, 200);
+                        frameAnimation.start();
+                    }else nowplayingbox.setVisibility(View.GONE);
+                    if (fab != null) {
+                        fab.show();
+                        fab.setVisibility(View.VISIBLE);
+                    }
                     super.onPostExecute(aVoid);
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
-            fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-            setNP(null);
-            m.runEnterAnimation(nowplayingbox, 200);
-            frameAnimation.start();
-        }else nowplayingbox.setVisibility(View.GONE);
-            if (fab != null) {
-                fab.show();
-                fab.setVisibility(View.VISIBLE);
-            }
         super.onResume();
     }
-
-
 
 
     @Override
