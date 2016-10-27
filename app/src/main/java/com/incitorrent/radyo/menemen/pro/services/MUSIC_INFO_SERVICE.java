@@ -32,10 +32,9 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     public static final String TAG = "MUSIC_INFO_SERVICE";
     public static final  String NP_FILTER = "com.incitorrent.radyo.menemen.NPUPDATE"; //NowPlaying - şimdi çalıyor kutusunu güncelle
-//    public static final  String SERVICE_FILTER = "com.incitorrent.radyo.menemen.PLAYERSERVICE";
     public static final String LAST_ARTWORK_URL = "lastartwork";
     final Context context = this;
-    Menemen inf;
+    Menemen m;
     radioDB sql;
     Intent notification_intent;
     NotificationManager nm;
@@ -56,7 +55,7 @@ public class MUSIC_INFO_SERVICE extends Service {
         notification_intent = new Intent(context, MainActivity.class);
         notification_intent.setAction("radyo.menemen.chat");
         broadcaster = LocalBroadcastManager.getInstance(this);
-        inf = new Menemen(context);
+        m = new Menemen(context);
         sql = new radioDB(context,null,null,1);
         queue = Volley.newRequestQueue(context);
         super.onCreate();
@@ -76,14 +75,14 @@ public class MUSIC_INFO_SERVICE extends Service {
 
 
     private void saveTrackAndNotifyNP(String calan, String songid,  String artwork) {
-        if (!inf.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
+        if (!m.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
             sql.addtoHistory(new radioDB.Songs(songid, null, calan, "no url",artwork)); // Şarkıyı kaydet
-            inf.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
+            m.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
             Intent intent = new Intent(NP_FILTER);
             intent.putExtra("action","update");
             intent.putExtra("calan",calan);
             broadcaster.sendBroadcast(intent);
-            inf.updateRadioWidget();
+            m.updateRadioWidget();
         }
     }
 
@@ -91,7 +90,7 @@ public class MUSIC_INFO_SERVICE extends Service {
     public class UpdateNow extends AsyncTask<String,String,Boolean>{
         @Override
         protected Boolean doInBackground(String... params) {
-            if (!inf.isInternetAvailable()) return null;
+            if (!m.isInternetAvailable()) return null;
                 //Şarkı bilgisi kontrolü
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.BROADCASTINFO_NEW,
                         new Response.Listener<String>() {
@@ -100,11 +99,11 @@ public class MUSIC_INFO_SERVICE extends Service {
                                 try {
                                     JSONObject c = new JSONObject(response).getJSONArray("info").getJSONObject(0);
                                     String calan = Menemen.radiodecodefix(c.getString(CALAN));
-                                    inf.kaydet(CALAN, calan);
-                                    inf.kaydet(DJ, c.getString(DJ));
+                                    m.kaydet(CALAN, calan);
+                                    m.kaydet(DJ, c.getString(DJ));
                                     String songid = c.getString("songid");
                                     String artwork = c.getString(ARTWORK);
-                                    inf.kaydet(LAST_ARTWORK_URL, artwork);
+                                    m.kaydet(LAST_ARTWORK_URL, artwork);
                                     saveTrackAndNotifyNP(calan, songid, artwork);
                                 }catch(Exception e){
                                     e.printStackTrace();
