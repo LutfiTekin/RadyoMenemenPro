@@ -2,7 +2,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardviewBG"
+    android:background="@color/widgetBG"
     android:padding="@dimen/widget_margin">
     <ImageView
         android:layout_width="80dp"
@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
         android:text="@string/media_play_now"
         android:id="@+id/trackname"
         android:layout_alignParentTop="true"
@@ -24,7 +24,6 @@
         android:layout_toEndOf="@+id/artwork"
         android:textSize="16sp"
         android:minLines="2"
-        android:layout_marginTop="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>
 <LinearLayout
@@ -34,6 +33,7 @@
     android:layout_below="@+id/trackname"
     android:layout_alignLeft="@+id/trackname"
     android:layout_alignStart="@+id/trackname"
+    android:layout_alignParentEnd="true"
     >
     <ImageButton
         android:id="@+id/wplay"
@@ -43,9 +43,7 @@
         android:src="@drawable/ic_play_arrow_black_24dp"
         android:background="#00ffffff"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:padding="8dp"
         />
 
     <ImageButton
@@ -56,9 +54,7 @@
         android:src="@drawable/ic_stop_black_24dp"
         android:background="#00ffffff"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:padding="8dp"
         />
 
     <ImageButton
@@ -69,9 +65,7 @@
         android:src="@drawable/ic_last_played_black_24dp"
         android:background="#00ffffff"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:padding="8dp"
         />
 </LinearLayout>
 
