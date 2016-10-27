@@ -21,6 +21,7 @@ public class NotificationControls extends BroadcastReceiver {
         Intent i = new Intent(context, MUSIC_PLAY_SERVICE.class);
         String dataSource = null;
         if (intent.getAction() != null && intent.getAction().equals("radyo.menemen.widget.play")) {
+            m.kaydet(RadyoMenemenPro.IS_PODCAST, "hayır");
             String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
             dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
             if(m.isPlaying()) dataSource = null;
