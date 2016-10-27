@@ -15,6 +15,7 @@
     <color name="textColorPrimaryDisabled">#a3ffffff</color>
     <color name="textColorHint">#bdbdbd</color>
     <color name="cardviewBG">#616161</color>
+    <color name="widgetBG">#86616161</color>
     <color name="select">#fff</color>
     <color name="BufferingPBcolor">#FFC400</color>
     <!--navbar items-->
