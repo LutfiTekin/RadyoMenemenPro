@@ -203,47 +203,68 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
 
     private void pause(final Boolean pausedbyUser) {
+    new AsyncTask<Void,Void,Void>(){
+        @Override
+        protected void onPreExecute() {
+            if(pausedbyUser) //abandonfocus if paused by user
+                audioManager.abandonAudioFocus(focusChangeListener);
+            super.onPreExecute();
+        }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    m.kaydet("caliyor","hayır");
-                    exoPlayer.setPlayWhenReady(false);
-                    broadcastToUi(false);
-                    nowPlayingNotification();
-                    stopForeground(false);
-                    stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
-                    mediaSessionCompat.setPlaybackState(stateBuilder.build());
-                    if(pausedbyUser) //abandonfocus if paused by user
-                        audioManager.abandonAudioFocus(focusChangeListener);
-                } catch (Exception e){ e.printStackTrace(); }
-            }
-        }).start();
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                m.kaydet("caliyor","hayır");
+                exoPlayer.setPlayWhenReady(false);
+                nowPlayingNotification();
+                stopForeground(false);
+                stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
+                mediaSessionCompat.setPlaybackState(stateBuilder.build());
+            } catch (Exception e){ e.printStackTrace(); }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            broadcastToUi(false); //Call this on Ui Thread
+            super.onPostExecute(aVoid);
+        }
+    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void resume(final Boolean resumedbyUser) {
-        new Thread(new Runnable() {
+        new AsyncTask<Void,Void,Void>(){
             @Override
-            public void run() {
-        if(resumedbyUser) { //regain focus if resumed by user
-        int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
-        }
-        try {
-            exoPlayer.setPlayWhenReady(true);
-            m.kaydet("caliyor","evet");
-            nowPlayingNotification();
-            startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
-            mediaSessionCompat.setActive(true);
-            stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
-            mediaSessionCompat.setPlaybackState(stateBuilder.build());
-            broadcastToUi(true);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+            protected void onPreExecute() {
+                if(resumedbyUser) { //regain focus if resumed by user
+                    int res =  audioManager.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                    if(res == AudioManager.AUDIOFOCUS_REQUEST_FAILED) return;
+                }
+                super.onPreExecute();
             }
-        }).start();
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    exoPlayer.setPlayWhenReady(true);
+                    m.kaydet("caliyor","evet");
+                    nowPlayingNotification();
+                    startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
+                    mediaSessionCompat.setActive(true);
+                    stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
+                    mediaSessionCompat.setPlaybackState(stateBuilder.build());
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                broadcastToUi(true); //Call this on Ui Thread
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -361,9 +382,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
             exoPlayer.removeListener(exolistener);
             exoPlayer.release();
             if(isPodcast) terminatePodcast();
-            broadcastToUi(false);
             mediaSessionCompat.release();
             exec.shutdown();
+            broadcastToUi(false);
             LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).unregisterReceiver(receiver);
             FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
