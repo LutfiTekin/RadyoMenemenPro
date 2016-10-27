@@ -75,6 +75,7 @@ public class galeri extends Fragment {
         });
 
         new loadGaleri().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        setRetainInstance(true);
         return galeri;
     }
 

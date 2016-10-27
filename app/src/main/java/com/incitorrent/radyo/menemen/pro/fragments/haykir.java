@@ -105,6 +105,7 @@ public class haykir extends Fragment implements View.OnClickListener {
                 new initShout().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         },0,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /4, TimeUnit.SECONDS);
+        setRetainInstance(true);
         return haykirview;
     }
 

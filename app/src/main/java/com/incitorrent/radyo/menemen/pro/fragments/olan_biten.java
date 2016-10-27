@@ -82,6 +82,7 @@ public class olan_biten extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         m = new Menemen(context);
         olanBiten();
+        setRetainInstance(true);
         return obview;
     }
     private void olanBiten(){

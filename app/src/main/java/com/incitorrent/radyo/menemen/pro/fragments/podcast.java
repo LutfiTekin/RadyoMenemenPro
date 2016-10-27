@@ -103,6 +103,7 @@ public class podcast extends Fragment {
         if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.PODCASTFEED,RadyoMenemenPro.PODCASTLINK).execute();
         else
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+        setRetainInstance(true);
         return podcastview;
     }
 
