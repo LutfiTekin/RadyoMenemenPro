@@ -83,6 +83,7 @@ public class MUSIC_INFO_SERVICE extends Service {
             intent.putExtra("calan",calan);
             broadcaster.sendBroadcast(intent);
             m.updateRadioWidget();
+            m.updateSqrRadioWidget();
         }
     }
 

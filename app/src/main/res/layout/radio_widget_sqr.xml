@@ -1,0 +1,70 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00ffffff"
+    android:padding="@dimen/widget_margin">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@id/artwork"
+        android:src="@mipmap/album_placeholder"
+        android:contentDescription="@string/cd_artwork"
+        android:foreground="@drawable/scrim"
+        android:alpha="0.6"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="bottom">
+        <ImageButton
+            android:id="@+id/wplay"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:background="#00ffffff"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/wstop"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_stop_black_24dp"
+            android:background="#00ffffff"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            />
+
+        <ImageButton
+            android:id="@+id/wlastp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_last_played_black_24dp"
+            android:background="#00ffffff"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/media_play_now"
+        android:id="@+id/trackname"
+        android:textSize="16sp"
+        android:minLines="2"
+        android:maxLines="2"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:textColor="@color/textColorPrimary"/>
+</FrameLayout>

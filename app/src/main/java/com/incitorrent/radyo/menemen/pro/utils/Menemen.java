@@ -66,6 +66,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadioWidget;
+import com.incitorrent.radyo.menemen.pro.RadioWidgetSqr;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
@@ -807,6 +808,13 @@ public class Menemen {
         if(!bool_oku(RadyoMenemenPro.DEFAULT_RADIO_WIDGET)) return;
         int[] ids = AppWidgetManager.getInstance(context.getApplicationContext()).getAppWidgetIds(new ComponentName(context.getApplicationContext(), RadioWidget.class));
         RadioWidget radioWidget = new RadioWidget();
+        radioWidget.onUpdate(context.getApplicationContext(), AppWidgetManager.getInstance(context.getApplicationContext()),ids);
+    }
+
+    public void updateSqrRadioWidget() {
+        if(!bool_oku(RadyoMenemenPro.SQUARE_RADIO_WIDGET)) return;
+        int[] ids = AppWidgetManager.getInstance(context.getApplicationContext()).getAppWidgetIds(new ComponentName(context.getApplicationContext(), RadioWidgetSqr.class));
+        RadioWidgetSqr radioWidget = new RadioWidgetSqr();
         radioWidget.onUpdate(context.getApplicationContext(), AppWidgetManager.getInstance(context.getApplicationContext()),ids);
     }
 
