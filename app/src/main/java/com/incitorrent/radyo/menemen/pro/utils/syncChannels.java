@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 import org.json.JSONArray;
@@ -52,6 +53,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
                                 m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
                                 m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
                                 if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
+                                syncTopics();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -62,7 +64,13 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
         return null;
     }
 
-
+    private void syncTopics() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseMessaging.getInstance().subscribeToTopic("sync");
+        FirebaseMessaging.getInstance().subscribeToTopic("onair");
+        FirebaseMessaging.getInstance().subscribeToTopic("podcast");
+    }
 
 
 }

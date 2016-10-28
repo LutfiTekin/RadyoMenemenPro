@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 
 /**
@@ -32,11 +31,6 @@ public class RMPRO extends Application {
         mInstance = this;
         RMPRO.context = getApplicationContext();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseMessaging.getInstance().subscribeToTopic("sync");
-        FirebaseMessaging.getInstance().subscribeToTopic("onair");
-        FirebaseMessaging.getInstance().subscribeToTopic("podcast");
     }
 
     public static Context getContext(){
