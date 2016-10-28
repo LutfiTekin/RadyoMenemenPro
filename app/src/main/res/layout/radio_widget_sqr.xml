@@ -12,7 +12,7 @@
         android:src="@mipmap/album_placeholder"
         android:contentDescription="@string/cd_artwork"
         android:foreground="@drawable/scrim"
-        android:alpha="0.6"/>
+        android:alpha="0.8"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -24,8 +24,8 @@
             android:id="@+id/wplay"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_play_arrow_black_24dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_play_arrow_white_36dp"
             android:background="#00ffffff"
             android:foreground="?android:attr/selectableItemBackground"
             android:padding="8dp"
@@ -35,8 +35,8 @@
             android:id="@+id/wstop"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_stop_black_24dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_stop_white_36dp"
             android:background="#00ffffff"
             android:foreground="?android:attr/selectableItemBackground"
             android:padding="8dp"
@@ -46,8 +46,8 @@
             android:id="@+id/wlastp"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_last_played_black_24dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_last_played_white_36dp"
             android:background="#00ffffff"
             android:foreground="?android:attr/selectableItemBackground"
             android:padding="8dp"
