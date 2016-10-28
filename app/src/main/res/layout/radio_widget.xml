@@ -5,7 +5,7 @@
     android:background="@color/widgetBG"
     android:padding="@dimen/widget_margin">
     <ImageView
-        android:layout_width="80dp"
+        android:layout_width="88dp"
         android:layout_height="match_parent"
         android:src="@mipmap/album_placeholder"
         android:contentDescription="@string/cd_artwork"
@@ -24,6 +24,7 @@
         android:layout_toEndOf="@+id/artwork"
         android:textSize="16sp"
         android:minLines="2"
+        android:maxLines="2"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>
 <LinearLayout
