@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                 getFragmentManager()
                         .beginTransaction()
                         .replace(R.id.Fcontent, track_info)
-                        .addToBackStack(null)
+                        .addToBackStack("track_info")
                         .commit();
             }
         });
@@ -230,15 +230,17 @@ public class MainActivity extends AppCompatActivity
                                 .replace(R.id.Fcontent, new haykir()).commit();
                         break;
                     case "radyo.menemen.track.info.last":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent, new radio()).commit();
                         Fragment track_info = new track_info();
                         Bundle bundle = new Bundle();
                         bundle.putString("trackname", Menemen.fromHtmlCompat(m.oku(CALAN)));
                         bundle.putString("arturl",m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL));
                         track_info.setArguments(bundle);
-                        getFragmentManager()
+                        fragmentManager
                                 .beginTransaction()
                                 .replace(R.id.Fcontent, track_info)
-                                .addToBackStack(null)
+                                .addToBackStack("track_info")
                                 .commit();
                         break;
                     default:

@@ -1,6 +1,5 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
@@ -30,12 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.ChangeBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.ChangeTransform;
-import android.transition.Fade;
 import android.transition.Slide;
-import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -579,36 +573,25 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         bundle.putString("trackname", trackName);
         bundle.putString("arturl",artUrl);
         track_info.setArguments(bundle);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            track_info.setSharedElementEnterTransition(new DetailsTransition());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             track_info.setEnterTransition(new Slide());
-            setExitTransition(new Fade());
-            track_info.setSharedElementReturnTransition(new DetailsTransition());
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getFragmentManager()
-                    .beginTransaction()
-                    .addSharedElement(art, art.getTransitionName())
-                    .replace(R.id.Fcontent, track_info)
-                    .addToBackStack(null)
-                    .commit();
-        }else {
+
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.Fcontent, track_info)
                     .addToBackStack(null)
                     .commit();
-        }
+
     }
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public class DetailsTransition extends TransitionSet {
-        DetailsTransition() {
-            setOrdering(ORDERING_TOGETHER);
-            addTransition(new ChangeBounds()).
-                    addTransition(new ChangeTransform()).
-                    addTransition(new ChangeImageTransform());
-        }
-    }
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    public class DetailsTransition extends TransitionSet {
+//        DetailsTransition() {
+//            setOrdering(ORDERING_TOGETHER);
+//            addTransition(new ChangeBounds()).
+//                    addTransition(new ChangeTransform()).
+//                    addTransition(new ChangeImageTransform());
+//        }
+//    }
     public class trackHistory {
         String song,songhash,arturl;
 

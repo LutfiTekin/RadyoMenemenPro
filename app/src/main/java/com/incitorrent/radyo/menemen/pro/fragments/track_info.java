@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.transition.AutoTransition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +29,6 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.util.concurrent.ExecutionException;
-
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.ART;
-import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.transitionname.CALAN;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +53,6 @@ public class track_info extends Fragment implements View.OnClickListener{
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.app_name)); //Toolbar title
         art = (ImageView) trackview.findViewById(R.id.art);
         track = (TextView) trackview.findViewById(R.id.track);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            art.setTransitionName(ART);
-            track.setTransitionName(CALAN);
-        }
         iv_spotify = (ImageView) trackview.findViewById(R.id.iv_spotify);
         iv_youtube = (ImageView) trackview.findViewById(R.id.iv_youtube);
         iv_lyric = (ImageView) trackview.findViewById(R.id.iv_lyric);
@@ -89,9 +81,6 @@ public class track_info extends Fragment implements View.OnClickListener{
             String trackName = bundle.getString("trackname", getString(R.string.music_not_found));
             track.setText(Menemen.fromHtmlCompat(trackName));
             arturl = bundle.getString("arturl", null);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition(new AutoTransition());
         }
 
         return trackview;
