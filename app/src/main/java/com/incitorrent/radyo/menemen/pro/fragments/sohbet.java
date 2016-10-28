@@ -501,6 +501,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void takePhoto() {
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //Dosya okuma izni yok izin iste
+            AskReadPerm();
+            return;
+        }
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Uri uri = tempUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
