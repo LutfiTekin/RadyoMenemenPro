@@ -52,8 +52,8 @@ public class RadioWidgetSqr extends AppWidgetProvider {
                     .error(R.mipmap.album_placeholder)
                     .into(new AppWidgetTarget(context.getApplicationContext(),views,R.id.artwork,appWidgetId));
         else views.setImageViewResource(R.id.artwork, R.mipmap.album_placeholder);
-        int button_state = R.drawable.ic_play_arrow_black_24dp;
-        if(isPlaying) button_state = R.drawable.ic_pause_black_24dp;
+        int button_state = R.drawable.ic_play_arrow_white_36dp;
+        if(isPlaying) button_state = R.drawable.ic_pause_white_36dp;
         views.setImageViewResource(R.id.wplay, button_state);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
