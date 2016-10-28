@@ -226,6 +226,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     private void setNPimage(final ImageView imageView) {
         final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        if(imageView == null || toolbar == null) return;
         new AsyncTask<Void,Void,Integer[]>() {
             Bitmap resim = null;
             final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
