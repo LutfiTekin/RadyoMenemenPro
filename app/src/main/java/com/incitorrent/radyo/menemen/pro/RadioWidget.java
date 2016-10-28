@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
@@ -70,15 +69,11 @@ public class RadioWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         new Menemen(context).bool_kaydet(RadyoMenemenPro.DEFAULT_RADIO_WIDGET,true);
-        Log.d("RadioWidget","enabled");
-        // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
         new Menemen(context).bool_kaydet(RadyoMenemenPro.DEFAULT_RADIO_WIDGET,false);
-        Log.d("RadioWidget","disabled");
-        // Enter relevant functionality for when the last widget is disabled
     }
 }
 
