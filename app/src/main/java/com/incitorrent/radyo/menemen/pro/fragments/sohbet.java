@@ -362,8 +362,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                    new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                }else{
                    int firstitempos = linearLayoutManager.findFirstVisibleItemPosition();
-                   sohbetRV.getAdapter().notifyItemRangeChanged(firstitempos,10);
-
+                   if(sohbetRV.getAdapter() != null)
+                       sohbetRV.getAdapter().notifyItemRangeChanged(firstitempos,10);
                }
            }catch (Exception e){e.printStackTrace();}
        }
