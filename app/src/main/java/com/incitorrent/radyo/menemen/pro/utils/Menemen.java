@@ -111,13 +111,10 @@ public class Menemen {
     public void bool_kaydet(String title,Boolean content){
         final SharedPreferences kaydet = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
         kaydet.edit().putBoolean(title,content).apply();
-        Log.v("Kayıt", "yazılıyor " + title + " " + content);
     }
 
     public Boolean bool_oku(String title){
-        final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        Log.v("Kayıt", "okunuyor " + title);
-        return oku.getBoolean(title, false); //Değer boş ise false
+        return context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE).getBoolean(title, false); //Değer boş ise false
     }
 
     //Uygulama içinde sadece ilk defa yapılacak şeyler için örn: uygulama introsu
@@ -807,6 +804,7 @@ public class Menemen {
     }
 
     public void updateRadioWidget() {
+        if(!bool_oku(RadyoMenemenPro.DEFAULT_RADIO_WIDGET)) return;
         int[] ids = AppWidgetManager.getInstance(context.getApplicationContext()).getAppWidgetIds(new ComponentName(context.getApplicationContext(), RadioWidget.class));
         RadioWidget radioWidget = new RadioWidget();
         radioWidget.onUpdate(context.getApplicationContext(), AppWidgetManager.getInstance(context.getApplicationContext()),ids);

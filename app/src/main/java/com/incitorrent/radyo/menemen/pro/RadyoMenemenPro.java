@@ -66,6 +66,7 @@ public final class RadyoMenemenPro {
     public static final String LAST_ID_SEEN_ON_CAPS = "lastseenidOnCaps_";
     public static final String SAVED_TIME = "savedtime";
     public static final String MUTE_NOTIFICATION = "mute_notif";
+    public static final String DEFAULT_RADIO_WIDGET = "radio_widget_def";
 
 
     public final static class broadcastinfo{

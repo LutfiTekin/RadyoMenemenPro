@@ -6,11 +6,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.AppWidgetTarget;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 
@@ -22,6 +24,7 @@ public class RadioWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         Menemen m = new Menemen(context.getApplicationContext());
+        Boolean isPlaying = m.isPlaying() && m.isServiceRunning(MUSIC_PLAY_SERVICE.class);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.radio_widget);
         //Go to radio/track info fragment
@@ -50,7 +53,7 @@ public class RadioWidget extends AppWidgetProvider {
                 .into(new AppWidgetTarget(context.getApplicationContext(),views,R.id.artwork,appWidgetId));
         else views.setImageViewResource(R.id.artwork, R.mipmap.album_placeholder);
         int button_state = R.drawable.ic_play_arrow_black_24dp;
-        if(m.isPlaying()) button_state = R.drawable.ic_pause_black_24dp;
+        if(isPlaying) button_state = R.drawable.ic_pause_black_24dp;
         views.setImageViewResource(R.id.wplay, button_state);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -66,11 +69,15 @@ public class RadioWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
+        new Menemen(context).bool_kaydet(RadyoMenemenPro.DEFAULT_RADIO_WIDGET,true);
+        Log.d("RadioWidget","enabled");
         // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
+        new Menemen(context).bool_kaydet(RadyoMenemenPro.DEFAULT_RADIO_WIDGET,false);
+        Log.d("RadioWidget","disabled");
         // Enter relevant functionality for when the last widget is disabled
     }
 }
