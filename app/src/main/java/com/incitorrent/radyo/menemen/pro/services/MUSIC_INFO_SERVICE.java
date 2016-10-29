@@ -116,7 +116,7 @@ public class MUSIC_INFO_SERVICE extends Service {
                         return Priority.IMMEDIATE;
                     }
                 };
-                stringRequest.setRetryPolicy(new DefaultRetryPolicy(1000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                stringRequest.setRetryPolicy(new DefaultRetryPolicy(7500,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 queue.add(stringRequest);
                 return true;
             }
