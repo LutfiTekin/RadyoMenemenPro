@@ -14,7 +14,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
@@ -36,7 +35,6 @@ public class MUSIC_INFO_SERVICE extends Service {
     final Context context = this;
     Menemen m;
     radioDB sql;
-    Intent notification_intent;
     NotificationManager nm;
     LocalBroadcastManager broadcaster;
     private RequestQueue queue;
@@ -52,8 +50,6 @@ public class MUSIC_INFO_SERVICE extends Service {
     @Override
     public void onCreate() {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notification_intent = new Intent(context, MainActivity.class);
-        notification_intent.setAction("radyo.menemen.chat");
         broadcaster = LocalBroadcastManager.getInstance(this);
         m = new Menemen(context);
         sql = new radioDB(context,null,null,1);
