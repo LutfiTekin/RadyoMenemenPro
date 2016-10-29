@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
@@ -28,7 +27,6 @@ public class get_image extends AppCompatActivity {
         String type = intent.getType();
         Menemen m = new Menemen(this);
         Intent main = new Intent(this, MainActivity.class);
-        Log.v("GET IMAGE"," action:" + intent.getAction() + " type" + type );
         if (Intent.ACTION_SEND.equals(action) && type != null && m.isLoggedIn()) {
             if (type.startsWith("image/")) {
                 try {
@@ -42,11 +40,10 @@ public class get_image extends AppCompatActivity {
                     if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_full_error",false))
                         toastmsg = getString(R.string.error_occured) + "\n" + e.toString();
                     Toast.makeText(get_image.this, toastmsg, Toast.LENGTH_SHORT).show();
-                    Log.v("GET IMAGE", e.getMessage() + " PARCELABLE " + getRealPathFromURI((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM)) );
                     e.printStackTrace();
                 }
             }
-            main.setAction("radyo.menemen.chat");
+            main.setAction(RadyoMenemenPro.Action.CHAT);
         }else
             Toast.makeText(get_image.this, R.string.toast_log_in_before_upload, Toast.LENGTH_SHORT).show();
         startActivity(main);

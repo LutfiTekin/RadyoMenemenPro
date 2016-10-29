@@ -102,6 +102,19 @@ public final class RadyoMenemenPro {
         public final static String SONG_CHANGE_EVENT = TOPIC + "songchange";
     }
 
+    public final static class Action{
+        public final static String RADIO =  "radyo.menemen.play";
+        public final static String CHAT =  "radyo.menemen.chat";
+        public final static String PODCAST =  "radyo.menemen.podcast";
+        public final static String PODCAST_PLAY =  "radyo.menemen.podcast.play";
+        public final static String OLAN_BITEN =  "radyo.menemen.news";
+        public final static String HAYKIR =  "radyo.menemen.haykir";
+        public final static String TRACK_INFO_LAST =  "radyo.menemen.track.info.last";
+        public final static String WIDGET_PLAY =  "radyo.menemen.widget.play";
+        public final static String WIDGET_STOP =  "radyo.menemen.widget.stop";
+        public final static String CAPS =  "radyo.menemen.caps";
+    }
+
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
 

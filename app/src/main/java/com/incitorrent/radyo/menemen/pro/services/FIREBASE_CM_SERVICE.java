@@ -101,7 +101,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        notification_intent.setAction("radyo.menemen.chat");
+        notification_intent.setAction(RadyoMenemenPro.Action.CHAT);
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();
         switch (topic) {
@@ -224,7 +224,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             if (vibrate)
                 builder.setVibrate(new long[]{1500, 500, 500});
         }
-        notification_intent.setAction("radyo.menemen.haykir");
+        notification_intent.setAction(RadyoMenemenPro.Action.HAYKIR);
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
         builder.setAutoCancel(true);
@@ -295,7 +295,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         sql_caps.addtoHistory(new capsDB.CAPS(msgid, caps_url, nick, comment, time));
         //Build notification
         notification_intent = new Intent(context, show_image_comments.class);
-        notification_intent.setAction("radyo.menemen.caps")
+        notification_intent.setAction(RadyoMenemenPro.Action.CAPS)
                 .putExtra("url",caps_url);
         if(!nick.equals(m.getUsername()) && notify_new_comment_caps && !is_caps_foreground)
             buildNotificationforCaps(nick,comment,caps_id);
@@ -314,7 +314,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             e.printStackTrace();
         }
         //podcast fragmenti aç
-        notification_intent.setAction("radyo.menemen.podcast");
+        notification_intent.setAction(RadyoMenemenPro.Action.PODCAST);
         notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_CANCEL_CURRENT));
         if(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)  notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
         if (vibrate)
@@ -364,7 +364,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
                 builder.setVibrate(new long[]{500, 1000, 500, 1000});
-        notification_intent.setAction("radyo.menemen.news");
+        notification_intent.setAction(RadyoMenemenPro.Action.OLAN_BITEN);
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setAutoCancel(true);
         Notification notification = builder.build();
@@ -394,7 +394,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_play_now),ppIntent);
         }
         //Main activity yi aç
-        notification_intent.setAction("radyo.menemen.play");
+        notification_intent.setAction(RadyoMenemenPro.Action.RADIO);
         int notificationid = (m.isPlaying()) ? RadyoMenemenPro.ON_AIR_NOTIFICATION : RadyoMenemenPro.NOW_PLAYING_NOTIFICATION;
         notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         if (notify_when_on_air) {

@@ -407,12 +407,12 @@ public class MUSIC_PLAY_SERVICE extends Service {
         if(isPodcast){
             contentTitle = getString(R.string.app_name) + " Podcast";
             calan = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
-            intent.setAction("radyo.menemen.podcast.play");
+            intent.setAction(RadyoMenemenPro.Action.PODCAST_PLAY);
             intent.putExtra("title", calan)
                     .putExtra("descr", m.oku(PODCAST_DESCR))
                     .putExtra("duration", exoPlayer.getDuration())
                     .putExtra("current", exoPlayer.getCurrentPosition());
-        }else intent.setAction("radyo.menemen.play");
+        }else intent.setAction(RadyoMenemenPro.Action.RADIO);
         Bitmap artwork = m.getMenemenArt(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL),false);
         int notificationcolor = ContextCompat.getColor(MUSIC_PLAY_SERVICE.this,R.color.colorBackgroundsofter);
         try {

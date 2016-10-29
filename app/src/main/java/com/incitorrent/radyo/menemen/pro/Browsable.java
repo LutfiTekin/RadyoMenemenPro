@@ -13,9 +13,9 @@ public class Browsable extends AppCompatActivity {
 
         if(getIntent().getData()!=null){
             if(getIntent().getData().toString().contains("podcast"))
-                main.setAction("radyo.menemen.podcast");
+                main.setAction(RadyoMenemenPro.Action.PODCAST);
             else if(getIntent().getData().toString().contains("olanbiten"))
-                main.setAction("radyo.menemen.news");
+                main.setAction(RadyoMenemenPro.Action.OLAN_BITEN);
         }
         startActivity(main);
 

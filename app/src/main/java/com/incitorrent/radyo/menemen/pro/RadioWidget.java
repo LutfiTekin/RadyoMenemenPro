@@ -28,18 +28,18 @@ public class RadioWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.radio_widget);
         //Go to radio/track info fragment
         Intent radiointent = new Intent(context, MainActivity.class);
-        radiointent.setAction("radyo.menemen.play");
+        radiointent.setAction(RadyoMenemenPro.Action.RADIO);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, radiointent, 0);
         views.setOnClickPendingIntent(R.id.wlastp, pendingIntent);
-        radiointent.setAction("radyo.menemen.track.info.last");
+        radiointent.setAction(RadyoMenemenPro.Action.TRACK_INFO_LAST);
         pendingIntent = PendingIntent.getActivity(context , 0, radiointent, 0);
         views.setOnClickPendingIntent(R.id.artwork, pendingIntent);
         //Play/Stop radio
         Intent controls = new Intent(context, NotificationControls.class);
-        controls.setAction("radyo.menemen.widget.play");
+        controls.setAction(RadyoMenemenPro.Action.WIDGET_PLAY);
         PendingIntent play = PendingIntent.getBroadcast(context.getApplicationContext(),1,controls,0);
         views.setOnClickPendingIntent(R.id.wplay, play);
-        controls.setAction("radyo.menemen.widget.stop");
+        controls.setAction(RadyoMenemenPro.Action.WIDGET_STOP);
         PendingIntent stop = PendingIntent.getBroadcast(context.getApplicationContext(),2,controls,0);
         views.setOnClickPendingIntent(R.id.wstop, stop);
         views.setTextViewText(R.id.trackname, Menemen.fromHtmlCompat(m.oku(RadyoMenemenPro.broadcastinfo.CALAN)));

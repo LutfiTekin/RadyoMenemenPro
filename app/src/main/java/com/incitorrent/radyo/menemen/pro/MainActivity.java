@@ -206,30 +206,30 @@ public class MainActivity extends AppCompatActivity
         if(!intent.getAction().equals(main)) {
             try {
                 switch (intent.getAction()) {
-                    case "radyo.menemen.play":
+                    case RadyoMenemenPro.Action.RADIO:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new radio()).commit();
                         break;
-                    case "radyo.menemen.chat":
+                    case RadyoMenemenPro.Action.CHAT:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new sohbet()).commit();
                         break;
-                    case "radyo.menemen.podcast":
+                    case RadyoMenemenPro.Action.PODCAST:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new podcast()).commit();
                         break;
-                    case "radyo.menemen.podcast.play":
+                    case RadyoMenemenPro.Action.PODCAST_PLAY:
                         podcastPlay(intent);
                         break;
-                    case "radyo.menemen.news":
+                    case RadyoMenemenPro.Action.OLAN_BITEN:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new olan_biten()).commit();
                         break;
-                    case "radyo.menemen.haykir":
+                    case RadyoMenemenPro.Action.HAYKIR:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new haykir()).commit();
                         break;
-                    case "radyo.menemen.track.info.last":
+                    case RadyoMenemenPro.Action.TRACK_INFO_LAST:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new radio()).commit();
                         Fragment track_info = new track_info();
