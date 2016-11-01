@@ -1,6 +1,5 @@
 package com.incitorrent.radyo.menemen.pro.services;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +34,6 @@ public class MUSIC_INFO_SERVICE extends Service {
     final Context context = this;
     Menemen m;
     radioDB sql;
-    NotificationManager nm;
     LocalBroadcastManager broadcaster;
     private RequestQueue queue;
     public MUSIC_INFO_SERVICE() {
@@ -49,7 +47,6 @@ public class MUSIC_INFO_SERVICE extends Service {
 
     @Override
     public void onCreate() {
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         broadcaster = LocalBroadcastManager.getInstance(this);
         m = new Menemen(context);
         sql = new radioDB(context,null,null,1);
@@ -88,7 +85,6 @@ public class MUSIC_INFO_SERVICE extends Service {
         @Override
         protected Boolean doInBackground(String... params) {
             if (!m.isInternetAvailable()) return null;
-                //Şarkı bilgisi kontrolü
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.BROADCASTINFO_NEW,
                         new Response.Listener<String>() {
                             @Override
