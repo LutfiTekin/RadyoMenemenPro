@@ -20,12 +20,12 @@ public class NotificationControls extends BroadcastReceiver {
         m = new Menemen(context);
         Intent i = new Intent(context, MUSIC_PLAY_SERVICE.class);
         String dataSource = null;
-        if (intent.getAction() != null && intent.getAction().equals("radyo.menemen.widget.play")) {
+        if (intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_PLAY)) {
             m.kaydet(RadyoMenemenPro.IS_PODCAST, "hayır");
             String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
             dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
             if(m.isPlaying()) dataSource = null;
-        }else if(intent.getAction() != null && intent.getAction().equals("radyo.menemen.widget.stop")){
+        }else if(intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_STOP)){
             dataSource = "stop";
         }else{
         if (intent.getExtras() != null) {
