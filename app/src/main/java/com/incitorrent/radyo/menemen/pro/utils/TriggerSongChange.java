@@ -106,7 +106,7 @@ public class TriggerSongChange extends BroadcastReceiver {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return new DefaultRetryPolicy(5000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                return new DefaultRetryPolicy(7500,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             }
         };
         queue.add(stringRequest);
