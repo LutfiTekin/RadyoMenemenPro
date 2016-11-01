@@ -87,7 +87,7 @@ public class galeri extends Fragment {
         protected Void doInBackground(Void... params) {
             try {
                 Glist = new ArrayList<>();
-                Cursor cursor = sql.getCapsGallery(10);
+                Cursor cursor = sql.getCapsGallery(20);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()){
