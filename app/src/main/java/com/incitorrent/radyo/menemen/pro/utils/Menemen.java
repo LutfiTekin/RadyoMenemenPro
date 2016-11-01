@@ -402,7 +402,7 @@ public class Menemen {
     public Bitmap getMenemenArt(String songurl,Boolean locksreen){
         //Artwork indirilme ayarı açık değilse varsayılan resim döndür
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), (locksreen) ? R.mipmap.ic_header_background : R.mipmap.album_placeholder);
-        if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) || songurl.equals("default"))
+        if(!PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) || songurl.equals("default") || !isConnectionFast())
             return bitmap;
         try {
             int dim = RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM;

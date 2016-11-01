@@ -83,7 +83,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     BroadcastReceiver NPreceiver;
     FloatingActionButton fab;
     ProgressBar progressbar;
-
+    Boolean download_artwork = false;
 
     public radio() {
         // Required empty public constructor
@@ -205,6 +205,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 }
             }
         };
+        download_artwork = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast();
         return radioview;
     }
 
@@ -212,7 +213,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         calan = (calan == null) ? m.oku(CALAN) : calan;
         progressbar.setVisibility(View.INVISIBLE);
         NPdj.setText(m.oku(DJ));
-        if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+        if(download_artwork)
             setNPimage(NPart);
         else
             NPtrack.setText(Menemen.fromHtmlCompat(calan));
@@ -547,7 +548,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
             String title = RList.get(i).song;
             personViewHolder.song.setText(Menemen.fromHtmlCompat(title));
-            if(getActivity()!=null && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true))
+            if(getActivity()!=null && download_artwork)
                 Glide.with(getActivity().getApplicationContext())
                         .load(RList.get(i).arturl)
                         .placeholder(R.mipmap.album_placeholder)
