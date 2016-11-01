@@ -43,6 +43,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
+import com.incitorrent.radyo.menemen.pro.utils.TriggerSongChange;
 
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -437,6 +438,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
         if(m.isPlaying()) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
         else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
+        if(!isPodcast && m.oku(DJ).equals(RadyoMenemenPro.OTO_DJ)){
+            Intent triggersongchange = new Intent(this, TriggerSongChange.class);
+            PendingIntent skipIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102),triggersongchange, PendingIntent.FLAG_CANCEL_CURRENT);
+            notification.addAction(R.drawable.ic_skip_next_black_24dp, getString(R.string.skip), skipIntent);
+        }
         notification.addAction(R.drawable.ic_stop_black_24dp,getString(R.string.media_stop),stopIntent);
         notification.setDeleteIntent(stopIntent);
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

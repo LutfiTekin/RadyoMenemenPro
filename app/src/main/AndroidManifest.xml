@@ -151,6 +151,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/radio_widget_sqr_info" />
         </receiver>
+        <receiver
+            android:name=".utils.TriggerSongChange"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

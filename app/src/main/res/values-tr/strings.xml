@@ -201,4 +201,12 @@
     <string name="loading">Yükleniyor</string>
     <string name="nav_topics">Konular</string>
     <string name="description_topic">Burda diğer Radyo Menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık, Özel veya Korumalı olmak üzere 3 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin.</string>
-    </resources>
+    <string name="toast_auth_error">Yetkilendirme Hatası</string>
+    <string name="toast_sc_auto_dj">Oto Dj yayında değilken şarkıyı değiştiremezsin</string>
+    <string name="toast_sc_no_mp">Puanın yok</string>
+    <string name="toast_sc_inscf_mp">Yeterli Menemen Puanın yok</string>
+    <string name="toast_sc_cur">Şuanda zaten şarkı değiştiriliyor</string>
+    <string name="toast_sc_success">Şarkı değiştiriliyor</string>
+    <string name="track_changed">Şarkı Değiştirildi</string>
+    <string name="track_changed_summary">Şuanda çalan şarkı bir dinleyen tarafından değiştirildi</string>
+</resources>

@@ -14,6 +14,7 @@ public final class RadyoMenemenPro {
     public final static int ON_AIR_NOTIFICATION = 28052016;
     public final static int PODCAST_NOTIFICATION = 19072016;
     public final static int MSG_DOWNLOAD_PROGRESS_NOTIFICATION = 27082016;
+    public final static int SONG_CHANGED_BY_USER_NOTIFICATION = 1112016;
 
     public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 600;
     public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 600;
@@ -48,6 +49,7 @@ public final class RadyoMenemenPro {
     public final static String PUSH_ONLINE_SIGNAL = APP_INFO + "pushonline";
     public final static String BROADCASTINFO_NEW = API + "broadcastinfo";
     public final static String MP_ADD = API + "mp_add";
+    public final static String MP_CHANGE_SONG = API + "mp_change_song";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";

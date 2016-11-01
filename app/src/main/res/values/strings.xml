@@ -249,4 +249,12 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="loading">Loading</string>
     <string name="nav_topics">Topics</string>
     <string name="description_topic">Here you can chat with other member of the Radio Menemen with topics. There are three types of topics Public, Private and Protected. Topics created by other users listed below.</string>
+    <string name="toast_sc_auto_dj">You cannot change track if current dj is not Auto DJ</string>
+    <string name="toast_sc_cur">There is an ongoing track change operation</string>
+    <string name="toast_sc_inscf_mp">You don\'t have enough Menemen Points</string>
+    <string name="toast_sc_no_mp">You don\'t have Menemen Point</string>
+    <string name="toast_sc_success">Changing track</string>
+    <string name="toast_auth_error">Auhorization Failed</string>
+    <string name="track_changed">Track Skipped</string>
+    <string name="track_changed_summary">A listener changed currently playing track</string>
 </resources>

@@ -125,6 +125,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 if (m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
                     startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
                     sendMenemenPointRequest();
+                    if(getDATA(remoteMessage, "byuser").equals("1"))
+                        notifySongChangedByListener();
+                    else notificationManager.cancel(RadyoMenemenPro.SONG_CHANGED_BY_USER_NOTIFICATION);
                 }
                 break;
             default:
@@ -154,6 +157,21 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void notifySongChangedByListener() {
+        NotificationCompat.Builder notification;
+        notification = new NotificationCompat.Builder(context);
+        notification.setContentTitle(getString(R.string.track_changed))
+                .setContentText(getString(R.string.track_changed_summary))
+                .setSmallIcon(R.drawable.ic_library_music_black_24dp);
+        //Main activity yi aç
+        notification_intent.setAction(RadyoMenemenPro.Action.RADIO);
+        notification.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        notification.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        notification.setPriority(Notification.PRIORITY_LOW);
+        notification.setAutoCancel(true);
+        notificationManager.notify(RadyoMenemenPro.SONG_CHANGED_BY_USER_NOTIFICATION, notification.build());
     }
 
     private void sendMenemenPointRequest() {
