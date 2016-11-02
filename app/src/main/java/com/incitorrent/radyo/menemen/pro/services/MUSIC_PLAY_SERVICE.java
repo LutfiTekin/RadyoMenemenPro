@@ -135,10 +135,36 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 pause(true);
                 super.onStop();
             }
+
+            @Override
+            public void onSkipToNext() {
+                sendBroadcast(new Intent(MUSIC_PLAY_SERVICE.this, TriggerSongChange.class));
+                super.onSkipToNext();
+            }
+
+            @Override
+            public void onFastForward() {
+                try {
+                    exoPlayer.seekTo(exoPlayer.getCurrentPosition() + 5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onFastForward();
+            }
+
+            @Override
+            public void onRewind() {
+                try {
+                    exoPlayer.seekTo(exoPlayer.getCurrentPosition() - 5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onRewind();
+            }
         });
         mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         stateBuilder = new PlaybackStateCompat.Builder();
-        stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE);
+        stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_FAST_FORWARD | PlaybackStateCompat.ACTION_REWIND);
         //Exoplayerlistener
         exolistener = new ExoPlayer.EventListener() {
             @Override
