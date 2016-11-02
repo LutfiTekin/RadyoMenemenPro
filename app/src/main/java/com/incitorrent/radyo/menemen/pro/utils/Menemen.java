@@ -115,7 +115,7 @@ public class Menemen {
         kaydet.edit().putBoolean(title,content).apply();
     }
 
-    public Boolean bool_oku(String title){
+    public boolean bool_oku(String title){
         return context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE).getBoolean(title, false); //Değer boş ise false
     }
 
@@ -620,7 +620,19 @@ public class Menemen {
         }
     }
 
-    public Boolean isPlaying() { return oku("caliyor").equals("evet"); }
+    /**
+     * Get players basic state
+     * @return true if radio is playing
+     */
+    public boolean isPlaying() { return bool_oku("playing"); }
+
+    /**
+     * Saves the radio "playing" state across everywhere in app persistantly
+     * @param isPlaying radio playing state
+     */
+    public void setPlaying(boolean isPlaying){
+        bool_kaydet("playing",isPlaying);
+    }
 
     public String getMobilKey(){
         return oku("mkey");

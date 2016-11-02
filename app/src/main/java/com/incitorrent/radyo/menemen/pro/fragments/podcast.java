@@ -227,10 +227,10 @@ public class podcast extends Fragment {
                 if(getActivity()!=null) {
                     Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
                     getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
-                    inf.kaydet("caliyor","hayır");
+                    inf.setPlaying(false);
                         playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
                         playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
-                    inf.kaydet(RadyoMenemenPro.IS_PODCAST,"evet");
+                    inf.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
                     inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
                     Fragment podcast_now_playing = new podcast_now_playing();

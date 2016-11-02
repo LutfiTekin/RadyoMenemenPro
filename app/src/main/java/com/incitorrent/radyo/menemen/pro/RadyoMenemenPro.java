@@ -61,7 +61,7 @@ public final class RadyoMenemenPro {
     public final static String LASTURI = "lasturi";
     public final static String SAVED_MUSIC_INFO = "savedcalanonservice";
     public final static String PLAYING_PODCAST = "playingpodcast";
-    public static final String IS_PODCAST = "podcastmicaliyor";
+    public static final String IS_PODCAST = "ispodcastplayingnow";
     public static final String FIRST_TIME = "f_t";
     public static final String IS_CHAT_FOREGROUND = "icf";
     public static final String LAST_ID_SEEN_ON_CHAT = "lastseenid"; //Bildirim gruplaması için gerekli

@@ -78,7 +78,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     NotificationCompat.Builder notification;
     NotificationManager nm;
     LocalBroadcastManager broadcasterForUi;
-    Boolean isPodcast = false; //Çalan şey radyo mu podcast mi
+    boolean isPodcast = false; //Çalan şey radyo mu podcast mi
     public MUSIC_PLAY_SERVICE() {
     }
 
@@ -241,7 +241,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                m.kaydet("caliyor","hayır");
+                m.setPlaying(false);
                 exoPlayer.setPlayWhenReady(false);
                 nowPlayingNotification();
                 stopForeground(false);
@@ -274,7 +274,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             protected Void doInBackground(Void... voids) {
                 try {
                     exoPlayer.setPlayWhenReady(true);
-                    m.kaydet("caliyor","evet");
+                    m.setPlaying(true);
                     nowPlayingNotification();
                     startForeground(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION,notification.build());
                     mediaSessionCompat.setActive(true);
@@ -297,7 +297,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String dataSource = null;
-        isPodcast = m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
+        isPodcast = m.bool_oku(RadyoMenemenPro.IS_PODCAST);
        if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
         if(dataSource!=null && dataSource.equals("stop")) {
             stopService(new Intent(this, MUSIC_PLAY_SERVICE.class)); //DURDUR
@@ -368,7 +368,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 try {
                     exoPlayer.setPlayWhenReady(true);
                     exoPlayer.addListener(exolistener);
-                    m.kaydet("caliyor","evet");
+                    m.setPlaying(true);
                     mediaSessionCompat.setActive(true);
                     stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                     mediaSessionCompat.setPlaybackState(stateBuilder.build());
@@ -401,7 +401,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     @Override
     public void onDestroy() {
-        m.kaydet("caliyor","hayır");
+        m.setPlaying(false);
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
             stopForeground(true);

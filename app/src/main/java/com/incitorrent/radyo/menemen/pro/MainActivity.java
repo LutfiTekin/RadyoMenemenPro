@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         header_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                if(m.isPlaying() && !m.bool_oku(RadyoMenemenPro.IS_PODCAST))
                     fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
                 if(drawer == null) return;
                 if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         header_sub_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!m.isPlaying() || m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                if(!m.isPlaying() || m.bool_oku(RadyoMenemenPro.IS_PODCAST))
                     return;
                 Fragment track_info = new track_info();
                 Bundle bundle = new Bundle();
@@ -162,9 +162,9 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    private void setNP(Boolean isPlaying){
+    private void setNP(boolean isPlaying){
         if(isPlaying){
-            if(!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+            if(!m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
                 //Podcast çalmıyorsa sol headerı düzenle
                 String title = Menemen.fromHtmlCompat(m.oku(CALAN));
                 if (header_txt != null) header_txt.setText(m.oku(DJ));
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.kaydet("caliyor","hayır");
+        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.setPlaying(false);
         setNP(m.isPlaying());
         initOnlineUsersCountBadge();
         super.onResume();

@@ -21,7 +21,7 @@ public class NotificationControls extends BroadcastReceiver {
         Intent i = new Intent(context, MUSIC_PLAY_SERVICE.class);
         String dataSource = null;
         if (intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_PLAY)) {
-            m.kaydet(RadyoMenemenPro.IS_PODCAST, "hayır");
+            m.bool_kaydet(RadyoMenemenPro.IS_PODCAST, false);
             String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
             dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
             if(m.isPlaying()) dataSource = null;
@@ -33,7 +33,7 @@ public class NotificationControls extends BroadcastReceiver {
                 dataSource = "stop";
             else if (intent.getExtras().getString("dataSource", null) != null) //dataSource received from on air notification
             {
-                m.kaydet(RadyoMenemenPro.IS_PODCAST, "hayır");
+                m.bool_kaydet(RadyoMenemenPro.IS_PODCAST, false);
                 dataSource = (intent.getExtras().getString("dataSource"));
                 Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
             }

@@ -159,7 +159,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet");
+                Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.bool_oku(RadyoMenemenPro.IS_PODCAST);
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           if(isPlayingValid) m.runExitAnimation(nowplayingbox, 400);
@@ -188,7 +188,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                             Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                             fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                             if (isPlaying) {
-                                if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                                if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST))
                                     m.runEnterAnimation(nowplayingbox, 200);
                                 m.runEnterAnimation(NPtrack, 400);
                                 m.runEnterAnimation(NPcard, 400);
@@ -197,7 +197,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                                 m.runEnterAnimation(NPyoutube, 800);
                                 m.runEnterAnimation(NPlyric, 900);
                                 frameAnimation.start();
-                            } else if (!m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet"))
+                            } else if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST))
                                 m.runExitAnimation(nowplayingbox, 500);
                     }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER))
                         calan = intent.getExtras().getString("calan",null);
@@ -388,7 +388,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 protected Void doInBackground(Void... voids) {
                     try {
                         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
-                            m.kaydet("caliyor","hayır");
+                            m.setPlaying(false);
                         cursor = sql.getHistory(20);
                         cursor.moveToFirst();
                         while(cursor!=null && !cursor.isAfterLast()) {
@@ -414,7 +414,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     adapter = new RadioAdapter(RList);
                     lastplayed.setAdapter(adapter);
                     if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
-                    if(m.isPlaying() && !m.oku(RadyoMenemenPro.IS_PODCAST).equals("evet")) {
+                    if(m.isPlaying() && !m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
                         fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                         setNP(null);
                         m.runEnterAnimation(nowplayingbox, 200);
@@ -465,7 +465,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 }
                 progressbar.setVisibility(View.VISIBLE);
                 //Podcast çalmıyor
-                m.kaydet(RadyoMenemenPro.IS_PODCAST,"hayır");
+                m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,false);
                 Intent  radyoservis = new Intent(context, MUSIC_PLAY_SERVICE.class);
                 //Ayarlardan seçilmiş kanalı bul
                 String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
