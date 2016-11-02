@@ -53,7 +53,6 @@ public final class RadyoMenemenPro {
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
-    public final static String SOHBETCACHE = "sohbetcache";
     public final static String HAYKIRCACHE = "hkcache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVEDOB = "kayitliolabiten";
@@ -66,7 +65,6 @@ public final class RadyoMenemenPro {
     public static final String IS_CHAT_FOREGROUND = "icf";
     public static final String LAST_ID_SEEN_ON_CHAT = "lastseenid"; //Bildirim gruplaması için gerekli
     public static final String LAST_ID_SEEN_ON_CAPS = "lastseenidOnCaps_";
-    public static final String SAVED_TIME = "savedtime";
     public static final String MUTE_NOTIFICATION = "mute_notif";
     public static final String DEFAULT_RADIO_WIDGET = "radio_widget_def";
     public static final String SQUARE_RADIO_WIDGET = "radio_widget_sqr";
