@@ -257,4 +257,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="toast_auth_error">Auhorization Failed</string>
     <string name="track_changed">Track Skipped</string>
     <string name="track_changed_summary">A listener changed currently playing track</string>
+    <string name="toast_sc_failed">Track could not be skipped</string>
 </resources>

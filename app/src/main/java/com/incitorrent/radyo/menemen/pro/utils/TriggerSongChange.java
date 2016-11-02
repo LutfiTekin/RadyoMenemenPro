@@ -22,7 +22,6 @@ import java.util.Map;
 import static java.lang.Integer.parseInt;
 
 public class TriggerSongChange extends BroadcastReceiver {
-    private RequestQueue queue;
     private Menemen m;
     /**
      *  Mobil key is wrong
@@ -62,7 +61,7 @@ public class TriggerSongChange extends BroadcastReceiver {
             Toast.makeText(context, R.string.toast_check_your_connection, Toast.LENGTH_SHORT).show();
             return;
         }
-        queue = Volley.newRequestQueue(context.getApplicationContext());
+        RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MP_CHANGE_SONG,
                 new Response.Listener<String>() {
                     @Override
@@ -80,6 +79,8 @@ public class TriggerSongChange extends BroadcastReceiver {
                             toastmsg = context.getString(R.string.toast_sc_cur);
                         else if(parseInt(response) == SONG_CHANGED)
                             toastmsg = context.getString(R.string.toast_sc_success);
+                        else if(parseInt(response) == SONG_CHANGE_FAILED)
+                            toastmsg = context.getString(R.string.toast_sc_failed);
                         else toastmsg = context.getString(R.string.error_occured);
                         Toast.makeText(context, toastmsg, Toast.LENGTH_LONG).show();
 

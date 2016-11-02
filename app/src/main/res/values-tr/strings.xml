@@ -209,4 +209,5 @@
     <string name="toast_sc_success">Şarkı değiştiriliyor</string>
     <string name="track_changed">Şarkı Değiştirildi</string>
     <string name="track_changed_summary">Şuanda çalan şarkı bir dinleyen tarafından değiştirildi</string>
+    <string name="toast_sc_failed">Şarkı değiştirirken bir hata oluştu</string>
 </resources>
