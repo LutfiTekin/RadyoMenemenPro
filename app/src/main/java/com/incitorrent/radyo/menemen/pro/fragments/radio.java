@@ -83,7 +83,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     BroadcastReceiver NPreceiver;
     FloatingActionButton fab;
     ProgressBar progressbar;
-    Boolean download_artwork = false;
+    boolean download_artwork = false;
 
     public radio() {
         // Required empty public constructor
@@ -205,7 +205,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 }
             }
         };
-        download_artwork = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast();
+
+            download_artwork = (m.isInternetAvailable()) ? PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast() : PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true);
         return radioview;
     }
 
