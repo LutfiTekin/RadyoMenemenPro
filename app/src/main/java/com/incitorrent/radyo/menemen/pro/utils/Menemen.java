@@ -26,6 +26,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -64,6 +66,8 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -898,45 +902,55 @@ public class Menemen {
 
     public void showNPToast(final String track, final String artwork){
         if(bool_oku(RadyoMenemenPro.IS_RADIO_FOREGROUND)) return;
-        new AsyncTask<Void,Void,Palette>(){
-            String t_track;
-            String t_art;
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
             @Override
-            protected void onPreExecute() {
-                t_track = (track == null) ? Menemen.fromHtmlCompat(oku(CALAN)) : track;
-                t_art = (artwork == null) ? oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL) : artwork;
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Palette doInBackground(Void... voids) {
+            public void run() {
                 try {
-                    if(t_art.equals("default")) return null;
-                    Bitmap resim = Glide.with(context)
-                            .load(t_art)
-                            .asBitmap()
-                            .error(R.mipmap.album_placeholder)
-                            .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
-                            .get();
-                    return Palette.from(resim).generate();
+                    new AsyncTask<Void,Void,Palette>(){
+                        String t_track;
+                        String t_art;
+                        @Override
+                        protected void onPreExecute() {
+                            t_track = (track == null) ? Menemen.fromHtmlCompat(oku(CALAN)) : track;
+                            t_art = (artwork == null) ? oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL) : artwork;
+                            super.onPreExecute();
+                        }
 
+                        @Override
+                        protected Palette doInBackground(Void... voids) {
+                            try {
+                                if(t_art.equals("default")) return null;
+                                Bitmap resim = Glide.with(context)
+                                        .load(t_art)
+                                        .asBitmap()
+                                        .error(R.mipmap.album_placeholder)
+                                        .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                                        .get();
+                                return Palette.from(resim).generate();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Palette palette) {
+                            try {
+                                Toast toast = NPToast(t_track,t_art,palette);
+                                if(toast != null) toast.show();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            super.onPostExecute(palette);
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return null;
             }
-
-            @Override
-            protected void onPostExecute(Palette palette) {
-                try {
-                    Toast toast = NPToast(t_track,t_art,palette);
-                    if(toast != null) toast.show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                super.onPostExecute(palette);
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        });
     }
 
     private Toast NPToast(String track, String artwork, Palette palette) throws NullPointerException{
@@ -976,6 +990,25 @@ public class Menemen {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public RetryPolicy menemenRetryPolicy(){
+      return new RetryPolicy() {
+          @Override
+          public int getCurrentTimeout() {
+              return RadyoMenemenPro.MENEMEN_TIMEOUT;
+          }
+
+          @Override
+          public int getCurrentRetryCount() {
+              return 0;
+          }
+
+          @Override
+          public void retry(VolleyError error) throws VolleyError {
+
+          }
+      };
     }
 
 }

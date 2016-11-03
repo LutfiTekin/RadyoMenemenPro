@@ -106,7 +106,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 return dataToSend;
             }
         };
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(10000,2,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(RadyoMenemenPro.MENEMEN_TIMEOUT * 3,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(postRequest);
         return null;
     }
@@ -227,7 +227,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return new DefaultRetryPolicy(10000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                return m.menemenRetryPolicy();
             }
         };
         queue.add(postRequest);

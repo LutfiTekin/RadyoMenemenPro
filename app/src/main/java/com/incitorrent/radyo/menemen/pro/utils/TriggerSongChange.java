@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -94,7 +93,7 @@ public class TriggerSongChange extends BroadcastReceiver {
         }){
             @Override
             public Priority getPriority() {
-                return Priority.IMMEDIATE;
+                return Priority.LOW;
             }
 
             @Override
@@ -107,7 +106,7 @@ public class TriggerSongChange extends BroadcastReceiver {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return new DefaultRetryPolicy(7500,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                return m.menemenRetryPolicy();
             }
         };
         queue.add(stringRequest);

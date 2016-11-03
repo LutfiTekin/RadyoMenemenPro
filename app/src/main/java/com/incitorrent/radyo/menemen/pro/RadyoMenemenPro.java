@@ -10,6 +10,7 @@ public final class RadyoMenemenPro {
     public final static String HIGH_CHANNEL = "Zeus"; //320 kbps yayın
     public final static String RADIO_SERVER = "serverR";
     public final static int MUSIC_INFO_SERVICE_INTERVAL = 240;
+    public final static int MENEMEN_TIMEOUT = 30000;
     public final static int NOW_PLAYING_NOTIFICATION = 20032016; //Notification idsi bi özelliği yok rastgele
     public final static int ON_AIR_NOTIFICATION = 28052016;
     public final static int PODCAST_NOTIFICATION = 19072016;

@@ -54,7 +54,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -606,7 +605,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
                     if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
                         sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(), mesaj, NOT_DELIVERED));
                     else {
@@ -639,7 +637,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
                 @Override
                 public RetryPolicy getRetryPolicy() {
-                    return new DefaultRetryPolicy(10000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                    return m.menemenRetryPolicy();
                 }
             };
             queue.add(post);
