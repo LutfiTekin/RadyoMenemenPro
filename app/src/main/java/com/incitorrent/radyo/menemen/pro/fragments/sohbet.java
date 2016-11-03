@@ -148,7 +148,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if(mesaj.getText().toString().trim().length()>0) {
                         postToMenemen(mesaj.getText().toString());
-                        mesaj.setText("");
                     }
                     return true;
                 }
@@ -467,7 +466,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 break;
             case R.id.mesaj_gonder_button:
                 if(mesaj.getText().toString().trim().length()>0)postToMenemen(mesaj.getText().toString());
-                mesaj.setText("");
                 break;
             case R.id.resim_ekle:
                 m.runEnterAnimation(image_pick, 0);
@@ -554,12 +552,17 @@ public class sohbet extends Fragment implements View.OnClickListener{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-        private void postToMenemen(final String mesaj) {
-            if(mesaj.toLowerCase().equals("çatçut")) {
+        private void postToMenemen(final String msg) {
+            if(!m.isInternetAvailable()) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mesaj.setText("");
+            if(msg.toLowerCase().equals("çatçut")) {
                 setChatSound();
                 return;
             }else if(sohbetList != null && sohbetRV != null){
-                sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),mesaj, PENDING));
+                sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),msg, PENDING));
                 if(sohbetRV.getAdapter() != null)
                     sohbetRV.getAdapter().notifyDataSetChanged();
             }
@@ -573,21 +576,21 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                 if(j.get("status").equals("ok")) {
                                     //Başarılı
                                     if(sohbetList.get(0).zaman != null)
-                                        if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).zaman.equals(PENDING))
-                                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, DELIVERED));
+                                        if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(msg) && sohbetList.get(0).zaman.equals(PENDING))
+                                            sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),msg, DELIVERED));
                                         else {
                                             for (int i = 0; i < sohbetList.size(); i++)
                                                 if(sohbetList.get(i).zaman != null)
-                                                    if (sohbetList.get(i).mesaj.equals(mesaj) && sohbetList.get(i).zaman.equals(PENDING))
-                                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, DELIVERED));
+                                                    if (sohbetList.get(i).mesaj.equals(msg) && sohbetList.get(i).zaman.equals(PENDING))
+                                                        sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), msg, DELIVERED));
                                         }
                                 }else{
-                                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
-                                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
+                                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(msg))
+                                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),msg, NOT_DELIVERED));
                                     else {
                                         for (int i = 0; i < sohbetList.size(); i++)
-                                            if (sohbetList.get(i).mesaj.equals(mesaj)) {
-                                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
+                                            if (sohbetList.get(i).mesaj.equals(msg)) {
+                                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), msg, NOT_DELIVERED));
                                                 break;
                                             }
                                     }
@@ -605,12 +608,12 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
-                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(), mesaj, NOT_DELIVERED));
+                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(msg))
+                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(), msg, NOT_DELIVERED));
                     else {
                         for (int i = 0; i < sohbetList.size(); i++)
-                            if (sohbetList.get(i).mesaj.equals(mesaj)) {
-                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, NOT_DELIVERED));
+                            if (sohbetList.get(i).mesaj.equals(msg)) {
+                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), msg, NOT_DELIVERED));
                                 break;
                             }
                     }
@@ -626,7 +629,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     Map<String, String> dataToSend = new HashMap<>();
                     dataToSend.put("nick", m.getUsername());
                     dataToSend.put("mkey", m.getMobilKey());
-                    dataToSend.put("mesaj", mesaj);
+                    dataToSend.put("mesaj", msg);
                     return dataToSend;
                 }
 

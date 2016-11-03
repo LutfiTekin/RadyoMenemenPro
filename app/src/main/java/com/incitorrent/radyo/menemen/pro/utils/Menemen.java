@@ -1001,7 +1001,7 @@ public class Menemen {
 
           @Override
           public int getCurrentRetryCount() {
-              return 0;
+              return -1;
           }
 
           @Override
