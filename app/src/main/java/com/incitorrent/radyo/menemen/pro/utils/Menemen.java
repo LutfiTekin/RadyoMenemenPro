@@ -949,7 +949,7 @@ public class Menemen {
             ImageView t_image = (ImageView) toastview.findViewById(R.id.toast_art);
             TextView t_text = (TextView) toastview.findViewById(R.id.toast_text);
             if(palette != null) {
-                toastcard.setCardBackgroundColor(palette.getMutedColor(backgroundcolor));
+                toastcard.setCardBackgroundColor(adjustAlpha(palette.getMutedColor(backgroundcolor),0.8f));
                 t_text.setTextColor((palette.getMutedSwatch() != null) ? palette.getMutedSwatch().getTitleTextColor() : textcolor);
             }
 
