@@ -224,7 +224,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     }
                 }
             }).start();
-
+        m.showNPToast(null,null);
         }
     }
 
