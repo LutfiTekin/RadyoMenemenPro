@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -205,7 +206,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             public void run() {
                updateMediaInfoIfNecessary();
             }
-        },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL /2, TimeUnit.SECONDS);
+        },1,RadyoMenemenPro.MUSIC_INFO_SERVICE_INTERVAL, TimeUnit.SECONDS);
         MusicPlayServiceReceiver();
         registerReceiver();
         super.onCreate();
@@ -219,6 +220,17 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     try {
                         setMusicMeta();
                         nowPlayingNotification();
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    m.showNPToast(null, null);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

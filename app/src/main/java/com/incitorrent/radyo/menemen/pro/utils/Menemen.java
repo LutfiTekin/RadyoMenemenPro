@@ -33,14 +33,18 @@ import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -69,6 +73,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadioWidget;
 import com.incitorrent.radyo.menemen.pro.RadioWidgetSqr;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 
@@ -87,6 +92,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 
 /**
  * Created by lutfi on 20.05.2016.
@@ -188,6 +195,7 @@ public class Menemen {
      * @return
      */
     public boolean isConnectionFast(){
+        if(!isInternetAvailable()) return false;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         int type = netInfo.getType();
@@ -886,6 +894,88 @@ public class Menemen {
         int[] ids = AppWidgetManager.getInstance(context.getApplicationContext()).getAppWidgetIds(new ComponentName(context.getApplicationContext(), RadioWidgetSqr.class));
         RadioWidgetSqr radioWidget = new RadioWidgetSqr();
         radioWidget.onUpdate(context.getApplicationContext(), AppWidgetManager.getInstance(context.getApplicationContext()),ids);
+    }
+
+    public void showNPToast(final String track, final String artwork){
+        if(bool_oku(RadyoMenemenPro.IS_RADIO_FOREGROUND)) return;
+        new AsyncTask<Void,Void,Palette>(){
+            String t_track;
+            String t_art;
+            @Override
+            protected void onPreExecute() {
+                t_track = (track == null) ? Menemen.fromHtmlCompat(oku(CALAN)) : track;
+                t_art = (artwork == null) ? oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL) : artwork;
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Palette doInBackground(Void... voids) {
+                try {
+                    if(t_art.equals("default")) return null;
+                    Bitmap resim = Glide.with(context)
+                            .load(t_art)
+                            .asBitmap()
+                            .error(R.mipmap.album_placeholder)
+                            .into(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                            .get();
+                    return Palette.from(resim).generate();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Palette palette) {
+                try {
+                    Toast toast = NPToast(t_track,t_art,palette);
+                    if(toast != null) toast.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.onPostExecute(palette);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private Toast NPToast(String track, String artwork, Palette palette) throws NullPointerException{
+        try {
+            final int backgroundcolor = ContextCompat.getColor(context,R.color.cardviewBG);
+            final int textcolor = ContextCompat.getColor(context,R.color.textColorPrimary);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+            final View toastview = inflater.inflate(R.layout.now_playing_toast,null);
+            CardView toastcard = (CardView) toastview.findViewById(R.id.toast_card);
+            ImageView t_image = (ImageView) toastview.findViewById(R.id.toast_art);
+            TextView t_text = (TextView) toastview.findViewById(R.id.toast_text);
+            if(palette != null) {
+                toastcard.setCardBackgroundColor(palette.getMutedColor(backgroundcolor));
+                t_text.setTextColor((palette.getMutedSwatch() != null) ? palette.getMutedSwatch().getTitleTextColor() : textcolor);
+            }
+
+            if(!artwork.equals("default"))
+                Glide.with(context)
+                        .load(artwork)
+                        .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM, RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                        .centerCrop()
+                        .placeholder(R.mipmap.album_placeholder)
+                        .error(R.mipmap.album_placeholder)
+                        .into(t_image);
+            t_text.setText(track);
+            Toast toast = new Toast(context);
+            toast.setView(toastview);
+            toast.setDuration(Toast.LENGTH_LONG);
+            TypedValue tv = new TypedValue();
+            int actionBarHeight = 0;
+            if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+            }
+            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, actionBarHeight + 16);
+            return toast;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

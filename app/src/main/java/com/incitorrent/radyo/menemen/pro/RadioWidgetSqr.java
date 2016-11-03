@@ -45,11 +45,16 @@ public class RadioWidgetSqr extends AppWidgetProvider {
         views.setTextViewText(R.id.trackname, Menemen.fromHtmlCompat(m.oku(RadyoMenemenPro.broadcastinfo.CALAN)));
         //Load image
         if(!m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL).equals("default") && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast())
-            Glide.with(context.getApplicationContext())
-                    .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
-                    .asBitmap()
-                    .error(R.mipmap.album_placeholder)
-                    .into(new AppWidgetTarget(context.getApplicationContext(),views,R.id.artwork,appWidgetId));
+            try {
+                Glide.with(context.getApplicationContext())
+                        .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
+                        .asBitmap()
+                        .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
+                        .error(R.mipmap.album_placeholder)
+                        .into(new AppWidgetTarget(context.getApplicationContext(),views,R.id.artwork,appWidgetId));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         else views.setImageViewResource(R.id.artwork, R.mipmap.album_placeholder);
         int button_state = R.drawable.ic_play_arrow_white_36dp;
         if(isPlaying) button_state = R.drawable.ic_pause_white_36dp;

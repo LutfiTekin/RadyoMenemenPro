@@ -364,6 +364,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 window.setStatusBarColor(Menemen.adjustAlpha(ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark),0.5f));
             }
         }
+        m.bool_kaydet(RadyoMenemenPro.IS_RADIO_FOREGROUND,false);
         super.onStop();
     }
 
@@ -388,6 +389,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
+                        m.bool_kaydet(RadyoMenemenPro.IS_RADIO_FOREGROUND,true);
                         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
                             m.setPlaying(false);
                         cursor = sql.getHistory(20);
