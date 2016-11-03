@@ -124,10 +124,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
                 if (m.isPlaying() && !m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
                     startService(new Intent(FIREBASE_CM_SERVICE.this, MUSIC_INFO_SERVICE.class));
-                    sendMenemenPointRequest();
                     if(getDATA(remoteMessage, "byuser").equals("1"))
                         notifySongChangedByListener();
-                    else notificationManager.cancel(RadyoMenemenPro.SONG_CHANGED_BY_USER_NOTIFICATION);
+                    else {
+                        sendMenemenPointRequest();
+                        notificationManager.cancel(RadyoMenemenPro.SONG_CHANGED_BY_USER_NOTIFICATION);
+                    }
                 }
                 break;
             default:
