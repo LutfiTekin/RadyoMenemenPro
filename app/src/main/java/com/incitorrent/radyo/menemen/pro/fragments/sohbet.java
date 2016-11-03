@@ -583,7 +583,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                                         sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), mesaj, DELIVERED));
                                         }
                                 }else{
-                                    Toast.makeText(getActivity().getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
                                     if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(mesaj))
                                         sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(),mesaj, NOT_DELIVERED));
                                     else {
