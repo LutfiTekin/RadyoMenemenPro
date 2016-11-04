@@ -32,9 +32,9 @@ public final class RadyoMenemenPro {
     public final static String HAYKIR_LINK = "http://radyomenemen.com/haykir.php";
 
 
-    public final static String AUTH = "http://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    private final static String APP_INFO = "http://radyomenemen.com/inc/appinfo.php?"; //base url
-    private final static String API = "http://api.radyomenemen.com/?"; //Yeni API base urls
+    public final static String AUTH = "https://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
+    private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
+    private final static String API = "http://sapi.radyomenemen.com/?"; //Yeni API base urls
     public final static String SYNCCHANNEL = APP_INFO + "channels";
     public final static String DJRESPONSE = APP_INFO + "djresponse";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
@@ -120,7 +120,7 @@ public final class RadyoMenemenPro {
     public final static String OTO_DJ = "Oto Dj";
     public final static String PLAY = "play";
 
-    public final static String CAPS_API_URL    =   "http://caps.radyomenemen.com/api/1/upload";
+    public final static String CAPS_API_URL    =   "https://caps.radyomenemen.com/api/1/upload";
     public final static String CAPS_API_KEY    =   "capsapi";
 
     public static final String CHAT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
