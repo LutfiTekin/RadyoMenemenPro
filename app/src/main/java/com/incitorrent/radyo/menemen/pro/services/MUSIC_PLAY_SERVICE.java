@@ -224,7 +224,6 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     }
                 }
             }).start();
-        m.showNPToast(null,null);
         }
     }
 
@@ -530,6 +529,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
                         }
                     }else if(action.equals("update")){
                         updateMediaInfoIfNecessary();
+                        m.showNPToast(null,null);
                     }
                 }
             }
