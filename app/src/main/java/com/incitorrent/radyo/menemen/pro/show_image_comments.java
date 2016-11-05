@@ -32,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -220,7 +219,7 @@ public class show_image_comments extends AppCompatActivity {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return new DefaultRetryPolicy(7000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                return m.menemenRetryPolicy();
             }
         };
         queue.add(postRequest);

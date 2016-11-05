@@ -1001,12 +1001,13 @@ public class Menemen {
 
           @Override
           public int getCurrentRetryCount() {
-              return -1;
+              return 0;
           }
 
           @Override
           public void retry(VolleyError error) throws VolleyError {
-
+            Log.d(TAG, "Volley Error " + error.toString());
+              throw new VolleyError("Do Not Retry");
           }
       };
     }

@@ -13,7 +13,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -106,7 +105,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 return dataToSend;
             }
         };
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(RadyoMenemenPro.MENEMEN_TIMEOUT * 3,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        postRequest.setRetryPolicy(m.menemenRetryPolicy());
         queue.add(postRequest);
         return null;
     }
@@ -129,6 +128,11 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 dataToSend.put("imagehash", name);
                 dataToSend.put("mkey", m.oku("mkey"));
                 return dataToSend;
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return m.menemenRetryPolicy();
             }
         };
         queue.add(postRequest);

@@ -272,6 +272,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                               sql.deleteMSG(id);
                               for (int i = 0; i < sohbetList.size(); i++) {
+                                  if(id == null) break;
                                   if (sohbetList.get(i).id.equals(id)) {
                                       sohbetList.remove(i);
                                       sohbetRV.getAdapter().notifyItemRemoved(i);
@@ -572,6 +573,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         @Override
                         public void onResponse(String response) {
                             try {
+                                Log.d(TAG, "Volley Response " + response);
                                 JSONObject j = new JSONObject(response).getJSONArray("post").getJSONObject(0);
                                 if(j.get("status").equals("ok")) {
                                     //Başarılı
@@ -608,20 +610,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if(sohbetList.get(0).nick.equals(m.getUsername()) && sohbetList.get(0).mesaj.equals(msg))
-                        sohbetList.set(0,new Sohbet_Objects(null,m.getUsername(), msg, NOT_DELIVERED));
-                    else {
-                        for (int i = 0; i < sohbetList.size(); i++)
-                            if (sohbetList.get(i).mesaj.equals(msg)) {
-                                sohbetList.set(i, new Sohbet_Objects(null, m.getUsername(), msg, NOT_DELIVERED));
-                                break;
-                            }
-                    }
-
+                    Log.d(TAG,"Volley Error " + error.toString());
                     if(m.isFirstTime(NOT_DELIVERED))
                         Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
-                    if(sohbetRV.getAdapter() != null && sohbetList != null)
-                        sohbetRV.getAdapter().notifyDataSetChanged();
                 }
             }){
                 @Override
