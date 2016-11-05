@@ -114,6 +114,8 @@ public class chatDB extends SQLiteOpenHelper {
             c.close();
         } catch (Exception e) {
             e.printStackTrace();
+            db.close();
+            return null;
         }
         db.close();
         return uploader;

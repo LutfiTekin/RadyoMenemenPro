@@ -205,7 +205,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                             JSONObject j = new JSONObject(response).getJSONArray("post").getJSONObject(0);
                             if(!j.get("status").equals("ok"))
                                 Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
-                            else uploadedimg();
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -234,6 +234,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 return m.menemenRetryPolicy();
             }
         };
+        uploadedimg();
         queue.add(postRequest);
     }
 }

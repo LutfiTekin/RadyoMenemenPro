@@ -276,7 +276,8 @@ public class show_image_comments extends AppCompatActivity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(final String response) {
-                            new AsyncTask<Void, Void, Void>() {
+                            Log.d(TAG,"Volley response " + response);
+                            new AsyncTask<Void, Void, Boolean>() {
                                 @Override
                                 protected void onPreExecute() {
                                     sohbetList = new ArrayList<>();
@@ -284,8 +285,9 @@ public class show_image_comments extends AppCompatActivity {
                                 }
 
                                 @Override
-                                protected Void doInBackground(Void... voids) {
+                                protected Boolean doInBackground(Void... voids) {
                                     try {
+                                        if(response.equals("problem")) return false;
                                         String id, nick, post, time;
                                         JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
                                         JSONObject c;
@@ -307,10 +309,14 @@ public class show_image_comments extends AppCompatActivity {
                                 }
 
                                 @Override
-                                protected void onPostExecute(Void aVoid) {
-                                    if(sohbetList!=null) sohbetAdapter = new SohbetAdapter(sohbetList);
-                                    if(sohbetAdapter!=null) sohbetRV.setAdapter(sohbetAdapter);
-                                    if(sohbetList != null && sohbetList.size()>1) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
+                                protected void onPostExecute(Boolean aVoid) {
+                                    if (aVoid != null && !aVoid){
+                                        if (sohbetList != null)
+                                            sohbetAdapter = new SohbetAdapter(sohbetList);
+                                        if (sohbetAdapter != null) sohbetRV.setAdapter(sohbetAdapter);
+                                        if (sohbetList != null && sohbetList.size() > 1)
+                                            m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, sohbetList.get(0).id);
+                                    }
                                     super.onPostExecute(aVoid);
                                 }
                             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -324,10 +330,31 @@ public class show_image_comments extends AppCompatActivity {
                 }
 
                 @Override
+                public RetryPolicy getRetryPolicy() {
+                    return new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return RadyoMenemenPro.MENEMEN_TIMEOUT;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 5;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+                            Toast.makeText(context, "Yorumlar indirilemedi yeniden deneniyor", Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                }
+
+                @Override
                 public Priority getPriority() {
-                    return Priority.IMMEDIATE;
+                    return Priority.HIGH;
                 }
             };
+            postRequest.setShouldCache(false);
             queue.add(postRequest);
         }else{
             new AsyncTask<Void,Void,Void>(){

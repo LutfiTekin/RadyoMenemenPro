@@ -30,10 +30,11 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -414,10 +415,12 @@ public class show_image extends AppCompatActivity{
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(final String response) {
-                            new AsyncTask<Void,Void,Void>(){
+                            Log.d(TAG,"Volley Response " + response + " \n imageurl " + imageurl);
+                            new AsyncTask<Void,Void,Boolean>(){
                                 @Override
-                                protected Void doInBackground(Void... voids) {
+                                protected Boolean doInBackground(Void... voids) {
                                     try {
+                                        if(response.equals("problem")) return false;
                                         String id,nick,post,time;
                                         JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
                                         JSONObject c;
@@ -431,6 +434,7 @@ public class show_image extends AppCompatActivity{
                                             //db ye ekle
                                             sql.addtoHistory(new capsDB.CAPS(id,imageurl,nick,post,time));
                                         }
+                                        return true;
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -438,29 +442,55 @@ public class show_image extends AppCompatActivity{
                                 }
 
                                 @Override
-                                protected void onPostExecute(Void aVoid) {
-                                    try {
-                                        String firscomment = m.getCapsDB().getFirstComment(imageurl);
-                                        if(getSupportActionBar() != null && firscomment != null) {
-                                            getSupportActionBar().setTitle(m.getChatDB().getCapsUploader(imageurl));
-                                            firscomment = firscomment.replaceAll(m.getChatDB().getCapsUploader(imageurl) + ": ","");
-                                            getSupportActionBar().setSubtitle(firscomment);
+                                protected void onPostExecute(Boolean result) {
+                                    if(result!=null)
+                                    if(result) {
+                                        try {
+                                            String firscomment = m.getCapsDB().getFirstComment(imageurl);
+                                            String capsuploader = m.getChatDB().getCapsUploader(imageurl);
+                                            if (getSupportActionBar() != null && firscomment != null && capsuploader != null) {
+                                                getSupportActionBar().setTitle(capsuploader);
+                                                firscomment = firscomment.replaceAll(capsuploader + ": ", "");
+                                                getSupportActionBar().setSubtitle(firscomment);
+                                            }
+                                        } catch (Exception e) {
+                                            getSupportActionBar().setSubtitle("");
+                                            e.printStackTrace();
                                         }
-                                    } catch (Exception e) {
-                                        getSupportActionBar().setSubtitle("");
-                                        e.printStackTrace();
                                     }
-                                    super.onPostExecute(aVoid);
+                                    super.onPostExecute(result);
                                 }
                             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     },null){
                 @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
+                protected Map<String, String> getParams() {
                     HashMap<String, String> dataToSend = new HashMap<>();
                     dataToSend.put("capsurl", imageurl);
                     return dataToSend;
                 }
+
+
+                @Override
+                public RetryPolicy getRetryPolicy() {
+                    return new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return RadyoMenemenPro.MENEMEN_TIMEOUT;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 5;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+                            Toast.makeText(context, "Yorumlar indirilemedi yeniden deneniyor " + error.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                }
+
 
                 @Override
                 public Priority getPriority() {
@@ -470,6 +500,7 @@ public class show_image extends AppCompatActivity{
                         return Priority.NORMAL;
                 }
             };
+            postRequest.setShouldCache(false);
             queue.add(postRequest);
         }
     }
