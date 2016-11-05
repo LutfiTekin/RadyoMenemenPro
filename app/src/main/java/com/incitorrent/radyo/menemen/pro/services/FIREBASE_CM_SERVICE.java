@@ -444,7 +444,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
-        builder.setLights(Color.RED, 1000, 500);
+        builder.setLights(Color.BLUE, 1000, 500);
         builder.setAutoCancel(true);
         Notification notification = builder.build();
        notificationManager.notify(new Random().nextInt(200), notification);
