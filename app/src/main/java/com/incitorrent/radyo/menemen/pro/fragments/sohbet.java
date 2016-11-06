@@ -174,8 +174,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         LinearLayoutManager layoutManager
                 = new GridLayoutManager(getActivity().getApplicationContext(),(getResources().getBoolean(R.bool.landscape_mode))? 10 : 6);
         smileRV.setLayoutManager(layoutManager);
-        String smileys[] = {"gmansmile","YSB",":arap:","(gc)","SBH","lan!?","aygötüm","(S)",":cahil",":NS:",":lan!",":ypm:","(hl?)","*nopanic",":V:","demeya!?",":hmm","(ÇS)"};
-        String smileyids[] = {"smile_gman","ysb","smile_arap","smile_keci","smile_sbh","smile_lan","smile_ayg","smile_sd","smile_cahil","smile_ns","smile_lann","ypm","smile_harbimi","smile_panikyok","v","yds","eizen","smile_sakincali"};
+        String smileys[] = {"gmansmile","YSB",":arap:","(gc)","SBH","lan!?","aygötüm","(S)",":cahil",":NS:",":lan!",":ypm:","(hl?)","*nopanic",":V:","demeya!?",":hmm"};
+        String smileyids[] = {"smile_gman","ysb","smile_arap","smile_keci","smile_sbh","smile_lan","smile_ayg","smile_sd","smile_cahil","smile_ns","smile_lann","ypm","smile_harbimi","smile_panikyok","v","yds","eizen"};
         for(int i = 0; i< smileys.length; i++) satbaxSmileList.add(new Satbax_Smiley_Objects(smileys[i], smileyids[i]));
         Smileadapter = new SatbaxSmileAdapter(satbaxSmileList);
         smileRV.setAdapter(Smileadapter);
