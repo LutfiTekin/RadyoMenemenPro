@@ -1019,7 +1019,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             final  int position = viewHolder.getAdapterPosition();
 
-            if(sohbetList.get(viewHolder.getAdapterPosition()).nick.equals(m.oku("username"))) { //Kendi mesajı, silebilir
+            if(sohbetList != null && sohbetList.size() > 0 && sohbetList.get(viewHolder.getAdapterPosition()).nick.equals(m.oku("username"))) { //Kendi mesajı, silebilir
                     Snackbar sn = Snackbar.make(smilegoster, R.string.message_deleted,Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
