@@ -31,6 +31,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,6 +82,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -501,8 +503,42 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 item.setVisible(false);
                 break;
             case R.id.go_to_online_users:
-
-                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new online(), "online").addToBackStack("online").commit();
+                if(getActivity()!=null) {
+                    trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
+                    try {
+                        if(sql.getOnlineUserCount()<1){
+                            Toast.makeText(getActivity().getApplicationContext(), R.string.online_user_none, Toast.LENGTH_SHORT).show();
+                        break;
+                        }else if(sql.getOnlineUserCount() == 1){
+                            Toast.makeText(getActivity().getApplicationContext(), R.string.toolbar_online_subtitle_one, Toast.LENGTH_SHORT).show();
+                        break;
+                        }
+                        Cursor cursor = sql.getOnlineUserList(m.getUsername());
+                        if (cursor == null) break;
+                        cursor.moveToFirst();
+                        String users = "";
+                        while (!cursor.isAfterLast()) {
+                            String nick = cursor.getString(cursor.getColumnIndex(trackonlineusersDB._NICK));
+                            users = users + nick + "\n";
+                            cursor.moveToNext();
+                        }
+                        cursor.close();
+                        new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
+                                .setTitle(getActivity().getString(R.string.online_members))
+                                .setMessage(users.toUpperCase(Locale.US))
+                                .setCancelable(true)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                })
+                                .show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+//                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new online(), "online").addToBackStack("online").commit();
                 break;
         }
         return super.onOptionsItemSelected(item);
