@@ -19,24 +19,20 @@ public final class RadyoMenemenPro {
 
     public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 600;
     public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 600;
-
     public final static int ARTWORK_IMAGE_OVERRIDE_DIM = 300;
 
 
-
-    public final static String BROADCASTINFO    =   "http://radyomenemen.com/inc/assets/broadcastinfo_pro.php";
-    public final static String PODCASTFEED = "http://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
-    public final static String PODCASTLINK = "http://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
+    public final static String PODCASTFEED = "https://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
+    public final static String PODCASTLINK = "https://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
     public final static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
     public final static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
-    public final static String HAYKIR_LINK = "http://radyomenemen.com/haykir.php";
+    public final static String HAYKIR_LINK = "https://radyomenemen.com/haykir.php";
 
 
     public final static String AUTH = "https://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
     private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
     private final static String API = "https://api.radyomenemen.com/?"; //Yeni API base urls
     public final static String SYNCCHANNEL = APP_INFO + "channels";
-    public final static String DJRESPONSE = APP_INFO + "djresponse";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
     public final static String HAYKIRMALAR = APP_INFO + "haykirmalarim";
     public final static String OLAN_BITEN = APP_INFO + "olanbiten";
