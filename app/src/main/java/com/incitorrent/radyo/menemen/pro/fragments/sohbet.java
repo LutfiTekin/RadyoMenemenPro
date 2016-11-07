@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -117,6 +118,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
     CardView image_pick;
     ImageView take_photo,pick_gallery,cancel_image_pick;
     Toolbar toolbar;
+    private Handler mHandler;
+    private boolean isScrolling = false;
+    private boolean isFragmentForeground = true;
     public sohbet() {
         // Required empty public constructor
     }
@@ -186,7 +190,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         linearLayoutManager = new WrapContentLinearLayoutManager(getActivity().getApplicationContext());
         sohbetRV.setLayoutManager(linearLayoutManager);
         sohbetRV.setHasFixedSize(true);
-        ((SimpleItemAnimator) sohbetRV.getItemAnimator()).setSupportsChangeAnimations(false);
         SohbetAdapter = new SohbetAdapter(sohbetList);
         itemTouchHelper.attachToRecyclerView(sohbetRV); //Swipe to remove itemtouchhelper
         //Onscroll Listener
@@ -223,6 +226,12 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                isScrolling = (newState == RecyclerView.SCROLL_STATE_DRAGGING) || (newState == RecyclerView.SCROLL_STATE_SETTLING);
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
         //Onscroll Listener End
@@ -300,6 +309,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
             }
         };
         if(m.isFirstTime("downloadmessages")) forceSyncMSGs();
+        mHandler = new Handler();
+        startRepeatingTask();
         setRetainInstance(true);
         setHasOptionsMenu(true);
         return sohbetView;
@@ -352,6 +363,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
+        isFragmentForeground = true;
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
        if((sohbetList == null || sohbetList.size() < 1))
            new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -360,17 +373,51 @@ public class sohbet extends Fragment implements View.OnClickListener{
                if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(sql.lastMsgId())){
                    new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                }else{
-                   int firstitempos = linearLayoutManager.findFirstVisibleItemPosition();
-                   if(sohbetRV.getAdapter() != null)
-                       sohbetRV.getAdapter().notifyItemRangeChanged(firstitempos,10);
+                   updateListSilently();
                }
            }catch (Exception e){e.printStackTrace();}
        }
-        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true); //Sohbet ön planda: bildirim gelmeyecek
         NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
         m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
+    }
+
+    void updateListSilently() {
+        //Prevent glitches: if user is isScrolling do not try to update UI
+        if(isScrolling) return;
+        //If Fragment is not in the foreground do not update
+        if(!isFragmentForeground) return;
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+                int firstitempos = linearLayoutManager.findFirstVisibleItemPosition();
+                if(sohbetRV.getAdapter() != null) {
+                    //Disable animations before to flickering happens
+                    ((SimpleItemAnimator) sohbetRV.getItemAnimator()).setSupportsChangeAnimations(false);
+                    sohbetRV.getAdapter().notifyItemRangeChanged(firstitempos, 10);
+                }
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                //Re-Enable animations
+                ((SimpleItemAnimator) sohbetRV.getItemAnimator()).setSupportsChangeAnimations(true);
+                super.onPostExecute(aVoid);
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    //Insure flickering not happening
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void iAmOnline() {
@@ -402,16 +449,23 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStop() {
-        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);//Sohbet ön planda değil: bildirim gelebilir
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
+        isFragmentForeground = false;
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
         super.onStop();
     }
 
+
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
+        isFragmentForeground = false;
+        stopRepeatingTask();
+        super.onDestroy();
     }
+
     int first_visible_view;
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -1057,5 +1111,25 @@ public class sohbet extends Fragment implements View.OnClickListener{
 };
 
 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                updateListSilently();
+            } finally {
+                mHandler.postDelayed(mStatusChecker, RadyoMenemenPro.MENEMEN_TIMEOUT);
+            }
+        }
+    };
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
+    }
+
 
 }
