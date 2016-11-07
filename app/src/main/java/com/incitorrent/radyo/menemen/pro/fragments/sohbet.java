@@ -1003,7 +1003,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
     }
     //RecyclerView callback methods for swipe to delete effects
-
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean isItemViewSwipeEnabled() {
