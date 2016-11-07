@@ -60,7 +60,7 @@ public class radioDB extends SQLiteOpenHelper {
     }
     public Cursor getHistory(int limit){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,null,null,null,null,_SONGID+" DESC", String.valueOf(limit));
+        return db.query(TABLE_NAME,null,null,null,null,null,_SONGID+" DESC", (limit == 0) ? null : String.valueOf(limit));
     }
 
     public void deleteTrack(String songhash){

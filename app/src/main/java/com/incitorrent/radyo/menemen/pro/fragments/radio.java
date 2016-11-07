@@ -392,7 +392,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         m.bool_kaydet(RadyoMenemenPro.IS_RADIO_FOREGROUND,true);
                         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
                             m.setPlaying(false);
-                        cursor = sql.getHistory(20);
+                        cursor = sql.getHistory(0);
                         cursor.moveToFirst();
                         while(cursor!=null && !cursor.isAfterLast()) {
                             if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
