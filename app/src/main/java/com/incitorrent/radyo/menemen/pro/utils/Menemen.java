@@ -337,7 +337,6 @@ public class Menemen {
     public static String getCapsUrl(String mesaj) {
         String capsurl = mesaj.split("caps")[1];
         capsurl = capsurl.split(" ")[0];
-        Log.v(TAG, "getCapsurl" + capsurl);
         return "https://caps" +capsurl.trim();
     }
 
