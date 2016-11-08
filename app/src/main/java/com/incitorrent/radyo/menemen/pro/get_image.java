@@ -1,26 +1,24 @@
 package com.incitorrent.radyo.menemen.pro;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
-import java.io.IOException;
+import java.io.InputStream;
 
 public class get_image extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Başka uygulamadan seçilen resmi işle
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -30,12 +28,13 @@ public class get_image extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null && m.isLoggedIn()) {
             if (type.startsWith("image/")) {
                 try {
-        Uri image = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                   if(getRealPathFromURI(image)!=null) {
-                       Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse("file://" + getRealPathFromURI(image)));
+                    Uri image = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    InputStream is = getContentResolver().openInputStream(image);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
                     new CapsYukle(bitmap,this).execute();
-                   }else Toast.makeText(get_image.this, R.string.error_occured, Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
+                    if(is != null)
+                        is.close();
+                } catch (Exception e) {
                     String toastmsg = getString(R.string.error_occured);
                     if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_full_error",false))
                         toastmsg = getString(R.string.error_occured) + "\n" + e.toString();
@@ -47,13 +46,5 @@ public class get_image extends AppCompatActivity {
         }else
             Toast.makeText(get_image.this, R.string.toast_log_in_before_upload, Toast.LENGTH_SHORT).show();
         startActivity(main);
-    }
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        if(cursor!=null)cursor.moveToFirst(); else return null;
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        String realpath = cursor.getString(idx);
-        cursor.close();
-        return realpath;
     }
 }
