@@ -2,7 +2,6 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,14 +17,27 @@ import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
@@ -36,13 +48,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class podcast extends Fragment {
-    private ProgressDialog pDialog;
-
     static final String KEY_ITEM = "item"; // parent node
     static final String KEY_TITLE = "title";
     static final String KEY_LINK = "link";
@@ -55,6 +67,8 @@ public class podcast extends Fragment {
     Context context;
     Menemen inf;
     int switchToOldPodcast = 1;
+    RequestQueue queue;
+    ProgressBar progressBar;
 
     public podcast() {
         // Required empty public constructor
@@ -65,13 +79,13 @@ public class podcast extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View podcastview = inflater.inflate(R.layout.fragment_podcast, container, false);
-        context = getActivity();
+        context = getActivity().getApplicationContext();
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.podcast)); //Toolbar title
         inf = new Menemen(context);
         final ImageView imageview = (ImageView) podcastview.findViewById(R.id.imageView);
         final TextView titlepodcast = (TextView) podcastview.findViewById(R.id.title_podcast);
         final TextView descrpodcast = (TextView) podcastview.findViewById(R.id.description_podcast);
-
+        queue = Volley.newRequestQueue(context);
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,12 +99,13 @@ public class podcast extends Fragment {
                     titlepodcast.setText("Incitorrent");
                     descrpodcast.setText(R.string.old_podcast_descr);
                     imageview.setImageResource(R.mipmap.incitorrent);
-                    if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.OLD_PODCASTFEED,RadyoMenemenPro.OLD_PODCASTLINK).execute();
+                    if(inf.isInternetAvailable())  loadFeed(false);
                     else
                         Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        progressBar = (ProgressBar) podcastview.findViewById(R.id.progressbar);
         PR = (RecyclerView) podcastview.findViewById(R.id.podcastR);
         PR.setHasFixedSize(false);
         PR.setNestedScrollingEnabled(false);
@@ -100,13 +115,62 @@ public class podcast extends Fragment {
             PR.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         else
             PR.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if(inf.isInternetAvailable())  new LoadXML(RadyoMenemenPro.PODCASTFEED,RadyoMenemenPro.PODCASTLINK).execute();
-        else
+         loadFeed(true);
+        if(!inf.isInternetAvailable())
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
         setRetainInstance(true);
         return podcastview;
     }
 
+    void loadFeed(final boolean menemen) {
+        progressBar.setVisibility(View.VISIBLE);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,
+                (menemen) ? RadyoMenemenPro.PODCASTFEED : RadyoMenemenPro.OLD_PODCASTFEED,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                            new LoadXML((menemen) ? RadyoMenemenPro.PODCASTLINK : RadyoMenemenPro.OLD_PODCASTLINK, response).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                    }
+                },null){
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    String utf8String = new String(response.data, "UTF-8");
+                    return Response.success(utf8String, HttpHeaderParser.parseCacheHeaders(response)) ;
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return super.getHeaders();
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return RadyoMenemenPro.MENEMEN_TIMEOUT;
+                    }
+
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 3;
+                    }
+
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
+                        Log.d("Volley",error.toString());
+                    }
+                };
+            }
+
+        };
+        queue.add(stringRequest);
+    }
 
 
     @Override
@@ -119,25 +183,11 @@ public class podcast extends Fragment {
 
 
     public class LoadXML extends AsyncTask<Void, Void, Boolean> {
-    String podcast,podcastlink;
+    String podcastlink,xml;
 
-        LoadXML(String podcast, String podcastlink) {
-            this.podcast = podcast;
+        LoadXML(String podcastlink, String xml) {
             this.podcastlink = podcastlink;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            try {
-                pDialog = new ProgressDialog(getActivity());
-                pDialog.setMessage(getString(R.string.podcast_updating_list));
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.xml = xml;
         }
 
 
@@ -145,11 +195,7 @@ public class podcast extends Fragment {
         protected Boolean doInBackground(Void... arg0) {
             try {
                 XMLParser parser = new XMLParser();
-                xml = parser.getXmlFromUrl(podcast); // getting XML
                 if(xml==null) return false;
-                if (xml.isEmpty()) {
-                    return false;
-                } else {
                     Document doc = parser.getDomElement(xml); // getting DOM element
                     NodeList nl = doc.getElementsByTagName(KEY_ITEM);
                     // looping through all item nodes <item>
@@ -168,34 +214,32 @@ public class podcast extends Fragment {
                             RList.add(i, new podcast_objs(title, desc, duration, real_mp3_link));
                         } catch (NullPointerException e1) {
                             e1.printStackTrace();
+                            return false;
                         }
 
                     }
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
+                return false;
             }
             return true;
 
         }
 
-
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            try {
-                pDialog.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            progressBar.setVisibility(View.GONE);
             if(!result) {
                 Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                 return;
             }
             adapter = new PodcastAdapter(RList);
             PR.setAdapter(adapter);
+
         }
-    }// load xml son
+    }
 
     public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PersonViewHolder> {
         Context context;
