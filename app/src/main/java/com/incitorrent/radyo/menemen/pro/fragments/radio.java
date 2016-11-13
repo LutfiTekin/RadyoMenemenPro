@@ -578,7 +578,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         bundle.putString("arturl",artUrl);
         track_info.setArguments(bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            track_info.setEnterTransition(new Slide());
+            track_info.setEnterTransition(new Slide(Gravity.TOP));
 
             getFragmentManager()
                     .beginTransaction()
