@@ -33,7 +33,7 @@
               android:id="@+id/usernameET"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:singleLine="true"
+              android:maxLines="1"
               android:textColorHint="@color/textColorHint"
               android:hint="@string/hint_username" />
       </android.support.design.widget.TextInputLayout>
