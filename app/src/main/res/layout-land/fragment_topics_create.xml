@@ -1,0 +1,93 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundsoft"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics_create">
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false">
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_weight="2"
+    android:layout_width="0dp"
+    android:layout_height="match_parent">
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/topics_create_input_margin"
+        android:layout_marginRight="@dimen/topics_create_input_margin">
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColorHint="@color/textColorHint"
+            android:hint="@string/topic_create_title"/>
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginTop="16dp"
+        android:id="@+id/til_descr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/topics_create_input_margin"
+        android:layout_marginRight="@dimen/topics_create_input_margin">
+        <EditText
+            android:id="@+id/et_descr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="1"
+            android:maxLines="2"
+            android:inputType="textAutoCorrect|textMultiLine"
+            android:textColorHint="@color/textColorHint"
+            android:hint="@string/topic_create_descr"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <CheckBox
+        android:text="@string/topic_create_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/topics_create_input_margin"
+        android:layout_marginRight="@dimen/topics_create_input_margin"
+        android:layout_marginTop="16dp"
+        android:id="@+id/checkBox" />
+</LinearLayout>
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_weight="1"
+       android:layout_width="0dp"
+       android:layout_height="match_parent">
+       <ImageView
+           android:layout_marginTop="16dp"
+           android:layout_width="112dp"
+           android:layout_height="112dp"
+           android:src="@drawable/default_image"
+           android:layout_gravity="center"
+           android:id="@+id/imageView"
+           android:foreground="?android:attr/selectableItemBackground"/>
+       <ProgressBar
+           android:id="@+id/progressBar"
+           style="?android:attr/progressBarStyleHorizontal"
+           android:layout_width="144dp"
+           android:layout_height="20dp"
+           android:layout_gravity="center"
+           android:layout_marginLeft="@dimen/topics_create_input_margin"
+           android:layout_marginRight="@dimen/topics_create_input_margin"
+           android:indeterminate="true"
+           android:indeterminateBehavior="cycle"
+           android:visibility="gone"/>
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:id="@+id/text"
+           android:text="@string/topic_create_image_text"/>
+   </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

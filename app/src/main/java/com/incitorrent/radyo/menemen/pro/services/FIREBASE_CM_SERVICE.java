@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -101,6 +102,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG,"onMessageReceived");
         notification_intent.setAction(RadyoMenemenPro.Action.CHAT);
         //Broadcast ekle sohbet fragmenti güncelle
         String topic = remoteMessage.getFrom();

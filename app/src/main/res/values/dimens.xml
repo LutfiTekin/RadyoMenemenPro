@@ -12,6 +12,7 @@
     <dimen name="cardview_in_appbar_margin">16dp</dimen>
     <dimen name="galeri_imageview_height">250dp</dimen>
     <dimen name="login_input_margin">72dp</dimen>
+    <dimen name="topics_create_input_margin">16dp</dimen>
     <dimen name="image_picker_margin">16dp</dimen>
 
     <!--

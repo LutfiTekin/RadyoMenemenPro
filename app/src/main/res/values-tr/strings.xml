@@ -200,7 +200,7 @@
     <string name="setting_preloadifwifi_summary">Eğer wi-fi açıksa sohbetteki resimleri önceden yükle</string>
     <string name="loading">Yükleniyor</string>
     <string name="nav_topics">Konular</string>
-    <string name="description_topic">Burda diğer Radyo Menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık, Özel veya Korumalı olmak üzere 3 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin.</string>
+    <string name="description_topic">Burda diğer Radyo Menemen üyeleri ile yazışabileceğin konular açabilirsin. Açık ve Özel olmak üzere 2 adet tipte konu açabilirsin. Aşağıda diğer üyeler tarafından açılmış konuları görebilirsin.</string>
     <string name="toast_auth_error">Yetkilendirme Hatası</string>
     <string name="toast_sc_auto_dj">Oto Dj yayında değilken şarkıyı değiştiremezsin</string>
     <string name="toast_sc_no_mp">Puanın yok</string>
@@ -210,4 +210,9 @@
     <string name="track_changed">Şarkı Değiştirildi</string>
     <string name="track_changed_summary">Şuanda çalan şarkı bir dinleyen tarafından değiştirildi</string>
     <string name="toast_sc_failed">Şarkı değiştirirken bir hata oluştu</string>
+    <string name="topic_create_title">Konu Başlığı</string>
+    <string name="topic_create_descr">Açıklama</string>
+    <string name="topic_create_check">Gizli Konu</string>
+    <string name="topic_create_image_text">Konu Resmi</string>
+    <string name="topic_create_new">Yeni Konu Aç</string>
 </resources>

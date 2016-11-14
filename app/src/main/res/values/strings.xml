@@ -248,7 +248,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="setting_preloadifwifi_title">Preload Images</string>
     <string name="loading">Loading</string>
     <string name="nav_topics">Topics</string>
-    <string name="description_topic">Here you can chat with other member of the Radio Menemen with topics. There are three types of topics Public, Private and Protected. Topics created by other users listed below.</string>
+    <string name="description_topic">Here you can chat with other member of the Radio Menemen with topics. There are two types of topics Public and Private . Topics created by other users listed below.</string>
     <string name="toast_sc_auto_dj">You cannot change track if current dj is not Auto DJ</string>
     <string name="toast_sc_cur">There is an ongoing track change operation</string>
     <string name="toast_sc_inscf_mp">You don\'t have enough Menemen Points</string>
@@ -258,4 +258,12 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="track_changed">Track Skipped</string>
     <string name="track_changed_summary">A listener changed currently playing track</string>
     <string name="toast_sc_failed">Track could not be skipped</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="topic_create_check">Private Topic</string>
+    <string name="topic_create_descr">Description</string>
+    <string name="topic_create_title">Title</string>
+    <string name="topic_create_image_text">Topic Image</string>
+    <string name="topic_create_new">Start a New Topic</string>
 </resources>
