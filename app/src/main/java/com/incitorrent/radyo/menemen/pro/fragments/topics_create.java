@@ -12,9 +12,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -63,7 +66,8 @@ public class topics_create extends Fragment implements View.OnClickListener{
     CheckBox checkBox;
     ImageView imageView;
     TextView textView;
-    ProgressBar progressBar;
+    ProgressBar progressBar,progressBarsubmit;
+    FloatingActionButton submit;
     public String imageurl = "default";
     public String imagepath = null;
     public topics_create() {
@@ -78,29 +82,94 @@ public class topics_create extends Fragment implements View.OnClickListener{
         if(getActivity() != null) getActivity().setTitle(getString(R.string.topic_create_new));
         m = new Menemen(context);
         queue = Volley.newRequestQueue(context);
+        // Inflate the layout for this fragment
+        View rootview = inflater.inflate(R.layout.fragment_topics_create, container, false);
+        et_title = (EditText) rootview.findViewById(R.id.et_title);
+        et_descr = (EditText) rootview.findViewById(R.id.et_descr);
+        til_title = (TextInputLayout) rootview.findViewById(R.id.til_title);
+        til_descr = (TextInputLayout) rootview.findViewById(R.id.til_descr);
+        checkBox = (CheckBox) rootview.findViewById(R.id.checkBox);
+        imageView = (ImageView) rootview.findViewById(R.id.imageView);
+        textView = (TextView) rootview.findViewById(R.id.text);
+        progressBar = (ProgressBar) rootview.findViewById(R.id.progressBar);
+        progressBarsubmit = (ProgressBar) rootview.findViewById(R.id.progressBar_submit);
+        progressBarsubmit.getIndeterminateDrawable()
+                .setColorFilter(ContextCompat.getColor(context,R.color.BufferingPBcolor), android.graphics.PorterDuff.Mode.MULTIPLY);
+        submit = (FloatingActionButton) rootview.findViewById(R.id.submit);
+        imageView.setOnClickListener(this);
+        submit.setOnClickListener(this);
+        m.runEnterAnimation(til_title,400);
+        m.runEnterAnimation(til_descr,600);
+        m.runEnterAnimation(checkBox,800);
+        m.runEnterAnimation(imageView,1000);
+        m.runEnterAnimation(textView,1000);
+        setRetainInstance(true);
+        return rootview;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.imageView:
+                selectTopicImage();
+                break;
+            case R.id.submit:
+                createNewTopic();
+                break;
+        }
+    }
+
+    private void createNewTopic() {
+        final String title = et_title.getText().toString().trim();
+        final String descr = et_descr.getText().toString().trim();
+        if(title.length() < 1 || descr.length() < 1) return;
+        progressBarsubmit.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_CREATE,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        switch (response){
+                        switch (response) {
                             case RESPONSE_ERROR:
                                 Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
                                 break;
                             case RESPONSE_DUPLICATE:
-                                Toast.makeText(context, "DUPLICATE", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.topics_error_duplicate, Toast.LENGTH_SHORT).show();
                                 break;
                             default:
+                                Toast.makeText(context, R.string.topics_new_success, Toast.LENGTH_SHORT).show();
                                 FirebaseMessaging.getInstance().subscribeToTopic(response);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getActivity().onBackPressed();
+                                    }
+                                }, 1000);
                                 break;
                         }
-                        Log.d("topics",response);
+                        Log.d("topics", response);
+                        progressBarsubmit.setVisibility(View.INVISIBLE);
                     }
-                },null){
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+        }){
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> dataToSend = new HashMap<>();
                 dataToSend.put(RadyoMenemenPro.USERNAME, m.getUsername());
                 dataToSend.put(RadyoMenemenPro.MOBIL_KEY, m.getMobilKey());
+                dataToSend.put("title", title);
+                dataToSend.put("descr", descr);
+                dataToSend.put("type", (checkBox.isChecked()) ? "2" : "1");
+                dataToSend.put("image", imageurl);
                 return dataToSend;
             }
 
@@ -119,39 +188,19 @@ public class topics_create extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void retry(VolleyError error) throws VolleyError {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
                         throw  new VolleyError("NO RETRY");
                     }
                 };
             }
         };
         queue.add(stringRequest);
-        // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_topics_create, container, false);
-        et_title = (EditText) rootview.findViewById(R.id.et_title);
-        et_descr = (EditText) rootview.findViewById(R.id.et_descr);
-        til_title = (TextInputLayout) rootview.findViewById(R.id.til_title);
-        til_descr = (TextInputLayout) rootview.findViewById(R.id.til_descr);
-        checkBox = (CheckBox) rootview.findViewById(R.id.checkBox);
-        imageView = (ImageView) rootview.findViewById(R.id.imageView);
-        textView = (TextView) rootview.findViewById(R.id.text);
-        progressBar = (ProgressBar) rootview.findViewById(R.id.progressBar);
-        imageView.setOnClickListener(this);
-        m.runEnterAnimation(til_title,400);
-        m.runEnterAnimation(til_descr,600);
-        m.runEnterAnimation(checkBox,800);
-        m.runEnterAnimation(imageView,1000);
-        m.runEnterAnimation(textView,1000);
-        setRetainInstance(true);
-        return rootview;
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.imageView:
-                selectTopicImage();
-                break;
-        }
     }
 
     private void selectTopicImage() {
@@ -224,7 +273,6 @@ public class topics_create extends Fragment implements View.OnClickListener{
                             JSONObject J = new JSONObject(response);
                             JSONObject Jo = J.getJSONObject("image");
                             if(!J.getString("status_code").equals("200")) throw new Exception(context.getString(R.string.image_not_uploaded));
-                            bitmap.recycle();
                             imageurl = Jo.getString("url");
                         } catch (Exception e) {
                             e.printStackTrace();

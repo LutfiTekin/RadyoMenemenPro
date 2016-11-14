@@ -266,4 +266,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="topic_create_title">Title</string>
     <string name="topic_create_image_text">Topic Image</string>
     <string name="topic_create_new">Start a New Topic</string>
+    <string name="topics_error_duplicate">You cannot create topic with the same name more than once</string>
+    <string name="topics_new_success">New topic is created successfully</string>
 </resources>

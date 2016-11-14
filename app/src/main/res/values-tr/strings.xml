@@ -215,4 +215,6 @@
     <string name="topic_create_check">Gizli Konu</string>
     <string name="topic_create_image_text">Konu Resmi</string>
     <string name="topic_create_new">Yeni Konu Aç</string>
+    <string name="topics_error_duplicate">Aynı isimde birden fazla konu açamazsın</string>
+    <string name="topics_new_success">Konu Başarıyla Oluşturuldu</string>
 </resources>

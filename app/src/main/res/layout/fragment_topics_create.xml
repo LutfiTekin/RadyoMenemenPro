@@ -1,10 +1,32 @@
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundsoft"
-    tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics_create">
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics_create"
+    >
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:padding="12dp">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:progressBarStyleLarge"
+            android:id="@+id/progressBar_submit"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/submit"
+            android:src="@drawable/ic_done_black_24dp"/>
+    </FrameLayout>
+
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -77,4 +99,4 @@
         android:id="@+id/text"
         android:text="@string/topic_create_image_text"/>
 </LinearLayout>
-</ScrollView>
+</FrameLayout>
