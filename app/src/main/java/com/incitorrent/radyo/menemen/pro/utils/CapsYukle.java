@@ -95,7 +95,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
             protected Map<String, String> getParams(){
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 if(byteSizeOf(bit)>3440000){
-                    bit = resizeBitmap(bit,720);
+                    bit = Menemen.resizeBitmap(bit,720);
                 }
                 bit.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
@@ -181,20 +181,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         }
     }
 
-    private Bitmap resizeBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
 
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
     private void postMessage(final String imageurl){
         StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
                 new Response.Listener<String>()
