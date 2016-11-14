@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -60,7 +59,6 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 {
                     @Override
                     public void onResponse(String response) {
-                        Log.v("Volley", response);
                         try {
                             JSONObject J = new JSONObject(response);
                             JSONObject Jo = J.getJSONObject("image");
@@ -86,7 +84,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.v("Volley",error.toString());
+                        error.printStackTrace();
                     }
                 }
         ) {
