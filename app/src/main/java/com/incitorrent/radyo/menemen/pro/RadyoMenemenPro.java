@@ -47,11 +47,12 @@ public final class RadyoMenemenPro {
     public final static String BROADCASTINFO_NEW = API + "broadcastinfo";
     public final static String MP_ADD = API + "mp_add";
     public final static String MP_CHANGE_SONG = API + "mp_change_song";
-    public final static String MENEMEN_TOPICS = API + "topics";
+    private final static String MENEMEN_TOPICS = API + "topics";
     public final static String MENEMEN_TOPICS_CREATE = MENEMEN_TOPICS + "&action=create";
     public final static String MENEMEN_TOPICS_DELETE = MENEMEN_TOPICS + "&action=delete";
     public final static String MENEMEN_TOPICS_JOIN = MENEMEN_TOPICS + "&action=join";
     public final static String MENEMEN_TOPICS_EDIT = MENEMEN_TOPICS + "&action=edit";
+    public final static String MENEMEN_TOPICS_LIST = MENEMEN_TOPICS + "&action=list";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
@@ -123,6 +124,7 @@ public final class RadyoMenemenPro {
 
     public final static String CAPS_API_URL    =   "https://caps.radyomenemen.com/api/1/upload";
     public final static String CAPS_API_KEY    =   "capsapi";
+    public final static String CAPS_IMAGES_PATH  =   "https://caps.radyomenemen.com/images/";
 
     public static final String CHAT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

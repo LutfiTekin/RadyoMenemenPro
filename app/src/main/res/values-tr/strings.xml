@@ -217,4 +217,5 @@
     <string name="topic_create_new">Yeni Konu Aç</string>
     <string name="topics_error_duplicate">Aynı isimde birden fazla konu açamazsın</string>
     <string name="topics_new_success">Konu Başarıyla Oluşturuldu</string>
+    <string name="topics_error_title_limit">Konu başlığı 16 karakterden fazla olamaz</string>
 </resources>

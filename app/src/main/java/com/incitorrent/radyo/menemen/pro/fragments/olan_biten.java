@@ -139,15 +139,15 @@ public class olan_biten extends Fragment {
 
 
 
-    public class OBAdapter extends RecyclerView.Adapter<OBAdapter.PersonViewHolder> {
+    public class OBAdapter extends RecyclerView.Adapter<OBAdapter.OBViewHolder> {
         Context context;
         List<ob_objs> OBList;
 
 
-        class PersonViewHolder extends RecyclerView.ViewHolder {
+        class OBViewHolder extends RecyclerView.ViewHolder {
             TextView title,content,author,time;
             CardView obcard;
-            PersonViewHolder(View itemView) {
+            OBViewHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.ob_title);
                 content = (TextView) itemView.findViewById(R.id.ob_content);
@@ -162,10 +162,10 @@ public class olan_biten extends Fragment {
         }
 
         @Override
-        public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public OBViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.olan_biten_item, viewGroup, false);
-            PersonViewHolder pvh = new PersonViewHolder(v);
+            OBViewHolder pvh = new OBViewHolder(v);
             context = viewGroup.getContext();
             return pvh;
         }
@@ -176,15 +176,15 @@ public class olan_biten extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final PersonViewHolder personViewHolder, final int i) {
+        public void onBindViewHolder(final OBViewHolder OBViewHolder, final int i) {
             ob_objs object = OBList.get(i);
-        personViewHolder.title.setText(object.title);
-        personViewHolder.author.setText(object.author);
-        personViewHolder.time.setText(object.time);
-        personViewHolder.content.setText(m.getSpannedTextWithSmileys(object.content));
+        OBViewHolder.title.setText(object.title);
+        OBViewHolder.author.setText(object.author);
+        OBViewHolder.time.setText(object.time);
+        OBViewHolder.content.setText(m.getSpannedTextWithSmileys(object.content));
 
-            personViewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
-        m.runEnterAnimation(personViewHolder.obcard,i*250);
+            OBViewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
+        m.runEnterAnimation(OBViewHolder.obcard,i*250);
         }
 
 

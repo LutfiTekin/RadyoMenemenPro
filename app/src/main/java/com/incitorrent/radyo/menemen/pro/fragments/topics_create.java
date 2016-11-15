@@ -133,6 +133,10 @@ public class topics_create extends Fragment implements View.OnClickListener{
         final String title = et_title.getText().toString().trim();
         final String descr = et_descr.getText().toString().trim();
         if(title.length() < 1 || descr.length() < 1) return;
+        if(title.length() > 16) {
+            Toast.makeText(context, R.string.topics_error_title_limit, Toast.LENGTH_SHORT).show();
+            return;
+        }
         progressBarsubmit.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_CREATE,
                 new Response.Listener<String>() {
@@ -179,6 +183,7 @@ public class topics_create extends Fragment implements View.OnClickListener{
                 dataToSend.put("title", title);
                 dataToSend.put("descr", descr);
                 dataToSend.put("type", (checkBox.isChecked()) ? "2" : "1");
+                imageurl = imageurl.replaceAll(RadyoMenemenPro.CAPS_IMAGES_PATH,"");
                 dataToSend.put("image", imageurl);
                 return dataToSend;
             }

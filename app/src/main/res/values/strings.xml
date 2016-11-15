@@ -259,8 +259,7 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="track_changed_summary">A listener changed currently playing track</string>
     <string name="toast_sc_failed">Track could not be skipped</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="topic_create_check">Private Topic</string>
     <string name="topic_create_descr">Description</string>
     <string name="topic_create_title">Title</string>
@@ -268,4 +267,5 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="topic_create_new">Start a New Topic</string>
     <string name="topics_error_duplicate">You cannot create topic with the same name more than once</string>
     <string name="topics_new_success">New topic is created successfully</string>
+    <string name="topics_error_title_limit">Topic title cannot be greater than 16</string>
 </resources>
