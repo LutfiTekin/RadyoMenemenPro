@@ -106,7 +106,6 @@ public class olan_biten extends Fragment {
                                     }
                                     if(m.isInternetAvailable()) {
                                         m.kaydet(RadyoMenemenPro.SAVEDOB, arr.getJSONArray(0).getJSONObject(0).getString("time"));
-                                        m.kaydet(RadyoMenemenPro.OBCACHE, response);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
