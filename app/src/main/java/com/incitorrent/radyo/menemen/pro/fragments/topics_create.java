@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.OnSwipeTouchListener;
 
 import org.json.JSONObject;
 
@@ -98,6 +100,14 @@ public class topics_create extends Fragment implements View.OnClickListener{
         submit = (FloatingActionButton) rootview.findViewById(R.id.submit);
         imageView.setOnClickListener(this);
         submit.setOnClickListener(this);
+        FrameLayout frameLayout = (FrameLayout) rootview.findViewById(R.id.create_topic_frame);
+        frameLayout.setOnTouchListener(new OnSwipeTouchListener(context){
+            @Override
+            public void onSwipeTop() {
+                getActivity().onBackPressed();
+                super.onSwipeTop();
+            }
+        });
         m.runEnterAnimation(til_title,400);
         m.runEnterAnimation(til_descr,600);
         m.runEnterAnimation(checkBox,800);

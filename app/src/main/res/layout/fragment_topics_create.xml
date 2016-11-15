@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundsoft"
+    android:id="@+id/create_topic_frame"
     tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics_create"
     >
     <FrameLayout
