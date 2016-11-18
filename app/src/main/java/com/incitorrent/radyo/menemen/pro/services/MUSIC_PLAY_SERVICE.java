@@ -426,7 +426,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
     void nowPlayingNotification(){
         //Şarkı albüm kapağı
-        if(m.oku(CALAN).equals("yok")) return; //ilk açılışta boş bildirim atma
+        if(m.oku(CALAN).equals(null)) return; //ilk açılışta boş bildirim atma
         String contentTitle = (m.oku("dj").equals(RadyoMenemenPro.OTO_DJ)) ? "Radyo Menemen" : m.oku("dj");
         String calan = m.oku(CALAN);
         Intent intent = new Intent(this, MainActivity.class);

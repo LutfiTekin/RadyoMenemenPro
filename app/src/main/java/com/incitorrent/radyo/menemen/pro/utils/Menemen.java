@@ -117,7 +117,7 @@ public class Menemen {
     //Kaydedilen bilgileri okumak için sharedpref metodu
     public String oku(String title){
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        return oku.getString(title, "yok"); //Değer boş ise "yok"
+        return oku.getString(title, null); //Değer boş ise null
     }
 
 

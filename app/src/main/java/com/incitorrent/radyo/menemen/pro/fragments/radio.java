@@ -159,7 +159,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals("yok") && !m.bool_oku(RadyoMenemenPro.IS_PODCAST);
+                Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals(null) && !m.bool_oku(RadyoMenemenPro.IS_PODCAST);
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           if(isPlayingValid) m.runExitAnimation(nowplayingbox, 400);
@@ -211,6 +211,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNP(String calan) {
+        if(m.oku(CALAN) == null) return;
         calan = (calan == null) ? m.oku(CALAN) : calan;
         progressbar.setVisibility(View.INVISIBLE);
         NPdj.setText(m.oku(DJ));
@@ -221,6 +222,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     }
 
     private void setNPimage(final ImageView imageView) {
+        if(getActivity() == null) return;
         final Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         if(imageView == null || toolbar == null) return;
         new AsyncTask<Void,Void,Integer[]>() {
@@ -259,7 +261,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }
             @Override
             protected void onPostExecute(Integer[] color) {
-                NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
+                if(m.oku(CALAN)!=null)NPtrack.setText(Menemen.fromHtmlCompat(m.oku(CALAN)));
                 addOneTrackToList();
                 if(color != null) {
                     fab.setBackgroundTintList(ColorStateList.valueOf(color[0]));

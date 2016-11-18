@@ -96,7 +96,7 @@ public class olan_biten extends Fragment {
                             protected Void doInBackground(Void... params) {
                                 try {
                                     OBList = new ArrayList<>();
-                                    if(response ==null || response.equals("yok")) return null;
+                                    if(response ==null || response.equals(null)) return null;
                                     JSONArray arr = new JSONObject(response).getJSONArray("olan_biten");
                                     JSONObject c;
                                     for(int i = 0;i<arr.getJSONArray(0).length();i++){

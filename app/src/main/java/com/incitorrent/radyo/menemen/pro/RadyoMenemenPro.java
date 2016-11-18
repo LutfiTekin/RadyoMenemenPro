@@ -57,6 +57,7 @@ public final class RadyoMenemenPro {
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
     public final static String HAYKIRCACHE = "hkcache";
+    public final static String TOPICCACHE = "tpccache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVEDOB = "kayitliolabiten";
     public final static String LASTOB = "sonolabiten";

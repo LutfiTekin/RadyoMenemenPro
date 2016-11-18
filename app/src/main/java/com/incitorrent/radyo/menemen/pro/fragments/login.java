@@ -85,7 +85,7 @@ public class login extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                m.kaydet(RadyoMenemenPro.HAYKIRCACHE, "yok");
+                                m.kaydet(RadyoMenemenPro.HAYKIRCACHE, null);
                                 PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("music_only",true).apply();
                                 Toast.makeText(context, R.string.music_only_mode_is_active, Toast.LENGTH_SHORT).show();
                                 Intent intent = getActivity().getIntent();
