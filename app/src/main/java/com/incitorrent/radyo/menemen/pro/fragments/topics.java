@@ -209,7 +209,7 @@ public class topics extends Fragment {
     class topic_objs{
         String title,description,image,creator,topicstr;
 
-        public topic_objs(String title, String description, String image, String creator, String topicstr) {
+        topic_objs(String title, String description, String image, String creator, String topicstr) {
             this.title = title;
             this.description = description;
             this.image = image;
