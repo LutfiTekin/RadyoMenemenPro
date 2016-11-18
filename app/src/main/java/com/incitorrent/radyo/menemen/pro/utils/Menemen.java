@@ -117,7 +117,7 @@ public class Menemen {
     //Kaydedilen bilgileri okumak için sharedpref metodu
     public String oku(String title) throws NullPointerException{
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        return oku.getString(title, "null"); //Değer boş ise null
+        return oku.getString(title, null); //Değer boş ise null
     }
 
 
@@ -537,6 +537,7 @@ public class Menemen {
 
     @NonNull
     public static String fromHtmlCompat(String title){
+        if(title == null) return "null";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N)
             return Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
         else

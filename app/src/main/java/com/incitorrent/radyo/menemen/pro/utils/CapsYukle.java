@@ -91,16 +91,21 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
             @Override
             protected Map<String, String> getParams(){
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                if(byteSizeOf(bit)>3440000){
-                    bit = Menemen.resizeBitmap(bit,720);
+                try {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    if(byteSizeOf(bit)>3440000){
+                        bit = Menemen.resizeBitmap(bit,720);
+                    }
+                    bit.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
+                    String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+                    Map<String,String> dataToSend = new HashMap<>();
+                    dataToSend.put("source", encodedImage);
+                    dataToSend.put("key", m.oku(RadyoMenemenPro.CAPS_API_KEY));
+                    return dataToSend;
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return null;
                 }
-                bit.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
-                String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-                Map<String,String> dataToSend = new HashMap<>();
-                dataToSend.put("source", encodedImage);
-                dataToSend.put("key", m.oku(RadyoMenemenPro.CAPS_API_KEY));
-                return dataToSend;
             }
         };
         postRequest.setRetryPolicy(m.menemenRetryPolicy());

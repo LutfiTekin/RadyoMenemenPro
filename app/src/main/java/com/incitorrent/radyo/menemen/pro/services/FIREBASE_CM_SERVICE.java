@@ -191,10 +191,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         ) {
             @Override
             protected Map<String, String> getParams(){
-                HashMap<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.oku("username"));
-                dataToSend.put("mkey", m.oku("mkey"));
-                return dataToSend;
+                try {
+                    HashMap<String, String> dataToSend = new HashMap<>();
+                    dataToSend.put("nick", m.oku("username"));
+                    dataToSend.put("mkey", m.oku("mkey"));
+                    return dataToSend;
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         };
         queue.add(postRequest);

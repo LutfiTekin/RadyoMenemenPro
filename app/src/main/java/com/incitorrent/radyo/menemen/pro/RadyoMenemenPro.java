@@ -58,6 +58,7 @@ public final class RadyoMenemenPro {
     public final static String SHAREDPREF = "Menemen";
     public final static String HAYKIRCACHE = "hkcache";
     public final static String TOPICCACHE = "tpccache";
+    public final static String PODCASTCACHE = "podcache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVEDOB = "kayitliolabiten";
     public final static String LASTOB = "sonolabiten";

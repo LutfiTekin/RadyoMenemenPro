@@ -68,7 +68,7 @@ public class MUSIC_INFO_SERVICE extends Service {
 
 
     private void saveTrackAndNotifyNP(String calan, String songid,  String artwork) {
-        if (!m.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
+        if (m.oku(RadyoMenemenPro.SAVED_MUSIC_INFO) == null || !m.oku(RadyoMenemenPro.SAVED_MUSIC_INFO).equals(calan)) {
             sql.addtoHistory(new radioDB.Songs(songid, null, calan, "no url",artwork)); // Şarkıyı kaydet
             m.kaydet(RadyoMenemenPro.SAVED_MUSIC_INFO, calan);
             Intent intent = new Intent(NP_FILTER);

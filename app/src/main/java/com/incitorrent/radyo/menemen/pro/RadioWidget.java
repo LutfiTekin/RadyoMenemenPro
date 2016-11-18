@@ -45,7 +45,7 @@ public class RadioWidget extends AppWidgetProvider {
        if(m.oku(RadyoMenemenPro.broadcastinfo.CALAN)!=null)
            views.setTextViewText(R.id.trackname, Menemen.fromHtmlCompat(m.oku(RadyoMenemenPro.broadcastinfo.CALAN)));
         //Load image
-        if(!m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL).equals("default") && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast())
+        if((m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL) != null) && !m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL).equals("default") && PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork", true) && m.isConnectionFast())
             try {
                 Glide.with(context.getApplicationContext())
                         .load(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL))
