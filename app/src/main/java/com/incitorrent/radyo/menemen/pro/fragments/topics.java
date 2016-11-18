@@ -80,13 +80,14 @@ public class topics extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stringRequest.setShouldCache(true);
-        queue.add(stringRequest);
+        loadTopicsList(m.oku(RadyoMenemenPro.TOPICCACHE));
         setRetainInstance(true);
         return topicview;
     }
 
     @Override
     public void onResume() {
+        queue.add(stringRequest);
         super.onResume();
     }
 
@@ -95,33 +96,8 @@ public class topics extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
-                    new AsyncTask<Void,Void,Void>(){
-
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            try {
-                                topicList = new ArrayList<>();
-                                JSONArray arr = new JSONObject(response).getJSONArray("topics");
-                                JSONObject c;
-                                for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                                    JSONArray innerJarr = arr.getJSONArray(0);
-                                    c = innerJarr.getJSONObject(i);
-                                    topicList.add(new topic_objs(c.getString("t"),c.getString("d"),c.getString("i"),c.getString("c"),c.getString("tpc")));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            if(topicList != null && topicList.size()>0){
-                                recyclerView.setAdapter(new TopicAdapter(topicList));
-                            }
-                            super.onPostExecute(aVoid);
-                        }
-                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        loadTopicsList(response);
+                        m.kaydet(RadyoMenemenPro.TOPICCACHE,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -142,7 +118,36 @@ public class topics extends Fragment {
         };
 
 
+    void loadTopicsList(final String response) {
+        if(response == null) return;
+        new AsyncTask<Void,Void,Void>(){
 
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    topicList = new ArrayList<>();
+                    JSONArray arr = new JSONObject(response).getJSONArray("topics");
+                    JSONObject c;
+                    for(int i = 0;i<arr.getJSONArray(0).length();i++){
+                        JSONArray innerJarr = arr.getJSONArray(0);
+                        c = innerJarr.getJSONObject(i);
+                        topicList.add(new topic_objs(c.getString("t"),c.getString("d"),c.getString("i"),c.getString("c"),c.getString("tpc")));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(topicList != null && topicList.size()>0){
+                    recyclerView.setAdapter(new TopicAdapter(topicList));
+                }
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TPCViewHolder> {
         Context context;
