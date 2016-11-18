@@ -60,7 +60,6 @@ public class podcast extends Fragment {
     static final String KEY_LINK = "link";
     static final String KEY_DESC = "description";
     static final String KEY_DURATION = "itunes:duration";
-    static String xml = null;
     List<podcast_objs> RList;
     PodcastAdapter adapter;
     RecyclerView PR;
