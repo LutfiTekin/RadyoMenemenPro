@@ -137,10 +137,13 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
             final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                     findItem(R.id.nav_olanbiten));
-           if(!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB))) {
-               m.setBadge(badge, getString(R.string.fresh)); //Olan bitende yeni ibaresini göster
-               m.kaydet(RadyoMenemenPro.SAVEDOB,m.oku(RadyoMenemenPro.LASTOB));//Yeni gelen veriyi kaydet
-           }
+            if ((m.oku(RadyoMenemenPro.LASTOB) != null))
+                if (m.oku(RadyoMenemenPro.SAVEDOB) != null) {
+                    if (!m.oku(RadyoMenemenPro.LASTOB).equals(m.oku(RadyoMenemenPro.SAVEDOB))) {
+                        m.setBadge(badge, getString(R.string.fresh)); //Olan bitende yeni ibaresini göster
+                        m.kaydet(RadyoMenemenPro.SAVEDOB, m.oku(RadyoMenemenPro.LASTOB));//Yeni gelen veriyi kaydet
+                    }
+                }
         }
         if(savedInstanceState == null) {
             defaultAction();

@@ -115,9 +115,9 @@ public class Menemen {
         kaydet.edit().putString(title,content).apply();
     }
     //Kaydedilen bilgileri okumak için sharedpref metodu
-    public String oku(String title){
+    public String oku(String title) throws NullPointerException{
         final SharedPreferences oku = context.getApplicationContext().getSharedPreferences(RadyoMenemenPro.SHAREDPREF, Context.MODE_PRIVATE);
-        return oku.getString(title, null); //Değer boş ise null
+        return oku.getString(title, "null"); //Değer boş ise null
     }
 
 
