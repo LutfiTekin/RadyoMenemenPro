@@ -115,7 +115,12 @@ public class podcast extends Fragment {
             PR.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         else
             PR.setLayoutManager(new LinearLayoutManager(getActivity()));
-         loadFeed(true);
+       if(inf.oku(RadyoMenemenPro.PODCASTCACHE) != null){
+           new LoadXML(RadyoMenemenPro.PODCASTLINK,
+                   inf.oku(RadyoMenemenPro.PODCASTCACHE), true)
+                   .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+           Log.d("PODCAST","LOADED FROM CACHE");
+       }else loadFeed(true);
         if(!inf.isInternetAvailable())
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
         setRetainInstance(true);
@@ -129,7 +134,16 @@ public class podcast extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                            new LoadXML((menemen) ? RadyoMenemenPro.PODCASTLINK : RadyoMenemenPro.OLD_PODCASTLINK, response).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        if(menemen) {
+                            if(inf.oku(RadyoMenemenPro.PODCASTCACHE) == null || !inf.oku(RadyoMenemenPro.PODCASTCACHE).equals(response)) {
+                                inf.kaydet(RadyoMenemenPro.PODCASTCACHE, response);
+                            }else {
+                                hideProgressBar();
+                                return;
+                            }
+
+                        }
+                            new LoadXML((menemen) ? RadyoMenemenPro.PODCASTLINK : RadyoMenemenPro.OLD_PODCASTLINK, response, false).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
                     }
                 },null){
@@ -172,6 +186,20 @@ public class podcast extends Fragment {
         queue.add(stringRequest);
     }
 
+    void hideProgressBar() {
+        try {
+            progressBar.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            },500);
+        } catch (Exception e) {
+            progressBar.setVisibility(View.GONE);
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -183,16 +211,19 @@ public class podcast extends Fragment {
 
 
     public class LoadXML extends AsyncTask<Void, Void, Boolean> {
-    String podcastlink,xml;
+        String podcastlink,xml;
+        boolean fromcache;
 
-        LoadXML(String podcastlink, String xml) {
+        LoadXML(String podcastlink, String xml, boolean fromcache) {
             this.podcastlink = podcastlink;
             this.xml = xml;
+            this.fromcache = fromcache;
         }
 
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
+            Log.d("PODCAST","loadXML");
             try {
                 XMLParser parser = new XMLParser();
                 if(xml==null) return false;
@@ -230,14 +261,16 @@ public class podcast extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            progressBar.setVisibility(View.GONE);
+            if(!fromcache)
+                hideProgressBar();
             if(!result) {
                 Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+                if(fromcache) loadFeed(true);
                 return;
             }
             adapter = new PodcastAdapter(RList);
             PR.setAdapter(adapter);
-
+            if(fromcache) loadFeed(true);
         }
     }
 
