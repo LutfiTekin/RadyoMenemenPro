@@ -79,6 +79,7 @@ public class topics extends Fragment {
         recyclerView.setHasFixedSize(false);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        stringRequest.setShouldCache(true);
         queue.add(stringRequest);
         setRetainInstance(true);
         return topicview;
@@ -137,6 +138,7 @@ public class topics extends Fragment {
             public RetryPolicy getRetryPolicy() {
                 return m.menemenRetryPolicy();
             }
+
         };
 
 

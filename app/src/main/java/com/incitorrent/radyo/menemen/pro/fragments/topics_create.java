@@ -209,7 +209,6 @@ public class topics_create extends Fragment implements View.OnClickListener{
                                 progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
-
                         throw  new VolleyError("NO RETRY");
                     }
                 };
