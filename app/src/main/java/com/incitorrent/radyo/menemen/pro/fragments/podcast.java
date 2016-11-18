@@ -65,7 +65,7 @@ public class podcast extends Fragment {
     PodcastAdapter adapter;
     RecyclerView PR;
     Context context;
-    Menemen inf;
+    Menemen m;
     int switchToOldPodcast = 1;
     RequestQueue queue;
     ProgressBar progressBar;
@@ -81,7 +81,7 @@ public class podcast extends Fragment {
        View podcastview = inflater.inflate(R.layout.fragment_podcast, container, false);
         context = getActivity().getApplicationContext();
         if(getActivity()!=null) getActivity().setTitle(getString(R.string.podcast)); //Toolbar title
-        inf = new Menemen(context);
+        m = new Menemen(context);
         final ImageView imageview = (ImageView) podcastview.findViewById(R.id.imageView);
         final TextView titlepodcast = (TextView) podcastview.findViewById(R.id.title_podcast);
         final TextView descrpodcast = (TextView) podcastview.findViewById(R.id.description_podcast);
@@ -99,7 +99,7 @@ public class podcast extends Fragment {
                     titlepodcast.setText("Incitorrent");
                     descrpodcast.setText(R.string.old_podcast_descr);
                     imageview.setImageResource(R.mipmap.incitorrent);
-                    if(inf.isInternetAvailable())  loadFeed(false);
+                    if(m.isInternetAvailable())  loadFeed(false);
                     else
                         Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
                 }
@@ -115,13 +115,13 @@ public class podcast extends Fragment {
             PR.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         else
             PR.setLayoutManager(new LinearLayoutManager(getActivity()));
-       if(inf.oku(RadyoMenemenPro.PODCASTCACHE) != null){
+       if(m.oku(RadyoMenemenPro.PODCASTCACHE) != null){
            new LoadXML(RadyoMenemenPro.PODCASTLINK,
-                   inf.oku(RadyoMenemenPro.PODCASTCACHE), true)
+                   m.oku(RadyoMenemenPro.PODCASTCACHE), true)
                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
            Log.d("PODCAST","LOADED FROM CACHE");
        }else loadFeed(true);
-        if(!inf.isInternetAvailable())
+        if(!m.isInternetAvailable())
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
         setRetainInstance(true);
         return podcastview;
@@ -135,8 +135,8 @@ public class podcast extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         if(menemen) {
-                            if(inf.oku(RadyoMenemenPro.PODCASTCACHE) == null || !inf.oku(RadyoMenemenPro.PODCASTCACHE).equals(response)) {
-                                inf.kaydet(RadyoMenemenPro.PODCASTCACHE, response);
+                            if(m.oku(RadyoMenemenPro.PODCASTCACHE) == null || !m.oku(RadyoMenemenPro.PODCASTCACHE).equals(response)) {
+                                m.kaydet(RadyoMenemenPro.PODCASTCACHE, response);
                             }else {
                                 hideProgressBar();
                                 return;
@@ -205,7 +205,7 @@ public class podcast extends Fragment {
     public void onResume() {
         Bundle bundle = new Bundle();
         bundle.putString("podcast","onresume");
-        inf.trackEvent("Podcast",bundle);
+        m.trackEvent("Podcast",bundle);
         super.onResume();
     }
 
@@ -304,17 +304,17 @@ public class podcast extends Fragment {
                 if(getActivity()!=null) {
                     Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
                     getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
-                    inf.setPlaying(false);
+                    m.setPlaying(false);
                         playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
                         playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
-                    inf.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
-                    inf.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
+                    m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
+                    m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);
                     Fragment podcast_now_playing = new podcast_now_playing();
                     Bundle bundle = new Bundle();
                     bundle.putString("title",RList.get(getAdapterPosition()).title);
                     bundle.putString("descr",RList.get(getAdapterPosition()).description);
-                    inf.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
+                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
                     podcast_now_playing.setArguments(bundle);
 
 
@@ -341,7 +341,7 @@ public class podcast extends Fragment {
 
             @Override
             public boolean onLongClick(View v) {
-                inf.downloadMenemenFile(RList.get(getAdapterPosition()).url, RList.get(getAdapterPosition()).title, R.drawable.podcast, "/RadyoMemenen/podcast", ".mp3", getActivity());
+                m.downloadMenemenFile(RList.get(getAdapterPosition()).url, RList.get(getAdapterPosition()).title, R.drawable.podcast, "/RadyoMemenen/podcast", ".mp3", getActivity());
                 return false;
             }
 
@@ -371,7 +371,7 @@ public class podcast extends Fragment {
             String title = RList.get(i).description;
             personViewHolder.descr.setText(Menemen.fromHtmlCompat(title));
             personViewHolder.duration.setText(RList.get(i).duration);
-            inf.runEnterAnimation(personViewHolder.cv,i*180);
+            m.runEnterAnimation(personViewHolder.cv,i*180);
         }
 
 
