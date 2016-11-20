@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
  */
 public class capsDB extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "radyomenemenproCaps.db";
     public static final String TABLE_NAME = "capscomment";
     public static final String _MSGID = "msgid";
@@ -86,12 +86,12 @@ public class capsDB extends SQLiteOpenHelper {
     //TODO implement onScroll Load More
 //    public Cursor getHistoryById(String msgid){
 //        SQLiteDatabase db = getReadableDatabase();
-//        return db.query(TABLE_NAME,null,_MSGID + ">=\'" + msgid + "\'",null,null,null,_MSGID+" DESC");
+//        return db.query(TABLE_NAME,null,_TOPICID + ">=\'" + msgid + "\'",null,null,null,_TOPICID+" DESC");
 //    }
 //
 //    public Cursor getHistoryOnScroll(String msgid){
 //        SQLiteDatabase db = getReadableDatabase();
-//        return db.query(TABLE_NAME,null,_MSGID + "<\'" + msgid + "\'",null,null,null,_MSGID+" DESC","20");
+//        return db.query(TABLE_NAME,null,_TOPICID + "<\'" + msgid + "\'",null,null,null,_TOPICID+" DESC","20");
 //    }
 
     public void deleteMSG(String msgid){

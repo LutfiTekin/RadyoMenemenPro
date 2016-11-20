@@ -3,6 +3,7 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,9 +28,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,24 +85,69 @@ public class topics extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         stringRequest.setShouldCache(true);
-        loadTopicsList(m.oku(RadyoMenemenPro.TOPICCACHE));
         setRetainInstance(true);
         return topicview;
     }
 
     @Override
     public void onResume() {
-        queue.add(stringRequest);
+        if(m.isFirstTime("loadTopicList")) {
+            queue.add(stringRequest);
+            try {
+                FirebaseMessaging.getInstance().subscribeToTopic("newtopic");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            loadTopicsListFromDB();
+        }
         super.onResume();
     }
 
+    private void loadTopicsListFromDB() {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                topicList = new ArrayList<>();
+                final topicDB sql = m.getTopicDB();
+                Cursor cursor = sql.getHistory();
+                if(cursor == null || cursor.getCount()<1) {
+                    sql.close();
+                    queue.add(stringRequest);
+                    return null;
+                }
+                cursor.moveToFirst();
+                while(!cursor.isAfterLast()){
+                    String title,descr,image,creator,tpc;
+                    title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
+                    descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
+                    image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
+                    creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
+                    tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
+                    topicList.add(new topic_objs(title,descr,image,creator,tpc));
+                    cursor.moveToNext();
+                }
+                cursor.close();
+                sql.close();
+                return null;
+            }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.MENEMEN_TOPICS_LIST,
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                if(topicList != null && topicList.size()>0){
+                    recyclerView.setAdapter(new TopicAdapter(topicList));
+                }
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.MENEMEN_TOPICS_LIST,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
                         loadTopicsList(response);
-                        m.kaydet(RadyoMenemenPro.TOPICCACHE,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -131,7 +181,15 @@ public class topics extends Fragment {
                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
                         JSONArray innerJarr = arr.getJSONArray(0);
                         c = innerJarr.getJSONObject(i);
-                        topicList.add(new topic_objs(c.getString("t"),c.getString("d"),c.getString("i"),c.getString("c"),c.getString("tpc")));
+                        String id,title,descr,image,creator,tpc;
+                        id = c.getString("id");
+                        title = c.getString("t");
+                        descr = c.getString("d");
+                        image = c.getString("i");
+                        creator = c.getString("c");
+                        tpc = c.getString("tpc");
+                        m.getTopicDB().addtoHistory(new topicDB.TOPIC(id,tpc,creator,"0",title,descr,image));
+                        topicList.add(new topic_objs(title,descr,image,creator,tpc));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -154,15 +212,35 @@ public class topics extends Fragment {
         List<topic_objs> topicList;
 
 
-        class TPCViewHolder extends RecyclerView.ViewHolder {
+        class TPCViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView title,description,creator;
             ImageView image;
+            ToggleButton toggle;
             TPCViewHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.t_title);
                 description = (TextView) itemView.findViewById(R.id.t_descr);
                 creator = (TextView) itemView.findViewById(R.id.t_creator);
                 image = (ImageView) itemView.findViewById(R.id.t_image);
+                toggle = (ToggleButton) itemView.findViewById(R.id.toggleButton);
+                title.setOnClickListener(this);
+                image.setOnClickListener(this);
+                toggle.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View view) {
+                if(view == image || view == title){
+                    //TODO eğer grupta değilse katıl butonunu göster, gruptaysa gruba git
+                toggle.setVisibility(View.VISIBLE);
+                }else if(view == toggle){
+                    boolean isChecked = ((ToggleButton) view).isChecked();
+                    if(isChecked){
+                        Toast.makeText(context, "on" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(context, "off", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 

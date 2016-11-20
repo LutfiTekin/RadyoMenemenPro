@@ -65,11 +65,15 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
     }
 
     private void syncTopics() {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseMessaging.getInstance().subscribeToTopic("sync");
-        FirebaseMessaging.getInstance().subscribeToTopic("onair");
-        FirebaseMessaging.getInstance().subscribeToTopic("podcast");
+        try {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
+            FirebaseMessaging.getInstance().subscribeToTopic("news");
+            FirebaseMessaging.getInstance().subscribeToTopic("sync");
+            FirebaseMessaging.getInstance().subscribeToTopic("onair");
+            FirebaseMessaging.getInstance().subscribeToTopic("podcast");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -35,6 +35,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
@@ -134,6 +135,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     }
                 }
                 break;
+            case RadyoMenemenPro.FCMTopics.NEW_PUBLIC_TOPIC:
+                addNewTopic(remoteMessage);
+                break;
             default:
                 //Topic yok
                 String category = remoteMessage.getData().get("cat");
@@ -161,6 +165,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void addNewTopic(RemoteMessage rm) {
+        m.getTopicDB().addtoHistory(new topicDB.TOPIC(
+                getDATA(rm,"id"),
+                getDATA(rm,"tpc"),
+                getDATA(rm,"creator"),
+                "0",
+                getDATA(rm,"title"),
+                getDATA(rm,"descr"),
+                getDATA(rm,"image")
+                ));
     }
 
     private void notifySongChangedByListener() {

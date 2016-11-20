@@ -57,7 +57,6 @@ public final class RadyoMenemenPro {
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
     public final static String HAYKIRCACHE = "hkcache";
-    public final static String TOPICCACHE = "tpccache";
     public final static String PODCASTCACHE = "podcache";
     public final static String OBCACHE = "olanbitencache";
     public final static String SAVEDOB = "kayitliolabiten";
@@ -106,6 +105,7 @@ public final class RadyoMenemenPro {
         public final static String ONAIR = TOPIC + "onair";
         public final static String PODCAST = TOPIC + "podcast";
         public final static String SONG_CHANGE_EVENT = TOPIC + "songchange";
+        public final static String NEW_PUBLIC_TOPIC = TOPIC + "newtopic";
     }
 
     public final static class Action{

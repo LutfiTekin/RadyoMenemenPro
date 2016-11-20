@@ -268,4 +268,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="topics_error_duplicate">You cannot create topic with the same name more than once</string>
     <string name="topics_new_success">New topic is created successfully</string>
     <string name="topics_error_title_limit">Topic title cannot be greater than 16</string>
+    <string name="topics_join">Join</string>
+    <string name="topics_leave">Leave</string>
 </resources>

@@ -769,6 +769,10 @@ public class Menemen {
         return new chatDB(context,null,null,1);
     }
 
+    public topicDB getTopicDB(){
+        return new topicDB(context,null,null,1);
+    }
+
     public boolean isReachable(String siteurl){
         if(!isInternetAvailable()) return false;
         try {
