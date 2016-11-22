@@ -58,8 +58,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String CATEGORY_HAYKIR = "haykir";
     public static final String CATEGORY_CHAT = "generalchat";
     public static final String CATEGORY_ONLINE = "online";
+    public static final String CATEGORY_TOPICS = "cat_topics";
     public static final String ADD = "add";
     public static final String DELETE = "delete";
+    public static final String JOIN = "join";
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -139,13 +141,13 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 addNewTopic(remoteMessage);
                 break;
             default:
-                //Topic yok
+                //Tokens or user-generated topics
                 String category = remoteMessage.getData().get("cat");
+                String action = getDATA(remoteMessage, "action");
                 if (category == null) return;
                 switch (category) {
                     case CATEGORY_CAPS:
                         //RECEIVE CAPS COMMENTS
-                        String action = getDATA(remoteMessage, "action");
                         if (action == null) break;
                         if (action.equals(ADD))
                             addCapsComments(remoteMessage);
@@ -160,11 +162,20 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         String nick = getDATA(remoteMessage, "user");
                         onlineUser(nick);
                         break;
+                    case CATEGORY_TOPICS:
+                        if(action==null) break;
+                        if(action.equals(JOIN))
+                            userjoined(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                        break;
                 }
 
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void userjoined(String user, String topicid) {
+        //TODO Build notification new user joined to topic
     }
 
     private void addNewTopic(RemoteMessage rm) {
