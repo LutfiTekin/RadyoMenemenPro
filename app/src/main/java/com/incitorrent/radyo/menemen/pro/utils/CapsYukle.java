@@ -126,10 +126,8 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         ) {
             @Override
             protected Map<String, String> getParams(){
-                HashMap<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.oku("username"));
+                Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("imagehash", name);
-                dataToSend.put("mkey", m.oku("mkey"));
                 return dataToSend;
             }
 
@@ -212,9 +210,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
             @Override
             protected Map<String, String> getParams(){
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.oku("username"));
-                dataToSend.put("mkey", m.oku("mkey"));
+                Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("mesaj", imageurl);
                 return dataToSend;
             }

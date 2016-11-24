@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,9 +32,7 @@ public class deletePost extends AsyncTask<Void,Void,Void> {
         Menemen m = new Menemen(context);
         if(!m.isInternetAvailable()) return null;
         if(!m.isLoggedIn()) return null;
-        Map<String,String> dataToSend = new HashMap<>();
-        dataToSend.put("nick", m.getUsername());
-        dataToSend.put("mkey", m.getMobilKey());
+        Map<String,String> dataToSend = m.getAuthMap();
         dataToSend.put("post", postid);
         BufferedReader reader = null;
 

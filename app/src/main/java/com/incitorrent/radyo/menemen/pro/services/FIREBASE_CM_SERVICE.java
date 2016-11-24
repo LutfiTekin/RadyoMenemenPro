@@ -42,7 +42,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -219,10 +218,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             @Override
             protected Map<String, String> getParams(){
                 try {
-                    HashMap<String, String> dataToSend = new HashMap<>();
-                    dataToSend.put("nick", m.oku("username"));
-                    dataToSend.put("mkey", m.oku("mkey"));
-                    return dataToSend;
+                    return m.getAuthMap();
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                     return null;

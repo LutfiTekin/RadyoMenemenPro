@@ -15,7 +15,6 @@ import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Integer.parseInt;
@@ -98,10 +97,7 @@ public class TriggerSongChange extends BroadcastReceiver {
 
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.getUsername());
-                dataToSend.put("mkey", m.getMobilKey());
-                return dataToSend;
+                return m.getAuthMap();
             }
 
             @Override

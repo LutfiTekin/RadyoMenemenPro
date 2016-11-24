@@ -192,10 +192,7 @@ public class haykir extends Fragment implements View.OnClickListener {
             }){
                 @Override
                 protected Map<String, String> getParams() {
-                    HashMap<String,String> dataToSend = new HashMap<>();
-                    dataToSend.put("nick", m.oku("username"));
-                    dataToSend.put("mkey", m.oku("mkey"));
-                    return dataToSend;
+                    return m.getAuthMap();
                 }
 
                 @Override

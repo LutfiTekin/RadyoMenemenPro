@@ -79,7 +79,6 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -429,10 +428,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 },null){
             @Override
             protected Map<String, String> getParams() {
-                HashMap<String,String> dataToSend = new HashMap<>();
-                dataToSend.put("nick", m.getUsername());
-                dataToSend.put("mkey", m.getMobilKey());
-                return dataToSend;
+                return m.getAuthMap();
             }
 
             @Override
@@ -665,9 +661,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             }){
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> dataToSend = new HashMap<>();
-                    dataToSend.put("nick", m.getUsername());
-                    dataToSend.put("mkey", m.getMobilKey());
+                    Map<String, String> dataToSend = m.getAuthMap();
                     dataToSend.put("mesaj", msg);
                     return dataToSend;
                 }

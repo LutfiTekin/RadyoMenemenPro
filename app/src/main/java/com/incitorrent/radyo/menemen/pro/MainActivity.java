@@ -404,8 +404,8 @@ public class MainActivity extends AppCompatActivity
                                 }
                             }).start();
                             //DELETE username and key
-                            m.kaydet("username",null);
-                            m.kaydet("mkey",null);
+                            m.kaydet(RadyoMenemenPro.USERNAME,null);
+                            m.kaydet(RadyoMenemenPro.MOBIL_KEY,null);
                             m.bool_kaydet("loggedin",false);
                             m.kaydet(RadyoMenemenPro.HAYKIRCACHE,null);
                             Toast.makeText(MainActivity.this, R.string.toast_logged_out, Toast.LENGTH_SHORT).show();

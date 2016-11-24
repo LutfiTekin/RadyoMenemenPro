@@ -647,14 +647,21 @@ public class Menemen {
     }
 
     public String getMobilKey(){
-        return oku("mkey");
+        return oku(RadyoMenemenPro.MOBIL_KEY);
     }
 
     public String getUsername(){
-        return oku("username");
+        return oku(RadyoMenemenPro.USERNAME);
     }
 
     public Boolean isLoggedIn() { return bool_oku("loggedin"); }
+
+    public Map<String, String> getAuthMap(){
+        Map<String, String> dataToSend = new HashMap<>();
+        dataToSend.put(RadyoMenemenPro.USERNAME, getUsername());
+        dataToSend.put(RadyoMenemenPro.MOBIL_KEY, getMobilKey());
+        return dataToSend;
+    }
 
     public boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
