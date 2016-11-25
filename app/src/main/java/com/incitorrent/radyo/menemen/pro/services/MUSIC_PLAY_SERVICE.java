@@ -490,9 +490,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
         Intent intent = new Intent(PODCAST_PLAY_FILTER);
         long duration = exoPlayer.getDuration();
         long currentpos = exoPlayer.getCurrentPosition();
+        long buffer = exoPlayer.getBufferedPosition();
         intent.putExtra("action",PODCAST_GET_DURATION);
         intent.putExtra("duration",duration);
         intent.putExtra("current", currentpos);
+        intent.putExtra("buffer", buffer);
         broadcasterForUi.sendBroadcast(intent);
     }
 
@@ -531,6 +533,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     }else if(action.equals("update")){
                         updateMediaInfoIfNecessary();
                         m.showNPToast(null,null);
+                    }else if(action.equals("requeststat")){
+                        broadcastPodcastDuration();
                     }
                 }
             }

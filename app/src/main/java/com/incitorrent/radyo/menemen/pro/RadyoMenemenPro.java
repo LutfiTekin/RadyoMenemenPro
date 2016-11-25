@@ -51,6 +51,7 @@ public final class RadyoMenemenPro {
     public final static String MENEMEN_TOPICS_CREATE = MENEMEN_TOPICS + "&action=create";
     public final static String MENEMEN_TOPICS_DELETE = MENEMEN_TOPICS + "&action=delete";
     public final static String MENEMEN_TOPICS_JOIN = MENEMEN_TOPICS + "&action=join";
+    public final static String MENEMEN_TOPICS_LEAVE = MENEMEN_TOPICS + "&action=leave";
     public final static String MENEMEN_TOPICS_EDIT = MENEMEN_TOPICS + "&action=edit";
     public final static String MENEMEN_TOPICS_LIST = MENEMEN_TOPICS + "&action=list";
 
@@ -130,6 +131,6 @@ public final class RadyoMenemenPro {
 
     public static final String CHAT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String USERNAME = "nick";
+    public static final String NICK = "nick";
     public static final String MOBIL_KEY = "mkey";
 }

@@ -5,4 +5,5 @@
     <dimen name="login_input_margin">120dp</dimen>
     <dimen name="topics_create_input_margin">32dp</dimen>
     <dimen name="image_picker_margin">72dp</dimen>
+    <dimen name="podcast_descr_size">16sp</dimen>
 </resources>

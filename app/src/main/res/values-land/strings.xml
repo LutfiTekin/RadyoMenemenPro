@@ -3,4 +3,5 @@
     <bool name="xlarge_landscape_mode" translatable='false'>false</bool>
     <bool name="landscape_mode" translatable='false'>true</bool>
     <bool name="xlarge_portrait_mode" translatable='false'>false</bool>
+    <integer name="podcast_lines">2</integer>
 </resources>

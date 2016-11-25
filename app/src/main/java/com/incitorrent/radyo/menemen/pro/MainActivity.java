@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity
                                 }
                             }).start();
                             //DELETE username and key
-                            m.kaydet(RadyoMenemenPro.USERNAME,null);
+                            m.kaydet("username",null);
                             m.kaydet(RadyoMenemenPro.MOBIL_KEY,null);
                             m.bool_kaydet("loggedin",false);
                             m.kaydet(RadyoMenemenPro.HAYKIRCACHE,null);

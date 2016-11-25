@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/podcast_descr_size"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ipsum odio, dapibus et diam convallis, pharetra semper mauris. Pellentesque a odio augue. Nulla id porta mi. Sed non venenatis lorem, semper ultrices felis. Morbi tristique enim nec accumsan sed. "
             android:id="@+id/podcast_descr"
             android:layout_below="@+id/podcast_title"
@@ -33,74 +34,74 @@
             android:layout_alignStart="@+id/podcast_title"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
+            android:maxLines="@integer/podcast_lines"
+            android:ellipsize="end"
             android:textColor="@color/textColorPrimaryDisabled" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
+
+
+    <FrameLayout
         android:layout_height="wrap_content"
-        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_play_arrow_black_24dp"
-        app:backgroundTint="#3f51b5" />
+        android:id="@+id/frame_placeholder"
+        android:padding="12dp">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:progressBarStyleLarge"
+            android:id="@+id/loading"
+            android:indeterminate="false"
+            android:layout_gravity="center"
+            />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            app:backgroundTint="#3f51b5"/>
+    </FrameLayout>
 
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:secondaryProgress="90"
         android:id="@+id/seekBar"
-        android:layout_above="@+id/placeholder"
+        android:layout_above="@+id/frame_placeholder"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
         android:max="100"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp" />
 
+
     <Chronometer
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/chr"
-        android:layout_below="@+id/seekBar"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="16dp" />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/loading"
-        android:indeterminate="false"
-        android:layout_alignBottom="@+id/placeholder"
+        android:layout_above="@+id/seekBar"
+        android:layout_marginBottom="8dp"
         android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rewind"
-        android:layout_below="@+id/seekBar"
-        android:layout_toLeftOf="@+id/chr"
-        android:layout_toStartOf="@+id/chr"
         android:src="@drawable/ic_fast_rewind_black_24dp"
         android:padding="16dp"
         android:foreground="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/cd_rewind"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/forward"
-        android:src="@drawable/ic_fast_forward_black_24dp"
-        android:padding="16dp"
+        android:contentDescription="@string/cd_rewind"
         android:layout_below="@+id/seekBar"
-        android:layout_toRightOf="@+id/chr"
-        android:layout_toEndOf="@+id/chr"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:contentDescription="@string/cd_forward"
-        />
+        android:layout_toLeftOf="@+id/download"
+        android:layout_toStartOf="@+id/download"
+        android:layout_marginRight="27dp"
+        android:layout_marginEnd="27dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -110,8 +111,21 @@
         android:padding="16dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:contentDescription="@string/cd_rewind"
-        android:layout_alignTop="@+id/rewind"
-        android:layout_toLeftOf="@+id/rewind"
-        android:layout_toStartOf="@+id/rewind" />
+        android:layout_below="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forward"
+        android:src="@drawable/ic_fast_forward_black_24dp"
+        android:padding="16dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/cd_forward"
+        android:layout_below="@+id/seekBar"
+        android:layout_toRightOf="@+id/download"
+        android:layout_toEndOf="@+id/download"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="23dp" />
 
 </RelativeLayout>
