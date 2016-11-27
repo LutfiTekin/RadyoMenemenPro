@@ -151,7 +151,11 @@ public class topics_create extends Fragment implements View.OnClickListener{
                                 break;
                             default:
                                 Toast.makeText(context, R.string.topics_new_success, Toast.LENGTH_SHORT).show();
-                                FirebaseMessaging.getInstance().subscribeToTopic(response);
+                                try {
+                                    FirebaseMessaging.getInstance().subscribeToTopic(response);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
@@ -178,7 +182,7 @@ public class topics_create extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put(RadyoMenemenPro.USERNAME, m.getUsername());
+                dataToSend.put(RadyoMenemenPro.NICK, m.getUsername());
                 dataToSend.put(RadyoMenemenPro.MOBIL_KEY, m.getMobilKey());
                 dataToSend.put("title", title);
                 dataToSend.put("descr", descr);

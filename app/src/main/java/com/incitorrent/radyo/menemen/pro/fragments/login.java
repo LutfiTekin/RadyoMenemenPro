@@ -126,7 +126,7 @@ public class login extends Fragment {
                                     String durum = J.getString("durum");
                                     String aksiyon = J.getString("aksiyon");
                                     if(durum.equals("ok")){
-                                        m.kaydet(RadyoMenemenPro.USERNAME,nick);
+                                        m.kaydet("username",nick);
                                         m.kaydet(RadyoMenemenPro.MOBIL_KEY,J.getString(RadyoMenemenPro.MOBIL_KEY));
                                         m.bool_kaydet("loggedin", true);
                                         m.setToken();

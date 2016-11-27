@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,6 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +54,7 @@ public class topics extends Fragment {
     RecyclerView recyclerView;
     List<topic_objs> topicList;
     RequestQueue queue;
+    String SELECTED_TOPIC_ID = "0";
     public topics() {
         // Required empty public constructor
     }
@@ -118,13 +122,14 @@ public class topics extends Fragment {
                 }
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
-                    String title,descr,image,creator,tpc;
+                    String id,title,descr,image,creator,tpc;
+                    id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
                     title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
                     descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
                     image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
                     creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
                     tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
-                    topicList.add(new topic_objs(title,descr,image,creator,tpc));
+                    topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
                     cursor.moveToNext();
                 }
                 cursor.close();
@@ -148,6 +153,7 @@ public class topics extends Fragment {
                     @Override
                     public void onResponse(final String response) {
                         loadTopicsList(response);
+                        Log.d("VOLL",response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -189,7 +195,7 @@ public class topics extends Fragment {
                         creator = c.getString("c");
                         tpc = c.getString("tpc");
                         m.getTopicDB().addtoHistory(new topicDB.TOPIC(id,tpc,creator,"0",title,descr,image));
-                        topicList.add(new topic_objs(title,descr,image,creator,tpc));
+                        topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -232,14 +238,12 @@ public class topics extends Fragment {
             public void onClick(View view) {
                 if(view == image || view == title){
                     //TODO eğer grupta değilse katıl butonunu göster, gruptaysa gruba git
-                toggle.setVisibility(View.VISIBLE);
+                if(!topicList.get(getAdapterPosition()).creator.equals(m.getUsername()))
+                    toggle.setVisibility(View.VISIBLE);
                 }else if(view == toggle){
                     boolean isChecked = ((ToggleButton) view).isChecked();
-                    if(isChecked){
-                        Toast.makeText(context, "on" + getAdapterPosition(), Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(context, "off", Toast.LENGTH_SHORT).show();
-                    }
+                    SELECTED_TOPIC_ID = topicList.get(getAdapterPosition()).id;
+                    queue.add((isChecked) ? join : leave);
                 }
             }
         }
@@ -285,9 +289,10 @@ public class topics extends Fragment {
 
 
     class topic_objs{
-        String title,description,image,creator,topicstr;
+        String id,title,description,image,creator,topicstr;
 
-        topic_objs(String title, String description, String image, String creator, String topicstr) {
+        topic_objs(String id, String title, String description, String image, String creator, String topicstr) {
+            this.id = id;
             this.title = title;
             this.description = description;
             this.image = image;
@@ -295,4 +300,55 @@ public class topics extends Fragment {
             this.topicstr = topicstr;
         }
     }
+
+    StringRequest join = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_JOIN,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("VOLLRESP",response);
+                }
+            },
+            new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+    }){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> dataToSend = m.getAuthMap();
+            dataToSend.put("topicid",SELECTED_TOPIC_ID);
+            return dataToSend;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return m.menemenRetryPolicy();
+        }
+    };
+    StringRequest leave = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("VOLLRESP",response);
+                }
+            },
+            new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+    }){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> dataToSend = m.getAuthMap();
+            dataToSend.put("topicid",SELECTED_TOPIC_ID);
+            return dataToSend;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return m.menemenRetryPolicy();
+        }
+    };
 }

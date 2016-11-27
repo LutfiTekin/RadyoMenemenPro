@@ -651,14 +651,14 @@ public class Menemen {
     }
 
     public String getUsername(){
-        return oku(RadyoMenemenPro.USERNAME);
+        return oku("username");
     }
 
     public Boolean isLoggedIn() { return bool_oku("loggedin"); }
 
     public Map<String, String> getAuthMap(){
         Map<String, String> dataToSend = new HashMap<>();
-        dataToSend.put(RadyoMenemenPro.USERNAME, getUsername());
+        dataToSend.put(RadyoMenemenPro.NICK, getUsername());
         dataToSend.put(RadyoMenemenPro.MOBIL_KEY, getMobilKey());
         return dataToSend;
     }
