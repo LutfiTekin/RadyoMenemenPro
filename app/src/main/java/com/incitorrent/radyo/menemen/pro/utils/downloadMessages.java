@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.MainActivity;
@@ -69,7 +68,6 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
                 sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
                 if((i % 10) == 0)
                     progressUpdate(lenght, i, nick + ": " + mesaj);
-                Log.v(TAG,"add to history " + id + " " + nick + " progress" + i);
             }
         }catch (JSONException e){
             e.printStackTrace();
@@ -86,7 +84,7 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
         super.onPostExecute(aVoid);
     }
 
-    public void progressUpdate(int max, int progress, String s){
+    private void progressUpdate(int max, int progress, String s){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setProgress(max,progress,false);
@@ -94,7 +92,7 @@ public class downloadMessages extends AsyncTask<Void,Void,Void> {
         Notification notification = builder.build();
         notificationManager.notify(RadyoMenemenPro.MSG_DOWNLOAD_PROGRESS_NOTIFICATION, notification);
     }
-    public void downloadFinished(){
+    private void downloadFinished(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
         builder.setAutoCancel(true);

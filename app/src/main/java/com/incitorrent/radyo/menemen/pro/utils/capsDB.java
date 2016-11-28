@@ -57,10 +57,8 @@ public class capsDB extends SQLiteOpenHelper {
         }
         db.close();
     }
-    public Cursor getHistory(int limit, String capsurl){
-        SQLiteDatabase db = getReadableDatabase();
-        if(limit < 1) limit = 20;
-        return db.query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" DESC", String.valueOf(limit));
+    public Cursor getHistory(String capsurl){
+        return getReadableDatabase().query(TABLE_NAME,null,_CAPSURL + "='"+ capsurl + "'",null,null,null,_MSGID+" DESC",null);
     }
     public String getFirstComment(String capsurl){
         String firscomment = null;
