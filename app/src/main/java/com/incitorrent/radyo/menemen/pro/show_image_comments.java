@@ -55,6 +55,7 @@ import java.util.Map;
 
 public class show_image_comments extends AppCompatActivity {
     private static final String TAG = "comments_image";
+    private boolean isUserCameDirectly = false;
     ImageView toolbar_image;
     private String imageurl;
     Menemen m;
@@ -75,7 +76,10 @@ public class show_image_comments extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       if(getIntent().getExtras()!=null) imageurl = getIntent().getExtras().getString("url");
+       if(getIntent().getExtras()!=null) {
+           imageurl = getIntent().getExtras().getString("url");
+           isUserCameDirectly = getIntent().getExtras().getBoolean("isUserCameDirectly");
+       }
         toolbar_image = (ImageView) findViewById(R.id.toolbar_image);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -85,16 +89,20 @@ public class show_image_comments extends AppCompatActivity {
         toolbar_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(imageurl));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image_comments.this,
-                            new Pair<View, String>(toolbar_image, toolbar_image.getTransitionName()),
-                            new Pair<View, String>(fab, fab.getTransitionName()));
-                    startActivity(intent, options.toBundle());
-                }else
-                    startActivity(intent);
-//                onBackPressed();
+                //If user came frome gallery when toolbar image click events goes to full image
+                if (isUserCameDirectly) {
+                    onBackPressed();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(imageurl));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image_comments.this,
+                                new Pair<View, String>(toolbar_image, toolbar_image.getTransitionName()),
+                                new Pair<View, String>(fab, fab.getTransitionName()));
+                        startActivity(intent, options.toBundle());
+                    }else
+                        startActivity(intent);
+                }
             }
         });
         m = new Menemen(context);

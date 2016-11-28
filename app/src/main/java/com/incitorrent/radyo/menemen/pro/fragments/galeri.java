@@ -110,7 +110,6 @@ public class galeri extends Fragment {
         protected void onPostExecute(Void aVoid) {
            if(Glist != null) {
                recyclerView.setAdapter(new GaleriAdapter(Glist));
-
            }
             super.onPostExecute(aVoid);
         }

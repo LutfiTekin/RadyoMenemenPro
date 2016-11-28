@@ -104,6 +104,7 @@ public class show_image extends AppCompatActivity{
                 }
                 Intent showimagecomment = new Intent(show_image.this, show_image_comments.class);
                 showimagecomment.putExtra("url", imageurl);
+                showimagecomment.putExtra("isUserCameDirectly",true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     c_fab.setTransitionName("fab");
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image.this,
