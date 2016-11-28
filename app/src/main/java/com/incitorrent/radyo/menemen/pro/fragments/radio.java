@@ -462,7 +462,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             }else if(v == NPart || v == NPtrack){
                 String title = m.oku(CALAN);
                 String arturl = m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL);
-                openTrackInfo(Menemen.fromHtmlCompat(title),arturl,NPart);
+                openTrackInfo(Menemen.fromHtmlCompat(title),arturl,Gravity.BOTTOM);
             }else if(v == fab){
                 if(!m.isInternetAvailable()){
                     Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
@@ -529,7 +529,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             public void onClick(View view) {
                 final String trackName = RList.get(getAdapterPosition()).song;
                 final String artUrl = RList.get(getAdapterPosition()).arturl;
-               openTrackInfo(trackName,artUrl,art);
+               openTrackInfo(trackName,artUrl,Gravity.TOP);
             }
 
         }
@@ -573,14 +573,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
     }
 
-    private void openTrackInfo(String trackName, String artUrl, ImageView art) {
+    private void openTrackInfo(String trackName, String artUrl, int gravity) {
         Fragment track_info = new track_info();
         Bundle bundle = new Bundle();
         bundle.putString("trackname", trackName);
         bundle.putString("arturl",artUrl);
         track_info.setArguments(bundle);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            track_info.setEnterTransition(new Slide(Gravity.TOP));
+            track_info.setEnterTransition(new Slide(gravity));
 
             getFragmentManager()
                     .beginTransaction()
