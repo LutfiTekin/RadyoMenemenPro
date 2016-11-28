@@ -135,27 +135,6 @@ public class show_image_comments extends AppCompatActivity {
         sohbetRV.setHasFixedSize(true);
         sohbetRV.setNestedScrollingEnabled(false);
         sohbetAdapter = new SohbetAdapter(sohbetList);
-//        itemTouchHelper.attachToRecyclerView(sohbetRV); //şimdilik kapalı
-//Onscroll Listener
-//        sohbetRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if(sohbetList == null) return;
-//                try {
-//                    int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
-//                    int LIST_SIZE = sohbetList.size();
-//                    String lastid = sohbetList.get(LIST_SIZE - 1).id;
-//                    if(LAST_POSITION_COMP_VISIBLE > (LIST_SIZE - 5) ){
-//                        //TODO LoadMore
-//                        Log.v("onScroll", "LAST" + LAST_POSITION_COMP_VISIBLE);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-        //Onscroll Listener End
         Chatreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -382,7 +361,7 @@ public class show_image_comments extends AppCompatActivity {
 
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    Cursor cursor = sql.getHistory(20,imageurl);
+                    Cursor cursor = sql.getHistory(imageurl);
                     String id,nick,post,time;
                     if(cursor == null) return null;
                     cursor.moveToFirst();
@@ -402,61 +381,6 @@ public class show_image_comments extends AppCompatActivity {
         }
     }
 
-
-
-
-//    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-//        @Override
-//        public boolean isItemViewSwipeEnabled() {
-//            return super.isItemViewSwipeEnabled();
-//        }
-//
-//        @Override
-//        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//            return false;
-//        }
-//
-//        @Override
-//        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-//            final  int position = viewHolder.getAdapterPosition();
-//
-//            if(sohbetList.get(viewHolder.getAdapterPosition()).nick.equals(m.oku("username"))) { //Kendi mesajı, silebilir
-//                Snackbar sn = Snackbar.make(fab, R.string.message_deleted,Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-//                    @Override
-//                    public void onDismissed(Snackbar snackbar, int event) {
-//                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
-//                            try {
-//                                //dbden sil
-//                                sql.deleteMSG(sohbetList.get(position).id);
-//                                //TODO siteyi güncelle
-//                                  sohbetList.remove(position);
-//                                if(sohbetRV!=null) sohbetRV.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                        super.onDismissed(snackbar, event);
-//                    }
-//                });
-//                sn.setAction(R.string.snackbar_undo, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if(sohbetRV!=null)  sohbetRV.getAdapter().notifyItemChanged(position);
-//                    }
-//                });
-//
-//                sn.show();
-//            } else{
-//                sohbetRV.getAdapter().notifyItemChanged(position);
-//                Toast.makeText(context, R.string.toast_only_your_message_deleted,Toast.LENGTH_SHORT).show();
-//            }
-//
-//            //Remove swiped item from list and notify the RecyclerView
-//
-//        }
-//    };
-    //TODO implement itemtouch helper
-//    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
     public class SohbetAdapter extends RecyclerView.Adapter<SohbetAdapter.chatViewHolder> {
         Context context;
         List<Sohbet_Objects> sohbetList;
