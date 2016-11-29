@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -812,32 +813,40 @@ public class Menemen {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("adaptive_quality",true)){
-                    //Wi-Fi connected switch to highest channel
-                    if(isConnectedWifi()){
-                        if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL) +  "/")){
-                            PreferenceManager.getDefaultSharedPreferences(context)
-                                    .edit()
-                                    .putString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)
-                                    .apply();
-                        }else setDefaultChannel(); //Fallback channel
-                    }else{
-                        //Not connected via Wi-Fi lower the quality
-                        if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.LOW_CHANNEL) +  "/")){
-                            PreferenceManager.getDefaultSharedPreferences(context)
-                                    .edit()
-                                    .putString("radio_channel",RadyoMenemenPro.LOW_CHANNEL)
-                                    .apply();
-                        }else setDefaultChannel();
+                try {
+                    if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("adaptive_quality",true)){
+                        //Wi-Fi connected switch to highest channel
+                        if(isConnectedWifi()){
+                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL) +  "/")){
+                                PreferenceManager.getDefaultSharedPreferences(context)
+                                        .edit()
+                                        .putString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)
+                                        .apply();
+                            }else setDefaultChannel(); //Fallback channel
+                        }else{
+                            //Not connected via Wi-Fi lower the quality
+                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.LOW_CHANNEL) +  "/")){
+                                PreferenceManager.getDefaultSharedPreferences(context)
+                                        .edit()
+                                        .putString("radio_channel",RadyoMenemenPro.LOW_CHANNEL)
+                                        .apply();
+                            }else setDefaultChannel();
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(!oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)).equals(selected_channel))
-                    Toast.makeText(context, R.string.toast_channel_change_auto, Toast.LENGTH_SHORT).show();
+                try {
+                    if(!oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)).equals(selected_channel))
+                        Toast.makeText(context, R.string.toast_channel_change_auto, Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException | Resources.NotFoundException e) {
+                    e.printStackTrace();
+                }
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
