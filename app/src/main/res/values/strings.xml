@@ -271,7 +271,4 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="topics_join">Join</string>
     <string name="topics_leave">Leave</string>
     <integer name="podcast_lines">5</integer>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
