@@ -20,7 +20,7 @@
             android:id="@+id/nav_topic"
             android:icon="@drawable/ic_topic_discussion"
             android:title="@string/nav_topics"
-            android:enabled="true"/>
+            android:enabled="false"/>
 
         <item
             android:id="@+id/nav_galeri"
