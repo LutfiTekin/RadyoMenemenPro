@@ -139,6 +139,8 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         queue.add(postRequest);
     }
     private void uploadedimg() {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(RadyoMenemenPro.Action.CHAT);
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
         notification = new NotificationCompat.Builder(context);
         notification.setAutoCancel(true)
@@ -150,13 +152,15 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(context.getString(R.string.caps_uploaded))
                 .setContentText(context.getString(R.string.caps_uploaded_sub))
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
+                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), intent, PendingIntent.FLAG_CANCEL_CURRENT));
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(unid, notification.build());
 
     }
 
     private void uploadingimg() {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(RadyoMenemenPro.Action.CHAT);
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
         notification = new NotificationCompat.Builder(context)
                 .setAutoCancel(true)
@@ -168,7 +172,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(context.getString(R.string.caps_uploading))
                 .setContentText(context.getString(R.string.caps_uploading_in_progress))
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), new Intent(context, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT));
+                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(100), intent, PendingIntent.FLAG_CANCEL_CURRENT));
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(unid, notification.build());
     }
