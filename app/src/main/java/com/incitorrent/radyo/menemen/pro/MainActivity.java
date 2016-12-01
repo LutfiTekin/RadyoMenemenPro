@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
                 navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_topic).setVisible(false);
             }
         }
       if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
