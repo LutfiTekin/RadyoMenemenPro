@@ -90,19 +90,7 @@ public class show_image_comments extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //If user came frome gallery when toolbar image click events goes to full image
-                if (isUserCameDirectly) {
-                    onBackPressed();
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(imageurl));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image_comments.this,
-                                new Pair<View, String>(toolbar_image, toolbar_image.getTransitionName()),
-                                new Pair<View, String>(fab, fab.getTransitionName()));
-                        startActivity(intent, options.toBundle());
-                    }else
-                        startActivity(intent);
-                }
+                returnBehavior();
             }
         });
         m = new Menemen(context);
@@ -169,7 +157,21 @@ public class show_image_comments extends AppCompatActivity {
         initcomments();
     }
 
-
+    void returnBehavior() {
+        if (isUserCameDirectly) {
+            onBackPressed();
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(imageurl));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(show_image_comments.this,
+                        new Pair<View, String>(toolbar_image, toolbar_image.getTransitionName()),
+                        new Pair<View, String>(fab, fab.getTransitionName()));
+                startActivity(intent, options.toBundle());
+            }else
+                startActivity(intent);
+        }
+    }
 
 
     private void postComment(final String mesaj) {
@@ -252,7 +254,7 @@ public class show_image_comments extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       onBackPressed();
+       returnBehavior();
         return true;
     }
 
