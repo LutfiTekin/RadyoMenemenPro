@@ -257,7 +257,7 @@ public class show_image_comments extends AppCompatActivity {
     }
 
     private void initcomments(){
-        if(!sql.isHistoryExist(imageurl, m.getUsername())) {
+        if(!sql.isHistoryExist(imageurl)) {
             RequestQueue queue = Volley.newRequestQueue(context);
             StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.GET_COMMENT_CAPS,
                     new Response.Listener<String>() {

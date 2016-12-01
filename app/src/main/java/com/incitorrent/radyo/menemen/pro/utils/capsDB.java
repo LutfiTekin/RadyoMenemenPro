@@ -75,9 +75,9 @@ public class capsDB extends SQLiteOpenHelper {
         return firscomment;
     }
 
-    public Boolean isHistoryExist(String capsurl,String nick){
+    public boolean isHistoryExist(String capsurl){
         SQLiteDatabase db = getReadableDatabase();
-        long rownum = DatabaseUtils.queryNumEntries(db,TABLE_NAME, _CAPSURL  + "='"+ capsurl + "' AND " + _NICK + "='" + nick + "'" );
+        long rownum = DatabaseUtils.queryNumEntries(db,TABLE_NAME, _CAPSURL  + "='"+ capsurl+"'");
         return rownum > 0;
     }
 
