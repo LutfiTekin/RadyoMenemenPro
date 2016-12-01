@@ -81,17 +81,6 @@ public class capsDB extends SQLiteOpenHelper {
         return rownum > 0;
     }
 
-    //TODO implement onScroll Load More
-//    public Cursor getHistoryById(String msgid){
-//        SQLiteDatabase db = getReadableDatabase();
-//        return db.query(TABLE_NAME,null,_TOPICID + ">=\'" + msgid + "\'",null,null,null,_TOPICID+" DESC");
-//    }
-//
-//    public Cursor getHistoryOnScroll(String msgid){
-//        SQLiteDatabase db = getReadableDatabase();
-//        return db.query(TABLE_NAME,null,_TOPICID + "<\'" + msgid + "\'",null,null,null,_TOPICID+" DESC","20");
-//    }
-
     public void deleteMSG(String msgid){
         try {
             SQLiteDatabase db = getWritableDatabase();
