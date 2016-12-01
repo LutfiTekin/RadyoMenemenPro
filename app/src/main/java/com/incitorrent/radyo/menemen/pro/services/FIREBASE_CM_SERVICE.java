@@ -10,9 +10,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -31,6 +33,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RMPRO;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
+import com.incitorrent.radyo.menemen.pro.utils.DirectReplyReceiver;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
@@ -42,6 +45,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -65,9 +71,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
     private NotificationManagerCompat notificationManagerCompat;
-    private NotificationCompat.InboxStyle inbox;
+    private NotificationCompat.MessagingStyle inbox;
     private final static String GROUP_KEY_CHAT = "group_key_chat";
-    public final static int GROUP_CHAT_NOTIFICATION =  111;
+    public final static int CHAT_NOTIFICATION =  111;
+    public static final String DIRECT_REPLY_KEY  = "d_r";
     Menemen m = new Menemen(context);
     final Boolean notify = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications", true);
     final Boolean notify_new_post = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("notifications_chat", true);
@@ -92,9 +99,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public void onCreate() {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManagerCompat = NotificationManagerCompat.from(context);
-        inbox = new NotificationCompat.InboxStyle();
-        inbox.setSummaryText(getString(R.string.notification_new_messages_text));
-        inbox.setBigContentTitle(getString(R.string.notification_new_messages_text));
+        inbox = new NotificationCompat.MessagingStyle(getString(R.string.me));
+        inbox.setConversationTitle(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
@@ -293,7 +299,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 chat.putExtra("msgid", msgid);
                 broadcastManager.sendBroadcast(chat);
             }else
-            notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
+            notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
             return;
         }
         //CHAT mesajı geldi
@@ -464,6 +470,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             nick = getString(R.string.me);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(R.mipmap.ic_chat);
+        builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
            builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
         if(!mutechatnotification && !m.isPlaying()) {
@@ -473,55 +480,69 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 builder.setVibrate(new long[]{500, 500, 500});
         }
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-        builder.setGroup(GROUP_KEY_CHAT);
         builder.setLights(Color.BLUE, 1000, 500);
         builder.setAutoCancel(true);
         Notification notification = builder.build();
-       notificationManager.notify(new Random().nextInt(200), notification);
         //add lines to inbox
         try {
+            DateFormat df = new SimpleDateFormat(RadyoMenemenPro.CHAT_DATE_FORMAT, Locale.US);
             Cursor cursor = sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                String user,post;
+            cursor.moveToLast();
+            while(!cursor.isBeforeFirst()){
+                String user,post,time;
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 if(user.equals(m.getUsername()))
                     user = getString(R.string.me);
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
-                inbox.addLine(String.format("%s: %s", user, m.getSpannedTextWithSmileys(post)));
-                cursor.moveToNext();
+                time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
+                inbox.addMessage(post, df.parse(time).getTime(),user);
+                cursor.moveToPrevious();
             }
             cursor.close();
             sql.close();
         } catch (Exception e) {
-            inbox.addLine(String.format("%s: %s", nick, Menemen.fromHtmlCompat(mesaj)));
+            inbox.addMessage(Menemen.fromHtmlCompat(mesaj),System.currentTimeMillis(),nick);
             e.printStackTrace();
         }
-        Bitmap largeicon = null;
-        try {
-            largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
-        } catch (Exception e){e.printStackTrace();}
-        SUM_Notification
-                .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                .setContentTitle(getString(R.string.notification_new_msg))
-                .setContentText(String.format("%s: %s", nick, m.getSpannedTextWithSmileys(mesaj)))
-                .setSmallIcon(R.mipmap.ic_chat)
-                .setStyle(inbox)
-                .setGroup(GROUP_KEY_CHAT)
-                .setGroupSummary(true)
-                .setOnlyAlertOnce(true);
-        if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
-        if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser && !m.isPlaying()) {
-            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
-                SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-            if (vibrate)
-                SUM_Notification.setVibrate(new long[]{500, 500, 500});
+        if(inbox.getMessages().size()<2)
+            notificationManager.notify(CHAT_NOTIFICATION, notification);
+        if (inbox.getMessages().size()>1) {
+            Bitmap largeicon = null;
+            try {
+                largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
+            } catch (Exception e){e.printStackTrace();}
+            //DIRECT REPLY
+            RemoteInput remoteinput = new RemoteInput.Builder(DIRECT_REPLY_KEY).setLabel(getString(R.string.hint_write_something)).build();
+            Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
+            direct_reply_intent.setAction(RadyoMenemenPro.Action.CHAT);
+            NotificationCompat.Action direct_reply_action = new NotificationCompat.Action.Builder(R.mipmap.ic_chat,
+                    getString(R.string.hint_write_something),
+                    PendingIntent.getBroadcast(context, new Random().nextInt(200),direct_reply_intent,PendingIntent.FLAG_ONE_SHOT))
+                    .addRemoteInput(remoteinput)
+                    .setAllowGeneratedReplies(true)
+                    .build();
+            SUM_Notification
+                    .setAutoCancel(true)
+                    .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setContentTitle(getString(R.string.notification_new_msg))
+                    .setContentText(String.format("%s: %s", nick, m.getSpannedTextWithSmileys(mesaj)))
+                    .setSmallIcon(R.mipmap.ic_chat)
+                    .setStyle(inbox)
+                    .setOnlyAlertOnce(true);
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+                SUM_Notification.addAction(direct_reply_action);
+            if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
+            if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser && !m.isPlaying()) {
+                if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                    SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+                if (vibrate)
+                    SUM_Notification.setVibrate(new long[]{500, 500, 500});
+            }
+            if(!mutechatnotification)
+                m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
+            Notification summary = SUM_Notification.build();
+            notificationManagerCompat.notify(CHAT_NOTIFICATION,summary);
         }
-        if(!mutechatnotification)
-            m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
-        Notification summary = SUM_Notification.build();
-        notificationManagerCompat.notify(GROUP_CHAT_NOTIFICATION,summary);
     }
 
 

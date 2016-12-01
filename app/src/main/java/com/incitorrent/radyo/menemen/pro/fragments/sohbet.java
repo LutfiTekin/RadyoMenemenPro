@@ -374,7 +374,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                }
            }catch (Exception e){e.printStackTrace();}
        }
-        NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.GROUP_CHAT_NOTIFICATION);
+        NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
         m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
