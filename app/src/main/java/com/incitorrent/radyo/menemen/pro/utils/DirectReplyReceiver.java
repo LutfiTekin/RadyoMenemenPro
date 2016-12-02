@@ -27,9 +27,11 @@ import com.incitorrent.radyo.menemen.pro.MainActivity;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
+import com.incitorrent.radyo.menemen.pro.show_image_comments;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -41,20 +43,77 @@ public class DirectReplyReceiver extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, final Intent intent) {
         queue = Volley.newRequestQueue(context.getApplicationContext());
         m = new Menemen(context);
-       if(intent.getAction()!=null){
+       if(intent.getAction()!=null && getMessage(intent) != null){
            switch (intent.getAction()){
                case RadyoMenemenPro.Action.CHAT:
-                   if(getMessage(intent) != null)
-                       postToMenemen(String.valueOf(getMessage(intent)),context);
+                   postToMenemen(String.valueOf(getMessage(intent)),context);
+                   break;
+               case RadyoMenemenPro.Action.CAPS:
+
+                   postCapsComment(intent, context);
                    break;
            }
        }
 
 
     }
+
+    void postCapsComment(final Intent intent, final Context context) {
+        final String url = intent.getExtras().getString("url");
+        final int caps_id = Integer.parseInt(intent.getExtras().getString("id"));
+        StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.POST_COMMENT_CAPS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        updateCapsNotification(context, url, caps_id);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                updateCapsNotification(context, url, caps_id);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                HashMap<String, String> dataToSend = new HashMap<>();
+                dataToSend.put("nick", m.getUsername());
+                dataToSend.put("capsurl", url);
+                dataToSend.put("comment", String.valueOf(getMessage(intent)));
+                return dataToSend;
+            }
+
+            @Override
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return m.menemenRetryPolicy();
+            }
+        };
+        queue.add(postRequest);
+    }
+
+    void updateCapsNotification(Context context, String url, int caps_id) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        Intent notification_intent = new Intent(context, show_image_comments.class);
+        notification_intent.putExtra("url",url);
+        builder
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentTitle(context.getString(R.string.notification_reply_sent))
+                .setContentText(context.getString(R.string.notification_see_all_comments))
+                .setSmallIcon(R.drawable.default_image)
+                .setOnlyAlertOnce(true);
+        Notification notification = builder.build();
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(RadyoMenemenPro.CAPS_NOTIFICATION + caps_id,notification);
+    }
+
     @Nullable
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     private CharSequence getMessage(Intent ıntent){

@@ -14,6 +14,7 @@ public final class RadyoMenemenPro {
     public final static int NOW_PLAYING_NOTIFICATION = 20032016; //Notification idsi bi özelliği yok rastgele
     public final static int ON_AIR_NOTIFICATION = 28052016;
     public final static int PODCAST_NOTIFICATION = 19072016;
+    public static final int CAPS_NOTIFICATION = 2122016;
     public final static int MSG_DOWNLOAD_PROGRESS_NOTIFICATION = 27082016;
     public final static int SONG_CHANGED_BY_USER_NOTIFICATION = 1112016;
 

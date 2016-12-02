@@ -220,4 +220,6 @@
     <string name="topics_error_title_limit">Konu başlığı 16 karakterden fazla olamaz</string>
     <string name="topics_join">Katıl</string>
     <string name="topics_leave">Çık</string>
+    <string name="notification_reply_sent">Cevabın gönderildi</string>
+    <string name="notification_see_all_comments">Tüm yorumları görmek için bildirime dokunun</string>
 </resources>

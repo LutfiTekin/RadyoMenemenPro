@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.DownloadManager;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -31,6 +32,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -78,6 +81,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadioWidget;
 import com.incitorrent.radyo.menemen.pro.RadioWidgetSqr;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
+import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
@@ -96,6 +100,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
@@ -1044,5 +1049,17 @@ public class Menemen {
             width = (int) (height * bitmapRatio);
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    public NotificationCompat.Action getDirectReplyAction(Intent direct_reply_intent){
+        RemoteInput remoteinput = new RemoteInput.Builder(FIREBASE_CM_SERVICE.DIRECT_REPLY_KEY)
+                .setLabel(context.getString(R.string.hint_write_something))
+                .build();
+        return new NotificationCompat.Action.Builder(R.mipmap.ic_chat,
+                context.getString(R.string.hint_write_something),
+                PendingIntent.getBroadcast(context, new Random().nextInt(200),direct_reply_intent,PendingIntent.FLAG_ONE_SHOT))
+                .addRemoteInput(remoteinput)
+                .setAllowGeneratedReplies(true)
+                .build();
     }
 }

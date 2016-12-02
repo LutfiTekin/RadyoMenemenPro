@@ -197,7 +197,6 @@ public class show_image_comments extends AppCompatActivity {
                 dataToSend.put("nick", m.getUsername());
                 dataToSend.put("capsurl", imageurl);
                 dataToSend.put("comment", mesaj);
-                dataToSend.put("ETmesaj", mesaj);
                 return dataToSend;
             }
 

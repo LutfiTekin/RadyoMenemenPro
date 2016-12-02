@@ -271,4 +271,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="topics_join">Join</string>
     <string name="topics_leave">Leave</string>
     <integer name="podcast_lines">5</integer>
+    <string name="notification_reply_sent">Reply sent</string>
+    <string name="notification_see_all_comments">Touch notification to see all comments</string>
 </resources>

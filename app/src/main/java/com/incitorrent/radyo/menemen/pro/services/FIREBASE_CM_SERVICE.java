@@ -14,7 +14,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -512,15 +511,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
             } catch (Exception e){e.printStackTrace();}
             //DIRECT REPLY
-            RemoteInput remoteinput = new RemoteInput.Builder(DIRECT_REPLY_KEY).setLabel(getString(R.string.hint_write_something)).build();
-            Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
-            direct_reply_intent.setAction(RadyoMenemenPro.Action.CHAT);
-            NotificationCompat.Action direct_reply_action = new NotificationCompat.Action.Builder(R.mipmap.ic_chat,
-                    getString(R.string.hint_write_something),
-                    PendingIntent.getBroadcast(context, new Random().nextInt(200),direct_reply_intent,PendingIntent.FLAG_ONE_SHOT))
-                    .addRemoteInput(remoteinput)
-                    .setAllowGeneratedReplies(true)
-                    .build();
+
             SUM_Notification
                     .setAutoCancel(true)
                     .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
@@ -529,8 +520,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     .setSmallIcon(R.mipmap.ic_chat)
                     .setStyle(inbox)
                     .setOnlyAlertOnce(true);
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-                SUM_Notification.addAction(direct_reply_action);
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
+                direct_reply_intent.setAction(RadyoMenemenPro.Action.CHAT);
+                SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
+            }
             if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
             if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser && !m.isPlaying()) {
                 if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
@@ -562,10 +556,17 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
         builder.setGroup(GROUP_KEY_CHAT);
         builder.setAutoCancel(true);
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
+            direct_reply_intent.setAction(notification_intent.getAction());
+            direct_reply_intent.putExtra("url",notification_intent.getExtras().getString("url"));
+            direct_reply_intent.putExtra("id",caps_id);
+            builder.addAction(m.getDirectReplyAction(direct_reply_intent));
+        }
         Notification notification = builder.build();
-        int notification_id = RadyoMenemenPro.ON_AIR_NOTIFICATION + 1;
+        int notification_id = RadyoMenemenPro.CAPS_NOTIFICATION;
         try {
-            notification_id = Integer.parseInt(caps_id) + RadyoMenemenPro.ON_AIR_NOTIFICATION;
+            notification_id = Integer.parseInt(caps_id) + RadyoMenemenPro.CAPS_NOTIFICATION;
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
