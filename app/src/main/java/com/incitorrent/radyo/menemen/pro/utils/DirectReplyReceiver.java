@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.Toast;
@@ -35,12 +36,13 @@ import java.util.Random;
 
 public class DirectReplyReceiver extends BroadcastReceiver {
     Menemen m;
+    RequestQueue queue;
     public DirectReplyReceiver() {
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        queue = Volley.newRequestQueue(context.getApplicationContext());
         m = new Menemen(context);
        if(intent.getAction()!=null){
            switch (intent.getAction()){
@@ -53,6 +55,7 @@ public class DirectReplyReceiver extends BroadcastReceiver {
 
 
     }
+    @Nullable
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     private CharSequence getMessage(Intent ıntent){
         Bundle remoteInput = RemoteInput.getResultsFromIntent(ıntent);
@@ -68,18 +71,16 @@ public class DirectReplyReceiver extends BroadcastReceiver {
             Toast.makeText(context.getApplicationContext(), R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
         StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        updateNotification(context, msg);
+                        updateChatNotification(context, msg);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                updateNotification(context, msg);
+                updateChatNotification(context, msg);
               error.printStackTrace();
             }
         }){
@@ -103,7 +104,7 @@ public class DirectReplyReceiver extends BroadcastReceiver {
         queue.add(post);
     }
 
-    void updateNotification(Context context, String msg) {
+    void updateChatNotification(Context context, String msg) {
         NotificationCompat.MessagingStyle inbox = new NotificationCompat.MessagingStyle(context.getString(R.string.me));
         try {
             chatDB sql = m.getChatDB();

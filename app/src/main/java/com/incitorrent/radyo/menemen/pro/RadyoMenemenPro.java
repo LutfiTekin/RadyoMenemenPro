@@ -120,6 +120,7 @@ public final class RadyoMenemenPro {
         public final static String WIDGET_PLAY =  "radyo.menemen.widget.play";
         public final static String WIDGET_STOP =  "radyo.menemen.widget.stop";
         public final static String CAPS =  "radyo.menemen.caps";
+        public final static String TOPICS =  "radyo.menemen.topics";
     }
 
     public final static String OTO_DJ = "Oto Dj";

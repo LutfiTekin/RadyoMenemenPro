@@ -257,12 +257,15 @@ public class MainActivity extends AppCompatActivity
                                 .addToBackStack("track_info")
                                 .commit();
                         break;
+                    case RadyoMenemenPro.Action.TOPICS:
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent,new topics()).addToBackStack("topics").commit();
                     default:
                         defaultAction();
                         break;
                 }
             } catch (Exception e) {
-                Log.v("ACTION", e.toString());
+                Log.d("ACTION", e.toString());
             }
         }
     }
