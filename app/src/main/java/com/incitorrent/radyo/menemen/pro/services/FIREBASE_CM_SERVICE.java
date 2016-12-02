@@ -492,7 +492,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 String user,post,time;
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 if(user.equals(m.getUsername()))
-                    user = getString(R.string.me);
+                    user = null;
                 post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                 time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
                 inbox.addMessage(post, df.parse(time).getTime(),user);
