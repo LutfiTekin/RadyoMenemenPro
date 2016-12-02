@@ -321,7 +321,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         final Boolean isUser = nick.equals(m.getUsername());
         //Notification creation condition
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;
-        buildChatNotification(nick,msg);
+        buildChatNotification(nick,Menemen.fromHtmlCompat(msg));
     }
 
     private void addCapsComments(RemoteMessage remoteMessage) {
@@ -492,7 +492,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 if(user.equals(m.getUsername()))
                     user = null;
-                post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                post = Menemen.fromHtmlCompat(cursor.getString(cursor.getColumnIndex(chatDB._POST)));
                 time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
                 inbox.addMessage(post, df.parse(time).getTime(),user);
                 cursor.moveToPrevious();

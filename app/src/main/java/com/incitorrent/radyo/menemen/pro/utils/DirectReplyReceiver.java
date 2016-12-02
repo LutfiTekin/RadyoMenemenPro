@@ -175,7 +175,7 @@ public class DirectReplyReceiver extends BroadcastReceiver {
                 user = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                 if(user.equals(m.getUsername()))
                     user = null;
-                post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
+                post = Menemen.fromHtmlCompat(cursor.getString(cursor.getColumnIndex(chatDB._POST)));
                 time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
                 inbox.addMessage(post, df.parse(time).getTime(),user);
                 cursor.moveToPrevious();
