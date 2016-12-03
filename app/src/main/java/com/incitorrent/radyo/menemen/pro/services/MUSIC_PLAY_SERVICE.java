@@ -462,6 +462,9 @@ public class MUSIC_PLAY_SERVICE extends Service {
         stop.putExtra("stop",true);
         PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
+       if(!notification.mActions.isEmpty()){
+           notification.mActions.clear();
+       }
         if(m.isPlaying()) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
         else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
         if(!isPodcast && m.oku(DJ).equals(RadyoMenemenPro.OTO_DJ)){
