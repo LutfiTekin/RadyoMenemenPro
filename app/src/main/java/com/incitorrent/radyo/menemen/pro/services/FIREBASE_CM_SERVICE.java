@@ -498,6 +498,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     .setStyle(inbox)
                     .setOnlyAlertOnce(true);
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                if(!SUM_Notification.mActions.isEmpty())
+                    SUM_Notification.mActions.clear();
                 Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
                 direct_reply_intent.setAction(RadyoMenemenPro.Action.CHAT);
                 SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
