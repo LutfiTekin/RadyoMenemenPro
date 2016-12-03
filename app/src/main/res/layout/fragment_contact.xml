@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundsoft"
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.contact">
+
+
+    <TextView
+        android:text="@string/contact_descr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/contact_descr"
+        android:textIsSelectable="false"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/textColorPrimary"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"
+        android:gravity="start"
+        android:id="@+id/ETcontact"
+        android:textAlignment="viewStart"
+        android:layout_alignLeft="@+id/contact_descr"
+        android:layout_alignStart="@+id/contact_descr"
+        android:layout_below="@+id/contact_descr"
+        android:layout_alignRight="@+id/contact_descr"
+        android:layout_alignEnd="@+id/contact_descr"
+        android:fadingEdge="horizontal|vertical"
+        android:hint="@string/hint_write_something"
+        android:background="@null"
+        android:textSize="@dimen/abc_text_size_subhead_material"
+        android:layout_marginBottom="16dp"/>
+</RelativeLayout>

@@ -713,7 +713,7 @@ public class Menemen {
         if(Sdate==null) return c.getString(R.string.time_moment);
         if(Sdate.equals(PENDING)) return c.getString(R.string.sending);
         if(Sdate.equals(NOT_DELIVERED)) return c.getString(R.string.not_delivered);
-        if(Sdate.equals(DELIVERED)) return c.getString(R.string.deliverd);
+        if(Sdate.equals(DELIVERED)) return c.getString(R.string.delivered);
         DateFormat df = new SimpleDateFormat(RadyoMenemenPro.CHAT_DATE_FORMAT, Locale.US);
         Date date = null;
         try {

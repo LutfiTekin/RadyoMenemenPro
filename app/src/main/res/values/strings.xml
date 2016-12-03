@@ -211,7 +211,7 @@
     <string name="online_members">Online Members</string>
     <string name="online_user_none">Nobody Else Is Here :(</string>
     <string name="who_is_online">Who is online?</string>
-    <string name="deliverd">Sent</string>
+    <string name="delivered">Sent</string>
     <string name="settings_autp_c_summary">Adjust stream quality depending on network status of the phone.  (Mobile Netork or Wi-Fi). Ps. If radio is playing already channel will not changed.</string>
     <string name="settings_autp_c_title">Select Channel Automatically</string>
     <string name="toast_channel_change_auto">Channel changed automatically</string>
@@ -245,4 +245,8 @@
     <integer name="podcast_lines">5</integer>
     <string name="notification_reply_sent">Reply sent</string>
     <string name="notification_see_all_comments">Touch notification to see all comments</string>
+    <string name="contact_descr">You can send us feedback here</string>
+    <string name="nav_contact">Contact</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="action_send">Send</string>
 </resources>

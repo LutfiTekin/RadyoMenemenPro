@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.incitorrent.radyo.menemen.pro.fragments.contact;
 import com.incitorrent.radyo.menemen.pro.fragments.galeri;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity
             if (m.isLoggedIn()) {
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+                navigationView.getMenu().findItem(R.id.nav_contact).setVisible(true);
             } else {
                 navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
@@ -390,7 +392,6 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.nav_podcast) {
             fragmentManager.beginTransaction().addToBackStack("podcast").replace(R.id.Fcontent,new podcast()).commit();
         }  else if(id == R.id.nav_logout){
-
             new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.dialog_logout_title))
                     .setMessage(getString(R.string.dialog_logout_descr))
@@ -428,9 +429,10 @@ public class MainActivity extends AppCompatActivity
             .setIcon(R.mipmap.ic_launcher)
             .show();
 
-        } else if(id == R.id.nav_settings){
-            startActivity(new Intent(this,Ayarlar.class));
-        }
+        }else if(id == R.id.nav_contact)
+            fragmentManager.beginTransaction().addToBackStack("contact").replace(R.id.Fcontent, new contact()).commit();
+        else if(id == R.id.nav_settings)
+            startActivity(new Intent(this, Ayarlar.class));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
        if(drawer!=null) drawer.closeDrawer(GravityCompat.START);

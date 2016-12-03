@@ -164,7 +164,7 @@
     <string name="online_members">Çevirimiçi Üyeler</string>
     <string name="online_user_none">Başka Hiç Kimse Yok :(</string>
     <string name="who_is_online">Kimler çevirimiçi?</string>
-    <string name="deliverd">Gönderildi</string>
+    <string name="delivered">Gönderildi</string>
     <string name="settings_autp_c_title">Otomatik Kanal</string>
     <string name="settings_autp_c_summary">Radyo kanalını telefonun ağ durumuna (Mobil Ağ veya Wi-Fi) göre ayarla. (Radyo zaten çalıyorsa değiştirilmez)</string>
     <string name="toast_channel_change_auto">Kanal otomatik olarak değişti</string>
@@ -195,4 +195,8 @@
     <string name="topics_leave">Çık</string>
     <string name="notification_reply_sent">Cevabın gönderildi</string>
     <string name="notification_see_all_comments">Tüm yorumları görmek için bildirime dokunun</string>
+    <string name="contact_descr">Burdan bize geri bildirimde bulunabilirsin.</string>
+    <string name="nav_contact">İletişim</string>
+    <string name="contact_us">Bize Yaz</string>
+    <string name="action_send">Gönder</string>
 </resources>
