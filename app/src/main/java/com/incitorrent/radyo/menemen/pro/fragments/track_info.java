@@ -30,9 +30,6 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.util.concurrent.ExecutionException;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class track_info extends Fragment implements View.OnClickListener{
     private ImageView art,iv_spotify,iv_youtube,iv_lyric;
     private TextView track,tv_spotify,tv_youtube,tv_lyric;

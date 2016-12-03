@@ -27,9 +27,7 @@ import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class galeri extends Fragment {
     private static final String TAG = "Galeri";
     Context context;

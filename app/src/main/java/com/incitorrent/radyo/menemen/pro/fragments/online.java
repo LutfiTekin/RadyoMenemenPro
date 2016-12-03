@@ -21,9 +21,7 @@ import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class online extends Fragment {
 //    private static final String TAG = "Online";
     trackonlineusersDB sql;

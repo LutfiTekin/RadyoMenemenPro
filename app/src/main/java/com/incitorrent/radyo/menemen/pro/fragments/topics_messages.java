@@ -11,9 +11,6 @@ import android.view.ViewGroup;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class topics_messages extends Fragment {
     Menemen m;
     Context context;

@@ -52,9 +52,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class topics_create extends Fragment implements View.OnClickListener{
     Context context;
     Menemen m;

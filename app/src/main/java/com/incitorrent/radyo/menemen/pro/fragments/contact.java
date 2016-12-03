@@ -27,9 +27,6 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
 import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class contact extends Fragment {
     Menemen m;
     Context context;
