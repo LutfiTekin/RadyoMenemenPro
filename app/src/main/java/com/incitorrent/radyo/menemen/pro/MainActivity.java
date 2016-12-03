@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.galeri;
-import com.incitorrent.radyo.menemen.pro.fragments.haykir;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
@@ -239,10 +238,6 @@ public class MainActivity extends AppCompatActivity
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new olan_biten()).commit();
                         break;
-                    case RadyoMenemenPro.Action.HAYKIR:
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.Fcontent, new haykir()).commit();
-                        break;
                     case RadyoMenemenPro.Action.TRACK_INFO_LAST:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent, new radio()).commit();
@@ -391,9 +386,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().addToBackStack("topics").replace(R.id.Fcontent, new topics()).commit();
         else if (id == R.id.nav_galeri)
             fragmentManager.beginTransaction().addToBackStack("galeri").replace(R.id.Fcontent, new galeri()).commit();
-        else if (id == R.id.nav_shout) {
-            fragmentManager.beginTransaction().addToBackStack("haykir").replace(R.id.Fcontent,new haykir()).commit();
-        }else if(id == R.id.nav_olanbiten){
+        else if(id == R.id.nav_olanbiten){
             fragmentManager.beginTransaction().addToBackStack("ob").replace(R.id.Fcontent,new olan_biten()).commit();
         }else if (id == R.id.nav_podcast) {
             fragmentManager.beginTransaction().addToBackStack("podcast").replace(R.id.Fcontent,new podcast()).commit();

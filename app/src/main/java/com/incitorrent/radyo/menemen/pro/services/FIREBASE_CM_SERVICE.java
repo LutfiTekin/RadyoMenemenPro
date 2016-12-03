@@ -59,7 +59,6 @@ import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ
 public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private static final String TAG = "FCM_SERVICE";
     public static final String CATEGORY_CAPS = "caps";
-    public static final String CATEGORY_HAYKIR = "haykir";
     public static final String CATEGORY_CHAT = "generalchat";
     public static final String CATEGORY_ONLINE = "online";
     public static final String CATEGORY_TOPICS = "cat_topics";
@@ -155,9 +154,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         if (action == null) break;
                         if (action.equals(ADD))
                             addCapsComments(remoteMessage);
-                        break;
-                    case CATEGORY_HAYKIR:
-                        haykirbildirim(remoteMessage);
                         break;
                     case CATEGORY_CHAT:
                         generalChat(remoteMessage);
@@ -267,25 +263,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         queue.add(stringRequest);
     }
 
-    private void haykirbildirim(RemoteMessage remoteMessage) {
-        String mesaj = getDATA(remoteMessage, "response");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.mipmap.ic_shout);
-        builder.setAutoCancel(true);
-        builder.setContentTitle(getString(R.string.dj_response)).setContentText(m.getSpannedTextWithSmileys(mesaj));
-        if(!mutechatnotification) {
-            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
-                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-            if (vibrate)
-                builder.setVibrate(new long[]{1500, 500, 500});
-        }
-        notification_intent.setAction(RadyoMenemenPro.Action.HAYKIR);
-        builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-        builder.setGroup(GROUP_KEY_CHAT);
-        builder.setAutoCancel(true);
-        Notification notification = builder.build();
-        notificationManager.notify(new Random().nextInt(100), notification);
-    }
 
     private void generalChat(RemoteMessage remoteMessage) {
         Intent chat = new Intent(CHAT_BROADCAST_FILTER);

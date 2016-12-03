@@ -27,7 +27,6 @@ public final class RadyoMenemenPro {
     public final static String PODCASTLINK = "https://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
     public final static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
     public final static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
-    public final static String HAYKIR_LINK = "https://radyomenemen.com/haykir.php";
 
     //Api URL Constants
     private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
@@ -116,7 +115,6 @@ public final class RadyoMenemenPro {
         public final static String PODCAST =  "radyo.menemen.podcast";
         public final static String PODCAST_PLAY =  "radyo.menemen.podcast.play";
         public final static String OLAN_BITEN =  "radyo.menemen.news";
-        public final static String HAYKIR =  "radyo.menemen.haykir";
         public final static String TRACK_INFO_LAST =  "radyo.menemen.track.info.last";
         public final static String WIDGET_PLAY =  "radyo.menemen.widget.play";
         public final static String WIDGET_STOP =  "radyo.menemen.widget.stop";
