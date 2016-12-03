@@ -13,7 +13,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/descr_login_logout"
-          android:id="@+id/textView"
           android:textColor="@color/textColor"
           android:gravity="center_horizontal"
           android:layout_alignParentTop="true"

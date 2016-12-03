@@ -259,11 +259,6 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                         queue.add(request);
                     }
                 });
-            Boolean show_chat_sound = new Menemen(RMPRO.context).bool_oku("catcut");
-            if(!show_chat_sound){
-                Preference chat_sound = findPreference("chat_sound");
-                getPreferenceScreen().removePreference(chat_sound);
-            }
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
         }

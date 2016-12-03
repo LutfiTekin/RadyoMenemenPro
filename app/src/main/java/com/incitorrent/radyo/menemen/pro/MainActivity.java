@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity
             } else {
                 navigationView.getMenu().findItem(R.id.nav_chat).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
-                navigationView.getMenu().findItem(R.id.nav_shout).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
                 navigationView.getMenu().findItem(R.id.nav_topic).setVisible(false);
             }

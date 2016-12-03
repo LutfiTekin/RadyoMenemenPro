@@ -4,8 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="50dp"
     android:layout_margin="2dp"
-    android:clickable="true"
-    android:id="@+id/smilecard">
+    android:clickable="true">
         <ImageView
             android:id="@+id/smiley"
             android:src="@mipmap/smile_gman"

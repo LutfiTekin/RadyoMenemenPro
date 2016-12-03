@@ -194,7 +194,6 @@ public class login extends Fragment {
         TextView header_txt = (TextView) hview.findViewById(R.id.header_txt);
         navigationView.getMenu().findItem(R.id.nav_chat).setVisible(true);
         navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
-        navigationView.getMenu().findItem(R.id.nav_shout).setVisible(true);
         navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         header_txt.setText(m.oku("username").toUpperCase());
     }

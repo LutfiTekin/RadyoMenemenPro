@@ -28,10 +28,6 @@
             android:title="@string/nav_galeri" />
 
         <item
-            android:id="@+id/nav_shout"
-            android:icon="@mipmap/ic_shout"
-            android:title="@string/nav_haykir" />
-        <item
             android:id="@+id/nav_podcast"
             android:icon="@drawable/podcast"
             android:title="@string/podcast" />

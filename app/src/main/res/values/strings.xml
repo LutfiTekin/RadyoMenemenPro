@@ -6,14 +6,6 @@
     <string name="action_settings">Settings</string>
     <!-- Strings related to Settings -->
     <string name="pref_header_general">General</string>
-    <string-array name="pref_artworks">
-        <item>Always</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_artworks_values">
-        <item>1</item>
-        <item>0</item>
-    </string-array>
     <string name="pref_header_radio">Radio Settings</string>
     <string-array name="pref_channels" translatable="false">
         <item>Hercules</item>
@@ -71,7 +63,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="nav_radio">Recently Played</string>
     <string name="nav_sohbet">Chat</string>
-    <string name="nav_haykir">Shout</string>
     <string name="share">Share</string>
     <string name="nav_login">Login</string>
     <string name="podcast" translatable="false">Podcast</string>
@@ -80,7 +71,6 @@
     <string name="licence">Licence</string>
     <string name="pref_title_select_channel">Select Channel</string>
     <string name="error_occured">An Error Occurred</string>
-    <string name="toast_error_account">Account not found</string>
     <string name="toast_error_password_incorrect">Incorrect password</string>
     <string name="toast_logged_in">Logged in</string>
     <string name="toast_signed_up">Signed up</string>
@@ -90,9 +80,7 @@
     <string name="time_moment">A moment ago</string>
     <string name="time_moments">Moments ago</string>
     <string name="time_ago">ago</string>
-    <string name="podcast_updating_list">Updating list… \n Please Wait.</string>
     <string name="podcast_subtitle">Here you can download latest podcast from Radio Menemen\'s broadcasts.</string>
-    <string name="toast_connecting">Connecting to the server</string>
     <string name="news_descr">What happened in radio menemen? Answers are here…</string>
     <string name="media_pause">Pause</string>
     <string name="media_resume">Resume</string>
@@ -111,7 +99,6 @@
     <string name="caps_uploaded">Caps uploaded</string>
     <string name="caps_uploaded_sub">Caps uploaded successfully</string>
     <string name="caps_uploading">Uploading caps</string>
-    <string name="app_share_text">"Download Radio Menemen app: "</string>
     <string name="sign_out">Sign Out</string>
     <string name="toast_internet_warn">There is a problem with the internet connection</string>
     <string name="old_podcast_descr">Old incitorrent podcasts are listed below</string>
@@ -127,19 +114,15 @@
     <!--Booleans-->
     <bool name="landscape_mode" translatable='false'>false</bool>
     <bool name="xlarge_landscape_mode" translatable='false'>false</bool>
-    <bool name="xlarge_portrait_mode" translatable='false'>false</bool>
     <!--Booleans End-->
     <string name="toast_check_your_connection">Check your internet connection</string>
     <string name="cd_smiley">Smiley</string>
     <string name="cd_send_button">Send Button</string>
     <string name="ET_hint_write_something">Write something</string>
     <string name="me">Me</string>
-    <string name="shoutlist_empty">No shouts here\n
-You can send a direct message to dj, who currently on air.\n Messages that sent from here only can read by authorized broadcaster.</string>
     <string name="cd_song_artwork">Song Artwork</string>
     <!--Placeholder-->
     <string name="ph_np_track">Now Playing</string>
-    <string name="ph_np_fetching_dj_note">Fetching Dj Note</string>
     <string name="settings_artwork_summary">Download album art of playing track. (May increase mobile-data consumption) When the connection state detected as slow image will not be downloaded</string>
     <string name="settings_artwork_title">Download Artwork</string>
     <string name="settings_onstart_chat_title">Open Chat on startup</string>
@@ -148,7 +131,6 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="settings_music_only_title">Music Only Mode</string>
     <string name="settings_music_only_summary">If you do not want to log in and you are using the app only for listening music. This setting does not effect if you already logged in.</string>
     <string name="music_only_mode_is_active">Music Only mode is active</string>
-    <string name="login_screen_descr">If it is your first login we will sign you up \n Try not to forget your password mate</string>
     <string name="hint_password">Password</string>
     <string name="hint_username">Username</string>
     <string name="dialog_nologin_title">You don\'t want to login?</string>
@@ -169,15 +151,11 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="done">Done</string>
     <string name="intro_slide_chat_descr">Only Music* is not enough, you should come join our chat</string>
     <string name="intro_slide_chat_title">Join Chat</string>
-    <string name="intro_slide_haykir_descr">Contact with the broadcaster directly</string>
     <string name="intro_slide_music_descr">You will be experiencing seamless music wherever and whenever you are</string>
     <string name="intro_slide_music_title">Seamless Music Experience</string>
     <string name="intro_slide_news_descr">Get notified with what happened in Radio Menemen</string>
     <string name="intro_slide_podcast_descr">You can download or listen immediately Radio Menemen podcasts if you like</string>
-    <string name="toast_caps_upload_cam">Hold the button if you want to select image from camera</string>
     <string name="notifications">Notifications</string>
-    <string name="pref_summary_new_message_notifications">Warning: notifications are not instant</string>
-    <string name="notification_new_message">%d new messages</string>
     <string name="track_deleted">Track deleted from the list</string>
     <string name="notification_new_msg">There are new messages</string>
     <string name="notification_new_messages_text">New messages in chat.</string>
@@ -192,22 +170,16 @@ You can send a direct message to dj, who currently on air.\n Messages that sent 
     <string name="pref_summary_show_intro">Show intro that appears in first lauch</string>
     <string name="mute_chat_notificaitions_for_10_min">Chat notifications will be muted next 10 minutes</string>
     <string name="site_adress" translatable="false">radyomenemen.com</string>
-    <string name="settings_night_mode_title">Night Mode</string>
-    <string name="settings_night_mode_summary">You might need restart for changes to take effect</string>
     <string name="title_activity_show_image_comments">Comments</string>
     <string name="toast_image_saved">Image saved to sdcard</string>
-    <string name="snackbar_feature_under_development">This feature is not available at this time</string>
     <string name="menemencast" translatable="false">MenemenCast</string>
     <string name="notification_caps_comment_sub_text">There is a comment for this image</string>
     <string name="pref_title2_new_comment_caps">Caps Comments</string>
     <string name="pref_title_new_comment_caps">Notify me when there is new comment on caps that i uploaded or posted a comment</string>
     <string name="cd_rewind">Rewind</string>
     <string name="cd_forward">Forward</string>
-    <string name="login_error">An error occurred \n Your username cannot be more than 16 \n Your password length cannot be less than 6</string>
-    <string name="dj_response">Dj Response</string>
     <string name="dialog_take_photo">Take Photo</string>
     <string name="dialog_choose_from_gallery">Choose from Gallery</string>
-    <string name="upload_caps">Upload Caps</string>
     <string name="nav_galeri">Gallery</string>
     <string name="galeri_descr">Here you can see recently uploaded caps and comment on them.</string>
     <string name="pref_summary_sync_channels">If radio does not play, click here for manuel channel info update</string>

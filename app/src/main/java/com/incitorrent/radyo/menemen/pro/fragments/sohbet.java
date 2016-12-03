@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -81,7 +80,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.DELIVERED;
 import static com.incitorrent.radyo.menemen.pro.utils.Menemen.NOT_DELIVERED;
@@ -274,7 +272,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(),RadyoMenemenPro.CHAT_DATE_FORMAT)));
                               }
                               sohbetRV.getAdapter().notifyDataSetChanged();
-                              playChatSound();
                               m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                           } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                               sql.deleteMSG(id);
@@ -316,37 +313,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
 
 
-    /**
-     * Activate/Deactivate secret chat sound
-     */
-    private void setChatSound(){
-        if(m.bool_oku("catcut")){
-            m.bool_kaydet("catcut",false);
-            Toast.makeText(getActivity().getApplicationContext(), android.R.string.no , Toast.LENGTH_SHORT).show();
-        }else {
-            m.bool_kaydet("catcut",true);
-            Toast.makeText(getActivity().getApplicationContext(), android.R.string.yes , Toast.LENGTH_SHORT).show();
-        }
-    }
 
-    /**
-     * Play secret chat sound
-     */
-    private void playChatSound() {
-        if(getActivity() != null)
-        if(PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).getBoolean("chat_sound",false)){
-            int sound = new Random().nextInt(5);
-            try {
-                MediaPlayer mPlayer;
-                mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                        + "://" + getActivity().getApplicationContext().getPackageName() + "/raw/s" + sound ));
-                if(mPlayer!=null) mPlayer.start();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
     @Override
     public void onStart() {
@@ -603,10 +570,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 return;
             }
             mesaj.setText("");
-            if(msg.toLowerCase().equals("çatçut")) {
-                setChatSound();
-                return;
-            }else if(sohbetList != null && sohbetRV != null){
+            if(sohbetList != null && sohbetRV != null){
                 sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),msg, PENDING));
                 if(sohbetRV.getAdapter() != null)
                     sohbetRV.getAdapter().notifyDataSetChanged();

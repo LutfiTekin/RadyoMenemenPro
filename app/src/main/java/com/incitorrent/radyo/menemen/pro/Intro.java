@@ -23,8 +23,6 @@ public class Intro extends AppIntro {
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide_chat_title),getString(R.string.intro_slide_chat_descr),R.drawable.intro_slide_chat,accent_color));
         addSlide(AppIntroFragment.newInstance(getString(R.string.podcast), getString(R.string.intro_slide_podcast_descr), R.drawable.podcast, background_color));
         addSlide(AppIntroFragment.newInstance(getString(R.string.news), getString(R.string.intro_slide_news_descr),R.drawable.announce,accent_color));
-        addSlide(AppIntroFragment.newInstance(getString(R.string.nav_haykir), getString(R.string.intro_slide_haykir_descr),R.drawable.intro_slide_haykir,background_color));
-
         setVibrate(true);
         setVibrateIntensity(30);
         setSkipText(getString(R.string.skip));
