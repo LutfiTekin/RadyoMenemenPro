@@ -457,6 +457,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : artwork)
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), intent, PendingIntent.FLAG_UPDATE_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_listeners",false)){
+            if(m.oku(RadyoMenemenPro.LISTENERS_COUNT) != null && !m.oku(RadyoMenemenPro.LISTENERS_COUNT).equals("0"))
+                notification.setSubText(m.oku(RadyoMenemenPro.LISTENERS_COUNT) + " kişi şuanda yayını dinliyor");
+        }
+
         Intent playpause = new Intent(this,NotificationControls.class);
         Intent stop = new Intent(this,NotificationControls.class);
         stop.putExtra("stop",true);

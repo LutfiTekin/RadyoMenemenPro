@@ -199,4 +199,6 @@
     <string name="nav_contact">İletişim</string>
     <string name="contact_us">Bize Yaz</string>
     <string name="action_send">Gönder</string>
+    <string name="settings_show_listeners_title">Dinleyenleri Göster</string>
+    <string name="settings_show_listeners_summary">Şimdi çalıyor bildiriminde kaç kişinin dinlediğini göster.(Dinleyici bilgisi sadece şarkı değiştiğinde güncellendiği için canlı yayınlarda çalışmaz)</string>
 </resources>

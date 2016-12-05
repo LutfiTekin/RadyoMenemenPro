@@ -9,6 +9,12 @@
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <SwitchPreference
+        android:defaultValue="false"
+        android:key="show_listeners"
+        android:title="@string/settings_show_listeners_title"
+        android:summary="@string/settings_show_listeners_summary"/>
+
+    <SwitchPreference
         android:defaultValue="true"
         android:key="adaptive_quality"
         android:summary="@string/settings_autp_c_summary"

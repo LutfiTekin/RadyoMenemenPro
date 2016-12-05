@@ -139,6 +139,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         notificationManager.cancel(RadyoMenemenPro.SONG_CHANGED_BY_USER_NOTIFICATION);
                     }
                 }
+                if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_listeners",false) ){
+                    m.kaydet(RadyoMenemenPro.LISTENERS_COUNT, getDATA(remoteMessage,"listeners"));
+                }
                 break;
             case RadyoMenemenPro.FCMTopics.NEW_PUBLIC_TOPIC:
                 addNewTopic(remoteMessage);

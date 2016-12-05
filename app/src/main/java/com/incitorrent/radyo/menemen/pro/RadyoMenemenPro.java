@@ -74,6 +74,7 @@ public final class RadyoMenemenPro {
     public static final String MUTE_NOTIFICATION = "mute_notif";
     public static final String DEFAULT_RADIO_WIDGET = "radio_widget_def";
     public static final String SQUARE_RADIO_WIDGET = "radio_widget_sqr";
+    public static final String LISTENERS_COUNT  = "listenersC";
 
 
     public final static class broadcastinfo{
