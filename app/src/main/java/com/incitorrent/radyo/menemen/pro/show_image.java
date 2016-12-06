@@ -117,7 +117,14 @@ public class show_image extends AppCompatActivity{
         });
 
 
-
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(c_fab.getVisibility() == View.VISIBLE)
+                    c_fab.hide();
+                else c_fab.show();
+            }
+        });
 
         image.setOnTouchListener(new OnSwipeTouchListener(show_image.this){
         @Override
