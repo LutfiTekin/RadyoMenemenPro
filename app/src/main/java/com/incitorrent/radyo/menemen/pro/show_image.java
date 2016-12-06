@@ -130,22 +130,18 @@ public class show_image extends AppCompatActivity{
         @Override
         public void onSwipeRight() {
             loadNextCaps(true);
-            Log.v(TAG,"t");
             super.onSwipeRight();
         }
 
         @Override
         public void onSwipeLeft() {
             loadNextCaps(false);
-            Log.v(TAG,"f");
             super.onSwipeLeft();
         }
 
             void loadNextCaps(Boolean next) {
                 if(image.getCurrentZoom() == 1 && progressBar.getVisibility() == View.GONE) {
-                    Log.v(TAG," önce " + imageurl);
                     imageurl = m.getChatDB().getNextCaps(imageurl, next);
-                    Log.v(TAG," sonra " +  imageurl);
                     new AsyncTask<Void,Void,Bitmap>(){
                         @Override
                         protected void onPreExecute() {
@@ -423,7 +419,6 @@ public class show_image extends AppCompatActivity{
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(final String response) {
-                            Log.d(TAG,"Volley Response " + response + " \n imageurl " + imageurl);
                             new AsyncTask<Void,Void,Boolean>(){
                                 @Override
                                 protected Boolean doInBackground(Void... voids) {
@@ -494,7 +489,7 @@ public class show_image extends AppCompatActivity{
 
                         @Override
                         public void retry(VolleyError error) throws VolleyError {
-                            Toast.makeText(context, "Yorumlar indirilemedi yeniden deneniyor " + error.toString(), Toast.LENGTH_SHORT).show();
+                          error.printStackTrace();
                         }
                     };
                 }
@@ -502,10 +497,7 @@ public class show_image extends AppCompatActivity{
 
                 @Override
                 public Priority getPriority() {
-                    if(m.isConnectedWifi())
-                        return Priority.IMMEDIATE;
-                    else
-                        return Priority.NORMAL;
+                    return Priority.NORMAL;
                 }
             };
             postRequest.setShouldCache(false);
