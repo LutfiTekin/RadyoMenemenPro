@@ -201,4 +201,5 @@
     <string name="action_send">Gönder</string>
     <string name="settings_show_listeners_title">Dinleyenleri Göster</string>
     <string name="settings_show_listeners_summary">Şimdi çalıyor bildiriminde kaç kişinin dinlediğini göster.(Dinleyici bilgisi sadece şarkı değiştiğinde güncellendiği için canlı yayınlarda çalışmaz)</string>
+    <string name="notification_listeners_subtext">%s kişi şuan yayını dinliyor</string>
 </resources>

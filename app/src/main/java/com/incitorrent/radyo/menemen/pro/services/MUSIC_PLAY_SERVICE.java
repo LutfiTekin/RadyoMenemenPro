@@ -459,7 +459,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
         if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_listeners",false)){
             if(m.oku(RadyoMenemenPro.LISTENERS_COUNT) != null && !m.oku(RadyoMenemenPro.LISTENERS_COUNT).equals("0"))
-                notification.setSubText(m.oku(RadyoMenemenPro.LISTENERS_COUNT) + " kişi şuanda yayını dinliyor");
+                notification.setSubText(String.format(getString(R.string.notification_listeners_subtext), m.oku(RadyoMenemenPro.LISTENERS_COUNT)));
         }
 
         Intent playpause = new Intent(this,NotificationControls.class);
