@@ -9,19 +9,19 @@ public final class RadyoMenemenPro {
     public final static String MID_CHANNEL = "Pegasus";//128 kbps yayın
     public final static String HIGH_CHANNEL = "Zeus"; //320 kbps yayın
     public final static String RADIO_SERVER = "serverR";
+    public final static String ARTWORK_ONLINE = "online_art";
     public final static int MUSIC_INFO_SERVICE_INTERVAL = 240;
     public final static int MENEMEN_TIMEOUT = 30000;
     public final static int NOW_PLAYING_NOTIFICATION = 20032016; //Notification idsi bi özelliği yok rastgele
     public final static int ON_AIR_NOTIFICATION = 28052016;
     public final static int PODCAST_NOTIFICATION = 19072016;
-    public static final int CAPS_NOTIFICATION = 2122016;
+    public final static int CAPS_NOTIFICATION = 2122016;
     public final static int MSG_DOWNLOAD_PROGRESS_NOTIFICATION = 27082016;
     public final static int SONG_CHANGED_BY_USER_NOTIFICATION = 1112016;
 
     public final static int GALLERY_IMAGE_OVERRIDE_WITDH = 600;
     public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 600;
     public final static int ARTWORK_IMAGE_OVERRIDE_DIM = 300;
-
 
     public final static String PODCASTFEED = "https://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
     public final static String PODCASTLINK = "https://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
@@ -47,6 +47,8 @@ public final class RadyoMenemenPro {
     public final static String MP_ADD = API + "mp_add";
     public final static String MP_CHANGE_SONG = API + "mp_change_song";
     public final static String CONTACT = API + "contact";
+    public static final String SEARCH_TRACK  = API + "search_track";
+    public static final String REQUEST_TRACK  = API + "request_track";
     private final static String MENEMEN_TOPICS = API + "topics";
     public final static String MENEMEN_TOPICS_CREATE = MENEMEN_TOPICS + "&action=create";
     public final static String MENEMEN_TOPICS_DELETE = MENEMEN_TOPICS + "&action=delete";

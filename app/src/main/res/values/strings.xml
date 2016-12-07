@@ -252,4 +252,6 @@
     <string name="settings_show_listeners_summary">Show listeners count at now playing notification. (It will not work unless auto dj is on air, since this information update occurs only in auto djs song change event)</string>
     <string name="settings_show_listeners_title">Show Listeners</string>
     <string name="notification_listeners_subtext">%s people listening now</string>
+    <string name="toast_auto_dj_track_not_found">The track you wanted could not be found at Auto Dj Archive please try again</string>
+    <string name="toast_auto_dj_req_success">Song request is successfull</string>
 </resources>

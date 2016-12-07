@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -58,9 +59,10 @@ public class radioDB extends SQLiteOpenHelper {
         }
         db.close();
     }
-    public Cursor getHistory(int limit){
+    public Cursor getHistory(int limit,@Nullable String searchquery){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TABLE_NAME,null,null,null,null,null,_SONGID+" DESC", (limit == 0) ? null : String.valueOf(limit));
+        searchquery = (searchquery != null) ? _SONGNAME + " LIKE '%" + searchquery + "%'" : null;
+        return db.query(TABLE_NAME,null,searchquery,null,null,null,_SONGID+" DESC", (limit == 0) ? null : String.valueOf(limit));
     }
 
     public void deleteTrack(String songhash){

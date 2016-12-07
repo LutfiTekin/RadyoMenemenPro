@@ -21,23 +21,30 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +54,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -55,8 +70,13 @@ import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
@@ -84,7 +104,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     FloatingActionButton fab;
     ProgressBar progressbar;
     boolean download_artwork = false;
-
+    boolean isUserSearching = false;
+    public static final String REQUEST_PLAYNOW = "req_pla";
     public radio() {
         // Required empty public constructor
     }
@@ -116,9 +137,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         emptyview = (CardView) radioview.findViewById(R.id.emptyview);
         lastplayed=(RecyclerView)radioview.findViewById(R.id.lastplayed);
         if (lastplayed != null) lastplayed.setHasFixedSize(true);
-        if(getResources().getBoolean(R.bool.landscape_mode))
-            lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
-        else lastplayed.setLayoutManager(new LinearLayoutManager(context));
         itemTouchHelper.attachToRecyclerView(lastplayed); //Swipe to remove itemtouchhelper
         nowplayingbox = (LinearLayout) radioview.findViewById(R.id.nowplaying_box);
         nowplayingbox.setVisibility(View.GONE); //initialy hidden
@@ -163,15 +181,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           if(isPlayingValid) m.runExitAnimation(nowplayingbox, 400);
-                          if(fab != null) fab.hide();
+                          if(fab != null && !isUserSearching) fab.hide();
                           break;
                       case RecyclerView.SCROLL_STATE_IDLE:
                       case RecyclerView.SCROLL_STATE_SETTLING:
                           if(isPlayingValid) m.runEnterAnimation(nowplayingbox, 200);
-                          if(fab != null) fab.show();
+                          if(fab != null && !isUserSearching) fab.show();
                           break;
                   }
-
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
@@ -207,6 +224,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         };
 
             download_artwork = (m.isInternetAvailable()) ? PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true) && m.isConnectionFast() : PreferenceManager.getDefaultSharedPreferences(context).getBoolean("download_artwork",true);
+        setHasOptionsMenu(true);
         return radioview;
     }
 
@@ -298,7 +316,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             protected Boolean doInBackground(Void... voids) {
                 try {
                     if(RList != null) {
-                        cursor = sql.getHistory(2);
+                        cursor = sql.getHistory(2,null);
                         cursor.moveToFirst();
                         Boolean added = false;
                         while(cursor!=null && !cursor.isAfterLast()) {
@@ -381,59 +399,69 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     @Override
     public void onResume() {
         m.selectChannelAuto();
-            new AsyncTask<Void,Void,Void>(){
-                @Override
-                protected void onPreExecute() {
-                    RList = new ArrayList<>();
-                    super.onPreExecute();
-                }
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    try {
-                        m.bool_kaydet(RadyoMenemenPro.IS_RADIO_FOREGROUND,true);
-                        if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
-                            m.setPlaying(false);
-                        cursor = sql.getHistory(0);
-                        cursor.moveToFirst();
-                        while(cursor!=null && !cursor.isAfterLast()) {
-                            if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
-                                String song = cursor.getString(cursor.getColumnIndex("song"));
-                                String songhash = cursor.getString(cursor.getColumnIndex("hash"));
-                                String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
-                                if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
-                                    RList.add(new trackHistory(song,songhash,arturl));
-                            }
-                            cursor.moveToNext();
-                        }
-                        cursor.close();
-                        sql.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    adapter = new RadioAdapter(RList);
-                    lastplayed.setAdapter(adapter);
-                    if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
-                    if(m.isPlaying() && !m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
-                        fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                        setNP(null);
-                        m.runEnterAnimation(nowplayingbox, 200);
-                        frameAnimation.start();
-                    }else nowplayingbox.setVisibility(View.GONE);
-                    if (fab != null) {
-                        fab.show();
-                        fab.setVisibility(View.VISIBLE);
-                    }
-                    super.onPostExecute(aVoid);
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+        if(!isUserSearching)
+            initRadio();
         super.onResume();
+    }
+
+    /**
+     * initialize radio tracks list
+     */
+    void initRadio() {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+                if(getResources().getBoolean(R.bool.landscape_mode))
+                    lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
+                else lastplayed.setLayoutManager(new LinearLayoutManager(context));
+                RList = new ArrayList<>();
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    m.bool_kaydet(RadyoMenemenPro.IS_RADIO_FOREGROUND,true);
+                    if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class))
+                        m.setPlaying(false);
+                    cursor = sql.getHistory(0,null);
+                    cursor.moveToFirst();
+                    while(cursor!=null && !cursor.isAfterLast()) {
+                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                            String song = cursor.getString(cursor.getColumnIndex("song"));
+                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                            if(!cursor.getString(cursor.getColumnIndex("song")).equals(m.oku(CALAN))) //Son çalanlarda son çalanı gösterme :)
+                                RList.add(new trackHistory(song,songhash,arturl));
+                        }
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
+                    sql.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                adapter = new RadioAdapter(RList);
+                lastplayed.setAdapter(adapter);
+                if(adapter.getItemCount() < 1) m.runEnterAnimation(emptyview,200);
+                if(m.isPlaying() && !m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
+                    fab.setImageResource((m.isPlaying()) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                    setNP(null);
+                    m.runEnterAnimation(nowplayingbox, 200);
+                    frameAnimation.start();
+                }else nowplayingbox.setVisibility(View.GONE);
+                if (fab != null) {
+                    fab.show();
+                    fab.setVisibility(View.VISIBLE);
+                }
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -510,6 +538,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             TextView song;
             ImageView art;
             CardView card;
+            Button req_queue,req_playnow;
             PersonViewHolder(View itemView) {
                 super(itemView);
                 song = (TextView)itemView.findViewById(R.id.song);
@@ -519,17 +548,43 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     art.setTransitionName(RadyoMenemenPro.transitionname.ART);
                     song.setTransitionName(RadyoMenemenPro.transitionname.CALAN);
                 }
-
+                req_queue = (Button) itemView.findViewById(R.id.req_queue);
+                req_playnow = (Button) itemView.findViewById(R.id.req_playnow);
                 art.setOnClickListener(this);
                 song.setOnClickListener(this);
                 card.setOnClickListener(this);
+                if(req_playnow != null && req_queue != null){
+                    req_playnow.setOnClickListener(this);
+                    req_queue.setOnClickListener(this);
+                }
             }
 
             @Override
             public void onClick(View view) {
-                final String trackName = RList.get(getAdapterPosition()).song;
-                final String artUrl = RList.get(getAdapterPosition()).arturl;
-               openTrackInfo(trackName,artUrl,Gravity.TOP);
+                if(isUserSearching) {
+                    final RequestQueue queue = Volley.newRequestQueue(context);
+                    final boolean online_result = RList.get(getAdapterPosition()).arturl.equals(RadyoMenemenPro.ARTWORK_ONLINE);
+                    final String track = (online_result)? RList.get(getAdapterPosition()).songhash : RList.get(getAdapterPosition()).song;
+                   if(view == req_queue){
+                       queue.add(requestTrack(false,track));
+                   }else if(view == req_playnow){
+                       queue.add(requestTrack(true,track));
+                   }else{
+                       if(req_queue.getVisibility() == View.VISIBLE){
+                           req_queue.setVisibility(View.GONE);
+                           req_playnow.setVisibility(View.GONE);
+                       }else {
+                           req_queue.setVisibility(View.VISIBLE);
+                           req_playnow.setVisibility(View.VISIBLE);
+                       }
+                   }
+
+                }
+                else {
+                    final String trackName = RList.get(getAdapterPosition()).song;
+                    final String artUrl = RList.get(getAdapterPosition()).arturl;
+                    openTrackInfo(trackName, artUrl, Gravity.TOP);
+                }
             }
 
         }
@@ -539,7 +594,11 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
         @Override
         public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.radio_item, viewGroup,false);
+            View v;
+            if (isUserSearching)
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.radio_item_request, viewGroup, false);
+            else
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.radio_item, viewGroup, false);
             PersonViewHolder pvh = new PersonViewHolder(v);
             context = viewGroup.getContext();
             return pvh;
@@ -553,15 +612,15 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
             String title = RList.get(i).song;
             personViewHolder.song.setText(Menemen.fromHtmlCompat(title));
-            if(getActivity()!=null && download_artwork)
+            if(RList.get(i).arturl.equals(RadyoMenemenPro.ARTWORK_ONLINE))
+                personViewHolder.art.setImageResource(R.drawable.ic_cloud_queue_black_24dp);
+            else if(getActivity()!=null && download_artwork)
                 Glide.with(getActivity().getApplicationContext())
                         .load(RList.get(i).arturl)
                         .placeholder(R.mipmap.album_placeholder)
                         .override(RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM,RadyoMenemenPro.ARTWORK_IMAGE_OVERRIDE_DIM)
                         .error(R.mipmap.album_placeholder)
                         .into(personViewHolder.art);
-//            int delay = i*100;
-//          m.runEnterAnimation(personViewHolder.card,delay);
         }
 
 
@@ -667,4 +726,191 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         }
     };
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.radio_menu,menu);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            MenuItem searchItem = menu.findItem(R.id.action_request_song);
+            MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    isUserSearching = true;
+                    nowplayingbox.setVisibility(View.GONE);
+                    fab.hide();
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    isUserSearching = false;
+                    initRadio();
+                    return true;
+                }
+            });
+            SearchView search = (SearchView) searchItem.getActionView();
+            search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    searchTrack(newText);
+                    return true;
+                }
+            });
+
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    void searchTrack(final String query){
+        final Cursor cursor = sql.getHistory(0,query);
+        if(query.length()<1 || RList == null || cursor.getCount()<1) return;
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected void onPreExecute() {
+                RList = new ArrayList<>();
+                if (lastplayed.getLayoutManager() instanceof GridLayoutManager)
+                    lastplayed.setLayoutManager(new LinearLayoutManager(context));
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    cursor.moveToFirst();
+                    while(!cursor.isAfterLast()) {
+                        if (cursor.getString(cursor.getColumnIndex("songid")) != null) {
+                            String song = cursor.getString(cursor.getColumnIndex("song"));
+                            String songhash = cursor.getString(cursor.getColumnIndex("hash"));
+                            String arturl = cursor.getString(cursor.getColumnIndex("arturl"));
+                            RList.add(new trackHistory(song,songhash,arturl));
+                        }
+                        cursor.moveToNext();
+                    }
+                    cursor.close();
+                    sql.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                adapter = new RadioAdapter(RList);
+                lastplayed.setAdapter(adapter);
+                Volley.newRequestQueue(context).add(searchTrackOnline(query));
+                super.onPostExecute(aVoid);
+            }
+        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+    }
+StringRequest searchTrackOnline(final String searchquery){
+   return new StringRequest(Request.Method.POST, RadyoMenemenPro.SEARCH_TRACK,
+           new Response.Listener<String>() {
+               @Override
+               public void onResponse(final String response) {
+                   if(RList == null) return;
+                   new AsyncTask<Void,Void,Void>(){
+                       @Override
+                       protected Void doInBackground(Void... voids) {
+                           try {
+                               JSONArray arr = new JSONObject(response).getJSONArray("req");
+                               JSONObject c;
+                               for(int i = 0;i<arr.getJSONArray(0).length();i++) {
+                                   JSONArray innerJarr = arr.getJSONArray(0);
+                                   c = innerJarr.getJSONObject(i);
+                                   String song, songhash;
+                                   song = c.getString("track");
+                                   songhash = c.getString("id");
+                                   RList.add(0,new trackHistory(song,songhash,RadyoMenemenPro.ARTWORK_ONLINE));
+                               }
+                           } catch (JSONException e) {
+                               e.printStackTrace();
+                           }
+                           return null;}
+
+                       @Override
+                       protected void onPostExecute(Void aVoid) {
+                           lastplayed.getAdapter().notifyDataSetChanged();
+                           super.onPostExecute(aVoid);
+                       }
+                   }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+               }
+           },null){
+       @Override
+       protected Map<String, String> getParams() throws AuthFailureError {
+           Map<String,String> dataToSend = m.getAuthMap();
+           dataToSend.put(SearchManager.QUERY,searchquery);
+           return dataToSend;
+       }
+
+       @Override
+       public RetryPolicy getRetryPolicy() {
+           return m.menemenRetryPolicy();
+       }
+   };
+}
+
+    /**
+     * Send a song request
+     * @param playNow if true auto dj will will play the track
+     * as soon as it gets the request
+     * @param track Tracks id or name
+     * @return
+     */
+    StringRequest requestTrack(boolean playNow , final String track){
+        String url = RadyoMenemenPro.REQUEST_TRACK + "&" +
+                ((playNow)? REQUEST_PLAYNOW : "");
+        return new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        switch (response){
+                            case "1":
+                                //Authorization failed
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                                break;
+                            case "2":
+                                //Track not found
+                                Toast.makeText(context, R.string.toast_auto_dj_track_not_found, Toast.LENGTH_SHORT).show();
+                                break;
+                            case "3":
+                                //SUCCESS
+                                Toast.makeText(context, R.string.toast_auto_dj_req_success, Toast.LENGTH_SHORT).show();
+                                break;
+                            case "4":
+                                //insufficient mp
+                                Toast.makeText(context, R.string.toast_sc_inscf_mp, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        Log.d("VOLLEYRESP",response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> dataToSend = m.getAuthMap();
+                dataToSend.put("track",track);
+                return dataToSend;
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return m.menemenRetryPolicy();
+            }
+        };
+    }
 }
