@@ -55,14 +55,14 @@ public class radioDB extends SQLiteOpenHelper {
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }catch (Exception e){
             e.printStackTrace();
-            Log.v("DBLog",e.toString());
+            Log.d("DBLog",e.toString());
         }
         db.close();
     }
     public Cursor getHistory(int limit,@Nullable String searchquery){
         SQLiteDatabase db = getReadableDatabase();
         searchquery = (searchquery != null) ? _SONGNAME + " LIKE '%" + searchquery + "%'" : null;
-        return db.query(TABLE_NAME,null,searchquery,null,null,null,_SONGID+" DESC", (limit == 0) ? null : String.valueOf(limit));
+        return db.query((searchquery!=null),TABLE_NAME,null,searchquery,null,null,null,_SONGID + " DESC", (limit == 0) ? null : String.valueOf(limit));
     }
 
     public void deleteTrack(String songhash){
