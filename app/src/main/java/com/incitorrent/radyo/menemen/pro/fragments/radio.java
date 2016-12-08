@@ -197,6 +197,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         NPreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(isUserSearching) return;
                 String calan = null;
                 if(intent.getExtras()!=null) {
                     String action = intent.getAction();
@@ -206,7 +207,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                             Boolean isPlaying = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                             fab.setImageResource((isPlaying) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                             if (isPlaying) {
-                                if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST) && !isUserSearching)
+                                if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST))
                                     m.runEnterAnimation(nowplayingbox, 200);
                                 m.runEnterAnimation(NPtrack, 400);
                                 m.runEnterAnimation(NPcard, 400);
