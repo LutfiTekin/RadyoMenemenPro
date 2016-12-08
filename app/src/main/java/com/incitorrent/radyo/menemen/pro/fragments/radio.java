@@ -774,12 +774,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
 
     void searchTrack(final String query){
+        Log.d("VOLLEY","offline search ");
         final Cursor cursor = sql.getHistory(0,query);
-        if(query.length()<1 || RList == null || cursor.getCount()<1) return;
+        if(query.length()<1 || RList == null) return;
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected void onPreExecute() {
-                RList = new ArrayList<>();
+               if(cursor.getCount()>0)
+                   RList = new ArrayList<>();
                 if (lastplayed.getLayoutManager() instanceof GridLayoutManager)
                     lastplayed.setLayoutManager(new LinearLayoutManager(context));
                 super.onPreExecute();
@@ -787,6 +789,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
             @Override
             protected Void doInBackground(Void... voids) {
+                if(cursor.getCount()<1)
+                    return null;
                 try {
                     cursor.moveToFirst();
                     while(!cursor.isAfterLast()) {
@@ -808,9 +812,12 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                adapter = new RadioAdapter(RList);
-                lastplayed.setAdapter(adapter);
+                if(cursor.getCount()>0) {
+                    adapter = new RadioAdapter(RList);
+                    lastplayed.setAdapter(adapter);
+                }
                 Volley.newRequestQueue(context).add(searchTrackOnline(query));
+                Log.d("VOLLEY","offline search " + query);
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
@@ -826,6 +833,7 @@ StringRequest searchTrackOnline(final String searchquery){
                        protected Void doInBackground(Void... voids) {
                            try {
                                JSONArray arr = new JSONObject(response).getJSONArray("req");
+                               Log.d("VOLLEYRES",response);
                                JSONObject c;
                                for(int i = 0;i<arr.getJSONArray(0).length();i++) {
                                    JSONArray innerJarr = arr.getJSONArray(0);
