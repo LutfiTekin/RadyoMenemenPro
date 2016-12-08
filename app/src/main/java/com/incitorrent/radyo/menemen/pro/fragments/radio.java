@@ -177,16 +177,17 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         lastplayed.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if(isUserSearching) return;
                 Boolean isPlayingValid = m.isPlaying() && !m.oku(CALAN).equals(null) && !m.bool_oku(RadyoMenemenPro.IS_PODCAST);
                   switch (newState) {
                       case RecyclerView.SCROLL_STATE_DRAGGING:
                           if(isPlayingValid) m.runExitAnimation(nowplayingbox, 400);
-                          if(fab != null && !isUserSearching) fab.hide();
+                          if(fab != null) fab.hide();
                           break;
                       case RecyclerView.SCROLL_STATE_IDLE:
                       case RecyclerView.SCROLL_STATE_SETTLING:
                           if(isPlayingValid) m.runEnterAnimation(nowplayingbox, 200);
-                          if(fab != null && !isUserSearching) fab.show();
+                          if(fab != null) fab.show();
                           break;
                   }
                 super.onScrollStateChanged(recyclerView, newState);
