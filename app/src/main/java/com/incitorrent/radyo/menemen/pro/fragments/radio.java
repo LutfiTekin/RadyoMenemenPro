@@ -107,6 +107,10 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     boolean isUserSearching = false;
     public static final String REQUEST_PLAYNOW = "req_pla";
     MenuItem searchItem;
+
+    //Global variables for receyclerview colors
+    private int ITEM_BACKGROUND_COLOR = 0;
+    private int ITEM_TEXT_COLOR = 0;
     public radio() {
         // Required empty public constructor
     }
@@ -217,8 +221,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                                 m.runEnterAnimation(NPyoutube, 800);
                                 m.runEnterAnimation(NPlyric, 900);
                                 frameAnimation.start();
-                            } else if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST))
+                            } else if (!m.bool_oku(RadyoMenemenPro.IS_PODCAST)) {
                                 m.runExitAnimation(nowplayingbox, 500);
+                                ITEM_BACKGROUND_COLOR = ContextCompat.getColor(context,R.color.cardviewBG);
+                                ITEM_TEXT_COLOR = ContextCompat.getColor(context,R.color.textColorPrimary);
+                                if(lastplayed.getAdapter() != null)
+                                    lastplayed.getAdapter().notifyDataSetChanged();
+                            }
                     }else if(action.equals(MUSIC_INFO_SERVICE.NP_FILTER))
                         calan = intent.getExtras().getString("calan",null);
                     setNP(calan);
@@ -248,13 +257,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         if(imageView == null || toolbar == null) return;
         new AsyncTask<Void,Void,Integer[]>() {
             Bitmap resim = null;
-            final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
-            final int colorbgsofter = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
-            final int textcolor = ContextCompat.getColor(context,R.color.textColorPrimary);
-            final int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorBackgroundsoft);
-            final int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
             @Override
             protected Integer[] doInBackground(Void... voids) {
+                //Default Colors
+                final int accentcolor = ContextCompat.getColor(context,R.color.colorAccent);
+                final int colorbgsofter = ContextCompat.getColor(context,R.color.colorBackgroundsofter);
+                final int textcolor = ContextCompat.getColor(context,R.color.textColorPrimary);
+                final int backgroundcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.cardviewBG);
+                final int statusbarcolor = ContextCompat.getColor(getActivity().getApplicationContext(),R.color.colorPrimaryDark);
                 try {
                     if(m.oku(MUSIC_INFO_SERVICE.LAST_ARTWORK_URL).equals("default")) return null;
                     resim = Glide.with(getActivity())
@@ -274,11 +284,13 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         color_5 = palette.getVibrantColor(backgroundcolor);
                         color_6 = palette.getDarkVibrantColor(statusbarcolor);
                     }
+                    ITEM_BACKGROUND_COLOR = color_3;
+                    ITEM_TEXT_COLOR =  (palette.getDarkMutedSwatch() != null) ? palette.getDarkMutedSwatch().getBodyTextColor() : color_4;
                     return new Integer[]{color_1,color_2,color_3,color_4,color_5,color_6};
                 } catch (InterruptedException | ExecutionException | NullPointerException e) {
                     e.printStackTrace();
                 }
-                return null;
+                return new Integer[]{accentcolor,accentcolor,colorbgsofter,textcolor,backgroundcolor,statusbarcolor};
             }
             @Override
             protected void onPostExecute(Integer[] color) {
@@ -298,6 +310,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                         window.setStatusBarColor(Menemen.adjustAlpha(color[5],0.5f));
                     }
+                    lastplayed.getAdapter().notifyDataSetChanged();
                 }
                 if(imageView != null) {
                     if (resim != null)
@@ -626,6 +639,14 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                         .into(personViewHolder.art);
         }
 
+        @Override
+        public void onViewAttachedToWindow(PersonViewHolder holder) {
+            if(ITEM_BACKGROUND_COLOR != 0 && ITEM_TEXT_COLOR != 0){
+                holder.card.setCardBackgroundColor(ITEM_BACKGROUND_COLOR);
+                holder.song.setTextColor(ITEM_TEXT_COLOR);
+            }
+            super.onViewAttachedToWindow(holder);
+        }
 
         @Override
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
