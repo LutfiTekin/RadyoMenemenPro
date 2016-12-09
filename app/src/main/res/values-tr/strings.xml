@@ -204,4 +204,5 @@
     <string name="notification_listeners_subtext">%s kişi şuan yayını dinliyor</string>
     <string name="toast_auto_dj_track_not_found">Şarkı Oto Dj arşivinde bulunamadı lütfen tekrar deneyin</string>
     <string name="toast_auto_dj_req_success">İsteğiniz başarıyla Oto Dj\'ye iletildi</string>
+    <string name="action_request_song">Şarkı İsteği Yap</string>
 </resources>

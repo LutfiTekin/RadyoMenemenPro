@@ -254,4 +254,5 @@
     <string name="notification_listeners_subtext">%s people listening now</string>
     <string name="toast_auto_dj_track_not_found">The track you wanted could not be found at Auto Dj Archive please try again</string>
     <string name="toast_auto_dj_req_success">Song request is successful</string>
+    <string name="action_request_song">Make a Song Request</string>
 </resources>

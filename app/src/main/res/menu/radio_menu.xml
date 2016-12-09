@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_request_song"
         android:orderInCategory="100"
-        android:title="İstek Yap"
+        android:title="@string/action_request_song"
         android:icon="@drawable/ic_search_black_24dp"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
