@@ -765,6 +765,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     isUserSearching = true;
                     nowplayingbox.setVisibility(View.GONE);
                     fab.hide();
+                    ITEM_BACKGROUND_COLOR = ContextCompat.getColor(context,R.color.cardviewBG);
+                    ITEM_TEXT_COLOR = ContextCompat.getColor(context,R.color.textColorPrimary);
                     return true;
                 }
 
