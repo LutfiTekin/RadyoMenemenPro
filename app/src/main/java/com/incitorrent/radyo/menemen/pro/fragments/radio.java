@@ -106,6 +106,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     boolean download_artwork = false;
     boolean isUserSearching = false;
     public static final String REQUEST_PLAYNOW = "req_pla";
+    MenuItem searchItem;
     public radio() {
         // Required empty public constructor
     }
@@ -736,7 +737,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
             SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-            MenuItem searchItem = menu.findItem(R.id.action_request_song);
+            searchItem = menu.findItem(R.id.action_request_song);
             MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
@@ -896,6 +897,8 @@ StringRequest searchTrackOnline(final String searchquery){
                             case "3":
                                 //SUCCESS
                                 Toast.makeText(context, R.string.toast_auto_dj_req_success, Toast.LENGTH_SHORT).show();
+                                if(searchItem!=null && searchItem.getActionView()!=null)
+                                    searchItem.collapseActionView();
                                 break;
                             case "4":
                                 //insufficient mp
@@ -903,6 +906,7 @@ StringRequest searchTrackOnline(final String searchquery){
                                 break;
                         }
                         Log.d("VOLLEYRESP",response);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
