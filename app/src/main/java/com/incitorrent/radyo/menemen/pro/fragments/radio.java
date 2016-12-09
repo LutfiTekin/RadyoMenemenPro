@@ -834,8 +834,9 @@ StringRequest searchTrackOnline(final String searchquery){
                        protected Void doInBackground(Void... voids) {
                            try {
                                JSONArray arr = new JSONObject(response).getJSONArray("req");
-                               Log.d("VOLLEYRES",response);
                                JSONObject c;
+                               //Clear list before showing new results
+                               if(arr.getJSONArray(0).length()>0) RList.clear();
                                for(int i = 0;i<arr.getJSONArray(0).length();i++) {
                                    JSONArray innerJarr = arr.getJSONArray(0);
                                    c = innerJarr.getJSONObject(i);
