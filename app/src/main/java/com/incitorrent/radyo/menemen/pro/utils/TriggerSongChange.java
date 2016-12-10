@@ -32,7 +32,7 @@ public class TriggerSongChange extends BroadcastReceiver {
     /**
      * User does not have menemen point
      */
-    public static final int NO_MP = 4;
+    public static final int NO_MP = 3;
     /**
      * Not enough menemen point to change the song
      */
