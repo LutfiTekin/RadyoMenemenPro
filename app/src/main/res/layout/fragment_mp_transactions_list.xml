@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackgroundsoft"
-    tools:context="com.incitorrent.radyo.menemen.pro.fragments.topics">
+    tools:context="com.incitorrent.radyo.menemen.pro.fragments.mp_transactions_list">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -28,9 +28,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:contentDescription="@string/nav_topics"
+                        android:contentDescription="@string/app_name"
                         android:id="@+id/imageView"
-                        android:src="@drawable/ic_topic_discussion"
+                        android:src="@mipmap/ic_launcher"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentStart="true"
                         android:layout_margin="16dp"
@@ -39,10 +39,11 @@
                         android:layout_width="90dp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/mp_descr"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/description_topic"
-                        android:textSize="10sp"
+                        android:text="@string/mp_descr"
+                        android:textSize="12sp"
                         android:layout_marginRight="16dp"
                         android:layout_alignBottom="@+id/imageView"
                         android:layout_toEndOf="@+id/imageView"
@@ -54,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/nav_topics"
+                        android:text="@string/mp"
                         android:id="@+id/textView3"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"
@@ -83,14 +84,18 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/topicR"
+            android:id="@+id/mplistR"
             />
     </android.support.v4.widget.NestedScrollView>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/create_fab"
-        android:layout_width="wrap_content"
+    <ProgressBar
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:src="@drawable/ic_create_black_24dp"
-        android:layout_margin="@dimen/fab_margin"/>
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressbar"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="center|bottom"
+        android:layout_margin="16dp"
+        />
 </android.support.design.widget.CoordinatorLayout>

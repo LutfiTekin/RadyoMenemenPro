@@ -96,7 +96,7 @@ public class olan_biten extends Fragment {
                             protected Void doInBackground(Void... params) {
                                 try {
                                     OBList = new ArrayList<>();
-                                    if(response ==null || response.equals(null)) return null;
+                                    if(response == null || response.equals("null")) return null;
                                     JSONArray arr = new JSONObject(response).getJSONArray("olan_biten");
                                     JSONObject c;
                                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
@@ -125,7 +125,7 @@ public class olan_biten extends Fragment {
                                 recyclerView.setAdapter(new OBAdapter(OBList));
                                 super.onPostExecute(aVoid);
                             }
-                        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
                     }
                 },null){
             @Override

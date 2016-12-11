@@ -23,7 +23,7 @@ android {
         versionCode 136
         versionName '1.1.36'
         multiDexEnabled true
-        versionNameSuffix '-stable-build.'+getDate()
+        versionNameSuffix '-stable-build.' + getDate()
     }
     buildTypes.release {
         minifyEnabled false
@@ -32,9 +32,11 @@ android {
     productFlavors {
     }
 }
+
 def getDate() {
     new Date().format('yyyyMMddHHmm')
 }
+
 repositories {
     mavenCentral()
 }

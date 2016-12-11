@@ -59,6 +59,10 @@
         android:title="@string/licence"
         android:key="licence"
         android:summary="@string/licence_title"/>
+    <Preference
+        android:title="@string/mp"
+        android:key="mp"
+        android:summary="@string/pref_action_show_my_mp"/>
     <Preference android:title="@string/version"
         android:key="versiyon"
         android:summary="1.0.0"/>

@@ -34,6 +34,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.contact;
 import com.incitorrent.radyo.menemen.pro.fragments.galeri;
 import com.incitorrent.radyo.menemen.pro.fragments.login;
+import com.incitorrent.radyo.menemen.pro.fragments.mp_transactions_list;
 import com.incitorrent.radyo.menemen.pro.fragments.olan_biten;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast;
 import com.incitorrent.radyo.menemen.pro.fragments.podcast_now_playing;
@@ -204,7 +205,6 @@ public class MainActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         goToFragmentByIntentAction(intent);
-
     }
 
     /**
@@ -256,8 +256,10 @@ public class MainActivity extends AppCompatActivity
                     case RadyoMenemenPro.Action.TOPICS:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent,new topics()).addToBackStack("topics").commit();
-                    default:
-                        defaultAction();
+                        break;
+                    case RadyoMenemenPro.Action.MP_TRANSACTIONS:
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent,new mp_transactions_list()).commit();
                         break;
                 }
             } catch (Exception e) {

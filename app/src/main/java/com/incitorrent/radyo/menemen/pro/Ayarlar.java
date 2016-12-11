@@ -220,7 +220,16 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                         return true;
                     }
                 });
-
+            Preference mp_tra_list = findPreference("mp");
+                mp_tra_list.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent main = new Intent(RMPRO.context, MainActivity.class);
+                        main.setAction(RadyoMenemenPro.Action.MP_TRANSACTIONS);
+                        startActivity(main);
+                        return true;
+                    }
+                });
             String version = null;
             try {
                 version = RMPRO.context.getPackageManager().getPackageInfo(RMPRO.context.getPackageName(), 0).versionName;

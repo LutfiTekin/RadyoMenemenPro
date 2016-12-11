@@ -205,4 +205,11 @@
     <string name="toast_auto_dj_track_not_found">Şarkı Oto Dj arşivinde bulunamadı lütfen tekrar deneyin</string>
     <string name="toast_auto_dj_req_success">İsteğiniz başarıyla Oto Dj\'ye iletildi</string>
     <string name="action_request_song">Şarkı İsteği Yap</string>
+    <string name="mp">Menemen Puan</string>
+    <string name="mp_descr">Aşağıdaki listede yaptığın işlemleri görebilirsin. Ardışık yapılan işlemleri değerleri toplanmıştır.</string>
+    <string name="tra_skip_track">Şarkıyı Geç</string>
+    <string name="tra_req_pla">Şarkı İsteği (Hemen Çal)</string>
+    <string name="tra_req_que">Şarkı İsteği (Sıraya Koy)</string>
+    <string name="tra_mp_add">Menemen Puan Kazanıldı</string>
+    <string name="pref_action_show_my_mp">Menemen Puanımı ve İşlemleri Göster</string>
 </resources>

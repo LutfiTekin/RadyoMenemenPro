@@ -46,6 +46,7 @@ public final class RadyoMenemenPro {
     public final static String BROADCASTINFO_NEW = API + "broadcastinfo";
     public final static String MP_ADD = API + "mp_add";
     public final static String MP_CHANGE_SONG = API + "mp_change_song";
+    public final static String MP_LIST_TRANSACTIONS = API + "list_mp_transactions";
     public final static String CONTACT = API + "contact";
     public static final String SEARCH_TRACK  = API + "search_track";
     public static final String REQUEST_TRACK  = API + "request_track";
@@ -123,6 +124,7 @@ public final class RadyoMenemenPro {
         public final static String WIDGET_STOP =  "radyo.menemen.widget.stop";
         public final static String CAPS =  "radyo.menemen.caps";
         public final static String TOPICS =  "radyo.menemen.topics";
+        public final static String MP_TRANSACTIONS = "radyo.menemen.mp.transactions";
     }
 
     public final static String OTO_DJ = "Oto Dj";
