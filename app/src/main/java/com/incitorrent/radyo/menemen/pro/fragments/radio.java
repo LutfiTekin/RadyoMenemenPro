@@ -45,6 +45,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -99,6 +100,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     CardView NPcard;
     ImageButton NPspotify,NPyoutube,NPlyric;
     LinearLayout nowplayingbox;
+    FrameLayout radioFrame;
     AnimationDrawable frameAnimation;
     BroadcastReceiver NPreceiver;
     FloatingActionButton fab;
@@ -136,6 +138,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
         }
         //Son çalınanlar listesini yükle
         sql = new radioDB(context,null,null,1);
+        radioFrame = (FrameLayout) radioview.findViewById(R.id.radioFrame);
         fab = (FloatingActionButton) radioview.findViewById(R.id.fab);
         progressbar = (ProgressBar) radioview.findViewById(R.id.progressbar);
         progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context,R.color.BufferingPBcolor), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -305,6 +308,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     ((TextView)NPtrack.getNextView()).setTextColor(color[3]);
                     if(toolbar!=null)
                         toolbar.setBackgroundColor(color[4]);
+                    radioFrame.setBackgroundColor(Menemen.adjustAlpha(color[4],0.7f));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getActivity() != null) {
                         Window window = getActivity().getWindow();
                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
