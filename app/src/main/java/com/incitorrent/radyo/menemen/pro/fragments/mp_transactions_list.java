@@ -80,7 +80,7 @@ public class mp_transactions_list extends Fragment {
         progressbar = (ProgressBar) mpview.findViewById(R.id.progressbar);
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        if(m.oku(MENEMEN_POINT) != null)
+        if(m.oku(MENEMEN_POINT) != null && toolbar != null)
             toolbar.setSubtitle(m.oku(MENEMEN_POINT) + "MP");
 
         return mpview;
@@ -130,7 +130,7 @@ public class mp_transactions_list extends Fragment {
                         protected void onPostExecute(Void aVoid) {
                             progressbar.setVisibility(View.GONE);
                             recyclerView.setAdapter(adapter);
-                            if(m.oku(MENEMEN_POINT) != null)
+                            if(m.oku(MENEMEN_POINT) != null && toolbar != null)
                                 toolbar.setSubtitle(m.oku(MENEMEN_POINT) + "MP");
                             super.onPostExecute(aVoid);
                         }
@@ -256,5 +256,12 @@ public class mp_transactions_list extends Fragment {
             this.transaction_type = transaction_type;
             this.transaction_date = transaction_date;
         }
+    }
+
+    @Override
+    public void onStop() {
+        if(toolbar!=null)
+            toolbar.setSubtitle("");
+        super.onStop();
     }
 }
