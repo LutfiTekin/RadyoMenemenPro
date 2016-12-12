@@ -418,7 +418,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onDestroy() {
-        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
         stopRepeatingTask();
         super.onDestroy();
     }
