@@ -14,6 +14,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -27,7 +28,6 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class olan_biten extends Fragment {
     TextView title,content,time,author;
     List<ob_objs> OBList;
     Menemen m;
-
+    ProgressBar progressBar;
     public olan_biten() {
         // Required empty public constructor
     }
@@ -81,11 +81,13 @@ public class olan_biten extends Fragment {
         else
         recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity().getApplicationContext()));
         m = new Menemen(context);
+        progressBar = (ProgressBar) obview.findViewById(R.id.progressbar);
         olanBiten();
         setRetainInstance(true);
         return obview;
     }
     private void olanBiten(){
+        progressBar.setVisibility(View.VISIBLE);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.OLAN_BITEN,
                 new Response.Listener<String>() {
@@ -107,7 +109,7 @@ public class olan_biten extends Fragment {
                                     if(m.isInternetAvailable()) {
                                         m.kaydet(RadyoMenemenPro.SAVEDOB, arr.getJSONArray(0).getJSONObject(0).getString("time"));
                                     }
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 return null;
@@ -123,6 +125,7 @@ public class olan_biten extends Fragment {
                                     m.setBadge(badge, "");
                                 }
                                 recyclerView.setAdapter(new OBAdapter(OBList));
+                                progressBar.setVisibility(View.GONE);
                                 super.onPostExecute(aVoid);
                             }
                         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

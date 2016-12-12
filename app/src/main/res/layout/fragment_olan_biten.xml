@@ -85,4 +85,16 @@
             android:id="@+id/obR"
             />
     </android.support.v4.widget.NestedScrollView>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressbar"
+        android:indeterminate="true"
+        android:indeterminateDuration="1000"
+        android:layout_gravity="center"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="center|bottom"
+        android:layout_margin="16dp"
+        />
 </android.support.design.widget.CoordinatorLayout>
