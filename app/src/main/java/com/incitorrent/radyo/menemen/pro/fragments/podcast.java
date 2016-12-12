@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.transition.ChangeBounds;
@@ -42,6 +41,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.XMLParser;
 
 import org.w3c.dom.Document;
@@ -113,12 +113,11 @@ public class podcast extends Fragment {
         else if(getResources().getBoolean(R.bool.landscape_mode))
             PR.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         else
-            PR.setLayoutManager(new LinearLayoutManager(getActivity()));
+            PR.setLayoutManager(new WrapContentLinearLayoutManager(getActivity().getApplicationContext()));
        if(m.oku(RadyoMenemenPro.PODCASTCACHE) != null){
            new LoadXML(RadyoMenemenPro.PODCASTLINK,
                    m.oku(RadyoMenemenPro.PODCASTCACHE), true)
                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-           Log.d("PODCAST","LOADED FROM CACHE");
        }else loadFeed(true);
         if(!m.isInternetAvailable())
             Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();

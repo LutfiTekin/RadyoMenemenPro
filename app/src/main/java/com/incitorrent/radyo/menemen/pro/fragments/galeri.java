@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.EndlessParentScrollListener;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 
@@ -36,7 +36,7 @@ public class galeri extends Fragment {
     List<galeri_objects> Glist;
     chatDB sql;
     capsDB capsSql;
-    LinearLayoutManager llm;
+    WrapContentLinearLayoutManager llm;
     NestedScrollView nestedScrollView;
     public galeri() {
         // Required empty public constructor
@@ -60,7 +60,7 @@ public class galeri extends Fragment {
         recyclerView = (RecyclerView) galeri.findViewById(R.id.galeriR);
         nestedScrollView = (NestedScrollView) galeri.findViewById(R.id.nestedscroll);
         recyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(getActivity().getApplicationContext());
+        llm = new WrapContentLinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(llm);
         recyclerView.setNestedScrollingEnabled(false);
         nestedScrollView.setOnScrollChangeListener(new EndlessParentScrollListener(llm) {

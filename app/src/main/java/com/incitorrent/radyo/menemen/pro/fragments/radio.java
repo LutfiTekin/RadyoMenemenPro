@@ -26,7 +26,6 @@ import android.support.v4.widget.TextViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -69,6 +68,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.radioDB;
 
 import org.json.JSONArray;
@@ -433,7 +433,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             protected void onPreExecute() {
                 if(getResources().getBoolean(R.bool.landscape_mode))
                     lastplayed.setLayoutManager(new GridLayoutManager(context, 4));
-                else lastplayed.setLayoutManager(new LinearLayoutManager(context));
+                else lastplayed.setLayoutManager(new WrapContentLinearLayoutManager(context));
                 RList = new ArrayList<>();
                 super.onPreExecute();
             }
@@ -802,7 +802,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
 
 
     void searchTrack(final String query){
-        Log.d("VOLLEY","offline search ");
         final Cursor cursor = sql.getHistory(0,query);
         if(query.length()<1 || RList == null) return;
         new AsyncTask<Void,Void,Void>(){
@@ -811,7 +810,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                if(cursor.getCount()>0)
                    RList = new ArrayList<>();
                 if (lastplayed.getLayoutManager() instanceof GridLayoutManager)
-                    lastplayed.setLayoutManager(new LinearLayoutManager(context));
+                    lastplayed.setLayoutManager(new WrapContentLinearLayoutManager(context));
                 super.onPreExecute();
             }
 
@@ -845,7 +844,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                     lastplayed.setAdapter(adapter);
                 }
                 Volley.newRequestQueue(context).add(searchTrackOnline(query));
-                Log.d("VOLLEY","offline search " + query);
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -31,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -100,7 +100,7 @@ public class mp_transactions_list extends Fragment {
                         @Override
                         protected void onPreExecute() {
                             traList = new ArrayList<>();
-                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                            recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(context));
                             recyclerView.setHasFixedSize(true);
                             recyclerView.setNestedScrollingEnabled(false);
                             progressbar.setVisibility(View.VISIBLE);
