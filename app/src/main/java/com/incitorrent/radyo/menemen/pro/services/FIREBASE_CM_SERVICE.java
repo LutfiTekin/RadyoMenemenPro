@@ -182,7 +182,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void addNewTopic(RemoteMessage rm) {
-        m.getTopicDB().addtoHistory(new topicDB.TOPIC(
+        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(
                 getDATA(rm,"id"),
                 getDATA(rm,"tpc"),
                 getDATA(rm,"creator"),

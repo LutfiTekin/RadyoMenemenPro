@@ -111,7 +111,7 @@ public class topics extends Fragment {
             protected Void doInBackground(Void... voids) {
                 topicList = new ArrayList<>();
                 final topicDB sql = m.getTopicDB();
-                Cursor cursor = sql.getHistory();
+                Cursor cursor = sql.listTopıcs();
                 if(cursor == null || cursor.getCount()<1) {
                     sql.close();
                     queue.add(stringRequest);
@@ -191,7 +191,7 @@ public class topics extends Fragment {
                         image = c.getString("i");
                         creator = c.getString("c");
                         tpc = c.getString("tpc");
-                        m.getTopicDB().addtoHistory(new topicDB.TOPIC(id,tpc,creator,"0",title,descr,image));
+                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,"0",title,descr,image));
                         topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
                     }
                 } catch (JSONException e) {

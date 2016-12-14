@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
  */
 public class topicDB extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "radyomenemenproTopic.db";
     public static final String TABLE_NAME = "topics";
     public static final String _TOPICID = "tid";
@@ -21,6 +21,13 @@ public class topicDB extends SQLiteOpenHelper {
     public static final String _TITLE = "title";
     public static final String _DESCR = "description";
     public static final String _IMAGEURL = "image";
+
+    //Messages table
+    public static final String MESSAGES_TABLE = "topics_msg";
+    public static final String _TOPIC_MSG_ID = "topics_msg_id";
+    public static final String _NICK = "nick";
+    public static final String _POST = "post";
+    public static final String _TIME = "time";
 
     public topicDB(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -38,15 +45,24 @@ public class topicDB extends SQLiteOpenHelper {
                 _IMAGEURL + " TEXT " +
                 ");";
         db.execSQL(query);
+        query = "CREATE TABLE " + MESSAGES_TABLE + "("+
+                _TOPIC_MSG_ID + " INTEGER PRIMARY KEY, " +
+                _TOPICID + " TEXT, " +
+                _NICK + " TEXT, " +
+                _POST + " TEXT, " +
+                _TIME + " TEXT, " +
+                ");";
+        db.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
         onCreate(db);
     }
 
-    public void addtoHistory(TOPIC t){
+    public void addtoTopicHistory(TOPIC t){
         ContentValues values = new ContentValues();
         values.put(_TOPICID, t.get_TOPICID());
         values.put(_TOPICSTR, t.get_TOPICSTR());
@@ -59,13 +75,30 @@ public class topicDB extends SQLiteOpenHelper {
         try {
             db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }catch (Exception e){
-            db.close();
             e.printStackTrace();
-            return;
+        }finally {
+            db.close();
         }
-        db.close();
     }
-    public Cursor getHistory(){
+
+    public void addTopicMsg(TOPIC_MSGS tm){
+        ContentValues values = new ContentValues();
+        values.put(_TOPIC_MSG_ID, tm.get_TOPIC_MSG_ID());
+        values.put(_TOPICID, tm.get_TOPIC_ID());
+        values.put(_NICK, tm.get_NICK());
+        values.put(_POST, tm.get_POST());
+        values.put(_TIME, tm.get_TIME());
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+            db.insertWithOnConflict(MESSAGES_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            db.close();
+        }
+    }
+    public Cursor listTopıcs(){
         return getReadableDatabase().query(TABLE_NAME,null,null,null,null,null, _TOPICID +" DESC", null);
     }
 
@@ -87,6 +120,59 @@ public class topicDB extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
+
+    public static class TOPIC_MSGS{
+        public String _TOPIC_MSG_ID,_TOPIC_ID,_NICK,_POST,_TIME;
+
+        public TOPIC_MSGS(String _TOPIC_MSG_ID, String _TOPIC_ID, String _NICK, String _POST, String _TIME) {
+            this._TOPIC_MSG_ID = _TOPIC_MSG_ID;
+            this._TOPIC_ID = _TOPIC_ID;
+            this._NICK = _NICK;
+            this._POST = _POST;
+            this._TIME = _TIME;
+        }
+
+        public String get_TOPIC_MSG_ID() {
+            return _TOPIC_MSG_ID;
+        }
+
+        public void set_TOPIC_MSG_ID(String _TOPIC_MSG_ID) {
+            this._TOPIC_MSG_ID = _TOPIC_MSG_ID;
+        }
+
+        public String get_TOPIC_ID() {
+            return _TOPIC_ID;
+        }
+
+        public void set_TOPIC_ID(String _TOPIC_ID) {
+            this._TOPIC_ID = _TOPIC_ID;
+        }
+
+        public String get_NICK() {
+            return _NICK;
+        }
+
+        public void set_NICK(String _NICK) {
+            this._NICK = _NICK;
+        }
+
+        public String get_POST() {
+            return _POST;
+        }
+
+        public void set_POST(String _POST) {
+            this._POST = _POST;
+        }
+
+        public String get_TIME() {
+            return _TIME;
+        }
+
+        public void set_TIME(String _TIME) {
+            this._TIME = _TIME;
+        }
+    }
+
 
 
     public static class TOPIC {
