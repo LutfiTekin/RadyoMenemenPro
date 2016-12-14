@@ -50,7 +50,7 @@ public class topicDB extends SQLiteOpenHelper {
                 _TOPICID + " TEXT, " +
                 _NICK + " TEXT, " +
                 _POST + " TEXT, " +
-                _TIME + " TEXT, " +
+                _TIME + " TEXT " +
                 ");";
         db.execSQL(query);
     }
