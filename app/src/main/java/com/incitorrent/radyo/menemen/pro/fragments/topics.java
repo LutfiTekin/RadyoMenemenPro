@@ -145,7 +145,7 @@ public class topics extends Fragment {
     }
 
 
-    StringRequest stringRequest = new StringRequest(Request.Method.GET, RadyoMenemenPro.MENEMEN_TOPICS_LIST,
+    StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LIST,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -168,7 +168,11 @@ public class topics extends Fragment {
                 return m.menemenRetryPolicy();
             }
 
-        };
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            return m.getAuthMap();
+        }
+    };
 
 
     void loadTopicsList(final String response) {
