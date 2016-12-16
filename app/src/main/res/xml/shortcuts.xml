@@ -1,0 +1,20 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="chat"
+        android:enabled="true"
+        android:icon="@mipmap/ic_chat"
+        android:shortcutShortLabel="@string/nav_sohbet"
+        android:shortcutLongLabel="@string/nav_sohbet"
+        android:shortcutDisabledMessage="@string/disabled">
+        <intent
+            android:action="radyo.menemen.chat"
+            android:targetPackage="com.incitorrent.radyo.menemen.pro"
+            android:targetClass="com.incitorrent.radyo.menemen.pro.MainActivity"
+            />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>

@@ -259,11 +259,32 @@ public class MainActivity extends AppCompatActivity
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent,new mp_transactions_list()).commit();
                         break;
+                    case RadyoMenemenPro.Action.PLAY_NOW:
+                        playAndOpenRadio();
+                        break;
                 }
             } catch (Exception e) {
                 Log.d("ACTION", e.toString());
             }
         }
+    }
+
+    private void playAndOpenRadio() {
+        if(!m.isInternetAvailable()){
+            Toast.makeText(this, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //Podcast çalmıyor
+        m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,false);
+        Intent  radyoservis = new Intent(this, MUSIC_PLAY_SERVICE.class);
+        //Ayarlardan seçilmiş kanalı bul
+        String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(this).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
+        String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
+        //Oluşturulan servis intentine datasource ekle
+        radyoservis.putExtra("dataSource",dataSource);
+        //data source ile servisi başlat
+        startService(radyoservis);
+        fragmentManager.beginTransaction().replace(R.id.Fcontent,new radio()).commit();
     }
 
     private void podcastPlay(Intent intent) {

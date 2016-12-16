@@ -7,11 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -45,6 +49,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.TriggerSongChange;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -253,6 +258,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         @Override
         protected void onPostExecute(Void aVoid) {
             broadcastToUi(false); //Call this on Ui Thread
+            setShortCut(false);
             super.onPostExecute(aVoid);
         }
     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -288,6 +294,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             protected void onPostExecute(Void aVoid) {
                 broadcastToUi(true); //Call this on Ui Thread
+                setShortCut(true);
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -348,6 +355,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             @Override
             protected void onPostExecute(Void aVoid) {
                 broadcastToUi(true);
+                setShortCut(true);
                 super.onPostExecute(aVoid);
             }
 
@@ -412,6 +420,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
             mediaSessionCompat.release();
             exec.shutdown();
             broadcastToUi(false);
+            setShortCut(false);
             LocalBroadcastManager.getInstance(MUSIC_PLAY_SERVICE.this).unregisterReceiver(receiver);
             FirebaseMessaging.getInstance().unsubscribeFromTopic("songchange");
             stopService(new Intent(MUSIC_PLAY_SERVICE.this,MUSIC_INFO_SERVICE.class));
@@ -595,5 +604,24 @@ public class MUSIC_PLAY_SERVICE extends Service {
             updateProgress();
         }
     };
+
+    /**
+     * Sets the radio shortcut for Android 7.1 launcher
+     * @param isPlaying
+     */
+    private void setShortCut(boolean isPlaying){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            Intent main = new Intent(this, MainActivity.class);
+            main.setAction(RadyoMenemenPro.Action.PLAY_NOW);
+            ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
+            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "radio")
+                    .setShortLabel((isPlaying) ? getString(R.string.media_pause) : getString(R.string.media_play))
+                    .setLongLabel((isPlaying) ? getString(R.string.radio_pause) : getString(R.string.radio_play))
+                    .setIcon(Icon.createWithResource(this, (isPlaying) ? R.drawable.ic_pause_black_24dp : R.drawable.ic_play_arrow_black_24dp))
+                    .setIntent(main)
+                    .build();
+            shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
+        }
+    }
 
 }

@@ -262,4 +262,8 @@
     <string name="tra_req_que">Song Request (Queue)</string>
     <string name="tra_skip_track">Skip Track</string>
     <string name="pref_action_show_my_mp">Show My Menemen Point and Transactions</string>
+    <string name="disabled" >Disabled</string>
+    <string name="media_play">Oynat</string>
+    <string name="radio_pause">Pause Radio</string>
+    <string name="radio_play">Play Radio</string>
 </resources>
