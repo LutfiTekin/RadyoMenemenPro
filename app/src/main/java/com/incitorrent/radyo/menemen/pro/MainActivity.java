@@ -46,7 +46,6 @@ import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
-import com.incitorrent.radyo.menemen.pro.utils.syncChannels;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
@@ -172,7 +171,6 @@ public class MainActivity extends AppCompatActivity
                 navigationView.getMenu().findItem(R.id.nav_topic).setVisible(false);
             }
         }
-      if(m.isFirstTime("channelsync"))  new syncChannels(this).execute();
     }
 
 

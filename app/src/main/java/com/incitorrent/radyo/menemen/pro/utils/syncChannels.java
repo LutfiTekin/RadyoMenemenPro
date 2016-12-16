@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -46,27 +45,34 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
                                 JSONObject J = new JSONObject(response);
                                 JSONArray JARR = J.getJSONArray("info");
                                 JSONObject Jo = JARR.getJSONObject(0);
-                                Log.v("SERVER",Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
                                 m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
-                                if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
+                                if(m.isLoggedIn()) {
+                                    if(m.isFirstTime("tokenset"))
+                                        m.setToken();
+                                }
                                 syncTopics();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     },null);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(9000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(m.menemenRetryPolicy());
         queue.add(stringRequest);
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        Log.d(TAG,"Syncronized");
+        super.onPostExecute(aVoid);
+    }
+
     private void syncTopics() {
         try {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("general");
             FirebaseMessaging.getInstance().subscribeToTopic("news");
             FirebaseMessaging.getInstance().subscribeToTopic("sync");
             FirebaseMessaging.getInstance().subscribeToTopic("onair");
