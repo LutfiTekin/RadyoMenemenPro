@@ -6,7 +6,7 @@ package com.incitorrent.radyo.menemen.pro;
 public final class RadyoMenemenPro {
 
     public final static String LOW_CHANNEL = "Hercules";//64 kbps yayın
-    public final static String MID_CHANNEL = "Pegasus";//128 kbps yayın
+    public final static String MID_CHANNEL = "Prometheus";//128 kbps yayın
     public final static String HIGH_CHANNEL = "Zeus"; //320 kbps yayın
     public final static String RADIO_SERVER = "serverR";
     public final static String ARTWORK_ONLINE = "online_art";
@@ -32,7 +32,7 @@ public final class RadyoMenemenPro {
     private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
     private final static String API = "https://api.radyomenemen.com/?"; //Yeni API base urls
     public final static String AUTH = "https://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    public final static String SYNCCHANNEL = APP_INFO + "channels";
+    public final static String SYNCCHANNEL = API + "channels";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
     public final static String OLAN_BITEN = APP_INFO + "olanbiten";
     public final static String MESAJ_GONDER = APP_INFO + "postmessage";

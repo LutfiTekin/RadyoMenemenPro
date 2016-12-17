@@ -9,12 +9,12 @@
     <string name="pref_header_radio">Radio Settings</string>
     <string-array name="pref_channels" translatable="false">
         <item>Hercules</item>
-        <item>Pegasus</item>
+        <item>Prometheus</item>
         <item>Zeus</item>
     </string-array>
     <string-array name="pref_channel_values" translatable="false">
         <item>Hercules</item>
-        <item>Pegasus</item>
+        <item>Prometheus</item>
         <item>Zeus</item>
     </string-array>
     <string-array name="anims" translatable="false">
