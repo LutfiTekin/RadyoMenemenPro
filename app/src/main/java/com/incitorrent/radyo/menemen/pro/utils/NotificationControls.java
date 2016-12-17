@@ -19,6 +19,8 @@ public class NotificationControls extends BroadcastReceiver {
         m = new Menemen(context);
         Intent i = new Intent(context, MUSIC_PLAY_SERVICE.class);
         String dataSource = null;
+        if(!m.isInternetAvailable())
+            Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_LONG).show();
         if (intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_PLAY)) {
             m.bool_kaydet(RadyoMenemenPro.IS_PODCAST, false);
             dataSource = m.getRadioDataSource();
