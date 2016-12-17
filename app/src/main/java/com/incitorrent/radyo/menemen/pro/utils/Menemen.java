@@ -822,7 +822,7 @@ public class Menemen {
                     if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("adaptive_quality",true)){
                         //Wi-Fi connected switch to highest channel
                         if(isConnectedWifi()){
-                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL) +  "/")){
+                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL))){
                                 PreferenceManager.getDefaultSharedPreferences(context)
                                         .edit()
                                         .putString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)
@@ -1061,5 +1061,10 @@ public class Menemen {
                 .addRemoteInput(remoteinput)
                 .setAllowGeneratedReplies(true)
                 .build();
+    }
+
+    public String getRadioDataSource(){
+        String selected_channel = oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
+        return "http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel;
     }
 }

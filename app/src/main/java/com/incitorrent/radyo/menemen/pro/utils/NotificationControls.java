@@ -3,7 +3,6 @@ package com.incitorrent.radyo.menemen.pro.utils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.incitorrent.radyo.menemen.pro.R;
@@ -22,8 +21,7 @@ public class NotificationControls extends BroadcastReceiver {
         String dataSource = null;
         if (intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_PLAY)) {
             m.bool_kaydet(RadyoMenemenPro.IS_PODCAST, false);
-            String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
-            dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
+            dataSource = m.getRadioDataSource();
             if(m.isPlaying()) dataSource = null;
         }else if(intent.getAction() != null && intent.getAction().equals(RadyoMenemenPro.Action.WIDGET_STOP)){
             dataSource = "stop";

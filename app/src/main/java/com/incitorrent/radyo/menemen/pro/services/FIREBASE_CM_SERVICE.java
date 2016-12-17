@@ -422,9 +422,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         //Play radio action
         if(!m.isPlaying()) {
             Intent playpause = new Intent(this, NotificationControls.class);
-            String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
-            String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
-            playpause.putExtra("dataSource",dataSource);
+            playpause.putExtra("dataSource",m.getRadioDataSource());
             PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
             notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_play_now),ppIntent);
         }

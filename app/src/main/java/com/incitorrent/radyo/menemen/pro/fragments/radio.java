@@ -520,11 +520,8 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 //Podcast çalmıyor
                 m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,false);
                 Intent  radyoservis = new Intent(context, MUSIC_PLAY_SERVICE.class);
-                //Ayarlardan seçilmiş kanalı bul
-                String selected_channel = m.oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
-                String dataSource = "http://" + m.oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel +  "/";
                 //Oluşturulan servis intentine datasource ekle
-                radyoservis.putExtra("dataSource",dataSource);
+                radyoservis.putExtra("dataSource",m.getRadioDataSource());
                 //data source ile servisi başlat
                 context.startService(radyoservis);
             }
