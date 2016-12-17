@@ -506,8 +506,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
             }
             if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
-            if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser && !m.isPlaying()) {
-                if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+            if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser) {
+                if (!m.isPlaying() && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                     SUM_Notification.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
                 if (vibrate)
                     SUM_Notification.setVibrate(new long[]{500, 500, 500});
