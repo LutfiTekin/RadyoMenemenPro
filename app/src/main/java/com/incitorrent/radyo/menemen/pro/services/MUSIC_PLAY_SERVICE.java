@@ -462,7 +462,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setContentTitle(contentTitle)
         .setContentText(Menemen.fromHtmlCompat(calan))
         .setColor(notificationcolor)
-        .setSmallIcon((isPodcast) ? R.drawable.podcast : R.mipmap.ic_equalizer)
+        .setSmallIcon((isPodcast) ? R.drawable.podcast : R.drawable.ic_radio_black_24dp)
         .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : artwork)
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), intent, PendingIntent.FLAG_UPDATE_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
