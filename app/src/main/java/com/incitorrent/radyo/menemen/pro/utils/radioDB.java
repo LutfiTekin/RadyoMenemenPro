@@ -43,7 +43,6 @@ public class radioDB extends SQLiteOpenHelper {
         onCreate(db);
     }
     public void addtoHistory(Songs s){
-        Log.v("ADD TO HISTORY",s.get_SONGNAME());
         ContentValues values = new ContentValues();
         values.put(_SONGID, s.get_SONGID());
         values.put(_SONGNAME, s.get_SONGNAME());
