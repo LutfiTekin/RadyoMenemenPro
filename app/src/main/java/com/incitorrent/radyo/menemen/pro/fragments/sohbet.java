@@ -104,6 +104,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     FloatingActionButton resimekle,scrollTop;
     private RecyclerView smileRV,sohbetRV;
     Menemen m;
+    Context context;
     List<Satbax_Smiley_Objects> satbaxSmileList;
     List<Sohbet_Objects> sohbetList;
     SatbaxSmileAdapter Smileadapter;
@@ -117,6 +118,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
     Toolbar toolbar;
     private Handler mHandler;
     private boolean isScrolling = false;
+    /**
+     * A boolean value for differenciating Topic messages by given id or General Chat
+     * Since they are both using same template and fragment
+     */
+    private boolean TOPIC_MODE = false;
     public sohbet() {
         // Required empty public constructor
     }
@@ -136,8 +142,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
             getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
             toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         }
-        m = new Menemen(getActivity().getApplicationContext());
-        sql = new chatDB(getActivity().getApplicationContext(),null,null,1);
+        context = getActivity().getApplicationContext();
+        m = new Menemen(context);
         resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
         mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
@@ -172,7 +178,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         satbaxSmileList = new ArrayList<>();
         smileRV.setHasFixedSize(true);
         LinearLayoutManager layoutManager
-                = new GridLayoutManager(getActivity().getApplicationContext(),(getResources().getBoolean(R.bool.landscape_mode))? 10 : 6);
+                = new GridLayoutManager(context,(getResources().getBoolean(R.bool.landscape_mode))? 10 : 6);
         smileRV.setLayoutManager(layoutManager);
         String smileys[] = {"gmansmile","YSB",":arap:","(gc)","SBH","lan!?","aygötüm","(S)",":cahil",":NS:",":lan!",":ypm:","(hl?)","*nopanic",":V:","demeya!?",":hmm"};
         String smileyids[] = {"smile_gman","ysb","smile_arap","smile_keci","smile_sbh","smile_lan","smile_ayg","smile_sd","smile_cahil","smile_ns","smile_lann","ypm","smile_harbimi","smile_panikyok","v","yds","eizen"};
@@ -183,7 +189,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         //SOHBET
         sohbetRV = (RecyclerView) sohbetView.findViewById(R.id.sohbetRV);
         sohbetList = new ArrayList<>();
-        linearLayoutManager = new WrapContentLinearLayoutManager(getActivity().getApplicationContext());
+        linearLayoutManager = new WrapContentLinearLayoutManager(context);
         sohbetRV.setLayoutManager(linearLayoutManager);
         sohbetRV.setHasFixedSize(true);
         SohbetAdapter = new SohbetAdapter(sohbetList);
@@ -203,19 +209,19 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     if(LAST_POSITION_COMP_VISIBLE > 100 ) {
                         scrollTop.show();
                         if(getActivity()!=null) {
-                            toolbar.setSubtitle(getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman, getActivity().getApplicationContext()));
+                            toolbar.setSubtitle(getTimeAgo(sohbetList.get(LAST_POSITION_COMP_VISIBLE).zaman, context));
                         }
                     }
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
                         if(getActivity()!=null && toolbar != null) {
-                            trackonlineusersDB sql = new trackonlineusersDB(getActivity().getApplicationContext(),null,null,1);
+                            trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
                             final int count = sql.getOnlineUserCount();
                             if(count > 0 && toolbar !=null) {
                                 if(count == 1)
                                     toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
                                 else
-                                    toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+                                    toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
                             }else toolbar.setSubtitle("");
                         }
                     }
@@ -295,7 +301,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                               if(count == 1)
                                   toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
                               else
-                                  toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
+                                  toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
 
                           }
                       }
@@ -321,7 +327,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
             filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
-            LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).registerReceiver((Chatreceiver),filter);
+            LocalBroadcastManager.getInstance(context).registerReceiver((Chatreceiver),filter);
         }
         super.onStart();
     }
@@ -341,7 +347,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                }
            }catch (Exception e){e.printStackTrace();}
        }
-        NotificationManagerCompat.from(getActivity().getApplicationContext()).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
+        NotificationManagerCompat.from(context).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
         m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
@@ -385,7 +391,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private void iAmOnline() {
         if(m.getSavedTime("online_push") > System.currentTimeMillis()) return;
         m.saveTime("online_push",(1000 * 60 * 2));
-        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.PUSH_ONLINE_SIGNAL,
                 new Response.Listener<String>() {
                     @Override
@@ -409,7 +415,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     @Override
     public void onStop() {
         m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
-        if(getActivity()!=null)  LocalBroadcastManager.getInstance(getActivity().getApplicationContext()).unregisterReceiver(Chatreceiver);
+        if(getActivity()!=null)  LocalBroadcastManager.getInstance(context).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
         super.onStop();
     }
@@ -509,7 +515,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void takePhoto() {
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             //Dosya okuma izni yok izin iste
             AskReadPerm();
             return;
@@ -522,7 +528,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void selectFromGallery() {
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&getActivity().getApplicationContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             //Dosya okuma izni yok izin iste
             AskReadPerm();
             return;
@@ -565,7 +571,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
         private void postToMenemen(final String msg) {
             if(!m.isInternetAvailable()) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
                 return;
             }
             mesaj.setText("");
@@ -574,7 +580,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 if(sohbetRV.getAdapter() != null)
                     sohbetRV.getAdapter().notifyDataSetChanged();
             }
-            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            RequestQueue queue = Volley.newRequestQueue(context);
             StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
                     new Response.Listener<String>() {
                         @Override
@@ -605,7 +611,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                     }
 
                                     if(m.isFirstTime(NOT_DELIVERED))
-                                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
                                 }
                                 //notify adapter
                                 if(sohbetRV.getAdapter() != null && sohbetList != null)
@@ -619,7 +625,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG,"Volley Error " + error.toString());
                     if(m.isFirstTime(NOT_DELIVERED))
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.toast_msg_not_sent, Toast.LENGTH_LONG).show();
                 }
             }){
                 @Override
@@ -785,9 +791,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(requestCode == RESULT_LOAD_IMAGE && data!=null){
             try {
                 Uri selectedimage = data.getData();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), selectedimage);
-                   new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedimage);
+                   new CapsYukle(bitmap,context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Toast.makeText(context, R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             }catch (Exception e){e.printStackTrace();}
         }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
             try {
@@ -795,8 +801,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Bitmap bitmap;
                 InputStream image_stream = getActivity().getContentResolver().openInputStream(saveduri);
                 bitmap= BitmapFactory.decodeStream(image_stream);
-                new CapsYukle(bitmap,getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                Toast.makeText(getActivity().getApplicationContext(), R.string.caps_uploading, Toast.LENGTH_SHORT).show();
+                new CapsYukle(bitmap,context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Toast.makeText(context, R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -860,7 +866,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void forceSyncMSGs() {
-        RequestQueue q = Volley.newRequestQueue(getActivity().getApplicationContext());
+        RequestQueue q = Volley.newRequestQueue(context);
         StringRequest r = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
                 new Response.Listener<String>() {
                     @Override
@@ -1033,7 +1039,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             //dbden sil
                             sql.deleteMSG(sohbetList.get(position).id);
                             //siteyi güncelle
-                            if(getActivity()!=null)  new deletePost(getActivity().getApplicationContext(),sohbetList.get(position).id).execute();
+                            if(getActivity()!=null)  new deletePost(context,sohbetList.get(position).id).execute();
                             sohbetList.remove(position);
                             if(sohbetRV!=null) sohbetRV.getAdapter().notifyItemRemoved(position); //Listeyi güncelle
                         } catch (Exception e) {
@@ -1053,7 +1059,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             sn.show();
         } else{
             sohbetRV.getAdapter().notifyItemChanged(position);
-        if(getActivity()!=null)    Toast.makeText(getActivity().getApplicationContext(), R.string.toast_only_your_message_deleted,Toast.LENGTH_SHORT).show();
+        if(getActivity()!=null)    Toast.makeText(context, R.string.toast_only_your_message_deleted,Toast.LENGTH_SHORT).show();
         }
 
         //Remove swiped item from list and notify the RecyclerView
