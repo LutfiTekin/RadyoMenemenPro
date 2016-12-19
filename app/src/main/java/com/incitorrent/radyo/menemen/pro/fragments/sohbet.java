@@ -71,6 +71,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
@@ -111,7 +112,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
     SohbetAdapter SohbetAdapter;
     BroadcastReceiver Chatreceiver;
     SwipeRefreshLayout swipeRV;
-    chatDB sql;
     LinearLayoutManager linearLayoutManager;
     CardView image_pick;
     ImageView take_photo,pick_gallery,cancel_image_pick;
@@ -216,7 +216,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
                         if(getActivity()!=null && toolbar != null) {
                             trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
-                            final int count = sql.getOnlineUserCount();
+                            final int count = sql.getOnlineUserCount(null);
                             if(count > 0 && toolbar !=null) {
                                 if(count == 1)
                                     toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
@@ -280,7 +280,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                               sohbetRV.getAdapter().notifyDataSetChanged();
                               m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                           } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
-                              sql.deleteMSG(id);
+                              if(TOPIC_MODE)
+                                  m.getTopicDB().deleteMSG(id);
+                              else
+                                  m.getChatDB().deleteMSG(id);
                               for (int i = 0; i < sohbetList.size(); i++) {
                                   if(id == null) break;
                                   if (sohbetList.get(i).id.equals(id)) {
@@ -340,7 +343,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
            new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else if(sohbetList != null && sohbetList.size() > 1){
            try {
-               if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(sql.lastMsgId())){
+               if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(
+                       (TOPIC_MODE) ? m.getTopicDB().lastMsgId() : m.getChatDB().lastMsgId())){
                    new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                }else{
                    updateListSilently();
@@ -867,7 +871,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     private void forceSyncMSGs() {
         RequestQueue q = Volley.newRequestQueue(context);
-        StringRequest r = new StringRequest(Request.Method.GET, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
+        StringRequest r = new StringRequest(Request.Method.POST,
+                (TOPIC_MODE) ? RadyoMenemenPro.MENEMEN_TOPICS_LIST : RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -878,15 +883,19 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                 JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
                                 JSONObject c;
                                 for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                                    String id,nick,mesaj,zaman;
+                                    String tid,id,nick,mesaj,zaman;
                                     JSONArray innerJarr = arr.getJSONArray(0);
                                     c = innerJarr.getJSONObject(i);
                                     id = c.getString("id");
                                     nick = c.getString("nick");
                                     mesaj = c.getString("post");
                                     zaman = c.getString("time");
+                                    tid = (TOPIC_MODE) ? c.getString("tid") : null;
                                     //db ye ekle
-                                    sql.addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+                                    if(TOPIC_MODE)
+                                        m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(id,tid,nick,mesaj,zaman));
+                                    else
+                                        m.getChatDB().addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
                                 }
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -901,7 +910,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         }
                     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
-                }, null);
+                }, null){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> dataToSend = m.getAuthMap();
+                if(TOPIC_MODE) dataToSend.put("tid","someid");//TODO Topic id girilecek
+                return dataToSend;
+            }
+        };
         q.add(r);
     }
 
@@ -924,7 +940,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         protected Void doInBackground(Void... params) {
             //Getfrom db
             try {
-                Cursor cursor = sql.getHistory(limit);
+                Cursor cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit) : m.getChatDB().getHistory(limit);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
@@ -937,7 +953,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     cursor.moveToNext();
                 }
                 cursor.close();
-                sql.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -968,7 +983,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Cursor cursor = sql.getHistoryOnScroll(lastid);
+                Cursor cursor =
+                        (TOPIC_MODE) ? m.getTopicDB().getTopicMessagesOnScroll(lastid) : m.getChatDB().getHistoryOnScroll(lastid);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
@@ -989,7 +1005,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     cursor.moveToNext();
                 }
                 cursor.close();
-                sql.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1037,7 +1052,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE || event == Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE) {
                         try {
                             //dbden sil
-                            sql.deleteMSG(sohbetList.get(position).id);
+                            if(TOPIC_MODE)
+                                m.getTopicDB().deleteMSG(sohbetList.get(position).id);
+                            else
+                                m.getChatDB().deleteMSG(sohbetList.get(position).id);
                             //siteyi güncelle
                             if(getActivity()!=null)  new deletePost(context,sohbetList.get(position).id).execute();
                             sohbetList.remove(position);

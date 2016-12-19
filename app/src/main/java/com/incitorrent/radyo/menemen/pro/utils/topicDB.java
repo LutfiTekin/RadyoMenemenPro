@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class topicDB extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "radyomenemenproTopic.db";
-    public static final String TABLE_NAME = "topics";
+    public static final String TOPICS_TABLE = "topics";
     public static final String _TOPICID = "tid";
     public static final String _TOPICSTR = "topicstr";
     public static final String _CREATOR = "creator";
@@ -35,7 +35,7 @@ public class topicDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE "+ TABLE_NAME + "("+
+        String query = "CREATE TABLE "+ TOPICS_TABLE + "("+
                 _TOPICID + " INTEGER PRIMARY KEY," +
                 _TOPICSTR + " TEXT, " +
                 _CREATOR + " TEXT, " +
@@ -57,7 +57,7 @@ public class topicDB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TOPICS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
         onCreate(db);
     }
@@ -73,7 +73,7 @@ public class topicDB extends SQLiteOpenHelper {
         values.put(_IMAGEURL, t.get_IMAGEURL());
         SQLiteDatabase db = getWritableDatabase();
         try {
-            db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            db.insertWithOnConflict(TOPICS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
@@ -81,6 +81,10 @@ public class topicDB extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Add message to MESSAGES_TABLE
+     * @param tm
+     */
     public void addTopicMsg(TOPIC_MSGS tm){
         ContentValues values = new ContentValues();
         values.put(_TOPIC_MSG_ID, tm.get_TOPIC_MSG_ID());
@@ -98,27 +102,83 @@ public class topicDB extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+    /**
+     * List all the Topics stored on the phone
+     * @return
+     */
     public Cursor listTopıcs(){
-        return getReadableDatabase().query(TABLE_NAME,null,null,null,null,null, _TOPICID +" DESC", null);
+        return getReadableDatabase().query(TOPICS_TABLE,null,null,null,null,null, _TOPICID +" DESC", null);
     }
 
+    /**
+     * List topic messages by given limit ordering desc
+     * @param limit
+     * @return
+     */
+    public Cursor getHistory(int limit){
+        SQLiteDatabase db = getReadableDatabase();
+        if(limit < 20) limit = 20;
+        return db.query(MESSAGES_TABLE,null,null,null,null,null,_TOPIC_MSG_ID + " DESC", String.valueOf(limit));
+    }
 
     public boolean isHistoryExist(String capsurl,String nick){
         SQLiteDatabase db = getReadableDatabase();
-        long rownum = DatabaseUtils.queryNumEntries(db,TABLE_NAME, _TOPICSTR + "='"+ capsurl + "' AND " + _CREATOR + "='" + nick + "'" );
+        long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TOPICSTR + "='"+ capsurl + "' AND " + _CREATOR + "='" + nick + "'" );
         return rownum > 0;
     }
 
+    /**
+     * Get topic messages ordered by given reference message id
+     * @param msgid
+     * @return
+     */
+    public Cursor getTopicMessagesById(String msgid){
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TOPICS_TABLE,null,_TOPIC_MSG_ID + ">=\'" + msgid + "\'",null,null,null,_TOPIC_MSG_ID +" DESC");
+    }
 
+    /**
+     * Get topic messages on recyclerviews on scroll event
+     * @param msgid
+     * @return
+     */
+    public Cursor getTopicMessagesOnScroll(String msgid){
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TOPICS_TABLE,null,_TOPIC_MSG_ID  + "<\'" + msgid + "\'",null,null,null,_TOPIC_MSG_ID +" DESC","40");
+    }
 
+    /**
+     * Delete a message by given message id
+     * @param msgid
+     */
     public void deleteMSG(String msgid){
         try {
             SQLiteDatabase db = getWritableDatabase();
-            db.delete(TABLE_NAME, _TOPICID + "=\'"+ msgid + "\'",null);
+            db.delete(MESSAGES_TABLE, _TOPIC_MSG_ID + "=\'"+ msgid + "\'",null);
             db.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get Last message id from messages table
+     * @return
+     */
+    public String lastMsgId(){
+        String lastid = "0";
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(MESSAGES_TABLE, new String[]{_TOPIC_MSG_ID},null,null,null,null,_TOPIC_MSG_ID + " DESC","1");
+            c.moveToFirst();
+            lastid = c.getString(c.getColumnIndex(_TOPIC_MSG_ID));
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return lastid;
     }
 
     public static class TOPIC_MSGS{

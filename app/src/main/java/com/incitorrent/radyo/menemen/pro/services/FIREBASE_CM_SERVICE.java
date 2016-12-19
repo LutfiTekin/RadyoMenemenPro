@@ -234,9 +234,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     private void onlineUser(String nick) {
         long now = System.currentTimeMillis();
-        sql_online.addToHistory(nick, now);
+        sql_online.addToHistory(nick, null, now);
         Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
-        onlineusers.putExtra("count", sql_online.getOnlineUserCount());
+        onlineusers.putExtra("count", sql_online.getOnlineUserCount(null));
         broadcastManager.sendBroadcast(onlineusers);
     }
 

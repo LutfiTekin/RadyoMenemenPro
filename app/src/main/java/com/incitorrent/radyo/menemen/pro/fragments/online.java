@@ -110,7 +110,7 @@ public class online extends Fragment {
                 textview.setText(res);
             }
             try {
-                final int count = sql.getOnlineUserCount();
+                final int count = sql.getOnlineUserCount(null);
                 if(toolbar!=null) {
                     if (count > 0) {
                         if (count == 1) {
