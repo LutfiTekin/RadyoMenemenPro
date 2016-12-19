@@ -34,7 +34,8 @@
               android:layout_height="wrap_content"
               android:maxLines="1"
               android:textColorHint="@color/textColorHint"
-              android:hint="@string/hint_username" />
+              android:hint="@string/hint_username"
+              android:inputType="textVisiblePassword"/>
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout
