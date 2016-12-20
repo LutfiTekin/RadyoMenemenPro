@@ -43,6 +43,7 @@ import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.XMLParser;
+import com.incitorrent.radyo.menemen.pro.utils.podcast_objs;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,7 +51,6 @@ import org.w3c.dom.NodeList;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -60,7 +60,7 @@ public class podcast extends Fragment {
     static final String KEY_LINK = "link";
     static final String KEY_DESC = "description";
     static final String KEY_DURATION = "itunes:duration";
-    List<podcast_objs> RList;
+    ArrayList<podcast_objs> RList;
     PodcastAdapter adapter;
     RecyclerView PR;
     Context context;
@@ -68,7 +68,6 @@ public class podcast extends Fragment {
     int switchToOldPodcast = 1;
     RequestQueue queue;
     ProgressBar progressBar;
-
     public podcast() {
         // Required empty public constructor
     }
@@ -221,7 +220,6 @@ public class podcast extends Fragment {
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            Log.d("PODCAST","loadXML");
             try {
                 XMLParser parser = new XMLParser();
                 if(xml==null) return false;
@@ -230,6 +228,8 @@ public class podcast extends Fragment {
                     // looping through all item nodes <item>
                     int maxlength = nl.getLength();
                     RList = new ArrayList<>();
+                    ArrayList<podcast_objs> Podcast = Menemen.PodcastList;
+                    Podcast.clear();
                     for (int i = 0; i < maxlength; i++) {
                         Element e = (Element) nl.item(i);
                         try {
@@ -241,7 +241,8 @@ public class podcast extends Fragment {
                             String desc = Menemen.decodefix(parser.getValue(e, KEY_DESC));
                             String duration = parser.getValue(e, KEY_DURATION);
                             RList.add(i, new podcast_objs(title, desc, duration, real_mp3_link));
-                        } catch (NullPointerException e1) {
+                            Podcast.add(i,new podcast_objs(title, desc, duration, real_mp3_link));
+                        } catch (Exception e1) {
                             e1.printStackTrace();
                             return false;
                         }
@@ -274,7 +275,7 @@ public class podcast extends Fragment {
 
     public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PersonViewHolder> {
         Context context;
-        List<podcast_objs> RList;
+        ArrayList<podcast_objs> RList;
         class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
             TextView title, duration, descr;
             CardView cv;
@@ -312,6 +313,11 @@ public class podcast extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("title",RList.get(getAdapterPosition()).title);
                     bundle.putString("descr",RList.get(getAdapterPosition()).description);
+                    ArrayList<String> podcasts = new ArrayList<>();
+                    for(int i=0; i<RList.size(); i++){
+                        podcasts.add(i,RList.get(i).url);
+                    }
+                    bundle.putStringArrayList("podcast_list",podcasts);
                     m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
                     podcast_now_playing.setArguments(bundle);
 
@@ -337,6 +343,7 @@ public class podcast extends Fragment {
                 }
             }
 
+
             @Override
             public boolean onLongClick(View v) {
                 m.downloadMenemenFile(RList.get(getAdapterPosition()).url, RList.get(getAdapterPosition()).title, R.drawable.podcast, "/RadyoMemenen/podcast", ".mp3", getActivity());
@@ -345,7 +352,7 @@ public class podcast extends Fragment {
 
         }
 
-        PodcastAdapter(List<podcast_objs> RList) {
+        PodcastAdapter(ArrayList<podcast_objs> RList) {
             this.RList = RList;
         }
 
@@ -379,15 +386,7 @@ public class podcast extends Fragment {
         }
     }
 
-    public class podcast_objs {
-        String title,description,duration,url;
-        podcast_objs(String title, String description, String duration, String url) {
-            this.title = title;
-            this.description = description;
-            this.duration = duration;
-            this.url = url;
-        }
-    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public class DetailsTransition extends TransitionSet {
         DetailsTransition() {

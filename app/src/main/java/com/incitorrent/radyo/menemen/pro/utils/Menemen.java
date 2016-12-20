@@ -95,6 +95,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1067,4 +1068,11 @@ public class Menemen {
         String selected_channel = oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
         return "http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel;
     }
+
+    public static ArrayList<podcast_objs> PodcastList = new ArrayList<>();
+
+
+
+
+
 }

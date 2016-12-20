@@ -48,7 +48,9 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.TriggerSongChange;
+import com.incitorrent.radyo.menemen.pro.utils.podcast_objs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -143,7 +145,11 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
             @Override
             public void onSkipToNext() {
-                sendBroadcast(new Intent(MUSIC_PLAY_SERVICE.this, TriggerSongChange.class));
+                if(isPodcast) {
+                   skipToNextPodcast();
+                }
+                else
+                    sendBroadcast(new Intent(MUSIC_PLAY_SERVICE.this, TriggerSongChange.class));
                 super.onSkipToNext();
             }
 
@@ -214,6 +220,23 @@ public class MUSIC_PLAY_SERVICE extends Service {
         MusicPlayServiceReceiver();
         registerReceiver();
         super.onCreate();
+    }
+
+    private void skipToNextPodcast() {
+        ArrayList<podcast_objs> Podcast = Menemen.PodcastList;
+        Log.v(TAG,"SKIP" + Podcast.size());
+        if (Podcast.size()>1)
+            for (int i = 0; i < Podcast.size(); i++) {
+                if(i==Podcast.size()-1) break;
+                if(Podcast.get(i).url.equals(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL))){
+                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,Podcast.get(i+1).url);
+                    m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,Podcast.get(i+1).title);
+                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_DESCR,Podcast.get(i+1).description);
+                    exoPlayer.stop();
+                    play(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL));
+                    break;
+                }
+            }
     }
 
     private void updateMediaInfoIfNecessary() {
@@ -540,18 +563,22 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 if(intent!=null) {
                     String action = intent.getExtras().getString("action");
                     if(action == null) return;
-                    if (action.equals("seek")){
-                        int msec = intent.getExtras().getInt("seek");
-                        try {
-                            exoPlayer.seekTo(msec);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }else if(action.equals("update")){
-                        updateMediaInfoIfNecessary();
-                        m.showNPToast(null,null);
-                    }else if(action.equals("requeststat")){
-                        broadcastPodcastDuration();
+                    switch (action) {
+                        case "seek":
+                            int msec = intent.getExtras().getInt("seek");
+                            try {
+                                exoPlayer.seekTo(msec);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case "update":
+                            updateMediaInfoIfNecessary();
+                            m.showNPToast(null, null);
+                            break;
+                        case "requeststat":
+                            broadcastPodcastDuration();
+                            break;
                     }
                 }
             }

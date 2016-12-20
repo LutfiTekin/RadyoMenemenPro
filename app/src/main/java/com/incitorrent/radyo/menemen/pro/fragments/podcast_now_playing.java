@@ -28,6 +28,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     Menemen m;
     long timeWhenStopped = 0;
     LocalBroadcastManager localBroadcastManager;
+    ArrayList<String> podcasts;
     public podcast_now_playing() {
         // Required empty public constructor
     }
@@ -82,9 +84,15 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
             descr.setText(podcast_descr);
             long podcastDur = bundle.getLong("duration");
             long current = bundle.getLong("current");
+            try {
+                podcasts = bundle.getStringArrayList("podcast_list");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if(podcastDur != 0) {
                 setCurrentandDuration(podcastDur, current, 0);
 //                startTimer();
+
             }
         }
 
@@ -110,6 +118,8 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
                             if(m.isPlaying())
                                 placeholder.setImageResource(android.R.drawable.ic_media_pause);
                             else chronometer.stop();
+                            title.setText(m.oku(RadyoMenemenPro.PLAYING_PODCAST));
+                            descr.setText(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_DESCR));
                             break;
                         case MUSIC_PLAY_SERVICE.PODCAST_SEEKBAR_BUFFERING_UPDATE:
                             int buffer = intent.getExtras().getInt("buffer") / 1000;
@@ -183,6 +193,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
     void requestPodcastDuration() {
         Intent requeststat = new Intent(MUSIC_PLAY_SERVICE.PODCAST_SEEK_FILTER);
         requeststat.putExtra("action","requeststat");
+        requeststat.putExtra("podcast_list",podcasts);
         localBroadcastManager =  LocalBroadcastManager.getInstance(getActivity().getApplicationContext());
         localBroadcastManager.sendBroadcast(requeststat);
     }
