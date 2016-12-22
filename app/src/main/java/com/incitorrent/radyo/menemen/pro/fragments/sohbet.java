@@ -123,6 +123,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
      * Since they are both using same template and fragment
      */
     private boolean TOPIC_MODE = false;
+    private String TOPIC_ID = "0";
     public sohbet() {
         // Required empty public constructor
     }
@@ -337,7 +338,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
-        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
+        if(TOPIC_MODE)
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+TOPIC_ID,true);
+        else
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
        if((sohbetList == null || sohbetList.size() < 1))
            new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -418,7 +422,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onStop() {
-        m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
+        if(TOPIC_MODE)
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+TOPIC_ID,false);
+        else
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(context).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
         super.onStop();
@@ -914,7 +921,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> dataToSend = m.getAuthMap();
-                if(TOPIC_MODE) dataToSend.put("tid","someid");//TODO Topic id girilecek
+                if(TOPIC_MODE) dataToSend.put("tid",TOPIC_ID);
                 return dataToSend;
             }
         };
@@ -940,7 +947,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         protected Void doInBackground(Void... params) {
             //Getfrom db
             try {
-                Cursor cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit) : m.getChatDB().getHistory(limit);
+                Cursor cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit,TOPIC_ID) : m.getChatDB().getHistory(limit);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
@@ -984,7 +991,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         protected Void doInBackground(Void... voids) {
             try {
                 Cursor cursor =
-                        (TOPIC_MODE) ? m.getTopicDB().getTopicMessagesOnScroll(lastid) : m.getChatDB().getHistoryOnScroll(lastid);
+                        (TOPIC_MODE) ? m.getTopicDB().getTopicMessagesOnScroll(lastid, TOPIC_ID) : m.getChatDB().getHistoryOnScroll(lastid);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
