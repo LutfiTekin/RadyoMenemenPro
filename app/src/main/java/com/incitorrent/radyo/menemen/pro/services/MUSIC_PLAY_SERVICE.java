@@ -145,12 +145,16 @@ public class MUSIC_PLAY_SERVICE extends Service {
 
             @Override
             public void onSkipToNext() {
-                if(isPodcast) {
-                   skipToNextPodcast();
-                }
+                if(isPodcast) skipToNextPodcast(true);
                 else
                     sendBroadcast(new Intent(MUSIC_PLAY_SERVICE.this, TriggerSongChange.class));
                 super.onSkipToNext();
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                if(isPodcast) skipToNextPodcast(false);
+                super.onSkipToPrevious();
             }
 
             @Override
@@ -175,7 +179,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         });
         mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         stateBuilder = new PlaybackStateCompat.Builder();
-        stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_FAST_FORWARD | PlaybackStateCompat.ACTION_REWIND);
+        stateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS | PlaybackStateCompat.ACTION_FAST_FORWARD | PlaybackStateCompat.ACTION_REWIND);
         //Exoplayerlistener
         exolistener = new ExoPlayer.EventListener() {
             @Override
@@ -222,20 +226,24 @@ public class MUSIC_PLAY_SERVICE extends Service {
         super.onCreate();
     }
 
-    private void skipToNextPodcast() {
+    private void skipToNextPodcast(boolean next) {
         ArrayList<podcast_objs> Podcast = Menemen.PodcastList;
-        Log.v(TAG,"SKIP" + Podcast.size());
         if (Podcast.size()>1)
-            for (int i = 0; i < Podcast.size(); i++) {
-                if(i==Podcast.size()-1) break;
-                if(Podcast.get(i).url.equals(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL))){
-                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,Podcast.get(i+1).url);
-                    m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,Podcast.get(i+1).title);
-                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_DESCR,Podcast.get(i+1).description);
-                    exoPlayer.stop();
-                    play(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL));
-                    break;
+            try {
+                for (int i = 0; i < Podcast.size(); i++) {
+                    if(i==Podcast.size()-1) break;
+                    if(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL).equals(Podcast.get(0).url) && !next) break;
+                    if(Podcast.get(i).url.equals(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL))){
+                        m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,Podcast.get((next) ? i+1 : i-1).url);
+                        m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,Podcast.get((next) ? i+1 : i-1).title);
+                        m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_DESCR,Podcast.get(i+1).description);
+                        exoPlayer.stop();
+                        play(m.oku(RadyoMenemenPro.broadcastinfo.PODCAST_URL));
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
     }
 
