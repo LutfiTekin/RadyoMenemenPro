@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.ContextCompat;
@@ -41,9 +42,11 @@ import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -87,6 +90,7 @@ import com.incitorrent.radyo.menemen.pro.show_image;
 import com.incitorrent.radyo.menemen.pro.show_image_comments;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -1071,7 +1075,29 @@ public class Menemen {
 
     public static ArrayList<podcast_objs> PodcastList = new ArrayList<>();
 
-
+    /**
+     * Setting a long text on toolbar and make it marquee
+     * @param toolbar
+     * @param text
+     */
+    public void setToolbarSubtitleMarquee(@Nullable Toolbar toolbar, String text){
+        if(toolbar == null) return;
+        if(text == null || text.length()<1) return;
+        try{
+            toolbar.setSubtitle(".");
+            Field field = Toolbar.class.getDeclaredField("mSubtitleTextView");
+            field.setAccessible(true);
+            TextView subtitleTextView = (TextView)field.get(toolbar);
+            subtitleTextView.setSingleLine(true);
+            subtitleTextView.setFocusable(true);
+            subtitleTextView.setFocusableInTouchMode(true);
+            subtitleTextView.requestFocus();
+            subtitleTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            subtitleTextView.setText(text);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
