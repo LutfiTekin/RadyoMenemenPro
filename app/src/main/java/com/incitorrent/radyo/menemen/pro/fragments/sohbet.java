@@ -306,11 +306,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                       if (intent.getAction().equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)) {
                           int count = intent.getExtras().getInt("count", 0);
                           if (count > 0 && toolbar != null) {
-                              if(count == 1)
-                                  toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
-                              else
-                                  toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
-
+                              m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
                           }
                       }
                   }
