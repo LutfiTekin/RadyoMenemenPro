@@ -245,6 +245,7 @@ public class topics extends Fragment {
                     boolean isChecked = ((ToggleButton) view).isChecked();
                     SELECTED_TOPIC_ID = topicList.get(getAdapterPosition()).id;
                     queue.add((isChecked) ? join : leave);
+                    queue.start();
                 }
             }
         }
@@ -306,13 +307,13 @@ public class topics extends Fragment {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("VOLLRESP",response);
+                    Log.d("JOIN",response);
                 }
             },
             new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            Log.d("JOIN","ERR " + error.toString());
         }
     }){
         @Override
@@ -323,21 +324,43 @@ public class topics extends Fragment {
         }
 
         @Override
+        public Priority getPriority() {
+            return Priority.IMMEDIATE;
+        }
+
+        @Override
         public RetryPolicy getRetryPolicy() {
-            return m.menemenRetryPolicy();
+            return new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 5;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            };
         }
     };
+
+
     StringRequest leave = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("VOLLRESP",response);
+                    Log.d("LEAVE",response);
                 }
             },
             new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            Log.d("LEAVE","ERR " + error.toString());
         }
     }){
         @Override
@@ -348,8 +371,28 @@ public class topics extends Fragment {
         }
 
         @Override
+        public Priority getPriority() {
+            return Priority.IMMEDIATE;
+        }
+
+        @Override
         public RetryPolicy getRetryPolicy() {
-            return m.menemenRetryPolicy();
+            return new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 5;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            };
         }
     };
 }

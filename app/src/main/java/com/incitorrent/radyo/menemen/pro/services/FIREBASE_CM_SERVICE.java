@@ -65,6 +65,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String ADD = "add";
     public static final String DELETE = "delete";
     public static final String JOIN = "join";
+    public static final String LEAVE = "leave";
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -168,7 +169,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     case CATEGORY_TOPICS:
                         if(action==null) break;
                         if(action.equals(JOIN))
-                            userjoined(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                            userjoinedtotopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                        else if(action.equals(LEAVE))
+                            userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
                         break;
                 }
 
@@ -177,7 +180,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         super.onMessageReceived(remoteMessage);
     }
 
-    private void userjoined(String user, String topicid) {
+    private void userlefttopic(String user, String topicid) {
+        //TODO Build notification user left from topic
+    }
+
+    private void userjoinedtotopic(String user, String topicid) {
         //TODO Build notification new user joined to topic
     }
 
