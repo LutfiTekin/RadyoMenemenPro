@@ -1114,7 +1114,11 @@ ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
     }
 
     void stopRepeatingTask() {
-        mHandler.removeCallbacks(mStatusChecker);
+        try {
+            mHandler.removeCallbacks(mStatusChecker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
