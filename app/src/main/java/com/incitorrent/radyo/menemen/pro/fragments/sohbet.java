@@ -279,6 +279,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(),RadyoMenemenPro.CHAT_DATE_FORMAT)));
                               }
                               sohbetRV.getAdapter().notifyDataSetChanged();
+                              //Scroll to top if new message added
+                              if(((LinearLayoutManager) sohbetRV.getLayoutManager()).findLastCompletelyVisibleItemPosition()<30)
+                                  sohbetRV.smoothScrollToPosition(0);
+                              else sohbetRV.scrollToPosition(0);
                               m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                           } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                               if(TOPIC_MODE)
