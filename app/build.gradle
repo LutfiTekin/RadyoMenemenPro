@@ -20,8 +20,8 @@ android {
         applicationId "com.incitorrent.radyo.menemen.pro"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 140
-        versionName '1.1.40'
+        versionCode 141
+        versionName '1.1.41'
         multiDexEnabled true
         versionNameSuffix '-stable-build.' + getDate()
     }
@@ -30,7 +30,6 @@ android {
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
     productFlavors {
-
     }
 }
 
