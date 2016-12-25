@@ -69,7 +69,10 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sohbetRV" />
+        android:id="@+id/sohbetRV"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        />
 </android.support.v4.widget.SwipeRefreshLayout>
   </LinearLayout>
 
