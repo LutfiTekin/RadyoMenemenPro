@@ -115,7 +115,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         switch (topic) {
             case RadyoMenemenPro.FCMTopics.NEWS:
                 //OLAN BITEN
-                if (notify) updateNews(remoteMessage);
+                updateNews(remoteMessage);
                 break;
             case RadyoMenemenPro.FCMTopics.ONAIR:
                 //Onair bildirimi
@@ -395,7 +395,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 .setContentText(m.getSpannedTextWithSmileys(content))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(m.getSpannedTextWithSmileys(content)))
                 .setSubText(getString(R.string.news));
-            if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+            if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
             if (vibrate)
                 builder.setVibrate(new long[]{500, 1000, 500, 1000});
