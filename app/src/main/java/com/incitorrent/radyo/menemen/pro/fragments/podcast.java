@@ -262,8 +262,8 @@ public class podcast extends Fragment {
             super.onPostExecute(result);
             if(!fromcache)
                 hideProgressBar();
-            if(!result) {
-                Toast.makeText(getActivity(), getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
+            if(!result && isAdded()) {
+                Toast.makeText(context, getString(R.string.error_occured), Toast.LENGTH_SHORT).show();
                 if(fromcache) loadFeed(true);
                 return;
             }
