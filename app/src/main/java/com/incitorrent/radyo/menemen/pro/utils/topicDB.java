@@ -181,6 +181,28 @@ public class topicDB extends SQLiteOpenHelper {
         return lastid;
     }
 
+    /**
+     * Get TopicStr from given topic id
+     * @param topicid
+     * @return
+     * @throws NullPointerException
+     */
+    public String getTopicSTR(String topicid) throws NullPointerException{
+        String topicstr = null;
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(TOPICS_TABLE, new String[]{_TOPICSTR},_TOPICID + " ='"+topicid + "'",null,null,null,null,"1");
+            c.moveToFirst();
+            topicstr = c.getString(c.getColumnIndex(_TOPICSTR));
+            c.close();
+            db.close();
+        } catch (Exception e) {
+            db.close();
+            e.printStackTrace();
+        }
+        return topicstr;
+    }
+
     public static class TOPIC_MSGS{
         public String _TOPIC_MSG_ID,_TOPIC_ID,_NICK,_POST,_TIME;
 

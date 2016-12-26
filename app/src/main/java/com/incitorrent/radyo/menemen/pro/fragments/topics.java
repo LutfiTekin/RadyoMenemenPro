@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
@@ -52,6 +53,8 @@ public class topics extends Fragment {
     List<topic_objs> topicList;
     RequestQueue queue;
     String SELECTED_TOPIC_ID = "0";
+    private final static String RESPONSE_AUTH_FAILED = "1";
+    private final static String RESPONSE_SUCCESS = "2";
     public topics() {
         // Required empty public constructor
     }
@@ -307,7 +310,21 @@ public class topics extends Fragment {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("JOIN",response);
+                    switch (response) {
+                        case RESPONSE_AUTH_FAILED:
+                            if(context!=null)
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                            break;
+                        case RESPONSE_SUCCESS:
+                            try {
+                                String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
+                                if(topicstr!=null)
+                                    FirebaseMessaging.getInstance().subscribeToTopic(topicstr);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                    }
                 }
             },
             new Response.ErrorListener() {
@@ -330,22 +347,7 @@ public class topics extends Fragment {
 
         @Override
         public RetryPolicy getRetryPolicy() {
-            return new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 5000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 5;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-                    error.printStackTrace();
-                }
-            };
+            return retrypolicy;
         }
     };
 
@@ -354,7 +356,21 @@ public class topics extends Fragment {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("LEAVE",response);
+                    switch (response) {
+                        case RESPONSE_AUTH_FAILED:
+                            if(context!=null)
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                            break;
+                        case RESPONSE_SUCCESS:
+                            try {
+                                String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
+                               if(topicstr!=null)
+                                   FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                    }
                 }
             },
             new Response.ErrorListener() {
@@ -377,22 +393,24 @@ public class topics extends Fragment {
 
         @Override
         public RetryPolicy getRetryPolicy() {
-            return new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 5000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 5;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-                    error.printStackTrace();
-                }
-            };
+            return retrypolicy;
         }
     };
+private RetryPolicy retrypolicy = new RetryPolicy() {
+    @Override
+    public int getCurrentTimeout() {
+        return 5000;
+    }
+
+    @Override
+    public int getCurrentRetryCount() {
+        return 5;
+    }
+
+    @Override
+    public void retry(VolleyError error) throws VolleyError {
+        error.printStackTrace();
+    }
+};
+
 }
