@@ -71,7 +71,6 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
-import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
@@ -128,8 +127,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +146,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
         mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
         mesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -885,9 +881,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     private void forceSyncMSGs() {
+        if(TOPIC_MODE) {
+            //In topic mode messages aren't stored
+            // in the server like general chat messages
+            new initsohbet(20, 0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return;
+        }
         RequestQueue q = Volley.newRequestQueue(context);
-        StringRequest r = new StringRequest(Request.Method.POST,
-                (TOPIC_MODE) ? RadyoMenemenPro.MENEMEN_TOPICS_LIST : RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
+        StringRequest r = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJLAR + "&sonmsg=1",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String response) {
@@ -905,12 +906,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                     nick = c.getString("nick");
                                     mesaj = c.getString("post");
                                     zaman = c.getString("time");
-                                    tid = (TOPIC_MODE) ? c.getString("tid") : null;
                                     //db ye ekle
-                                    if(TOPIC_MODE)
-                                        m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(id,tid,nick,mesaj,zaman));
-                                    else
-                                        m.getChatDB().addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
+                                    m.getChatDB().addtoHistory(new chatDB.CHAT(id,nick,mesaj,zaman));
                                 }
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -928,9 +925,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 }, null){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> dataToSend = m.getAuthMap();
-                if(TOPIC_MODE) dataToSend.put("tid",TOPIC_ID);
-                return dataToSend;
+                return m.getAuthMap();
             }
         };
         q.add(r);
