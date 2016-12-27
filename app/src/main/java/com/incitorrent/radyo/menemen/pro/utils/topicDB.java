@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
@@ -201,6 +202,30 @@ public class topicDB extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return topicstr;
+    }
+
+    /**
+     * Join the topic with the given id
+     * @param topicid
+     */
+    public void join(String topicid){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(_JOINED,"1");
+        int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + "'" + topicid + "' ",null);
+        Log.d(TOPICS_TABLE, rows + " affected");
+    }
+
+    /**
+     * Check if current user is
+     * joined to topic with the given id
+     * @param topicid
+     * @return
+     */
+    public boolean isJoined(String topicid){
+        SQLiteDatabase db = getReadableDatabase();
+        long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TOPICID + "='"+ topicid + "' AND " + _JOINED + "='1'" );
+        return rownum > 0;
     }
 
     public static class TOPIC_MSGS{

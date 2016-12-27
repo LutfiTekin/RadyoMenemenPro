@@ -240,13 +240,16 @@ public class topics extends Fragment {
 
             @Override
             public void onClick(View view) {
+                SELECTED_TOPIC_ID = topicList.get(getAdapterPosition()).id;
                 if(view == image || view == title){
-                    //TODO eğer grupta değilse katıl butonunu göster, gruptaysa gruba git
-                if(!topicList.get(getAdapterPosition()).creator.equals(m.getUsername()))
-                    toggle.setVisibility(View.VISIBLE);
+                    if(m.getTopicDB().isJoined(SELECTED_TOPIC_ID))
+                        //User is in the topic go to selected topic
+                        openTopic();
+                    else if(!topicList.get(getAdapterPosition()).creator.equals(m.getUsername()))
+                        //User is not joined the group show the join/leave toggle
+                        toggle.setVisibility(View.VISIBLE);
                 }else if(view == toggle){
                     boolean isChecked = ((ToggleButton) view).isChecked();
-                    SELECTED_TOPIC_ID = topicList.get(getAdapterPosition()).id;
                     queue.add((isChecked) ? join : leave);
                     queue.start();
                 }
@@ -320,6 +323,10 @@ public class topics extends Fragment {
                                 String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
                                 if(topicstr!=null)
                                     FirebaseMessaging.getInstance().subscribeToTopic(topicstr);
+                                //Join Topic
+                                m.getTopicDB().join(SELECTED_TOPIC_ID);
+                                //Go to topic
+                                openTopic();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -350,6 +357,17 @@ public class topics extends Fragment {
             return retrypolicy;
         }
     };
+
+    private void openTopic() {
+        Fragment topic = new sohbet();
+        Bundle bundle = new Bundle();
+        bundle.putString("tid", SELECTED_TOPIC_ID);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.Fcontent,topic)
+                .addToBackStack("topic"+SELECTED_TOPIC_ID)
+                .commit();
+    }
 
 
     StringRequest leave = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
