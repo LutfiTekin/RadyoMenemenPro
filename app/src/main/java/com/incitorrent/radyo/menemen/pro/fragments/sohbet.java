@@ -141,12 +141,12 @@ public class sohbet extends Fragment implements View.OnClickListener{
         m = new Menemen(context);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            TOPIC_ID = bundle.getString("tid");
+            TOPIC_ID = bundle.getString(topicDB._TOPICID);
             if(TOPIC_ID != null)
                 //Get Topic id and switch the topic mode on
                 TOPIC_MODE = true;
             else
-            //Getting topic id is failed set TOPIC_ID to initial value
+                //Getting topic id is failed set TOPIC_ID to initial value
                 TOPIC_ID = "0";
         }
         if(getActivity()!=null) {

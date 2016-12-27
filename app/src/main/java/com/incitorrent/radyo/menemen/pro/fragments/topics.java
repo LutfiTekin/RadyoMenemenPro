@@ -2,6 +2,7 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -361,7 +362,9 @@ public class topics extends Fragment {
     private void openTopic() {
         Fragment topic = new sohbet();
         Bundle bundle = new Bundle();
-        bundle.putString("tid", SELECTED_TOPIC_ID);
+        bundle.putString(topicDB._TOPICID, SELECTED_TOPIC_ID);
+        topic.setArguments(bundle);
+        getFragmentManager().popBackStack("sohbet", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.Fcontent,topic)
