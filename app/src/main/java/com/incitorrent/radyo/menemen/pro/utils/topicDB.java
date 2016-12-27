@@ -228,6 +228,27 @@ public class topicDB extends SQLiteOpenHelper {
         return rownum > 0;
     }
 
+    /**
+     * Get info from topic with given topic id and cloumn
+     * @param topicid
+     * @param info
+     * @return
+     */
+    public String getTopicInfo(String topicid,String info){
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(TOPICS_TABLE,new String[]{info}, _TOPICID + "='" + topicid + "'",null,null,null,null,"1");
+            c.moveToFirst();
+            String s = c.getString(c.getColumnIndex(info));
+            c.close();
+            db.close();
+            return s;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static class TOPIC_MSGS{
         public String _TOPIC_MSG_ID,_TOPIC_ID,_NICK,_POST,_TIME;
 

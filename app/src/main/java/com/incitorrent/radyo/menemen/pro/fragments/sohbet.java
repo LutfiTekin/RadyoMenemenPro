@@ -71,6 +71,7 @@ import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
@@ -136,10 +137,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
-        if(getActivity()!=null) {
-            getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
-            toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        }
+        context = getActivity().getApplicationContext();
+        m = new Menemen(context);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             TOPIC_ID = bundle.getString("tid");
@@ -150,8 +149,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
             //Getting topic id is failed set TOPIC_ID to initial value
                 TOPIC_ID = "0";
         }
-        context = getActivity().getApplicationContext();
-        m = new Menemen(context);
+        if(getActivity()!=null) {
+            if(TOPIC_MODE)
+                getActivity().setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._TITLE));
+            else
+                getActivity().setTitle(getString(R.string.nav_sohbet));
+            toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            if(toolbar!=null && TOPIC_MODE)
+                m.setToolbarSubtitleMarquee(toolbar,m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._DESCR));
+        }
+
         resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
         mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
