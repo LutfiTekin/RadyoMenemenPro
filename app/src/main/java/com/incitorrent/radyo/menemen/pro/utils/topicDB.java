@@ -212,7 +212,7 @@ public class topicDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(_JOINED,"1");
-        int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + "'" + topicid + "' ",null);
+        int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + "='" + topicid + "' ",null);
         Log.d(TOPICS_TABLE, rows + " affected");
     }
 
@@ -229,7 +229,7 @@ public class topicDB extends SQLiteOpenHelper {
     }
 
     /**
-     * Get info from topic with given topic id and cloumn
+     * Get info from topic with given topic id and column
      * @param topicid
      * @param info
      * @return
