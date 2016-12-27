@@ -46,6 +46,7 @@ import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
@@ -254,6 +255,18 @@ public class MainActivity extends AppCompatActivity
                     case RadyoMenemenPro.Action.TOPICS:
                         fragmentManager.beginTransaction()
                                 .replace(R.id.Fcontent,new topics()).addToBackStack("topics").commit();
+                        break;
+                    case RadyoMenemenPro.Action.TOPIC_MESSAGES:
+                        Fragment topic = new sohbet();
+                        Bundle tbundle = new Bundle();
+                        String topicid = intent.getExtras().getString(topicDB._TOPICID,null);
+                        if(topicid == null) break;
+                        tbundle.putString(topicDB._TOPICID, topicid);
+                        topic.setArguments(tbundle);
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.Fcontent,topic)
+                                .addToBackStack("topic"+topicid)
+                                .commit();
                         break;
                     case RadyoMenemenPro.Action.MP_TRANSACTIONS:
                         fragmentManager.beginTransaction()

@@ -613,7 +613,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     sohbetRV.getAdapter().notifyDataSetChanged();
             }
             RequestQueue queue = Volley.newRequestQueue(context);
-            StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
+            StringRequest post = new StringRequest(Request.Method.POST,
+                    (TOPIC_MODE) ? RadyoMenemenPro.MENEMEN_TOPICS_POST : RadyoMenemenPro.MESAJ_GONDER,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -663,6 +664,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> dataToSend = m.getAuthMap();
+                    if(TOPIC_MODE)
+                        dataToSend.put(topicDB._TOPICID,TOPIC_ID);
                     dataToSend.put("mesaj", msg);
                     return dataToSend;
                 }

@@ -57,6 +57,7 @@ public final class RadyoMenemenPro {
     public final static String MENEMEN_TOPICS_LEAVE = MENEMEN_TOPICS + "&action=leave";
     public final static String MENEMEN_TOPICS_EDIT = MENEMEN_TOPICS + "&action=edit";
     public final static String MENEMEN_TOPICS_LIST = MENEMEN_TOPICS + "&action=list";
+    public final static String MENEMEN_TOPICS_POST = MENEMEN_TOPICS + "&action=post";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
@@ -124,6 +125,7 @@ public final class RadyoMenemenPro {
         public final static String WIDGET_STOP =  "radyo.menemen.widget.stop";
         public final static String CAPS =  "radyo.menemen.caps";
         public final static String TOPICS =  "radyo.menemen.topics";
+        public final static String TOPIC_MESSAGES =  "radyo.menemen.topic.messages";
         public final static String MP_TRANSACTIONS = "radyo.menemen.mp.transactions";
         public final static String PLAY_NOW = "radyo.menemen.play.now";
     }

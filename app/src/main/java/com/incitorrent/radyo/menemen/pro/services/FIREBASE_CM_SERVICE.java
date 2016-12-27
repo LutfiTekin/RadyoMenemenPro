@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -164,7 +165,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         break;
                     case CATEGORY_ONLINE:
                         String nick = getDATA(remoteMessage, "user");
-                        onlineUser(nick);
+                        onlineUser(nick,null);
                         break;
                     case CATEGORY_TOPICS:
                         if(action==null) break;
@@ -172,12 +173,55 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             userjoinedtotopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
                         else if(action.equals(LEAVE))
                             userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                        else if(action.equals(ADD))
+                            topicmsg(remoteMessage);
                         break;
                 }
 
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void topicmsg(RemoteMessage remoteMessage) {
+        Intent topic = new Intent(CHAT_BROADCAST_FILTER);
+        String action = getDATA(remoteMessage, "action");
+        String topicid = getDATA(remoteMessage,"tid");
+        String msgid = getDATA(remoteMessage, "msgid");
+        if(action.equals(DELETE)){
+
+            m.getTopicDB().deleteMSG(msgid);
+            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+                topic.putExtra("action", DELETE);
+                topic.putExtra("msgid", msgid);
+                broadcastManager.sendBroadcast(topic);
+            }else
+                notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
+            return;
+        }
+        //CHAT mesajı geldi
+        //notify sohbet fragment
+        String nick = getDATA(remoteMessage,"nick");
+        String msg = getDATA(remoteMessage,"msg");
+        String time = getDATA(remoteMessage, "time");
+        //add to db get auto incremented id
+        msgid = String.valueOf(m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,nick,msg,time)));
+        if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+            //Update ui only if chat is foreground
+            topic.putExtra("nick", nick);
+            topic.putExtra("msg", msg);
+            topic.putExtra("msgid", msgid);
+            topic.putExtra("time", time);
+            topic.putExtra("action", ADD);
+            broadcastManager.sendBroadcast(topic);
+        }
+
+        onlineUser(nick,topicid);
+        final Boolean isUser = nick.equals(m.getUsername());
+        //Notification creation condition
+        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;
+        buildChatNotification(nick,Menemen.fromHtmlCompat(msg),topicid);
+
     }
 
     private void userlefttopic(String user, String topicid) {
@@ -239,7 +283,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         queue.add(postRequest);
     }
 
-    private void onlineUser(String nick) {
+    private void onlineUser(String nick,@Nullable String topicid) {
+        //TODO topic id kullan
         long now = System.currentTimeMillis();
         sql_online.addToHistory(nick, null, now);
         Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
@@ -304,11 +349,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
-        onlineUser(nick);
+        onlineUser(nick,null);
         final Boolean isUser = nick.equals(m.getUsername());
         //Notification creation condition
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;
-        buildChatNotification(nick,Menemen.fromHtmlCompat(msg));
+        buildChatNotification(nick,Menemen.fromHtmlCompat(msg),null);
     }
 
     private void addCapsComments(RemoteMessage remoteMessage) {
@@ -448,12 +493,17 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notificationManager.notify(notificationid, notification.build());
     }
 
-    private void buildChatNotification(String nick, String mesaj) {
-        Boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
+    private void buildChatNotification(String nick, String mesaj, @Nullable String topicid) {
+        boolean isTopic = topicid != null;
+        if(isTopic) {
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPICS);
+            notification_intent.putExtra(topicDB._TOPICID,topicid);
+        }
+        boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
         if(isUser)
             nick = getString(R.string.me);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.mipmap.ic_chat);
+        builder.setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat);
         builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
            builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));

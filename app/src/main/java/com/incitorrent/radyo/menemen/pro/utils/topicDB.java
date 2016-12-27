@@ -12,7 +12,7 @@ import android.util.Log;
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
  */
 public class topicDB extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "radyomenemenproTopic.db";
     public static final String TOPICS_TABLE = "topics";
     public static final String _TOPICID = "tid";
@@ -47,7 +47,7 @@ public class topicDB extends SQLiteOpenHelper {
                 ");";
         db.execSQL(query);
         query = "CREATE TABLE " + MESSAGES_TABLE + "("+
-                _TOPIC_MSG_ID + " INTEGER PRIMARY KEY, " +
+                _TOPIC_MSG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 _TOPICID + " TEXT, " +
                 _NICK + " TEXT, " +
                 _POST + " TEXT, " +
@@ -86,9 +86,8 @@ public class topicDB extends SQLiteOpenHelper {
      * Add message to MESSAGES_TABLE
      * @param tm
      */
-    public void addTopicMsg(TOPIC_MSGS tm){
+    public long addTopicMsg(TOPIC_MSGS tm){
         ContentValues values = new ContentValues();
-        values.put(_TOPIC_MSG_ID, tm.get_TOPIC_MSG_ID());
         values.put(_TOPICID, tm.get_TOPIC_ID());
         values.put(_NICK, tm.get_NICK());
         values.put(_POST, tm.get_POST());
@@ -96,12 +95,13 @@ public class topicDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         try {
-            db.insertWithOnConflict(MESSAGES_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+           return db.insertWithOnConflict(MESSAGES_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             db.close();
         }
+        return -1;
     }
 
     /**
