@@ -140,6 +140,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
             getActivity().setTitle(getString(R.string.nav_sohbet)); //Toolbar title
             toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         }
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            TOPIC_ID = bundle.getString("tid");
+            if(TOPIC_ID != null)
+                //Get Topic id and switch the topic mode on
+                TOPIC_MODE = true;
+            else
+            //Getting topic id is failed set TOPIC_ID to initial value
+                TOPIC_ID = "0";
+        }
         context = getActivity().getApplicationContext();
         m = new Menemen(context);
         resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
