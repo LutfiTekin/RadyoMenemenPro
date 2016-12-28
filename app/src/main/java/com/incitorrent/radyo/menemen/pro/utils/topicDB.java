@@ -146,7 +146,7 @@ public class topicDB extends SQLiteOpenHelper {
      */
     public Cursor getTopicMessagesOnScroll(String msgid,String topicid){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TOPICS_TABLE,null,_TOPIC_MSG_ID  + "<'" + msgid + "' AND " + _TOPICID + " ='"+topicid+"'",null,null,null,_TOPIC_MSG_ID +" DESC","40");
+        return db.query(MESSAGES_TABLE,null,_TOPIC_MSG_ID  + "<'" + msgid + "' AND " + _TOPICID + " ='"+topicid+"'",null,null,null,_TOPIC_MSG_ID +" DESC","40");
     }
 
     /**

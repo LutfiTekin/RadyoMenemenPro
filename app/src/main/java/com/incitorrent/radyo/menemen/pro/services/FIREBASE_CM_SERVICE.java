@@ -208,6 +208,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         msgid = String.valueOf(m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,nick,msg,time)));
         if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
             //Update ui only if chat is foreground
+            topic.putExtra(topicDB._TOPICID,topicid);
             topic.putExtra("nick", nick);
             topic.putExtra("msg", msg);
             topic.putExtra("msgid", msgid);
