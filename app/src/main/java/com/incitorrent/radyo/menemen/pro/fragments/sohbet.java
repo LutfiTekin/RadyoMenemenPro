@@ -450,9 +450,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
     @Override
     public void onStop() {
         if(TOPIC_MODE)
-            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+TOPIC_ID,false);
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID, false);
         else
-            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,false);
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND, false);
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(context).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
         super.onStop();
@@ -961,6 +961,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         int limit;
         int scroll;
         Cursor cursor;
+        topicDB tsql;
+        chatDB csql;
 
         initsohbet(int limit, int scroll) {
             this.limit = limit;
@@ -970,7 +972,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected void onPreExecute() {
             sohbetList = new ArrayList<>();
-            cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit,TOPIC_ID) : m.getChatDB().getHistory(limit);
+            if(TOPIC_MODE){
+                tsql = m.getTopicDB();
+                cursor = tsql.getHistory(limit,TOPIC_ID);
+            }else {
+                csql = m.getChatDB();
+                cursor = csql.getHistory(limit);
+            }
             try {
                 if(cursor.getCount()>0 && TOPIC_MODE && emptyview != null)
                     emptyview.setVisibility(View.GONE);
@@ -1010,6 +1018,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if(swipeRV != null) swipeRV.setRefreshing(false);
             if(sohbetList != null && sohbetList.size()>1 && sohbetList.get(0).id != null) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             if(sohbetRV != null && scroll != 0) sohbetRV.scrollToPosition(scroll);
+            try {
+                if(TOPIC_MODE) tsql.close(); else csql.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             super.onPostExecute(aVoid);
         }
     }
