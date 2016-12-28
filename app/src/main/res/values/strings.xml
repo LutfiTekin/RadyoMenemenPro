@@ -266,4 +266,5 @@
     <string name="media_play">Oynat</string>
     <string name="radio_pause">Pause Radio</string>
     <string name="radio_play">Play Radio</string>
+    <string name="emptyview_no_message">There are no messages here</string>
 </resources>

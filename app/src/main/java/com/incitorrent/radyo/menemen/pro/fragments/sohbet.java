@@ -102,6 +102,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private static final int PERMISSION_REQUEST_ID = 2065;
     private EditText mesaj;
     private ImageView smilegoster;
+    private TextView emptyview;
     FloatingActionButton resimekle,scrollTop;
     private RecyclerView smileRV,sohbetRV;
     Menemen m;
@@ -150,8 +151,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 TOPIC_ID = "0";
         }
         if(getActivity()!=null) {
-            if(TOPIC_MODE)
-                getActivity().setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._TITLE));
+            if(TOPIC_MODE) {
+                getActivity().setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE));
+                emptyview = (TextView) sohbetView.findViewById(R.id.emptytextview);
+                emptyview.setVisibility(View.VISIBLE);
+            }
             else
                 getActivity().setTitle(getString(R.string.nav_sohbet));
             toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -956,6 +960,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     class initsohbet extends AsyncTask<Void,Void,Void>{
         int limit;
         int scroll;
+        Cursor cursor;
 
         initsohbet(int limit, int scroll) {
             this.limit = limit;
@@ -965,6 +970,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
         @Override
         protected void onPreExecute() {
             sohbetList = new ArrayList<>();
+            cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit,TOPIC_ID) : m.getChatDB().getHistory(limit);
+            try {
+                if(cursor.getCount()>0 && TOPIC_MODE && emptyview != null)
+                    emptyview.setVisibility(View.GONE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             super.onPreExecute();
         }
 
@@ -972,7 +984,6 @@ public class sohbet extends Fragment implements View.OnClickListener{
         protected Void doInBackground(Void... params) {
             //Getfrom db
             try {
-                Cursor cursor = (TOPIC_MODE) ? m.getTopicDB().getHistory(limit,TOPIC_ID) : m.getChatDB().getHistory(limit);
                 if(cursor == null) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){

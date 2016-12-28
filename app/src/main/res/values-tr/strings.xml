@@ -216,4 +216,5 @@
     <string name="media_play">Oynat</string>
     <string name="radio_pause">Radyoyu Duraklat</string>
     <string name="radio_play">Radyoyu Çal</string>
+    <string name="emptyview_no_message">Burda henüz mesaj yok</string>
 </resources>
