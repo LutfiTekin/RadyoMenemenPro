@@ -100,7 +100,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private static final int RESULT_LOAD_IMAGE_CAM = 2063;
     private static final int RESULT_LOAD_IMAGE = 2064;
     private static final int PERMISSION_REQUEST_ID = 2065;
-    private EditText mesaj;
+    private EditText ETmesaj;
     private ImageView smilegoster;
     private TextView emptyview;
     FloatingActionButton resimekle,scrollTop;
@@ -165,13 +165,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
         resimekle = (FloatingActionButton) sohbetView.findViewById(R.id.resim_ekle);
         smilegoster = (ImageView) sohbetView.findViewById(R.id.smile_goster_button);
-        mesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
-        mesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+        ETmesaj = (EditText) sohbetView.findViewById(R.id.ETmesaj);
+        ETmesaj.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(mesaj.getText().toString().trim().length()>0) {
-                        postToMenemen(mesaj.getText().toString());
+                    if(ETmesaj.getText().toString().trim().length()>0) {
+                        postToMenemen(ETmesaj.getText().toString());
                     }
                     return true;
                 }
@@ -306,7 +306,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   //Scroll to top if new message added
                                   if (((LinearLayoutManager) sohbetRV.getLayoutManager()).findLastCompletelyVisibleItemPosition() < 30)
                                       sohbetRV.smoothScrollToPosition(0);
-                                  else sohbetRV.scrollToPosition(0);
+                                  else
+                                      sohbetRV.scrollToPosition(0);
+
                                   m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                               } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                                   if (TOPIC_MODE)
@@ -331,6 +333,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           int count = intent.getExtras().getInt("count", 0);
                           if (count > 0 && toolbar != null) {
                               m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
+                          ETmesaj.requestFocus();
                           }
                           break;
                   }
@@ -520,7 +523,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 smileRV.setVisibility(smileRV.getVisibility() != View.VISIBLE ? View.VISIBLE : View.GONE);
                 break;
             case R.id.mesaj_gonder_button:
-                if(mesaj.getText().toString().trim().length()>0)postToMenemen(mesaj.getText().toString());
+                if(ETmesaj.getText().toString().trim().length()>0)postToMenemen(ETmesaj.getText().toString());
                 break;
             case R.id.resim_ekle:
                 m.runEnterAnimation(image_pick, 0);
@@ -612,7 +615,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Toast.makeText(context, R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
                 return;
             }
-            mesaj.setText("");
+            ETmesaj.setText("");
             if(sohbetList != null && sohbetRV != null){
                 sohbetList.add(0,new Sohbet_Objects(null,m.getUsername(),msg, PENDING));
                 if(sohbetRV.getAdapter() != null)
@@ -873,7 +876,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             }
             @Override
             public void onClick(View v) {
-                mesaj.setText(mesaj.getText().toString() + " " + satbaxSmileList.get(getAdapterPosition()).smile);
+                ETmesaj.setText(ETmesaj.getText().toString() + " " + satbaxSmileList.get(getAdapterPosition()).smile);
                 smileRV.setVisibility(View.GONE);
             }
         }
