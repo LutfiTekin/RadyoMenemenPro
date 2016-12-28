@@ -206,6 +206,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String time = getDATA(remoteMessage, "time");
         //add to db get auto incremented id
         msgid = String.valueOf(m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,nick,msg,time)));
+        Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + topicid + "FCM");
         if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
             //Update ui only if chat is foreground
             topic.putExtra(topicDB._TOPICID,topicid);
@@ -215,6 +216,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             topic.putExtra("time", time);
             topic.putExtra("action", ADD);
             broadcastManager.sendBroadcast(topic);
+            Log.d("TOPIC",nick + " : " + msg + " , " + topicid);
         }
 
         onlineUser(nick,topicid);

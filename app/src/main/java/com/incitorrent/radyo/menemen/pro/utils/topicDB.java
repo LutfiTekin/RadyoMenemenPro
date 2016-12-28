@@ -95,7 +95,9 @@ public class topicDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         try {
-           return db.insertWithOnConflict(MESSAGES_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+           long msgid = db.insertWithOnConflict(MESSAGES_TABLE,null,values,SQLiteDatabase.CONFLICT_REPLACE);
+            db.close();
+            return msgid;
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -118,9 +120,10 @@ public class topicDB extends SQLiteOpenHelper {
      * @return
      */
     public Cursor getHistory(int limit, String topicid){
+        Log.d("TOPIC","requested info from " + topicid);
         SQLiteDatabase db = getReadableDatabase();
         if(limit < 20) limit = 20;
-        return db.query(MESSAGES_TABLE,null,_TOPIC_MSG_ID + " ='" + topicid + "'",null,null,null,_TOPIC_MSG_ID + " DESC", String.valueOf(limit));
+        return db.query(MESSAGES_TABLE,null,_TOPICID + " ='" + topicid + "'",null,null,null,_TOPIC_MSG_ID + " DESC", String.valueOf(limit));
     }
 
     public boolean isHistoryExist(String capsurl,String nick){
@@ -136,7 +139,7 @@ public class topicDB extends SQLiteOpenHelper {
      */
     public Cursor getTopicMessagesById(String msgid){
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(TOPICS_TABLE,null,_TOPICID + ">=\'" + msgid + "\'",null,null,null,_TOPIC_MSG_ID +" DESC");
+        return db.query(MESSAGES_TABLE,null,_TOPICID + ">=\'" + msgid + "\'",null,null,null,_TOPIC_MSG_ID +" DESC");
     }
 
     /**

@@ -359,8 +359,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onResume() {
-        if(TOPIC_MODE)
-            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+TOPIC_ID,true);
+        if(TOPIC_MODE) {
+            m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID, true);
+            Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID);
+        }
         else
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
         //Eğer önceden liste oluşturuldu ise yeniden yükleme
@@ -975,7 +977,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
                     String id,nick,post,time;
-                    id = cursor.getString(cursor.getColumnIndex(chatDB._MSGID));
+                    id = cursor.getString(cursor.getColumnIndex((TOPIC_MODE) ? topicDB._TOPIC_MSG_ID : chatDB._MSGID));
                     nick = cursor.getString(cursor.getColumnIndex(chatDB._NICK));
                     post = cursor.getString(cursor.getColumnIndex(chatDB._POST));
                     time = cursor.getString(cursor.getColumnIndex(chatDB._TIME));
