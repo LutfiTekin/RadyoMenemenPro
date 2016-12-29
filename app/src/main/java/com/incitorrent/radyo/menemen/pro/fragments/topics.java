@@ -243,7 +243,7 @@ public class topics extends Fragment {
             public void onClick(View view) {
                 SELECTED_TOPIC_ID = topicList.get(getAdapterPosition()).id;
                 if(view == image || view == title){
-                    if(m.getTopicDB().isJoined(SELECTED_TOPIC_ID))
+                    if(m.getTopicDB().isJoined(SELECTED_TOPIC_ID) || topicList.get(getAdapterPosition()).creator.equals(m.getUsername()))
                         //User is in the topic go to selected topic
                         openTopic();
                     else if(!topicList.get(getAdapterPosition()).creator.equals(m.getUsername()))
