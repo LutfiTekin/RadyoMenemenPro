@@ -44,6 +44,7 @@ import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.OnSwipeTouchListener;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 
 import org.json.JSONObject;
 
@@ -149,7 +150,10 @@ public class topics_create extends Fragment implements View.OnClickListener{
                             default:
                                 Toast.makeText(context, R.string.topics_new_success, Toast.LENGTH_SHORT).show();
                                 try {
-                                    FirebaseMessaging.getInstance().subscribeToTopic(response);
+                                    Log.d("TOPIC",response);
+                                    JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
+                                    FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
+                                    m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID),j.getString(topicDB._TOPICSTR),m.getUsername(),"1",title,descr,imageurl));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -178,9 +182,7 @@ public class topics_create extends Fragment implements View.OnClickListener{
         }){
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> dataToSend = new HashMap<>();
-                dataToSend.put(RadyoMenemenPro.NICK, m.getUsername());
-                dataToSend.put(RadyoMenemenPro.MOBIL_KEY, m.getMobilKey());
+                Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("title", title);
                 dataToSend.put("descr", descr);
                 dataToSend.put("type", (checkBox.isChecked()) ? "2" : "1");
