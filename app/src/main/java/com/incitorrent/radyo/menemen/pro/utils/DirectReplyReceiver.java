@@ -49,10 +49,11 @@ public class DirectReplyReceiver extends BroadcastReceiver {
        if(intent.getAction()!=null && getMessage(intent) != null){
            switch (intent.getAction()){
                case RadyoMenemenPro.Action.CHAT:
-                   postToMenemen(String.valueOf(getMessage(intent)),context);
+                   postToMenemen(String.valueOf(getMessage(intent)),context,null);
                    break;
+               case RadyoMenemenPro.Action.TOPIC_MESSAGES:
+                   postToMenemen(String.valueOf(getMessage(intent)),context,intent.getExtras().getString(topicDB._TOPICID,"failed"));
                case RadyoMenemenPro.Action.CAPS:
-
                    postCapsComment(intent, context);
                    break;
            }
@@ -125,12 +126,18 @@ public class DirectReplyReceiver extends BroadcastReceiver {
     }
 
 
-    private void postToMenemen(final String msg,final Context context) {
+    private void postToMenemen(final String msg,final Context context, @Nullable final String topicid) {
+        boolean isTopic = false;
+        if(topicid != null){
+            if(topicid.equals("failed")) return;
+            isTopic = true;
+        }
         if(!m.isInternetAvailable()) {
             Toast.makeText(context.getApplicationContext(), R.string.toast_internet_warn, Toast.LENGTH_SHORT).show();
             return;
         }
-        StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
+        StringRequest post = new StringRequest(Request.Method.POST,
+                (isTopic) ? RadyoMenemenPro.MENEMEN_TOPICS_POST : RadyoMenemenPro.MESAJ_GONDER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -147,6 +154,8 @@ public class DirectReplyReceiver extends BroadcastReceiver {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("mesaj", msg);
+                if(topicid != null)
+                    dataToSend.put(topicDB._TOPICID,topicid);
                 return dataToSend;
             }
 

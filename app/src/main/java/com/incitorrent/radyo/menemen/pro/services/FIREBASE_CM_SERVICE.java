@@ -506,7 +506,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private void buildChatNotification(String nick, String mesaj, @Nullable String topicid) {
         boolean isTopic = topicid != null;
         if(isTopic) {
-            notification_intent.setAction(RadyoMenemenPro.Action.TOPICS);
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
             notification_intent.putExtra(topicDB._TOPICID,topicid);
         }
         boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
@@ -569,7 +569,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 if(!SUM_Notification.mActions.isEmpty())
                     SUM_Notification.mActions.clear();
                 Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
-                direct_reply_intent.setAction(RadyoMenemenPro.Action.CHAT);
+                direct_reply_intent.setAction((isTopic) ? RadyoMenemenPro.Action.TOPIC_MESSAGES : RadyoMenemenPro.Action.CHAT);
+                if(isTopic) direct_reply_intent.putExtra(topicDB._TOPICID,topicid);
                 SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
             }
             if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
