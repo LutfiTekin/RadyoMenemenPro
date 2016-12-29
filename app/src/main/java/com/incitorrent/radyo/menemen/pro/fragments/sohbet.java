@@ -281,6 +281,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   String topicid = bundle.getString("tid");
                                   if(topicid == null) return;
                                   if(!topicid.equals(TOPIC_ID)) return;
+                                  emptyview.setVisibility(View.GONE);
                               }
                               String action = bundle.getString("action");
                               if (action == null) return;
