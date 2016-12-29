@@ -267,4 +267,11 @@
     <string name="radio_pause">Pause Radio</string>
     <string name="radio_play">Play Radio</string>
     <string name="emptyview_no_message">There are no messages here</string>
+    <string name="action_close_topic">Close Topic</string>
+    <string name="action_leave_topic">Leave Topic</string>
+    <string name="toast_leaving_topic">Leaving topic</string>
+    <string name="topic_leave_topic_success">Leaving topic is successfull, you will not receive notifications from this topic anymore</string>
+    <string name="toast_topic_close_success">Topic is succesfully closed and messages deleted.</string>
+    <string name="toast_closing_topic">Closing topic</string>
+    <string name="dialog_topic_close">Topic will be closed and all messages within will be irreversibly deleted, are you sure?</string>
 </resources>

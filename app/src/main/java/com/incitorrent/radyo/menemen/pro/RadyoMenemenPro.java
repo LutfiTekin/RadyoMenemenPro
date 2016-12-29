@@ -55,6 +55,7 @@ public final class RadyoMenemenPro {
     public final static String MENEMEN_TOPICS_DELETE = MENEMEN_TOPICS + "&action=delete";
     public final static String MENEMEN_TOPICS_JOIN = MENEMEN_TOPICS + "&action=join";
     public final static String MENEMEN_TOPICS_LEAVE = MENEMEN_TOPICS + "&action=leave";
+    public final static String MENEMEN_TOPICS_CLOSE = MENEMEN_TOPICS + "&action=close";
     public final static String MENEMEN_TOPICS_EDIT = MENEMEN_TOPICS + "&action=edit";
     public final static String MENEMEN_TOPICS_LIST = MENEMEN_TOPICS + "&action=list";
     public final static String MENEMEN_TOPICS_POST = MENEMEN_TOPICS + "&action=post";

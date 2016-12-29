@@ -67,6 +67,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String DELETE = "delete";
     public static final String JOIN = "join";
     public static final String LEAVE = "leave";
+    public static final String CLOSE = "close";
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -175,12 +176,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
                         else if(action.equals(ADD))
                             topicmsg(remoteMessage);
+                        else if(action.equals(CLOSE))
+                            closetopic(getDATA(remoteMessage,topicDB._TOPICID));
                         break;
                 }
 
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void closetopic(String topicid) {
+        m.getTopicDB().closeTopic(topicid);
     }
 
     private void topicmsg(RemoteMessage remoteMessage) {

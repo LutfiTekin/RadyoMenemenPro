@@ -217,6 +217,31 @@ public class topicDB extends SQLiteOpenHelper {
         contentValues.put(_JOINED,"1");
         int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + "='" + topicid + "' ",null);
         Log.d(TOPICS_TABLE, rows + " affected");
+        db.close();
+    }
+    /**
+     * Leave the topic with the given id
+     * @param topicid
+     */
+    public void leave(String topicid){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(_JOINED,"0");
+        int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + "='" + topicid + "' ", null);
+        Log.d(TOPICS_TABLE, rows + " affected");
+        db.delete(MESSAGES_TABLE,_TOPICID + "='" + topicid + "' ",null);
+        db.close();
+    }
+
+    /**
+     * Close the topic with given id and delete everything inside
+     * @param topicid
+     */
+    public void closeTopic(String topicid){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TOPICS_TABLE,_TOPICID + "='" + topicid + "'", null);
+        db.delete(MESSAGES_TABLE,_TOPICID + "='" + topicid + "'",null);
+        db.close();
     }
 
     /**

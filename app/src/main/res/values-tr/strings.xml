@@ -192,7 +192,7 @@
     <string name="topics_new_success">Konu Başarıyla Oluşturuldu</string>
     <string name="topics_error_title_limit">Konu başlığı 16 karakterden fazla olamaz</string>
     <string name="topics_join">Katıl</string>
-    <string name="topics_leave">Çık</string>
+    <string name="topics_leave">Ayrıl</string>
     <string name="notification_reply_sent">Cevabın gönderildi</string>
     <string name="notification_see_all_comments">Tüm yorumları görmek için bildirime dokunun</string>
     <string name="contact_descr">Burdan bize geri bildirimde bulunabilirsin.</string>
@@ -217,4 +217,11 @@
     <string name="radio_pause">Radyoyu Duraklat</string>
     <string name="radio_play">Radyoyu Çal</string>
     <string name="emptyview_no_message">Burda henüz mesaj yok</string>
+    <string name="action_leave_topic">Konudan Ayrıl</string>
+    <string name="action_close_topic">Konuyu Kapat</string>
+    <string name="topic_leave_topic_success">Konudan ayrılma başarılı, artık bu konudan bildirim almayacaksınız.</string>
+    <string name="toast_leaving_topic">Konudan ayrılınıyor</string>
+    <string name="toast_topic_close_success">Konu başarıyla kapatıldı ve mesajlar silindi.</string>
+    <string name="toast_closing_topic">Konu kapatılıyor</string>
+    <string name="dialog_topic_close">Konu kapatılacak ve içindeki mesajlar geri getirilemeyecek şekilde silinecek, emin misin?</string>
 </resources>

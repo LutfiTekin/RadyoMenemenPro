@@ -344,7 +344,7 @@ public class topics extends Fragment {
         @Override
         protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> dataToSend = m.getAuthMap();
-            dataToSend.put("topicid",SELECTED_TOPIC_ID);
+            dataToSend.put(topicDB._TOPICID,SELECTED_TOPIC_ID);
             return dataToSend;
         }
 
@@ -387,6 +387,7 @@ public class topics extends Fragment {
                                 String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
                                if(topicstr!=null)
                                    FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
+                                m.getTopicDB().leave(SELECTED_TOPIC_ID);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -403,7 +404,7 @@ public class topics extends Fragment {
         @Override
         protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> dataToSend = m.getAuthMap();
-            dataToSend.put("topicid",SELECTED_TOPIC_ID);
+            dataToSend.put(topicDB._TOPICID,SELECTED_TOPIC_ID);
             return dataToSend;
         }
 

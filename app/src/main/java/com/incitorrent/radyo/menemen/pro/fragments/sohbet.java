@@ -39,6 +39,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,6 +64,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
@@ -494,10 +496,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.sohbet_menu,menu);
-       MenuItem silentN = menu.findItem(R.id.action_silent_notification);
+        inflater.inflate((TOPIC_MODE) ? R.menu.topic_messages_menu : R.menu.sohbet_menu,menu);
         if(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis())
-            silentN.setVisible(false);
+            menu.findItem(R.id.action_silent_notification).setVisible(false);
+        if (TOPIC_MODE && m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._CREATOR).equals(m.getUsername())) {
+            menu.findItem(R.id.action_close_topic).setVisible(true);
+            menu.findItem(R.id.action_leave_topic).setVisible(false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -513,9 +518,142 @@ public class sohbet extends Fragment implements View.OnClickListener{
             case R.id.go_to_online_users:
                 getFragmentManager().beginTransaction().replace(R.id.Fcontent, new online(), "online").addToBackStack("online").commit();
                 break;
+            case R.id.action_leave_topic:
+                Toast.makeText(context, R.string.toast_leaving_topic, Toast.LENGTH_SHORT).show();
+                RequestQueue queue = Volley.newRequestQueue(context);
+                queue.add(leavetopic);
+                break;
+            case R.id.action_close_topic:
+                if(isAdded())
+                    new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
+                            .setTitle(R.string.action_close_topic)
+                            .setIcon(R.mipmap.ic_logout)
+                            .setMessage(R.string.dialog_topic_close)
+                            .setPositiveButton(R.string.topics_leave, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    RequestQueue queue = Volley.newRequestQueue(context);
+                                    Toast.makeText(context, R.string.toast_closing_topic, Toast.LENGTH_SHORT).show();
+                                    queue.add(closetopic);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            })
+                            .setCancelable(true)
+                            .show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    StringRequest leavetopic = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d(TAG,"TOPIC response" + response);
+                    switch (response) {
+                        case "1":
+                            if(context!=null)
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "2":
+                            try {
+                                String topicstr = m.getTopicDB().getTopicSTR(TOPIC_ID);
+                                if(topicstr!=null)
+                                    FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
+                                m.getTopicDB().leave(TOPIC_ID);
+                                Toast.makeText(context, R.string.topic_leave_topic_success, Toast.LENGTH_SHORT).show();
+                                getFragmentManager().beginTransaction().replace(R.id.Fcontent,new topics()).commit();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                    }
+                }
+            },null){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String,String> dataToSend = m.getAuthMap();
+            dataToSend.put(topicDB._TOPICID,TOPIC_ID);
+            return dataToSend;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 5000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            };
+        }
+    };
+
+    StringRequest closetopic = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_CLOSE,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    switch (response) {
+                        case "1":
+                            if(context!=null)
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "2":
+                            try {
+                                String topicstr = m.getTopicDB().getTopicSTR(TOPIC_ID);
+                                if(topicstr!=null)
+                                    FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
+                                m.getTopicDB().closeTopic(TOPIC_ID);
+                                Toast.makeText(context, R.string.toast_topic_close_success, Toast.LENGTH_LONG).show();
+                                getFragmentManager().beginTransaction().replace(R.id.Fcontent,new topics()).commit();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                    }
+                }
+            },null){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String,String> dataToSend = m.getAuthMap();
+            dataToSend.put(topicDB._TOPICID,TOPIC_ID);
+            return dataToSend;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 5000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            };
+        }
+    };
 
     @Override
     public void onClick(View v) {
