@@ -12,7 +12,7 @@ import android.util.Log;
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
  */
 public class topicDB extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "radyomenemenproTopic.db";
     public static final String TOPICS_TABLE = "topics";
     public static final String _TOPICID = "tid";
