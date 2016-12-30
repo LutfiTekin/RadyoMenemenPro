@@ -265,6 +265,7 @@ public class topicDB extends SQLiteOpenHelper {
     public boolean isJoined(String topicid){
         SQLiteDatabase db = getReadableDatabase();
         long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TOPICID + "='"+ topicid + "' AND " + _JOINED + "='1'" );
+        db.close();
         return rownum > 0;
     }
 

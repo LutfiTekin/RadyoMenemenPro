@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -155,7 +154,6 @@ public class topics extends Fragment {
                     @Override
                     public void onResponse(final String response) {
                         loadTopicsList(response);
-                        Log.d("VOLL",response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -198,7 +196,6 @@ public class topics extends Fragment {
     void loadTopicsList(final String response) {
         if(response == null) return;
         m.getTopicDB().refreshTopics();
-        Log.d(topicDB.TOPICS_TABLE,response);
         new AsyncTask<Void,Void,Void>(){
 
             @Override
@@ -352,13 +349,7 @@ public class topics extends Fragment {
                             break;
                     }
                 }
-            },
-            new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d("JOIN","ERR " + error.toString());
-        }
-    }){
+            },null){
         @Override
         protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> dataToSend = m.getAuthMap();
@@ -412,13 +403,7 @@ public class topics extends Fragment {
                             break;
                     }
                 }
-            },
-            new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.d("LEAVE","ERR " + error.toString());
-        }
-    }){
+            },null){
         @Override
         protected Map<String, String> getParams() throws AuthFailureError {
             Map<String, String> dataToSend = m.getAuthMap();
