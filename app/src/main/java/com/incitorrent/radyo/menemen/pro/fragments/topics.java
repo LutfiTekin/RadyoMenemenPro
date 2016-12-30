@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -53,6 +54,7 @@ public class topics extends Fragment {
     List<topic_objs> topicList;
     RequestQueue queue;
     String SELECTED_TOPIC_ID = "0";
+    ProgressBar progressBar;
     private final static String RESPONSE_AUTH_FAILED = "1";
     private final static String RESPONSE_SUCCESS = "2";
     public topics() {
@@ -88,6 +90,8 @@ public class topics extends Fragment {
         recyclerView.setHasFixedSize(false);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity().getApplicationContext()));
+        progressBar = (ProgressBar) topicview.findViewById(R.id.progressbar);
+
         stringRequest.setShouldCache(true);
         setRetainInstance(true);
         return topicview;
@@ -95,14 +99,13 @@ public class topics extends Fragment {
 
     @Override
     public void onResume() {
-        try {
-            FirebaseMessaging.getInstance().subscribeToTopic("newtopic");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-            loadTopicsListFromDB();
-
+        progressBar.setVisibility(View.VISIBLE);
+            queue.add(stringRequest);
+            try {
+                FirebaseMessaging.getInstance().subscribeToTopic("newtopic");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         super.onResume();
     }
 
@@ -140,7 +143,7 @@ public class topics extends Fragment {
                 if(topicList != null && topicList.size()>0){
                     recyclerView.setAdapter(new TopicAdapter(topicList));
                 }
-                queue.add(stringRequest);
+                progressBar.setVisibility(View.GONE);
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -157,7 +160,7 @@ public class topics extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+            loadTopicsListFromDB();
             }
         }){
             @Override
@@ -167,7 +170,22 @@ public class topics extends Fragment {
 
             @Override
             public RetryPolicy getRetryPolicy() {
-                return m.menemenRetryPolicy();
+                return new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return 5000;
+                    }
+
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 2;
+                    }
+
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
+                        error.printStackTrace();
+                    }
+                };
             }
 
         @Override
@@ -179,6 +197,7 @@ public class topics extends Fragment {
 
     void loadTopicsList(final String response) {
         if(response == null) return;
+        m.getTopicDB().refreshTopics();
         Log.d(topicDB.TOPICS_TABLE,response);
         new AsyncTask<Void,Void,Void>(){
 
@@ -200,7 +219,6 @@ public class topics extends Fragment {
                         tpc = c.getString("tpc");
                         joined = c.getString("j");
                         m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,joined,title,descr,image));
-                        topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
                         if(joined.equals("1"))
                             FirebaseMessaging.getInstance().subscribeToTopic(tpc);
                     }
@@ -212,9 +230,7 @@ public class topics extends Fragment {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if(topicList != null && topicList.size()>0){
-                    recyclerView.setAdapter(new TopicAdapter(topicList));
-                }
+                loadTopicsListFromDB();
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

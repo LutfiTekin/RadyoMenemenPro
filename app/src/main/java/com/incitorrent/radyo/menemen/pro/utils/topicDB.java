@@ -248,6 +248,15 @@ public class topicDB extends SQLiteOpenHelper {
     }
 
     /**
+     * Delete topics to keep sycnronized with server
+     */
+    public void refreshTopics(){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TOPICS_TABLE,"1",null);
+        db.close();
+    }
+
+    /**
      * Check if current user is
      * joined to topic with the given id
      * @param topicid

@@ -95,4 +95,16 @@
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_create_black_24dp"
         android:layout_margin="@dimen/fab_margin"/>
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:id="@+id/progressbar"
+        android:indeterminate="true"
+        android:indeterminateDuration="1000"
+        android:layout_gravity="center"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="center|bottom"
+        android:layout_margin="16dp"
+        />
 </android.support.design.widget.CoordinatorLayout>
