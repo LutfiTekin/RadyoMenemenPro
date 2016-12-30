@@ -239,7 +239,27 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void userjoinedtotopic(String user, String topicid) {
-        //TODO Build notification new user joined to topic
+        if(user.equals(m.getUsername())) return;
+        try {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setSmallIcon(R.drawable.ic_topic_discussion);
+            builder.setAutoCancel(true);
+            builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE))
+                    .setContentText(m.getSpannedTextWithSmileys(String.format(getString(R.string.topic_user_joined), user)));
+            if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500,500});
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
+            notification_intent.putExtra(topicDB._TOPICID,topicid);
+            builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.setAutoCancel(true);
+            Notification notification = builder.build();
+            int notification_id = CHAT_NOTIFICATION + Integer.parseInt(topicid);
+            notificationManager.notify(notification_id, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void addNewTopic(RemoteMessage rm) {
