@@ -170,9 +170,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     case CATEGORY_TOPICS:
                         if(action==null) break;
                         if(action.equals(JOIN))
-                            userjoinedtotopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                            userjoinedtotopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,topicDB._TOPICID));
                         else if(action.equals(LEAVE))
-                            userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,"topicid"));
+                            userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,topicDB._TOPICID));
                         else if(action.equals(ADD))
                             topicmsg(remoteMessage);
                         else if(action.equals(CLOSE))
