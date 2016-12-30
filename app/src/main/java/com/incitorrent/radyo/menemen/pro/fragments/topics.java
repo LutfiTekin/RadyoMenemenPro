@@ -38,7 +38,6 @@ import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -203,8 +202,10 @@ public class topics extends Fragment {
                         joined = c.getString("j");
                         m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,joined,title,descr,image));
                         topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
+                        if(joined.equals("1"))
+                            FirebaseMessaging.getInstance().subscribeToTopic(tpc);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
