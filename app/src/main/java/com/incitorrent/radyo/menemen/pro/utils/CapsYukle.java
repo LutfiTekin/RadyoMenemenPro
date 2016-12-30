@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
     private Menemen m;
     private Bitmap bit;
     private RequestQueue queue;
+    private String TOPIC_ID = null;
 
     Context context;
     public CapsYukle(Bitmap bit, Context context) {
@@ -48,6 +50,11 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         this.context = context;
     }
 
+    public CapsYukle(Bitmap bit, Context context, @Nullable String TOPIC_ID) {
+        this.bit = bit;
+        this.context = context;
+        this.TOPIC_ID = TOPIC_ID;
+    }
 
     @Override
     protected String doInBackground(Void... params) {
@@ -188,7 +195,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
 
 
     private void postMessage(final String imageurl){
-        StringRequest postRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MESAJ_GONDER,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, (TOPIC_ID != null) ? RadyoMenemenPro.MENEMEN_TOPICS_POST : RadyoMenemenPro.MESAJ_GONDER,
                 new Response.Listener<String>()
                 {
                     @Override
@@ -216,6 +223,7 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
             protected Map<String, String> getParams(){
                 Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("mesaj", imageurl);
+                if(TOPIC_ID!=null) dataToSend.put(topicDB._TOPICID,TOPIC_ID);
                 return dataToSend;
             }
 

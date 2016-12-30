@@ -976,7 +976,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             try {
                 Uri selectedimage = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), selectedimage);
-                   new CapsYukle(bitmap,context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                   new CapsYukle(bitmap,context,(TOPIC_MODE) ? TOPIC_ID : null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(context, R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             }catch (Exception e){e.printStackTrace();}
         }else if(requestCode == RESULT_LOAD_IMAGE_CAM && resultCode!=0){ //resultCode 0: kameradan seçim iptal edildi
@@ -985,7 +985,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Bitmap bitmap;
                 InputStream image_stream = getActivity().getContentResolver().openInputStream(saveduri);
                 bitmap= BitmapFactory.decodeStream(image_stream);
-                new CapsYukle(bitmap,context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new CapsYukle(bitmap,context,(TOPIC_MODE) ? TOPIC_ID : null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(context, R.string.caps_uploading, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
