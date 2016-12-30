@@ -181,6 +181,7 @@ public class topics extends Fragment {
 
     void loadTopicsList(final String response) {
         if(response == null) return;
+        Log.d(topicDB.TOPICS_TABLE,response);
         new AsyncTask<Void,Void,Void>(){
 
             @Override
@@ -192,14 +193,15 @@ public class topics extends Fragment {
                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
                         JSONArray innerJarr = arr.getJSONArray(0);
                         c = innerJarr.getJSONObject(i);
-                        String id,title,descr,image,creator,tpc;
+                        String id,title,descr,image,creator,tpc,joined;
                         id = c.getString("id");
                         title = c.getString("t");
                         descr = c.getString("d");
                         image = c.getString("i");
                         creator = c.getString("c");
                         tpc = c.getString("tpc");
-                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,"0",title,descr,image));
+                        joined = c.getString("j");
+                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,joined,title,descr,image));
                         topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
                     }
                 } catch (JSONException e) {
