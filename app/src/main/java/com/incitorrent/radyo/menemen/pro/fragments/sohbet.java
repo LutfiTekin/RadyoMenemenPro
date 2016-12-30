@@ -530,7 +530,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             .setTitle(R.string.action_close_topic)
                             .setIcon(R.mipmap.ic_logout)
                             .setMessage(R.string.dialog_topic_close)
-                            .setPositiveButton(R.string.topics_leave, new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.action_close_topic, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     RequestQueue queue = Volley.newRequestQueue(context);

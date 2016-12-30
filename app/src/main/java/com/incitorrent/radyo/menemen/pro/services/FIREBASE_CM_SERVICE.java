@@ -186,6 +186,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void closetopic(String topicid) {
+        Log.d(TAG, topicid + " closed");
         m.getTopicDB().closeTopic(topicid);
     }
 

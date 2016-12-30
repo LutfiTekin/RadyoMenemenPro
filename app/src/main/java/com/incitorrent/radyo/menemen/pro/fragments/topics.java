@@ -95,16 +95,14 @@ public class topics extends Fragment {
 
     @Override
     public void onResume() {
-        if(m.isFirstTime("loadTopicList")) {
-            queue.add(stringRequest);
-            try {
-                FirebaseMessaging.getInstance().subscribeToTopic("newtopic");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else{
-            loadTopicsListFromDB();
+        try {
+            FirebaseMessaging.getInstance().subscribeToTopic("newtopic");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+            loadTopicsListFromDB();
+
         super.onResume();
     }
 
@@ -142,6 +140,7 @@ public class topics extends Fragment {
                 if(topicList != null && topicList.size()>0){
                     recyclerView.setAdapter(new TopicAdapter(topicList));
                 }
+                queue.add(stringRequest);
                 super.onPostExecute(aVoid);
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
