@@ -515,7 +515,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat);
         builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
-           builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
+          if(isTopic)
+              builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE)).setContentText(nick + ": " + m.getSpannedTextWithSmileys(mesaj));
+        else
+              builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
         if(!mutechatnotification && !m.isPlaying()) {
             if (PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
                 builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
