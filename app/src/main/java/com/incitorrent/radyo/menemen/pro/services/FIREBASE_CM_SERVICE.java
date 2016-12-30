@@ -558,7 +558,14 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         if (inbox.getMessages().size()>1) {
             Bitmap largeicon = null;
             try {
-                largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
+                if(isTopic && !m.getTopicDB().getTopicInfo(topicid,topicDB._IMAGEURL).equals("default"))
+                    largeicon = Glide.with(context)
+                            .load(RadyoMenemenPro.CAPS_IMAGES_PATH + m.getTopicDB().getTopicInfo(topicid,topicDB._IMAGEURL))
+                            .asBitmap()
+                            .placeholder(R.drawable.ic_topic_discussion)
+                            .error(R.mipmap.ic_launcher).into(100,100).get();
+                else
+                    largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
             } catch (Exception e){e.printStackTrace();}
             //DIRECT REPLY
             inbox.setConversationTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : getString(R.string.notification_new_messages_text));
