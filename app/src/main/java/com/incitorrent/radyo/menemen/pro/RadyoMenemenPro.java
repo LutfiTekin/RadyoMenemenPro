@@ -76,6 +76,7 @@ public final class RadyoMenemenPro {
     public static final String IS_RADIO_FOREGROUND = "irf";
     public static final String LAST_ID_SEEN_ON_CHAT = "lastseenid"; //Bildirim gruplaması için gerekli
     public static final String LAST_ID_SEEN_ON_CAPS = "lastseenidOnCaps_";
+    public static final String LAST_ID_SEEN_ON_TOPIC = "lastseenidOnTopic_";
     public static final String MUTE_NOTIFICATION = "mute_notif";
     public static final String DEFAULT_RADIO_WIDGET = "radio_widget_def";
     public static final String SQUARE_RADIO_WIDGET = "radio_widget_sqr";

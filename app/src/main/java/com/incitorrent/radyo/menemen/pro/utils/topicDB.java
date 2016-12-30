@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -137,9 +138,11 @@ public class topicDB extends SQLiteOpenHelper {
      * @param msgid
      * @return
      */
-    public Cursor getTopicMessagesById(String msgid){
+    public Cursor getTopicMessagesById(@Nullable String msgid, String topicid){
+        if(msgid == null) msgid = "0";
+        Log.d(TOPICS_TABLE,"MSGID " + msgid);
         SQLiteDatabase db = getReadableDatabase();
-        return db.query(MESSAGES_TABLE,null,_TOPICID + ">=\'" + msgid + "\'",null,null,null,_TOPIC_MSG_ID +" DESC");
+        return db.query(MESSAGES_TABLE,null,_TOPICID + "='" + topicid + "' AND " + _TOPIC_MSG_ID + ">='" + msgid + "'",null,null,null,_TOPIC_MSG_ID +" DESC");
     }
 
     /**

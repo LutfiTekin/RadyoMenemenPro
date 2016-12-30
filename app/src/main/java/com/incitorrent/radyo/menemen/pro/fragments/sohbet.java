@@ -311,8 +311,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                       sohbetRV.smoothScrollToPosition(0);
                                   else
                                       sohbetRV.scrollToPosition(0);
-
-                                  m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
+                                  m.kaydet((TOPIC_MODE) ? RadyoMenemenPro.LAST_ID_SEEN_ON_TOPIC + TOPIC_ID : RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                               } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                                   if (TOPIC_MODE)
                                       m.getTopicDB().deleteMSG(id);
@@ -388,7 +387,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                }
            }catch (Exception e){e.printStackTrace();}
        }
-        NotificationManagerCompat.from(context).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
+        int tid = 0;
+        if(TOPIC_MODE) tid = Integer.parseInt(TOPIC_ID);
+        NotificationManagerCompat.from(context).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION + tid);
         m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
@@ -1158,7 +1159,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if(sohbetList!=null) SohbetAdapter = new SohbetAdapter(sohbetList);
             if(SohbetAdapter!=null) sohbetRV.setAdapter(SohbetAdapter);
             if(swipeRV != null) swipeRV.setRefreshing(false);
-            if(sohbetList != null && sohbetList.size()>1 && sohbetList.get(0).id != null) m.kaydet(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
+            if(sohbetList != null && sohbetList.size()>1 && sohbetList.get(0).id != null)
+                m.kaydet((TOPIC_MODE) ? RadyoMenemenPro.LAST_ID_SEEN_ON_TOPIC + TOPIC_ID : RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT ,sohbetList.get(0).id);
             if(sohbetRV != null && scroll != 0) sohbetRV.scrollToPosition(scroll);
             try {
                 if(TOPIC_MODE) tsql.close(); else csql.close();

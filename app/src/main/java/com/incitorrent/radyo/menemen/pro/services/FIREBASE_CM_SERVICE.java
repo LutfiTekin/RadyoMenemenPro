@@ -101,7 +101,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManagerCompat = NotificationManagerCompat.from(context);
         inbox = new NotificationCompat.MessagingStyle(getString(R.string.me));
-        inbox.setConversationTitle(getString(R.string.notification_new_messages_text));
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
@@ -530,7 +529,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         //add lines to inbox
         try {
             DateFormat df = new SimpleDateFormat(RadyoMenemenPro.CHAT_DATE_FORMAT, Locale.US);
-            Cursor cursor = sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
+            Cursor cursor =
+                    (isTopic) ?
+                            m.getTopicDB().getTopicMessagesById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_TOPIC + topicid),topicid)
+                            : sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
             cursor.moveToLast();
             while(!cursor.isBeforeFirst()){
                 String user,post,time;
@@ -556,13 +558,13 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
             } catch (Exception e){e.printStackTrace();}
             //DIRECT REPLY
-
+            inbox.setConversationTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : getString(R.string.notification_new_messages_text));
             SUM_Notification
                     .setAutoCancel(true)
                     .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                    .setContentTitle(getString(R.string.notification_new_msg))
+                    .setContentTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : getString(R.string.notification_new_msg))
                     .setContentText(String.format("%s: %s", nick, m.getSpannedTextWithSmileys(mesaj)))
-                    .setSmallIcon(R.mipmap.ic_chat)
+                    .setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat)
                     .setStyle(inbox)
                     .setOnlyAlertOnce(true);
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -583,7 +585,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             if(!mutechatnotification)
                 m.saveTime(RadyoMenemenPro.MUTE_NOTIFICATION,(1000*5)); //Sonraki 5 saniyeyi sustur
             Notification summary = SUM_Notification.build();
-            notificationManagerCompat.notify(CHAT_NOTIFICATION,summary);
+            try {
+                notificationManagerCompat.notify((isTopic) ? CHAT_NOTIFICATION + Integer.parseInt(topicid) : CHAT_NOTIFICATION,summary);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 

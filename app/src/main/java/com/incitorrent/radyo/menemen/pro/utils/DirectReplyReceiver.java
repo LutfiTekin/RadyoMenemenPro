@@ -141,12 +141,12 @@ public class DirectReplyReceiver extends BroadcastReceiver {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        updateChatNotification(context, msg);
+                        updateChatNotification(context, msg, topicid);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                updateChatNotification(context, msg);
+                updateChatNotification(context, msg, topicid);
               error.printStackTrace();
             }
         }){
@@ -172,12 +172,17 @@ public class DirectReplyReceiver extends BroadcastReceiver {
         queue.add(post);
     }
 
-    void updateChatNotification(Context context, String msg) {
+    void updateChatNotification(Context context, String msg, @Nullable String topicid) {
+        boolean isTopic = topicid != null;
         NotificationCompat.MessagingStyle inbox = new NotificationCompat.MessagingStyle(context.getString(R.string.me));
         try {
             chatDB sql = m.getChatDB();
+            topicDB Tsql = m.getTopicDB();
             DateFormat df = new SimpleDateFormat(RadyoMenemenPro.CHAT_DATE_FORMAT, Locale.US);
-            Cursor cursor = sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
+            Cursor cursor =
+                    (isTopic) ?
+                            Tsql.getTopicMessagesById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_TOPIC + topicid),topicid)
+                            : sql.getHistoryById(m.oku(RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT));
             cursor.moveToLast();
             while(!cursor.isBeforeFirst()){
                 String user,post,time;
@@ -190,7 +195,10 @@ public class DirectReplyReceiver extends BroadcastReceiver {
                 cursor.moveToPrevious();
             }
             cursor.close();
-            sql.close();
+            if(isTopic)
+                Tsql.close();
+            else
+                sql.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,16 +207,24 @@ public class DirectReplyReceiver extends BroadcastReceiver {
         NotificationCompat.Builder SUM_Notification = new NotificationCompat.Builder(context);
         Intent notification_intent = new Intent(context, MainActivity.class);
         notification_intent.setAction(RadyoMenemenPro.Action.CHAT);
-        inbox.setConversationTitle(context.getString(R.string.notification_new_msg));
+        if(isTopic) {
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
+            notification_intent.putExtra(topicDB._TOPICID,topicid);
+        }
+        inbox.setConversationTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : context.getString(R.string.notification_new_msg));
         SUM_Notification
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
-                .setContentTitle(context.getString(R.string.notification_new_msg))
-                .setSmallIcon(R.mipmap.ic_chat)
+                .setContentTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : context.getString(R.string.notification_new_msg))
+                .setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat)
                 .setStyle(inbox)
                 .setOnlyAlertOnce(true);
         Notification summary = SUM_Notification.build();
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION,summary);
+        try {
+            notificationManagerCompat.notify((isTopic) ? FIREBASE_CM_SERVICE.CHAT_NOTIFICATION + Integer.parseInt(topicid) : FIREBASE_CM_SERVICE.CHAT_NOTIFICATION,summary);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 }
