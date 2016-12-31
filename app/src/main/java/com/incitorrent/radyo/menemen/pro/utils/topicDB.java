@@ -290,6 +290,18 @@ public class topicDB extends SQLiteOpenHelper {
         return null;
     }
 
+    /**
+     * Check if topic exist with given id
+     * @param topicid
+     * @return
+     */
+    public boolean isTopicExists(String topicid){
+        SQLiteDatabase db = getReadableDatabase();
+        long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TOPICID + "='"+ topicid + "'" );
+        db.close();
+        return rownum > 0;
+    }
+
     public static class TOPIC_MSGS{
         public String _TOPIC_MSG_ID,_TOPIC_ID,_NICK,_POST,_TIME;
 

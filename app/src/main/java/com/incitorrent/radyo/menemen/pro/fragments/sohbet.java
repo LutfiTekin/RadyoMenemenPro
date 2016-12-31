@@ -293,7 +293,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   String mesaj = bundle.getString("msg");
                                   if (sohbetList == null || sohbetRV == null || sohbetRV.getAdapter() == null)
                                       return;
-                                  if (sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
+                                  if(sohbetList.size()<1)
+                                      sohbetList.add(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
+                                  else if (sohbetList.get(0).mesaj.equals(mesaj) && sohbetList.get(0).nick.equals(nick))
                                       sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
                                   else {
                                       //Fallback and search for it
@@ -371,6 +373,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(TOPIC_MODE) {
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID, true);
             Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID);
+            if(!m.getTopicDB().isTopicExists(TOPIC_ID)){
+                if(isAdded())
+                    Toast.makeText(context, "Konu bulunamadı", Toast.LENGTH_SHORT).show();
+                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
+            }
         }
         else
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
@@ -500,9 +507,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
         inflater.inflate((TOPIC_MODE) ? R.menu.topic_messages_menu : R.menu.sohbet_menu,menu);
         if(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis())
             menu.findItem(R.id.action_silent_notification).setVisible(false);
-        if (TOPIC_MODE && m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._CREATOR).equals(m.getUsername())) {
-            menu.findItem(R.id.action_close_topic).setVisible(true);
-            menu.findItem(R.id.action_leave_topic).setVisible(false);
+        try {
+            if (TOPIC_MODE && m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._CREATOR).equals(m.getUsername())) {
+                menu.findItem(R.id.action_close_topic).setVisible(true);
+                menu.findItem(R.id.action_leave_topic).setVisible(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
