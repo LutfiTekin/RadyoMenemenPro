@@ -276,4 +276,5 @@
     <string name="dialog_topic_close">Topic will be closed and all messages within will be irreversibly deleted, are you sure?</string>
     <string name="topic_user_joined">%s joined to topic</string>
     <string name="topic_user_left">%s left from topic</string>
+    <string name="topic_closed_by_creator">Topic is closed by its owner</string>
 </resources>

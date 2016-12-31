@@ -226,4 +226,5 @@
     <string name="dialog_topic_close">Konu kapatılacak ve içindeki mesajlar geri getirilemeyecek şekilde silinecek, emin misin?</string>
     <string name="topic_user_joined">%s konuya katıldı</string>
     <string name="topic_user_left">%s konudan ayrıldı</string>
+    <string name="topic_closed_by_creator">Konu sahibi tarafından kapatıldı</string>
 </resources>

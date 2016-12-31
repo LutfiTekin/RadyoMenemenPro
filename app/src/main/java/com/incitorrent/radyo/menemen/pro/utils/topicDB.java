@@ -244,6 +244,7 @@ public class topicDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TOPICS_TABLE,_TOPICID + "='" + topicid + "'", null);
         db.delete(MESSAGES_TABLE,_TOPICID + "='" + topicid + "'",null);
+        Log.d(topicDB.TOPICS_TABLE, topicid + " closed");
         db.close();
     }
 

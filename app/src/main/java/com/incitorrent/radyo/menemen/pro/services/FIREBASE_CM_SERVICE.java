@@ -186,8 +186,28 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     }
 
     private void closetopic(String topicid) {
-        Log.d(TAG, topicid + " closed");
-        m.getTopicDB().closeTopic(topicid);
+        try {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setSmallIcon(R.drawable.ic_topic_discussion);
+            builder.setAutoCancel(true);
+            builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE))
+                    .setContentText(getString(R.string.topic_closed_by_creator));
+            if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500,500});
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPICS);
+            builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.setAutoCancel(true);
+            Notification notification = builder.build();
+            int notification_id = CHAT_NOTIFICATION + Integer.parseInt(topicid);
+            notificationManager.notify(notification_id, notification);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } finally {
+            m.getTopicDB().closeTopic(topicid);
+        }
+
     }
 
     private void topicmsg(RemoteMessage remoteMessage) {
