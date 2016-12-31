@@ -253,10 +253,21 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             Notification notification = builder.build();
             int notification_id = CHAT_NOTIFICATION + Integer.parseInt(topicid);
             notificationManager.notify(notification_id, notification);
+            long msgid = m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,getString(R.string.app_name),String.format(getString(R.string.topic_user_left), user),Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
+            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+                Intent topic = new Intent(CHAT_BROADCAST_FILTER);
+                //Update ui only if chat is foreground
+                topic.putExtra(topicDB._TOPICID,topicid);
+                topic.putExtra("nick", getString(R.string.app_name));
+                topic.putExtra("msg", String.format(getString(R.string.topic_user_left), user));
+                topic.putExtra("msgid", String.valueOf(msgid));
+                topic.putExtra("time", Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT));
+                topic.putExtra("action", ADD);
+                broadcastManager.sendBroadcast(topic);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //TODO Build notification user left from topic
     }
 
     private void userjoinedtotopic(String user, String topicid) {
@@ -278,6 +289,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             Notification notification = builder.build();
             int notification_id = CHAT_NOTIFICATION + Integer.parseInt(topicid);
             notificationManager.notify(notification_id, notification);
+            long msgid = m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,getString(R.string.app_name),String.format(getString(R.string.topic_user_joined), user),Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
+            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+                Intent topic = new Intent(CHAT_BROADCAST_FILTER);
+                //Update ui only if chat is foreground
+                topic.putExtra(topicDB._TOPICID,topicid);
+                topic.putExtra("nick", getString(R.string.app_name));
+                topic.putExtra("msg", String.format(getString(R.string.topic_user_joined), user));
+                topic.putExtra("msgid", String.valueOf(msgid));
+                topic.putExtra("time", Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT));
+                topic.putExtra("action", ADD);
+                broadcastManager.sendBroadcast(topic);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
