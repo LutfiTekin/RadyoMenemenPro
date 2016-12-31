@@ -511,6 +511,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             if (TOPIC_MODE && m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._CREATOR).equals(m.getUsername())) {
                 menu.findItem(R.id.action_close_topic).setVisible(true);
                 menu.findItem(R.id.action_leave_topic).setVisible(false);
+                menu.findItem(R.id.action_edit_topic).setVisible(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -557,6 +558,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             })
                             .setCancelable(true)
                             .show();
+                break;
+            case R.id.action_edit_topic:
+                //TODO goto create topics fragment and open it with edit mode
                 break;
         }
         return super.onOptionsItemSelected(item);

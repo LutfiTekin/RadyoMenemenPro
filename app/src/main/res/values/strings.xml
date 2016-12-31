@@ -270,11 +270,12 @@
     <string name="action_close_topic">Close Topic</string>
     <string name="action_leave_topic">Leave Topic</string>
     <string name="toast_leaving_topic">Leaving topic</string>
-    <string name="topic_leave_topic_success">Leaving topic is successfull, you will not receive notifications from this topic anymore</string>
-    <string name="toast_topic_close_success">Topic is succesfully closed and messages deleted.</string>
+    <string name="topic_leave_topic_success">Leaving topic is successful, you will not receive notifications from this topic anymore</string>
+    <string name="toast_topic_close_success">Topic is successfully closed and messages deleted.</string>
     <string name="toast_closing_topic">Closing topic</string>
     <string name="dialog_topic_close">Topic will be closed and all messages within will be irreversibly deleted, are you sure?</string>
     <string name="topic_user_joined">%s joined to topic</string>
     <string name="topic_user_left">%s left from topic</string>
     <string name="topic_closed_by_creator">Topic is closed by its owner</string>
+    <string name="action_edit_topic">Edit Topic</string>
 </resources>

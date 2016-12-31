@@ -227,4 +227,5 @@
     <string name="topic_user_joined">%s konuya katıldı</string>
     <string name="topic_user_left">%s konudan ayrıldı</string>
     <string name="topic_closed_by_creator">Konu sahibi tarafından kapatıldı</string>
+    <string name="action_edit_topic">Konuyu Düzenle</string>
 </resources>

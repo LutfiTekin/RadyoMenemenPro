@@ -17,6 +17,11 @@
         android:title="@string/action_leave_topic"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_edit_topic"
+        android:orderInCategory="100"
+        android:title="@string/action_edit_topic"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_close_topic"
         android:orderInCategory="100"
         android:title="@string/action_close_topic"
