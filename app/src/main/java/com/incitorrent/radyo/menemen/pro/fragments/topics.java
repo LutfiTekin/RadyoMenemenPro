@@ -15,11 +15,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -241,14 +241,14 @@ public class topics extends Fragment {
         class TPCViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             TextView title,description,creator;
             ImageView image;
-            ToggleButton toggle;
+            Button toggle;
             TPCViewHolder(View itemView) {
                 super(itemView);
                 title = (TextView) itemView.findViewById(R.id.t_title);
                 description = (TextView) itemView.findViewById(R.id.t_descr);
                 creator = (TextView) itemView.findViewById(R.id.t_creator);
                 image = (ImageView) itemView.findViewById(R.id.t_image);
-                toggle = (ToggleButton) itemView.findViewById(R.id.toggleButton);
+                toggle = (Button) itemView.findViewById(R.id.toggleButton);
                 title.setOnClickListener(this);
                 image.setOnClickListener(this);
                 toggle.setOnClickListener(this);
@@ -265,8 +265,7 @@ public class topics extends Fragment {
                         //User is not joined the group show the join/leave toggle
                         toggle.setVisibility(View.VISIBLE);
                 }else if(view == toggle){
-                    boolean isChecked = ((ToggleButton) view).isChecked();
-                    queue.add((isChecked) ? join : leave);
+                    queue.add(join);
                     queue.start();
                 }
             }
@@ -382,45 +381,45 @@ public class topics extends Fragment {
     }
 
 
-    StringRequest leave = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    switch (response) {
-                        case RESPONSE_AUTH_FAILED:
-                            if(context!=null)
-                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
-                            break;
-                        case RESPONSE_SUCCESS:
-                            try {
-                                String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
-                               if(topicstr!=null)
-                                   FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
-                                m.getTopicDB().leave(SELECTED_TOPIC_ID);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                    }
-                }
-            },null){
-        @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
-            Map<String, String> dataToSend = m.getAuthMap();
-            dataToSend.put(topicDB._TOPICID,SELECTED_TOPIC_ID);
-            return dataToSend;
-        }
-
-        @Override
-        public Priority getPriority() {
-            return Priority.IMMEDIATE;
-        }
-
-        @Override
-        public RetryPolicy getRetryPolicy() {
-            return retrypolicy;
-        }
-    };
+//    StringRequest leave = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,
+//            new Response.Listener<String>() {
+//                @Override
+//                public void onResponse(String response) {
+//                    switch (response) {
+//                        case RESPONSE_AUTH_FAILED:
+//                            if(context!=null)
+//                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+//                            break;
+//                        case RESPONSE_SUCCESS:
+//                            try {
+//                                String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
+//                               if(topicstr!=null)
+//                                   FirebaseMessaging.getInstance().unsubscribeFromTopic(topicstr);
+//                                m.getTopicDB().leave(SELECTED_TOPIC_ID);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                            break;
+//                    }
+//                }
+//            },null){
+//        @Override
+//        protected Map<String, String> getParams() throws AuthFailureError {
+//            Map<String, String> dataToSend = m.getAuthMap();
+//            dataToSend.put(topicDB._TOPICID,SELECTED_TOPIC_ID);
+//            return dataToSend;
+//        }
+//
+//        @Override
+//        public Priority getPriority() {
+//            return Priority.IMMEDIATE;
+//        }
+//
+//        @Override
+//        public RetryPolicy getRetryPolicy() {
+//            return retrypolicy;
+//        }
+//    };
 private RetryPolicy retrypolicy = new RetryPolicy() {
     @Override
     public int getCurrentTimeout() {

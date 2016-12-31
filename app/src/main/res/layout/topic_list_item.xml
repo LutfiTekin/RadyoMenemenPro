@@ -63,14 +63,12 @@
             android:layout_alignParentEnd="true"
             android:layout_margin="8dp"/>
 
-        <ToggleButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/toggleButton"
             android:background="?android:attr/selectableItemBackground"
-            android:textOn="@string/topics_leave"
-            android:textOff="@string/topics_join"
-            android:checked="false"
+            android:text="@string/topics_join"
             android:layout_below="@+id/t_creator"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
