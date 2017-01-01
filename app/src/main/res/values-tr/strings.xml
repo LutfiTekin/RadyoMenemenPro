@@ -228,4 +228,7 @@
     <string name="topic_user_left">%s konudan ayrıldı</string>
     <string name="topic_closed_by_creator">Konu sahibi tarafından kapatıldı</string>
     <string name="action_edit_topic">Konuyu Düzenle</string>
+    <string name="topic_not_found">Konu bulunamadı</string>
+    <string name="topic_edited_by_owner">%1$s, %2$s konusunu düzenledi</string>
+    <string name="topic_edit_success">Konu başarıyla düzenlendi</string>
 </resources>

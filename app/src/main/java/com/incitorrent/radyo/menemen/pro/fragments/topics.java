@@ -75,12 +75,12 @@ public class topics extends Fragment {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment track_info = new topics_create();
+                Fragment topics_create = new topics_create();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                    track_info.setEnterTransition(new Slide(Gravity.TOP));
+                    topics_create.setEnterTransition(new Slide(Gravity.TOP));
                 getFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.Fcontent, track_info)
+                        .replace(R.id.Fcontent, topics_create)
                         .addToBackStack(null)
                         .commit();
             }

@@ -39,6 +39,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -68,6 +69,8 @@ public class topics_create extends Fragment implements View.OnClickListener{
     TextView textView;
     ProgressBar progressBar,progressBarsubmit;
     FloatingActionButton submit;
+    private boolean TOPIC_EDIT_MODE = false;
+    private String TOPIC_ID = "0";
     public String imageurl = "default";
     public String imagepath = null;
     public topics_create() {
@@ -98,6 +101,30 @@ public class topics_create extends Fragment implements View.OnClickListener{
         submit = (FloatingActionButton) rootview.findViewById(R.id.submit);
         imageView.setOnClickListener(this);
         submit.setOnClickListener(this);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            TOPIC_ID = bundle.getString(topicDB._TOPICID);
+            if(TOPIC_ID != null){
+                TOPIC_EDIT_MODE = true;
+                if(!m.getTopicDB().isTopicExists(TOPIC_ID) || !m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._CREATOR).equals(m.getUsername())) {
+                    if(isAdded())
+                        Toast.makeText(context, R.string.topic_not_found, Toast.LENGTH_SHORT).show();
+                    getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
+                }else{
+                  topicDB.TOPIC topic = m.getTopicDB().getTopic(TOPIC_ID);
+                    et_title.setText(topic.get_TITLE(), TextView.BufferType.EDITABLE);
+                    et_descr.setText(topic.get_DESCR(), TextView.BufferType.EDITABLE);
+                    if(isAdded() && !topic.get_IMAGEURL().equals("default"))
+                        Glide.with(getActivity()).load(RadyoMenemenPro.CAPS_IMAGES_PATH + topic.get_IMAGEURL()).placeholder(R.drawable.default_image).into(imageView);
+                    imageurl = topic.get_IMAGEURL();
+                    checkBox.setEnabled(false);
+                    if(getActivity() != null && isAdded())
+                        getActivity().setTitle(getString(R.string.action_edit_topic));
+                }
+            }else
+                //Getting topic id is failed set TOPIC_ID to initial value
+                TOPIC_ID = "0";
+        }
         FrameLayout frameLayout = (FrameLayout) rootview.findViewById(R.id.create_topic_frame);
         frameLayout.setOnTouchListener(new OnSwipeTouchListener(context){
             @Override
@@ -136,7 +163,8 @@ public class topics_create extends Fragment implements View.OnClickListener{
             return;
         }
         progressBarsubmit.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_CREATE,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                (TOPIC_EDIT_MODE) ? RadyoMenemenPro.MENEMEN_TOPICS_EDIT : RadyoMenemenPro.MENEMEN_TOPICS_CREATE,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -148,14 +176,15 @@ public class topics_create extends Fragment implements View.OnClickListener{
                                 Toast.makeText(context, R.string.topics_error_duplicate, Toast.LENGTH_SHORT).show();
                                 break;
                             default:
-                                Toast.makeText(context, R.string.topics_new_success, Toast.LENGTH_SHORT).show();
-                                try {
-                                    Log.d("TOPIC",response);
-                                    JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
-                                    FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
-                                    m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID),j.getString(topicDB._TOPICSTR),m.getUsername(),"1",title,descr,imageurl));
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                if (!TOPIC_EDIT_MODE) {
+                                    Toast.makeText(context, R.string.topics_new_success, Toast.LENGTH_SHORT).show();
+                                    try {
+                                        JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
+                                        FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
+                                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID),j.getString(topicDB._TOPICSTR),m.getUsername(),"1",title,descr,imageurl));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
@@ -166,7 +195,6 @@ public class topics_create extends Fragment implements View.OnClickListener{
                                 }, 1000);
                                 break;
                         }
-                        Log.d("topics", response);
                         progressBarsubmit.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
@@ -185,9 +213,12 @@ public class topics_create extends Fragment implements View.OnClickListener{
                 Map<String, String> dataToSend = m.getAuthMap();
                 dataToSend.put("title", title);
                 dataToSend.put("descr", descr);
-                dataToSend.put("type", (checkBox.isChecked()) ? "2" : "1");
+                if(!TOPIC_EDIT_MODE)
+                    dataToSend.put("type", (checkBox.isChecked()) ? "2" : "1");
                 imageurl = imageurl.replaceAll(RadyoMenemenPro.CAPS_IMAGES_PATH,"");
                 dataToSend.put("image", imageurl);
+                if(TOPIC_EDIT_MODE)
+                    dataToSend.put(topicDB._TOPICID,TOPIC_ID);
                 return dataToSend;
             }
 

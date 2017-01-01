@@ -278,4 +278,7 @@
     <string name="topic_user_left">%s left from topic</string>
     <string name="topic_closed_by_creator">Topic is closed by its owner</string>
     <string name="action_edit_topic">Edit Topic</string>
+    <string name="topic_not_found">Topic not found</string>
+    <string name="topic_edited_by_owner">"%1$s, changed %2$s "</string>
+    <string name="topic_edit_success">Topic edited successfully</string>
 </resources>

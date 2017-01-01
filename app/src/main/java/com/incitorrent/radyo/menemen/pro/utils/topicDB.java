@@ -291,6 +291,48 @@ public class topicDB extends SQLiteOpenHelper {
     }
 
     /**
+     * Get Topic Object containin all the info with the
+     * given topic id
+     * @param topicid
+     * @return
+     */
+    public TOPIC getTopic(String topicid){
+        SQLiteDatabase db = getReadableDatabase();
+
+        try {
+            Cursor c = db.query(TOPICS_TABLE,null, _TOPICID + "='" + topicid + "'",null,null,null,null,"1");
+            c.moveToFirst();
+            TOPIC topıc = new TOPIC(
+                    c.getString(c.getColumnIndex(_TOPICID)),
+                    c.getString(c.getColumnIndex(_TOPICSTR)),
+                    c.getString(c.getColumnIndex(_CREATOR)),
+                    c.getString(c.getColumnIndex(_JOINED)),
+                    c.getString(c.getColumnIndex(_TITLE)),
+                    c.getString(c.getColumnIndex(_DESCR)),
+                    c.getString(c.getColumnIndex(_IMAGEURL))
+                    );
+            c.close();
+            db.close();
+            return topıc;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void edittopic(ContentValues contentValues){
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            int rows = db.update(TOPICS_TABLE,contentValues,_TOPICID + " ='" + contentValues.get(topicDB._TOPICID) + "'",null);
+            Log.d(TOPICS_TABLE, rows + " affected");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
      * Check if topic exist with given id
      * @param topicid
      * @return

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -64,6 +65,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String CATEGORY_ONLINE = "online";
     public static final String CATEGORY_TOPICS = "cat_topics";
     public static final String ADD = "add";
+    public static final String EDIT = "edit";
     public static final String DELETE = "delete";
     public static final String JOIN = "join";
     public static final String LEAVE = "leave";
@@ -177,12 +179,49 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             topicmsg(remoteMessage);
                         else if(action.equals(CLOSE))
                             closetopic(getDATA(remoteMessage,topicDB._TOPICID));
+                        else if(action.equals(EDIT))
+                            edittopic(remoteMessage);
                         break;
                 }
 
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void edittopic(RemoteMessage remoteMessage) {
+        try {
+        String topicid = getDATA(remoteMessage,topicDB._TOPICID);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(topicDB._TOPICID,topicid);
+        contentValues.put(topicDB._TITLE,getDATA(remoteMessage,topicDB._TITLE));
+        contentValues.put(topicDB._DESCR,getDATA(remoteMessage,"descr"));
+        contentValues.put(topicDB._IMAGEURL,getDATA(remoteMessage,topicDB._IMAGEURL));
+        m.getTopicDB().edittopic(contentValues);
+        String message = String.format(getString(R.string.topic_edited_by_owner), m.getTopicDB().getTopicInfo(topicid, topicDB._CREATOR), getDATA(remoteMessage, "oldtitle"));
+        if(m.getTopicDB().getTopicInfo(topicid,topicDB._CREATOR).equals(m.getUsername()))
+            message = getString(R.string.topic_edit_success);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setSmallIcon(R.drawable.ic_topic_discussion);
+            builder.setAutoCancel(true);
+            builder.setContentTitle(getDATA(remoteMessage, "oldtitle"))
+                    .setContentText(message);
+            if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+            if (vibrate)
+                builder.setVibrate(new long[]{500,500});
+            notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
+            notification_intent.putExtra(topicDB._TOPICID,topicid);
+            builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.setAutoCancel(true);
+            Notification notification = builder.build();
+            int notification_id = CHAT_NOTIFICATION + new Random().nextInt(200);
+            notificationManager.notify(notification_id, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     private void closetopic(String topicid) {

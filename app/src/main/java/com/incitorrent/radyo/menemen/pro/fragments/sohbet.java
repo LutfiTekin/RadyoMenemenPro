@@ -38,8 +38,10 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.method.LinkMovementMethod;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -375,7 +377,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID);
             if(!m.getTopicDB().isTopicExists(TOPIC_ID)){
                 if(isAdded())
-                    Toast.makeText(context, "Konu bulunamadı", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.topic_not_found, Toast.LENGTH_SHORT).show();
                 getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
             }
         }
@@ -560,7 +562,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             .show();
                 break;
             case R.id.action_edit_topic:
-                //TODO goto create topics fragment and open it with edit mode
+                Fragment topic_edit = new topics_create();
+                Bundle tbundle = new Bundle();
+                tbundle.putString(topicDB._TOPICID, TOPIC_ID);
+                topic_edit.setArguments(tbundle);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    topic_edit.setEnterTransition(new Slide(Gravity.TOP));
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.Fcontent, topic_edit)
+                        .addToBackStack(topicDB.TOPICS_TABLE + "edit" + TOPIC_ID)
+                        .commit();
                 break;
         }
         return super.onOptionsItemSelected(item);
