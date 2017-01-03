@@ -53,6 +53,7 @@ public class DirectReplyReceiver extends BroadcastReceiver {
                    break;
                case RadyoMenemenPro.Action.TOPIC_MESSAGES:
                    postToMenemen(String.valueOf(getMessage(intent)),context,intent.getExtras().getString(topicDB._TOPICID,"failed"));
+                   break;
                case RadyoMenemenPro.Action.CAPS:
                    postCapsComment(intent, context);
                    break;
