@@ -303,6 +303,21 @@ public class topicDB extends SQLiteOpenHelper {
         return null;
     }
 
+    public String getTopicId(String topicstr){
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            Cursor c = db.query(TOPICS_TABLE,new String[]{_TOPICID}, _TOPICSTR+ "='" + topicstr + "'",null,null,null,null,"1");
+            c.moveToFirst();
+            String s = c.getString(c.getColumnIndex(_TOPICID));
+            c.close();
+            db.close();
+            return s;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Get Topic Object containin all the info with the
      * given topic id

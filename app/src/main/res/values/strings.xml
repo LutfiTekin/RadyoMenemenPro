@@ -285,4 +285,6 @@
     <string name="topic_join_prompt_message">You are not member of %s do you want to join?</string>
     <string name="topic_join_prompt_title">Do you want to join this topic?</string>
     <string name="topic_joining">Subscribing</string>
+    <string name="topic_share_link">Share Topic Link</string>
+    <string name="topic_share_text">\"Open this topic link in Radyo Menemen Android App : %s \"</string>
 </resources>

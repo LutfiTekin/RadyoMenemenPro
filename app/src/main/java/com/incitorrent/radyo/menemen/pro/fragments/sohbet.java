@@ -600,8 +600,23 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         .addToBackStack(topicDB.TOPICS_TABLE + "edit" + TOPIC_ID)
                         .commit();
                 break;
+            case R.id.action_share_topic:
+                shareTopic();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareTopic() {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("radyomenemen.com")
+                .appendQueryParameter(topicDB._TOPICID, m.getTopicDB().getTopicSTR(TOPIC_ID));
+        String topic_link = builder.build().toString();
+        Intent share_intent = new Intent(Intent.ACTION_SEND);
+        share_intent.setType("text/plain");
+        share_intent.putExtra(android.content.Intent.EXTRA_TEXT, String.format(getString(R.string.topic_share_text), topic_link));
+        startActivity(Intent.createChooser(share_intent,getString(R.string.topic_share_link)));
     }
 
     StringRequest leavetopic = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LEAVE,

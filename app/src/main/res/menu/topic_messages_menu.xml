@@ -2,16 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/go_to_online_users"
-        android:orderInCategory="100"
-        android:title="@string/who_is_online"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_leave_topic"
         android:orderInCategory="100"
         android:title="@string/action_leave_topic"
@@ -20,6 +10,11 @@
         android:id="@+id/action_edit_topic"
         android:orderInCategory="100"
         android:title="@string/action_edit_topic"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_topic"
+        android:orderInCategory="100"
+        android:title="@string/topic_share_link"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_close_topic"

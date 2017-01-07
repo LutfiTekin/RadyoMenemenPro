@@ -3,8 +3,8 @@ package com.incitorrent.radyo.menemen.pro;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
+import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 
 public class Browsable extends AppCompatActivity {
@@ -21,9 +21,9 @@ public class Browsable extends AppCompatActivity {
                 main.setAction(RadyoMenemenPro.Action.OLAN_BITEN);
             else if(getIntent().getData().toString().contains(topicDB._TOPICID)) {
                 main.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
-                //https://radyomenemen.com?tid=8&str=topicstr
-                main.putExtra(topicDB._TOPICID,getIntent().getData().getQueryParameter(topicDB._TOPICID));
-                Log.d("BROWSABLE",getIntent().getData().toString());
+                Menemen m = new Menemen(Browsable.this);
+                String topicid = m.getTopicDB().getTopicId(getIntent().getData().getQueryParameter(topicDB._TOPICID));
+                main.putExtra(topicDB._TOPICID,topicid);
             }
         }
         startActivity(main);

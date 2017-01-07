@@ -235,4 +235,6 @@
     <string name="topic_joining">Konuya katılınıyor</string>
     <string name="topic_join_prompt_title">Konuya Katılmak İstiyor musunuz?</string>
     <string name="topic_join_prompt_message">%s konusuna abone değilsin katılmak istiyor musun?</string>
+    <string name="topic_share_link">Konu Linkini Paylaş</string>
+    <string name="topic_share_text">Konu linkini Radyo Menemen Android uygulaması ile açın %s</string>
 </resources>
