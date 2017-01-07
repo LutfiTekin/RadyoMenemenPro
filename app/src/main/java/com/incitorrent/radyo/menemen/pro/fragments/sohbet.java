@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,6 +38,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.transition.Slide;
 import android.util.Log;
@@ -72,6 +74,7 @@ import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.CapsYukle;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
+import com.incitorrent.radyo.menemen.pro.utils.NavHeader;
 import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
@@ -122,6 +125,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     ImageView take_photo,pick_gallery,cancel_image_pick;
     Toolbar toolbar;
     private Handler mHandler;
+    private NavHeader navHeader;
     private boolean isScrolling = false;
     /**
      * A boolean value for differenciating Topic messages by given id or General Chat
@@ -376,12 +380,17 @@ public class sohbet extends Fragment implements View.OnClickListener{
     public void onResume() {
         if(TOPIC_MODE) {
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID, true);
-            Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + TOPIC_ID);
             if(!m.getTopicDB().isTopicExists(TOPIC_ID)){
                 if(isAdded())
                     Toast.makeText(context, R.string.topic_not_found, Toast.LENGTH_SHORT).show();
                 getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
             }
+            navHeader = new NavHeader().setHeaderView(((NavigationView) getActivity().findViewById(R.id.nav_view)).getHeaderView(0))
+                    .setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE))
+                    .setSubTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._DESCR))
+                    .setImage(RadyoMenemenPro.CAPS_IMAGES_PATH + m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._IMAGEURL));
+            navHeader.build();
+            navHeader.getSubHeaderTextView().setEllipsize(TextUtils.TruncateAt.END);
         }
         else
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
@@ -498,6 +507,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND, false);
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(context).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
+        if(TOPIC_MODE)
+            navHeader.clear();
         super.onStop();
     }
 
