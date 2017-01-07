@@ -281,4 +281,8 @@
     <string name="topic_not_found">Topic not found</string>
     <string name="topic_edited_by_owner">"%1$s, changed %2$s "</string>
     <string name="topic_edit_success">Topic edited successfully</string>
+    <string name="topic_subscribed_to_topic">You are subscribed to %s</string>
+    <string name="topic_join_prompt_message">You are not member of %s do you want to join?</string>
+    <string name="topic_join_prompt_title">Do you want to join this topic?</string>
+    <string name="topic_joining">Subscribing</string>
 </resources>

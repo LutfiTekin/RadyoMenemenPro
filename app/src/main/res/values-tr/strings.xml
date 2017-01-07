@@ -231,4 +231,8 @@
     <string name="topic_not_found">Konu bulunamadı</string>
     <string name="topic_edited_by_owner">%1$s, %2$s konusunu düzenledi</string>
     <string name="topic_edit_success">Konu başarıyla düzenlendi</string>
+    <string name="topic_subscribed_to_topic">Artık %s konusuna abonesiniz.</string>
+    <string name="topic_joining">Konuya katılınıyor</string>
+    <string name="topic_join_prompt_title">Konuya Katılmak İstiyor musunuz?</string>
+    <string name="topic_join_prompt_message">%s konusuna abone değilsin katılmak istiyor musun?</string>
 </resources>

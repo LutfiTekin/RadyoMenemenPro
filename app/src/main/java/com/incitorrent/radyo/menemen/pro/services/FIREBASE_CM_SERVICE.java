@@ -373,7 +373,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 "0",
                 getDATA(rm,"title"),
                 getDATA(rm,"descr"),
-                getDATA(rm,"image")
+                getDATA(rm,"image"),
+                getDATA(rm,"type")
                 ));
     }
 

@@ -181,7 +181,7 @@ public class topics_create extends Fragment implements View.OnClickListener{
                                     try {
                                         JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
                                         FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
-                                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID),j.getString(topicDB._TOPICSTR),m.getUsername(),"1",title,descr,imageurl));
+                                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID),j.getString(topicDB._TOPICSTR),m.getUsername(),"1",title,descr,imageurl,(checkBox.isChecked()) ? "2" : "1"));
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }

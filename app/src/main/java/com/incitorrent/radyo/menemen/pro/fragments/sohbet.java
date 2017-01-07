@@ -159,6 +159,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 getActivity().setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE));
                 emptyview = (TextView) sohbetView.findViewById(R.id.emptytextview);
                 emptyview.setVisibility(View.VISIBLE);
+                if(!m.getTopicDB().isJoined(TOPIC_ID))
+                    promptJoinDialog();
             }
             else
                 getActivity().setTitle(getString(R.string.nav_sohbet));
@@ -402,6 +404,31 @@ public class sohbet extends Fragment implements View.OnClickListener{
         m.runEnterAnimation(resimekle,250);
         iAmOnline();
         super.onResume();
+    }
+
+    private void promptJoinDialog() {
+        if(isAdded())
+            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
+                    .setTitle(R.string.topic_join_prompt_title)
+                    .setIcon(R.drawable.ic_topic_discussion)
+                    .setMessage(String.format(getString(R.string.topic_join_prompt_message), m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE)))
+                    .setPositiveButton(R.string.topics_join, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            RequestQueue queue = Volley.newRequestQueue(context);
+                            Toast.makeText(context, R.string.topic_joining, Toast.LENGTH_SHORT).show();
+                            queue.add(jointopic);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
+                            dialogInterface.cancel();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
     }
 
     void updateListSilently() {
@@ -659,6 +686,55 @@ public class sohbet extends Fragment implements View.OnClickListener{
             Map<String,String> dataToSend = m.getAuthMap();
             dataToSend.put(topicDB._TOPICID,TOPIC_ID);
             return dataToSend;
+        }
+
+        @Override
+        public RetryPolicy getRetryPolicy() {
+            return new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 5000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 5000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            };
+        }
+    };
+
+
+    StringRequest jointopic = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_JOIN,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    switch (response) {
+                        case "1":
+                            if(context!=null)
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                            break;
+                        case "2":
+                            m.getTopicDB().join(TOPIC_ID);
+                            break;
+                    }
+                }
+            },null){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> dataToSend = m.getAuthMap();
+            dataToSend.put(topicDB._TOPICID,TOPIC_ID);
+            return dataToSend;
+        }
+
+        @Override
+        public Priority getPriority() {
+            return Priority.IMMEDIATE;
         }
 
         @Override

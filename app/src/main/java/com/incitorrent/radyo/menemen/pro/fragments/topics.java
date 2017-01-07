@@ -202,12 +202,12 @@ public class topics extends Fragment {
             protected Void doInBackground(Void... voids) {
                 try {
                     topicList = new ArrayList<>();
-                    JSONArray arr = new JSONObject(response).getJSONArray("topics");
+                    JSONArray arr = new JSONObject(response).getJSONArray(topicDB.TOPICS_TABLE);
                     JSONObject c;
                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
                         JSONArray innerJarr = arr.getJSONArray(0);
                         c = innerJarr.getJSONObject(i);
-                        String id,title,descr,image,creator,tpc,joined;
+                        String id,title,descr,image,creator,tpc,joined,type;
                         id = c.getString("id");
                         title = c.getString("t");
                         descr = c.getString("d");
@@ -215,7 +215,8 @@ public class topics extends Fragment {
                         creator = c.getString("c");
                         tpc = c.getString("tpc");
                         joined = c.getString("j");
-                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,joined,title,descr,image));
+                        type = "1"; //Listing public topics only
+                        m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(id,tpc,creator,joined,title,descr,image,type));
                         if(joined.equals("1"))
                             FirebaseMessaging.getInstance().subscribeToTopic(tpc);
                     }
@@ -334,17 +335,8 @@ public class topics extends Fragment {
                                 Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
                             break;
                         case RESPONSE_SUCCESS:
-                            try {
-                                String topicstr = m.getTopicDB().getTopicSTR(SELECTED_TOPIC_ID);
-                                if(topicstr!=null)
-                                    FirebaseMessaging.getInstance().subscribeToTopic(topicstr);
-                                //Join Topic
-                                m.getTopicDB().join(SELECTED_TOPIC_ID);
-                                //Go to topic
-                                openTopic();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            m.getTopicDB().join(SELECTED_TOPIC_ID);
+                            openTopic();
                             break;
                     }
                 }
