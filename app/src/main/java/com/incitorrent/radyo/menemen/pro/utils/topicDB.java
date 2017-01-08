@@ -74,7 +74,7 @@ public class topicDB extends SQLiteOpenHelper {
         values.put(_TOPICSTR, t.get_TOPICSTR());
         values.put(_CREATOR, t.get_CREATOR());
         values.put(_JOINED, t.get_JOINED());
-        values.put(_TYPE, t.get_PRIVATE());
+        values.put(_TYPE, t.get_TYPE());
         values.put(_TITLE, t.get_TITLE());
         values.put(_DESCR, t.get_DESCR());
         values.put(_IMAGEURL, t.get_IMAGEURL());
@@ -117,7 +117,7 @@ public class topicDB extends SQLiteOpenHelper {
      * @return
      */
     public Cursor listTopıcs(){
-        return getReadableDatabase().query(TOPICS_TABLE,null,null,null,null,null, _TOPICID +" DESC", null);
+        return getReadableDatabase().rawQuery("SELECT DISTINCT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE + " LEFT JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +  " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1' ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
     }
 
     /**
@@ -428,9 +428,9 @@ public class topicDB extends SQLiteOpenHelper {
 
 
     public static class TOPIC {
-        public String _TOPICID,_TOPICSTR,_CREATOR,_JOINED,_TITLE,_DESCR,_IMAGEURL,_PRIVATE;
+        public String _TOPICID,_TOPICSTR,_CREATOR,_JOINED,_TITLE,_DESCR,_IMAGEURL, _TYPE;
 
-        public TOPIC(String _TOPICID, String _TOPICSTR, String _CREATOR, String _JOINED, String _TITLE, String _DESCR, String _IMAGEURL, String _PRIVATE) {
+        public TOPIC(String _TOPICID, String _TOPICSTR, String _CREATOR, String _JOINED, String _TITLE, String _DESCR, String _IMAGEURL, String _TYPE) {
             this._TOPICID = _TOPICID;
             this._TOPICSTR = _TOPICSTR;
             this._CREATOR = _CREATOR;
@@ -438,8 +438,9 @@ public class topicDB extends SQLiteOpenHelper {
             this._TITLE = _TITLE;
             this._DESCR = _DESCR;
             this._IMAGEURL = _IMAGEURL;
-            this._PRIVATE = _PRIVATE;
+            this._TYPE = _TYPE;
         }
+
 
         public String get_TOPICID() {
             return _TOPICID;
@@ -469,8 +470,8 @@ public class topicDB extends SQLiteOpenHelper {
             return _IMAGEURL;
         }
 
-        public String get_PRIVATE() {
-            return _PRIVATE;
+        public String get_TYPE() {
+            return _TYPE;
         }
     }
 

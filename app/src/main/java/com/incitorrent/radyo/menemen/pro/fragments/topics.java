@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -202,6 +203,7 @@ public class topics extends Fragment {
             protected Void doInBackground(Void... voids) {
                 try {
                     topicList = new ArrayList<>();
+                    Log.d("TOPIC",response);
                     JSONArray arr = new JSONObject(response).getJSONArray(topicDB.TOPICS_TABLE);
                     JSONObject c;
                     for(int i = 0;i<arr.getJSONArray(0).length();i++){
