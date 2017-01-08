@@ -370,7 +370,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                 getDATA(rm,"id"),
                 getDATA(rm,"tpc"),
                 getDATA(rm,"creator"),
-                "0",
+                (getDATA(rm,"creator").equals(m.getUsername())) ? "1" : "0",
                 getDATA(rm,"title"),
                 getDATA(rm,"descr"),
                 getDATA(rm,"image"),
