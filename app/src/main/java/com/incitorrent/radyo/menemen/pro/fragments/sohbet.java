@@ -4,6 +4,7 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -29,12 +30,14 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -82,6 +85,7 @@ import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -116,6 +120,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     Context context;
     List<Satbax_Smiley_Objects> satbaxSmileList;
     List<Sohbet_Objects> sohbetList;
+    ArrayList<String> userlist;
     SatbaxSmileAdapter Smileadapter;
     SohbetAdapter SohbetAdapter;
     BroadcastReceiver Chatreceiver;
@@ -133,6 +138,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
      */
     private boolean TOPIC_MODE = false;
     private String TOPIC_ID = "0";
+
+    MenuItem searchItem;
+    boolean isUserSearching = false;
     public sohbet() {
         // Required empty public constructor
     }
@@ -227,7 +235,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(sohbetList == null) return;
+                if(sohbetList == null || isUserSearching) return;
                 try {
                     int LAST_POSITION_COMP_VISIBLE = linearLayoutManager.findLastVisibleItemPosition();
                     int LIST_SIZE = sohbetList.size();
@@ -441,8 +449,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
     }
 
     void updateListSilently() {
-        //Prevent glitches: if user is isScrolling do not try to update UI
-        if(isScrolling) return;
+        //Prevent glitches: if user is isScrolling or searching do not try to update UI
+        if(isScrolling || isUserSearching) return;
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected void onPreExecute() {
@@ -555,6 +563,52 @@ public class sohbet extends Fragment implements View.OnClickListener{
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        //Search user and add to topic (If current user is creator of topic)
+        if(TOPIC_MODE && m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._CREATOR).equals(m.getUsername())){
+            menu.findItem(R.id.action_add_user).setVisible(true);
+            SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            searchItem = menu.findItem(R.id.action_add_user);
+            MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    isUserSearching = true;
+                    if(getActivity()!=null)(getActivity().findViewById(R.id.input_section)).setVisibility(View.GONE);
+                    emptyview.setVisibility(View.GONE);
+                    resimekle.hide();
+                    sohbetList.clear();
+                    userlist = new ArrayList<>();
+                    sohbetRV.setAdapter(new UserAdapter(userlist));
+                    swipeRV.setEnabled(false);
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    isUserSearching = false;
+                    swipeRV.setEnabled(true);
+                    if(getActivity()!=null)(getActivity().findViewById(R.id.input_section)).setVisibility(View.VISIBLE);
+                    new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    return true;
+                }
+            });
+            SearchView search = (SearchView) searchItem.getActionView();
+            search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    //Search user
+                    if (newText.trim().length()>2) {
+                        Volley.newRequestQueue(context).add(search_user(newText.trim()));
+                    }
+                    return true;
+                }
+            });
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -1176,6 +1230,100 @@ public class sohbet extends Fragment implements View.OnClickListener{
             super.onAttachedToRecyclerView(recyclerView);
         }
     }
+    //Smiley END
+
+    class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserVH>{
+        Context context;
+        ArrayList<String> userlist;
+        class UserVH extends RecyclerView.ViewHolder implements View.OnClickListener{
+            ImageButton add_user;
+            TextView username;
+            UserVH(View itemView) {
+                super(itemView);
+                add_user = (ImageButton) itemView.findViewById(R.id.add_user);
+                username = (TextView) itemView.findViewById(R.id.username);
+                add_user.setOnClickListener(this);
+            }
+            @Override
+            public void onClick(View v) {
+                ImageButton i = (ImageButton) v;
+            }
+        }
+        UserAdapter(ArrayList<String> userlist){
+
+            this.userlist = userlist;
+        }
+
+        @Override
+        public UserVH onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.topic_add_user_item, viewGroup,false);
+            UserVH pvh = new UserVH(v);
+            context = viewGroup.getContext();
+            return pvh;
+        }
+        @Override
+        public int getItemCount() {
+            return userlist.size();
+        }
+
+        @Override
+        public void onBindViewHolder(UserVH user, final int i) {
+            user.username.setText(userlist.get(i));
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+        }
+    }
+
+    StringRequest search_user(final String query) {
+        StringRequest sr =  new StringRequest(Request.Method.POST, RadyoMenemenPro.SEARCH_USER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String response) {
+                        Log.d("SEARCH",response);
+                        if (response.equals("1")) {
+                            Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+                        } else {
+                            new AsyncTask<Void,Void,Void>(){
+                                @Override
+                                protected Void doInBackground(Void... voids) {
+                                    try {
+                                        JSONArray arr = new JSONObject(response).getJSONArray("req");
+                                        JSONObject c;
+                                        if(arr.getJSONArray(0).length()>0) userlist.clear();
+                                        for(int i = 0;i<arr.getJSONArray(0).length();i++) {
+                                            JSONArray innerJarr = arr.getJSONArray(0);
+                                            c = innerJarr.getJSONObject(i);
+                                            userlist.add(c.getString("nick"));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return null;}
+
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    if(userlist.size()>0)
+                                        sohbetRV.getAdapter().notifyDataSetChanged();
+                                    super.onPostExecute(aVoid);
+                                }
+                            }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+                        }
+                    }
+                }, null) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> dataToSend = m.getAuthMap();
+                dataToSend.put(SearchManager.QUERY, query);
+                return dataToSend;
+            }
+
+        };
+        sr.setShouldCache(true);
+        return sr;
+    };
 
     private void forceSyncMSGs() {
         if(TOPIC_MODE) {

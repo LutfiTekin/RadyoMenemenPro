@@ -287,4 +287,5 @@
     <string name="topic_joining">Subscribing</string>
     <string name="topic_share_link">Share Topic Link</string>
     <string name="topic_share_text">\"Open this topic link in Radyo Menemen Android App : %s \"</string>
+    <string name="topics_add_user">Add user to topic</string>
 </resources>
