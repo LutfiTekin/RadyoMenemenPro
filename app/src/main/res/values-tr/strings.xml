@@ -238,4 +238,8 @@
     <string name="topic_share_link">Konu Linkini Paylaş</string>
     <string name="topic_share_text">Konu linkini Radyo Menemen Android uygulaması ile açın %s</string>
     <string name="topics_add_user">Konuya Üye Ekle</string>
+    <string name="topics_member_duplicate">Bu üye zaten konuya abone</string>
+    <string name="topics_add_member_success">Üye konuya eklendi</string>
+    <string name="topics_creator_added_you">%s seni konuya ekledi</string>
+    <string name="topic_user_adding">%s konuya ekleniyor</string>
 </resources>

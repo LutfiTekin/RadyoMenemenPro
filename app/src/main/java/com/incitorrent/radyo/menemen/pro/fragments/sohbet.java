@@ -1247,10 +1247,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 ImageButton i = (ImageButton) v;
+                Volley.newRequestQueue(context).add(add_user(userlist.get(getAdapterPosition()),i));
             }
         }
         UserAdapter(ArrayList<String> userlist){
-
             this.userlist = userlist;
         }
 
@@ -1323,7 +1323,50 @@ public class sohbet extends Fragment implements View.OnClickListener{
         };
         sr.setShouldCache(true);
         return sr;
-    };
+    }
+
+    StringRequest add_user(final String user, final ImageButton ib){
+        Toast.makeText(context, String.format(getString(R.string.topic_user_adding), user), Toast.LENGTH_SHORT).show();
+        return new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_ADD_USER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+                        switch (response) {
+                            case "1":
+                                Toast.makeText(context, R.string.toast_auth_error, Toast.LENGTH_SHORT).show();
+//                                if (ib != null)
+                                    ib.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                break;
+                            case "2":
+                                //Duplicate
+                                Toast.makeText(context, R.string.topics_member_duplicate, Toast.LENGTH_SHORT).show();
+//                                if (ib != null)
+                                    ib.setImageResource(R.drawable.ic_cancel_black_24dp);
+                                break;
+                            case "3":
+                                //Success
+                                Toast.makeText(context, R.string.topics_add_member_success, Toast.LENGTH_SHORT).show();
+                                if (ib != null) ib.setImageResource(R.drawable.ic_done_black_24dp);
+                                break;
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,error.toString());
+            }
+        }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> dataToSend = m.getAuthMap();
+                dataToSend.put(topicDB._TOPICID, TOPIC_ID);
+                dataToSend.put("user", user);
+                return dataToSend;
+            }
+        };
+    }
 
     private void forceSyncMSGs() {
         if(TOPIC_MODE) {

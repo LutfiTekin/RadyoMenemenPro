@@ -756,8 +756,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.radio_menu,menu);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
             SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
             searchItem = menu.findItem(R.id.action_request_song);
             MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
@@ -793,7 +791,6 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 }
             });
 
-        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 

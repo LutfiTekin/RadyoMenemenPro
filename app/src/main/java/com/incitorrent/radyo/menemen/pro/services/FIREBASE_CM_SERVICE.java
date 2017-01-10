@@ -19,10 +19,13 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -70,6 +73,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     public static final String JOIN = "join";
     public static final String LEAVE = "leave";
     public static final String CLOSE = "close";
+    public static final String ADD_USER = "adduser";
     final Context context = RMPRO.getContext();
     private NotificationCompat.Builder SUM_Notification;
     private NotificationManager notificationManager;
@@ -181,12 +185,84 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             closetopic(getDATA(remoteMessage,topicDB._TOPICID));
                         else if(action.equals(EDIT))
                             edittopic(remoteMessage);
+                        else if(action.equals(ADD_USER))
+                            if(getDATA(remoteMessage,"user").equals(m.getUsername()))
+                                jointopic(getDATA(remoteMessage,topicDB._TOPICID),getDATA(remoteMessage, topicDB._CREATOR));
                         break;
                 }
 
                 break;
         }
         super.onMessageReceived(remoteMessage);
+    }
+
+    private void jointopic(final String topicid, final String creator) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest join = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_JOIN,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if(!m.getTopicDB().isTopicExists(topicid)) return;
+                        if(response.equals("2")) {
+                            m.getTopicDB().join(topicid);
+                            //Notify user
+                            try {
+                                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                                builder.setSmallIcon(R.drawable.ic_topic_discussion);
+                                builder.setAutoCancel(true);
+                                builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE))
+                                        .setContentText(String.format(getString(R.string.topics_creator_added_you), creator));
+                                if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                                    builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+                                if (vibrate)
+                                    builder.setVibrate(new long[]{500,500});
+                                notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
+                                notification_intent.putExtra(topicDB._TOPICID,topicid);
+                                builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                                builder.setAutoCancel(true);
+                                Notification notification = builder.build();
+                                int notification_id = CHAT_NOTIFICATION + new Random().nextInt(200);
+                                notificationManager.notify(notification_id, notification);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                },null){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> dataToSend = m.getAuthMap();
+                dataToSend.put(topicDB._TOPICID,topicid);
+                return dataToSend;
+            }
+
+            @Override
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
+            }
+
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return 5000;
+                    }
+
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 5;
+                    }
+
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
+
+                    }
+                };
+            }
+        };
+        queue.add(join);
     }
 
     private void edittopic(RemoteMessage remoteMessage) {
