@@ -827,7 +827,7 @@ public class Menemen {
                     if(PreferenceManager.getDefaultSharedPreferences(context).getBoolean("adaptive_quality",true)){
                         //Wi-Fi connected switch to highest channel
                         if(isConnectedWifi()){
-                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.HIGH_CHANNEL))){
+                            if(isReachable(oku(RadyoMenemenPro.HIGH_CHANNEL))){
                                 PreferenceManager.getDefaultSharedPreferences(context)
                                         .edit()
                                         .putString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL)
@@ -835,7 +835,7 @@ public class Menemen {
                             }else setDefaultChannel(); //Fallback channel
                         }else{
                             //Not connected via Wi-Fi lower the quality
-                            if(isReachable("http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + oku(RadyoMenemenPro.LOW_CHANNEL) +  "/")){
+                            if(isReachable(oku(RadyoMenemenPro.LOW_CHANNEL))){
                                 PreferenceManager.getDefaultSharedPreferences(context)
                                         .edit()
                                         .putString("radio_channel",RadyoMenemenPro.LOW_CHANNEL)
@@ -1069,8 +1069,7 @@ public class Menemen {
     }
 
     public String getRadioDataSource(){
-        String selected_channel = oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.HIGH_CHANNEL));
-        return "http://" + oku(RadyoMenemenPro.RADIO_SERVER) + ":" + selected_channel;
+        return oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.FALLBACK_CHANNEL));
     }
 
     public static ArrayList<podcast_objs> PodcastList = new ArrayList<>();

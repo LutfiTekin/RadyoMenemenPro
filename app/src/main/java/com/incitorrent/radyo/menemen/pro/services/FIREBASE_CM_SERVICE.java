@@ -516,7 +516,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
                             m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
                             m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
-                            m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
                             m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
                             if(m.isLoggedIn() && m.isFirstTime("tokenset")) m.setToken();
                         } catch (Exception e) {

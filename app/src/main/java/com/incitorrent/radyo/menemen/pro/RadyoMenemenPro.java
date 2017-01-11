@@ -8,7 +8,7 @@ public final class RadyoMenemenPro {
     public final static String LOW_CHANNEL = "Hercules";//64 kbps yayın
     public final static String MID_CHANNEL = "Prometheus";//128 kbps yayın
     public final static String HIGH_CHANNEL = "Zeus"; //320 kbps yayın
-    public final static String RADIO_SERVER = "serverR";
+    public final static String FALLBACK_CHANNEL = "https://radyomenemen.com:8443/live"; //320 kbps yayın
     public final static String ARTWORK_ONLINE = "online_art";
     public final static int MUSIC_INFO_SERVICE_INTERVAL = 240;
     public final static int MENEMEN_TIMEOUT = 30000;
@@ -32,7 +32,7 @@ public final class RadyoMenemenPro {
     private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
     private final static String API = "https://api.radyomenemen.com/?"; //Yeni API base urls
     public final static String AUTH = "https://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    public final static String SYNCCHANNEL = API + "channels";
+    public final static String SYNCCHANNEL = "https://app.radyomenemen.com/channels.html";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
     public final static String OLAN_BITEN = APP_INFO + "olanbiten";
     public final static String MESAJ_GONDER = APP_INFO + "postmessage";

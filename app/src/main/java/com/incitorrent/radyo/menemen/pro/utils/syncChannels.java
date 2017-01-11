@@ -48,7 +48,6 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
                                 m.kaydet(RadyoMenemenPro.LOW_CHANNEL,Jo.getString(RadyoMenemenPro.LOW_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.MID_CHANNEL,Jo.getString(RadyoMenemenPro.MID_CHANNEL));
                                 m.kaydet(RadyoMenemenPro.HIGH_CHANNEL,Jo.getString(RadyoMenemenPro.HIGH_CHANNEL));
-                                m.kaydet(RadyoMenemenPro.RADIO_SERVER,Jo.getString("server"));
                                 m.kaydet(RadyoMenemenPro.CAPS_API_KEY,Jo.getString("capsapikey"));
                                 if(m.isLoggedIn()) {
                                     if(m.isFirstTime("tokenset"))
@@ -67,7 +66,7 @@ public class syncChannels extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        Log.d(TAG,"Syncronized");
+        Log.d(TAG,"Syncronized 1");
         super.onPostExecute(aVoid);
     }
 
