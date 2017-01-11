@@ -242,4 +242,6 @@
     <string name="topics_add_member_success">Üye konuya eklendi</string>
     <string name="topics_creator_added_you">%s seni konuya ekledi</string>
     <string name="topic_user_adding">%s konuya ekleniyor</string>
+    <string name="dialog_app_outdated_title">Uygulama Güncel Değil</string>
+    <string name="dialog_app_outdated_message">Uygulamanın sizde olan sürümü gerekli olan sürümden eski, bu yüzden devam etmek için uygulamayı güncelleyiniz. Bu uyarı sadece kritik güncellemelerde çıkar.</string>
 </resources>

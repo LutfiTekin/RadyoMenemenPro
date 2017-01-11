@@ -61,6 +61,7 @@ public final class RadyoMenemenPro {
     public final static String MENEMEN_TOPICS_POST = MENEMEN_TOPICS + "&action=post";
     public final static String MENEMEN_TOPICS_ADD_USER = MENEMEN_TOPICS + "&action=adduser";
     public final static String SEARCH_USER = API + "&finduser";
+    public final static String VALID_VERSION = "https://app.radyomenemen.com/validversion.html";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";

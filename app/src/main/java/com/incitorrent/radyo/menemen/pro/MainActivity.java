@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.contact;
@@ -174,6 +182,52 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void checkValidVersion() {
+        if(!m.isInternetAvailable()) m.saveTime("checkvalidversion",0);
+        if(m.getSavedTime("checkvalidversion")<System.currentTimeMillis() && isValid()) return;
+        m.saveTime("checkvalidversion",(1000*60*60*12));
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.VALID_VERSION, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    int versionCode = getPackageManager().getPackageInfo(getPackageName(),0).versionCode;
+                    if(Integer.parseInt(response)>versionCode) {
+                        m.bool_kaydet("valid", false);
+                        new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.alertDialogTheme))
+                                .setTitle(R.string.dialog_app_outdated_title)
+                                .setMessage(R.string.dialog_app_outdated_message)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                                        } catch (android.content.ActivityNotFoundException anfe) {
+                                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.incitorrent.radyo.menemen.pro")));
+                                        }
+                                    }
+                                })
+                                .setIcon(R.mipmap.ic_launcher)
+                                .setCancelable(false)
+                                .show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        },null){
+            @Override
+            public RetryPolicy getRetryPolicy() {
+                return m.menemenRetryPolicy();
+            }
+        };
+        request.setShouldCache(false);
+        queue.add(request);
+    }
+
+    boolean isValid(){
+        return m.bool_oku("valid");
+    }
 
 
     private void setNP(boolean isPlaying){
@@ -372,6 +426,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        checkValidVersion();
         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.setPlaying(false);
         setNP(m.isPlaying());
         initOnlineUsersCountBadge();

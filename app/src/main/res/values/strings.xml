@@ -292,4 +292,6 @@
     <string name="topics_add_member_success">User added to topic</string>
     <string name="topics_creator_added_you">%s added you this topic</string>
     <string name="topic_user_adding">Adding %s to the topic</string>
+    <string name="dialog_app_outdated_title">Application is not up to date</string>
+    <string name="dialog_app_outdated_message">Your current version of app is not up to date, so you must update app to continue. This warning comes up if there is a critical update.</string>
 </resources>
