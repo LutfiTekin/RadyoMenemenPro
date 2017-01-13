@@ -117,7 +117,7 @@ public class topicDB extends SQLiteOpenHelper {
      * @return
      */
     public Cursor listTopıcs(){
-        return getReadableDatabase().rawQuery("SELECT DISTINCT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE + " LEFT JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +  " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1' ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
+        return getReadableDatabase().rawQuery("SELECT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE + " LEFT JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +  " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1' ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
     }
 
     /**
