@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -161,6 +162,18 @@ public class topics_create extends Fragment implements View.OnClickListener{
         if(title.length() > 16) {
             Toast.makeText(context, R.string.topics_error_title_limit, Toast.LENGTH_SHORT).show();
             return;
+        }
+        if (getActivity()!=null) {
+            //Hide soft keyboard on submit
+            try {
+                InputMethodManager inputManager = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+               if(inputManager!=null && getActivity().getCurrentFocus()!=null)
+                   inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         progressBarsubmit.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
