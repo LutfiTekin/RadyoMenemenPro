@@ -294,4 +294,5 @@
     <string name="topic_user_adding">Adding %s to the topic</string>
     <string name="dialog_app_outdated_title">Application is not up to date</string>
     <string name="dialog_app_outdated_message">Your current version of app is not up to date, so you must update app to continue. This warning comes up if there is a critical update.</string>
+    <string name="topics_curuser_joined">You have subscribed to this topic</string>
 </resources>

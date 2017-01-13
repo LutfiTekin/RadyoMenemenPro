@@ -244,4 +244,5 @@
     <string name="topic_user_adding">%s konuya ekleniyor</string>
     <string name="dialog_app_outdated_title">Uygulama Güncel Değil</string>
     <string name="dialog_app_outdated_message">Uygulamanın sizde olan sürümü gerekli olan sürümden eski, bu yüzden devam etmek için uygulamayı güncelleyiniz. Bu uyarı sadece kritik güncellemelerde çıkar.</string>
+    <string name="topics_curuser_joined">Konuya Katıldınız.</string>
 </resources>

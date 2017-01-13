@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.incitorrent.radyo.menemen.pro.R;
+import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
 
 /**
  * Radyo Menemen Pro Created by lutfi on 3.08.2016.
@@ -33,9 +35,10 @@ public class topicDB extends SQLiteOpenHelper {
     public static final String _NICK = "nick";
     public static final String _POST = "post";
     public static final String _TIME = "time";
-
+    private Context context;
     public topicDB(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -117,7 +120,20 @@ public class topicDB extends SQLiteOpenHelper {
      * @return
      */
     public Cursor listTopıcs(){
-        return getReadableDatabase().rawQuery("SELECT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE + " LEFT JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +  " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1' ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
+        return getReadableDatabase().rawQuery("SELECT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE +
+                " INNER JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +
+                " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1'" +
+                "GROUP BY " + TOPICS_TABLE  + "." + _TOPICID + " HAVING MAX(" + MESSAGES_TABLE +"."+ _TOPIC_MSG_ID + ") " +
+                " ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
+    }
+    /**
+     * List all the Topics stored on the phone
+     * @return all new topics that user not joined
+     */
+    public Cursor listNewTopics(){
+        return getReadableDatabase().rawQuery("SELECT * FROM " +TOPICS_TABLE +
+                " WHERE " + _TYPE + "='1' AND " + _JOINED + "!='1'" +
+                " ORDER BY " + _TOPICID + " DESC",null);
     }
 
     /**
@@ -229,6 +245,8 @@ public class topicDB extends SQLiteOpenHelper {
             String topicstr = getTopicSTR(topicid);
             if(topicstr!=null)
                 FirebaseMessaging.getInstance().subscribeToTopic(topicstr);
+            TOPIC_MSGS tm = new TOPIC_MSGS(null,topicid,context.getString(R.string.app_name),context.getString(R.string.topics_curuser_joined),Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT));
+            addTopicMsg(tm);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
