@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
 
     private void checkValidVersion() {
         if(!m.isInternetAvailable()) m.saveTime("checkvalidversion",0);
-        if(m.getSavedTime("checkvalidversion")<System.currentTimeMillis() && isValid()) return;
+        if(m.getSavedTime("checkvalidversion")<System.currentTimeMillis() && m.bool_oku("valid")) return;
         m.saveTime("checkvalidversion",(1000*60*60*12));
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.VALID_VERSION, new Response.Listener<String>() {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                                 .setIcon(R.mipmap.ic_launcher)
                                 .setCancelable(false)
                                 .show();
-                    }
+                    }else m.bool_kaydet("valid", true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -225,9 +225,7 @@ public class MainActivity extends AppCompatActivity
         queue.add(request);
     }
 
-    boolean isValid(){
-        return m.bool_oku("valid");
-    }
+
 
 
     private void setNP(boolean isPlaying){
