@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,41 +115,22 @@ public class topics extends Fragment {
                 topicList = new ArrayList<>();
                 final topicDB sql = m.getTopicDB();
                 Cursor cursor;
+                cursor = sql.liswOwnTopics();
+                if(cursor!=null && cursor.getCount()>0){
+                    getFromCursortoList(cursor);
+                }
+
                 cursor = sql.listTopıcs();
                 if(cursor == null || cursor.getCount()<1) {
                     sql.close();
                     queue.add(stringRequest);
                     return null;
                 }
-                cursor.moveToFirst();
-                while(!cursor.isAfterLast()){
-                    String id,title,descr,image,creator,tpc;
-                    id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
-                    title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
-                    descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
-                    image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
-                    creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
-                    tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
-                    topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
-                    Log.d("TOPIC JOINED", "T " + title);
-                    cursor.moveToNext();
-                }
+                getFromCursortoList(cursor);
 
                 cursor = sql.listNewTopics();
                 if(cursor != null && cursor.getCount()>0){
-                    cursor.moveToFirst();
-                    while(!cursor.isAfterLast()){
-                        String id,title,descr,image,creator,tpc;
-                        id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
-                        title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
-                        descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
-                        image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
-                        creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
-                        tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
-                        topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
-                        Log.d("TOPIC NEWS", "T " + title);
-                        cursor.moveToNext();
-                    }
+                    getFromCursortoList(cursor);
                     cursor.close();
                 }
                 if(cursor!=null && !cursor.isClosed()) cursor.close();
@@ -169,6 +149,20 @@ public class topics extends Fragment {
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getFromCursortoList(Cursor cursor) {
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            String id,title,descr,image,creator,tpc;
+            id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
+            title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
+            descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
+            image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
+            creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
+            tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
+            topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
+            cursor.moveToNext();
+        }
+    }
 
     StringRequest stringRequest = new StringRequest(Request.Method.POST, RadyoMenemenPro.MENEMEN_TOPICS_LIST,
                 new Response.Listener<String>() {

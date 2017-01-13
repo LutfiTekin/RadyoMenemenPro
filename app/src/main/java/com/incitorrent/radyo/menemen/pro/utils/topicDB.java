@@ -117,14 +117,17 @@ public class topicDB extends SQLiteOpenHelper {
 
     /**
      * List all the Topics stored on the phone
-     * @return
+     * @return all topics except current user is creator
+     * or topic type is private
      */
     public Cursor listTopıcs(){
+        Menemen m = new Menemen(context);
+        String curuser = m.getUsername();
         return getReadableDatabase().rawQuery("SELECT " + TOPICS_TABLE + ".* FROM " +TOPICS_TABLE +
                 " INNER JOIN " + MESSAGES_TABLE + " ON " + MESSAGES_TABLE + "." + _TOPICID + "=" + TOPICS_TABLE + "." + _TOPICID +
-                " WHERE " + _JOINED + " ='1' OR " + _TYPE + " ='1'" +
+                " WHERE " + _CREATOR + "!= ? AND (" + _JOINED + " ='1' OR " + _TYPE + " ='1')" +
                 "GROUP BY " + TOPICS_TABLE  + "." + _TOPICID + " HAVING MAX(" + MESSAGES_TABLE +"."+ _TOPIC_MSG_ID + ") " +
-                " ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,null);
+                " ORDER BY " + MESSAGES_TABLE + "." + _TOPIC_MSG_ID + " DESC" ,new String[]{curuser});
     }
     /**
      * List all the Topics stored on the phone
@@ -134,6 +137,18 @@ public class topicDB extends SQLiteOpenHelper {
         return getReadableDatabase().rawQuery("SELECT * FROM " +TOPICS_TABLE +
                 " WHERE " + _TYPE + "='1' AND " + _JOINED + "!='1'" +
                 " ORDER BY " + _TOPICID + " DESC",null);
+    }
+
+    /**
+     * List all the Topics stored on the phone
+     * @return all topics created by current user
+     */
+    public Cursor liswOwnTopics(){
+        Menemen m = new Menemen(context);
+        String curuser = m.getUsername();
+        return getReadableDatabase().rawQuery("SELECT * FROM " + TOPICS_TABLE +
+                " WHERE " + _CREATOR + "= ? " +
+                " ORDER BY " + _TOPICID + " DESC",new String[]{curuser});
     }
 
     /**
