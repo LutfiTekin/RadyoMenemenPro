@@ -348,8 +348,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String time = getDATA(remoteMessage, "time");
         //add to db get auto incremented id
         msgid = String.valueOf(m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,nick,msg,time)));
-        Log.d("TOPIC",RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + topicid + "FCM");
-        if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+        final boolean is_topic_foreground = m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + topicid);
+        if(is_topic_foreground) {
             //Update ui only if chat is foreground
             topic.putExtra(topicDB._TOPICID,topicid);
             topic.putExtra("nick", nick);
@@ -358,13 +358,12 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             topic.putExtra("time", time);
             topic.putExtra("action", ADD);
             broadcastManager.sendBroadcast(topic);
-            Log.d("TOPIC",nick + " : " + msg + " , " + topicid);
         }
 
         onlineUser(nick,topicid);
-        final Boolean isUser = nick.equals(m.getUsername());
+        final boolean isUser = nick.equals(m.getUsername());
         //Notification creation condition
-        if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;
+        if (!notify || !notify_new_post || is_topic_foreground || music_only || !logged || isUser) return;
         buildChatNotification(nick,Menemen.fromHtmlCompat(msg),topicid);
 
     }
@@ -389,7 +388,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             int notification_id = CHAT_NOTIFICATION + Integer.parseInt(topicid);
             notificationManager.notify(notification_id, notification);
             long msgid = m.getTopicDB().addTopicMsg(new topicDB.TOPIC_MSGS(null,topicid,getString(R.string.app_name),String.format(getString(R.string.topic_user_left), user),Menemen.getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
-            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
+            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND + "tid" + topicid)) {
                 Intent topic = new Intent(CHAT_BROADCAST_FILTER);
                 //Update ui only if chat is foreground
                 topic.putExtra(topicDB._TOPICID,topicid);
