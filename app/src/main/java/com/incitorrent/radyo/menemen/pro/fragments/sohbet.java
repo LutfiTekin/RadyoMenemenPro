@@ -515,7 +515,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND, false);
         if(getActivity()!=null)  LocalBroadcastManager.getInstance(context).unregisterReceiver(Chatreceiver);
         if(toolbar != null) toolbar.setSubtitle("");
-        if(TOPIC_MODE)
+        if(TOPIC_MODE && navHeader != null)
             navHeader.clear();
         super.onStop();
     }
