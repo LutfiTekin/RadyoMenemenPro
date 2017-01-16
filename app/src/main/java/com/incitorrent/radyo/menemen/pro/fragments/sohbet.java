@@ -315,8 +315,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                       sohbetList.set(0, new Sohbet_Objects(id, nick, mesaj, getFormattedDate(System.currentTimeMillis(), RadyoMenemenPro.CHAT_DATE_FORMAT)));
                                   else {
                                       //Fallback and search for it
-                                      for (int i = 0; i < sohbetList.size(); i++) {
-                                          if (sohbetList.get(i).mesaj.equals(mesaj) || (sohbetList.get(i).zaman != null && sohbetList.get(i).zaman.equals(Menemen.PENDING))) {
+                                      int searchmargin = (sohbetList.size()> 10) ? 10 : sohbetList.size();
+                                      for (int i = 0; i < searchmargin; i++) {
+                                          if ((sohbetList.get(i).mesaj.equals(mesaj) || sohbetList.get(i).mesaj.contains("http")) && (sohbetList.get(i).zaman != null && sohbetList.get(i).zaman.equals(Menemen.PENDING))) {
                                               sohbetList.remove(i);
                                               sohbetRV.getAdapter().notifyItemRemoved(i);
                                           }
