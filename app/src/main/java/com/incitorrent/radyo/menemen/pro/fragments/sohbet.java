@@ -364,7 +364,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         };
         if(m.isFirstTime("downloadmessages")) forceSyncMSGs();
         mHandler = new Handler();
-        startRepeatingTask();
+        startUpdatingUISilently();
         setRetainInstance(true);
         setHasOptionsMenu(true);
         return sohbetView;
@@ -525,7 +525,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onDestroy() {
-        stopRepeatingTask();
+        stopUpdatingUI();
         super.onDestroy();
     }
 
@@ -1618,11 +1618,11 @@ ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         }
     };
 
-    void startRepeatingTask() {
+    void startUpdatingUISilently() {
         mStatusChecker.run();
     }
 
-    void stopRepeatingTask() {
+    void stopUpdatingUI() {
         try {
             mHandler.removeCallbacks(mStatusChecker);
         } catch (Exception e) {
