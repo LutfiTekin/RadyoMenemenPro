@@ -762,6 +762,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
                     isUserSearching = true;
+                    emptyview.setVisibility(View.GONE);
                     nowplayingbox.setVisibility(View.GONE);
                     fab.hide();
                     ITEM_BACKGROUND_COLOR = ContextCompat.getColor(context,R.color.cardviewBG);
