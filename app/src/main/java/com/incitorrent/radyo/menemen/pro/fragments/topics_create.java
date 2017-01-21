@@ -158,9 +158,13 @@ public class topics_create extends Fragment implements View.OnClickListener{
     private void createNewTopic() {
         final String title = et_title.getText().toString().trim();
         final String descr = et_descr.getText().toString().trim();
-        if(title.length() < 1 || descr.length() < 1) return;
+        if(title.length() < 1 || descr.length() < 1 || descr.equals(RadyoMenemenPro.PM)) return;
         if(title.length() > 16) {
             Toast.makeText(context, R.string.topics_error_title_limit, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(title.contains(m.getUsername())){
+            Toast.makeText(context, R.string.topics_error_title_contains_username, Toast.LENGTH_SHORT).show();
             return;
         }
         if (getActivity()!=null) {

@@ -50,6 +50,7 @@ import com.incitorrent.radyo.menemen.pro.fragments.radio;
 import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
 import com.incitorrent.radyo.menemen.pro.fragments.topics;
 import com.incitorrent.radyo.menemen.pro.fragments.track_info;
+import com.incitorrent.radyo.menemen.pro.fragments.user_pm;
 import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
@@ -244,8 +245,19 @@ public class MainActivity extends AppCompatActivity
             }
         }else{
             header_img.setImageDrawable(null);
-            if(m.isLoggedIn())
+            if(m.isLoggedIn()) {
                 header_txt.setText(m.getUsername().toUpperCase());
+                header_txt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Fragment userinfo = new user_pm();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(RadyoMenemenPro.NICK,m.getUsername().toUpperCase());
+                        userinfo.setArguments(bundle);
+                        fragmentManager.beginTransaction().replace(R.id.Fcontent,userinfo).commit();
+                    }
+                });
+            }
             else header_txt.setText(getString(R.string.app_name));
             header_sub_txt.setText(R.string.site_adress);
         }

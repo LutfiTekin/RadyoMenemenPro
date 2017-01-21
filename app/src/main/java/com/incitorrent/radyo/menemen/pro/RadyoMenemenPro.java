@@ -146,4 +146,6 @@ public final class RadyoMenemenPro {
 
     public static final String NICK = "nick";
     public static final String MOBIL_KEY = "mkey";
+
+    public static final String PM = "pm";
 }

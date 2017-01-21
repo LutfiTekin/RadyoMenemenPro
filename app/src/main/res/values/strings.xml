@@ -262,7 +262,7 @@
     <string name="tra_req_que">Song Request (Queue)</string>
     <string name="tra_skip_track">Skip Track</string>
     <string name="pref_action_show_my_mp">Show My Menemen Point and Transactions</string>
-    <string name="disabled" >Disabled</string>
+    <string name="disabled">Disabled</string>
     <string name="media_play">Oynat</string>
     <string name="radio_pause">Pause Radio</string>
     <string name="radio_play">Play Radio</string>
@@ -295,4 +295,6 @@
     <string name="dialog_app_outdated_title">Application is not up to date</string>
     <string name="dialog_app_outdated_message">Your current version of app is not up to date, so you must update app to continue. This warning comes up if there is a critical update.</string>
     <string name="topics_curuser_joined">You have subscribed to this topic</string>
+    <string name="topics_error_title_contains_username">Topic title cannot contain your username</string>
+    <string name="pm">Private Message</string>
 </resources>
