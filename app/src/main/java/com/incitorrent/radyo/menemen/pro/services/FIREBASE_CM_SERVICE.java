@@ -206,25 +206,27 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         if(response.equals("2")) {
                             m.getTopicDB().join(topicid);
                             //Notify user
-                            try {
-                                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                                builder.setSmallIcon(R.drawable.ic_topic_discussion);
-                                builder.setAutoCancel(true);
-                                builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE))
-                                        .setContentText(String.format(getString(R.string.topics_creator_added_you), creator));
-                                if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
-                                    builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
-                                if (vibrate)
-                                    builder.setVibrate(new long[]{500,500});
-                                notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
-                                notification_intent.putExtra(topicDB._TOPICID,topicid);
-                                builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
-                                builder.setAutoCancel(true);
-                                Notification notification = builder.build();
-                                int notification_id = CHAT_NOTIFICATION + new Random().nextInt(200);
-                                notificationManager.notify(notification_id, notification);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            if(!m.getTopicDB().getTopicInfo(topicid,topicDB._DESCR).equals(RadyoMenemenPro.PM)) {
+                                try {
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                                    builder.setSmallIcon(R.drawable.ic_topic_discussion);
+                                    builder.setAutoCancel(true);
+                                    builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE))
+                                            .setContentText(String.format(getString(R.string.topics_creator_added_you), creator));
+                                    if (notify && PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null) != null)
+                                        builder.setSound(Uri.parse(PreferenceManager.getDefaultSharedPreferences(context).getString("notifications_on_air_ringtone", null)));
+                                    if (vibrate)
+                                        builder.setVibrate(new long[]{500, 500});
+                                    notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
+                                    notification_intent.putExtra(topicDB._TOPICID, topicid);
+                                    builder.setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                                    builder.setAutoCancel(true);
+                                    Notification notification = builder.build();
+                                    int notification_id = CHAT_NOTIFICATION + new Random().nextInt(200);
+                                    notificationManager.notify(notification_id, notification);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
