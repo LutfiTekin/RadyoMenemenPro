@@ -158,7 +158,7 @@ public class topics_create extends Fragment implements View.OnClickListener{
     private void createNewTopic() {
         final String title = et_title.getText().toString().trim();
         final String descr = et_descr.getText().toString().trim();
-        if(title.length() < 1 || descr.length() < 1 || descr.equals(RadyoMenemenPro.PM)) return;
+        if(title.length() < 1 || descr.length() < 1 || descr.equals(RadyoMenemenPro.PM) || title.startsWith(RadyoMenemenPro.PM)) return;
         if(title.length() > 16) {
             Toast.makeText(context, R.string.topics_error_title_limit, Toast.LENGTH_SHORT).show();
             return;

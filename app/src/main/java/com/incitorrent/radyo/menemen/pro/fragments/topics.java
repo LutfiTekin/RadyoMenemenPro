@@ -153,14 +153,20 @@ public class topics extends Fragment {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
             String id,title,descr,image,creator,tpc;
-            id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
-            title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
-            descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
-            image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
-            creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
-            tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
-            topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
-            cursor.moveToNext();
+            try {
+                id = cursor.getString(cursor.getColumnIndex(topicDB._TOPICID));
+                title = cursor.getString(cursor.getColumnIndex(topicDB._TITLE));
+                descr = cursor.getString(cursor.getColumnIndex(topicDB._DESCR));
+                image = cursor.getString(cursor.getColumnIndex(topicDB._IMAGEURL));
+                creator = cursor.getString(cursor.getColumnIndex(topicDB._CREATOR));
+                tpc = cursor.getString(cursor.getColumnIndex(topicDB._TOPICSTR));
+                if(!title.startsWith(RadyoMenemenPro.PM))
+                    topicList.add(new topic_objs(id,title,descr,image,creator,tpc));
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                cursor.moveToNext();
+            }
         }
     }
 

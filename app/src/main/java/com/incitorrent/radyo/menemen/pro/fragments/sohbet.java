@@ -168,7 +168,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
         if(getActivity()!=null) {
             if(TOPIC_MODE) {
-                getActivity().setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE));
+                final String topictitle = m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE);
+                if(!topictitle.startsWith(RadyoMenemenPro.PM))
+                    getActivity().setTitle(topictitle);
                 emptyview = (TextView) sohbetView.findViewById(R.id.emptytextview);
                 emptyview.setVisibility(View.VISIBLE);
                 if(!m.getTopicDB().isJoined(TOPIC_ID))
@@ -1057,6 +1059,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     caps.setTransitionName("show_image");
                 card.setOnClickListener(this);
                 mesaj.setOnClickListener(this);
+                nick.setOnClickListener(this);
             }
 
             @Override
@@ -1068,7 +1071,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     }else if(sohbetList.get(getAdapterPosition()).mesaj.contains("youtube.com/watch") || sohbetList.get(getAdapterPosition()).mesaj.contains("youtu.be/")){
                         m.openYoutubeLink(getYoutubeId(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj)));
                     }
-                } else {
+                }else if(view == nick){
+                    Fragment userinfo = new user_pm();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(RadyoMenemenPro.NICK,sohbetList.get(getAdapterPosition()).nick);
+                    userinfo.setArguments(bundle);
+                    getFragmentManager().beginTransaction().replace(R.id.Fcontent,userinfo).commit();
+                }else {
                     String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                     try {
                         if (zaman_val.equals(PENDING) || zaman_val.equals(DELIVERED)) return;

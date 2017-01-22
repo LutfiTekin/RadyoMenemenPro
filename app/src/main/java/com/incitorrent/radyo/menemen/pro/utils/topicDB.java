@@ -35,12 +35,17 @@ public class topicDB extends SQLiteOpenHelper {
     public static final String _NICK = "nick";
     public static final String _POST = "post";
     public static final String _TIME = "time";
+
+    //Relevant constants
+    public static final String JOINED = "1";
+    public static final String PUBLIC_TOPIC = JOINED;
+    public static final String PRIVATE_TOPIC = "2";
+
     private Context context;
     public topicDB(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
         this.context = context;
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE "+ TOPICS_TABLE + "("+
