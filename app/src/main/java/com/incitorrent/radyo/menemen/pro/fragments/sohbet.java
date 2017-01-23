@@ -133,10 +133,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private NavHeader navHeader;
     private boolean isScrolling = false;
     /**
-     * A boolean value for differenciating Topic messages by given id or General Chat
+     * A boolean value for differentiating Topic messages by given id or General Chat
      * Since they are both using same template and fragment
      */
     private boolean TOPIC_MODE = false;
+    /**
+     * A boolean for checking whether it is normal topic or pm topic
+     */
+    private boolean IS_PM = false;
     private String TOPIC_ID = "0";
 
     MenuItem searchItem;
@@ -168,6 +172,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }
         if(getActivity()!=null) {
             if(TOPIC_MODE) {
+                IS_PM = m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._DESCR).equals(RadyoMenemenPro.PM);
                 final String topictitle = m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE);
                 if(!topictitle.startsWith(RadyoMenemenPro.PM))
                     getActivity().setTitle(topictitle);
@@ -179,7 +184,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
             else
                 getActivity().setTitle(getString(R.string.nav_sohbet));
             toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-            if(toolbar!=null && TOPIC_MODE)
+            if(toolbar!=null && TOPIC_MODE && !IS_PM)
                 m.setToolbarSubtitleMarquee(toolbar,m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._DESCR));
         }
 
@@ -353,10 +358,12 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           }
                           break;
                       case FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER:
-                          int count = intent.getExtras().getInt("count", 0);
-                          if (count > 0 && toolbar != null) {
-                              m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
-                          ETmesaj.requestFocus();
+                          if (!IS_PM) {
+                              int count = intent.getExtras().getInt("count", 0);
+                              if (count > 0 && toolbar != null) {
+                                  m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
+                              ETmesaj.requestFocus();
+                              }
                           }
                           break;
                   }
@@ -396,12 +403,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     Toast.makeText(context, R.string.topic_not_found, Toast.LENGTH_SHORT).show();
                 getFragmentManager().beginTransaction().replace(R.id.Fcontent, new topics()).commit();
             }
-            navHeader = new NavHeader().setHeaderView(((NavigationView) getActivity().findViewById(R.id.nav_view)).getHeaderView(0))
-                    .setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE))
-                    .setSubTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._DESCR))
-                    .setImage(RadyoMenemenPro.CAPS_IMAGES_PATH + m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._IMAGEURL));
-            navHeader.build();
-            navHeader.getSubHeaderTextView().setEllipsize(TextUtils.TruncateAt.END);
+            if (!IS_PM) {
+                navHeader = new NavHeader().setHeaderView(((NavigationView) getActivity().findViewById(R.id.nav_view)).getHeaderView(0))
+                        .setTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE))
+                        .setSubTitle(m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._DESCR))
+                        .setImage(RadyoMenemenPro.CAPS_IMAGES_PATH + m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._IMAGEURL));
+                navHeader.build();
+                navHeader.getSubHeaderTextView().setEllipsize(TextUtils.TruncateAt.END);
+            }
         }
         else
             m.bool_kaydet(RadyoMenemenPro.IS_CHAT_FOREGROUND,true);
