@@ -375,7 +375,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         mHandler = new Handler();
         startUpdatingUISilently();
         setRetainInstance(true);
-        setHasOptionsMenu(true);
+        if(!IS_PM)
+            setHasOptionsMenu(true);
         return sohbetView;
     }
 
@@ -419,13 +420,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
            new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else if(sohbetList != null && sohbetList.size() > 1){
            try {
-               if(Integer.parseInt(sohbetList.get(0).id) < Integer.parseInt(
-                       (TOPIC_MODE) ? m.getTopicDB().lastMsgId() : m.getChatDB().lastMsgId())){
-                   new initsohbet(20,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-               }else{
-                   updateListSilently();
-               }
-           }catch (Exception e){e.printStackTrace();}
+               String lastid = (TOPIC_MODE) ? m.getTopicDB().lastMsgId() : m.getChatDB().lastMsgId();
+               if(!lastid.equals(sohbetList.get(0).id))
+                   new initsohbet(30,0).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+           }catch (Exception e){
+               e.printStackTrace();
+               updateListSilently();
+           }
        }
         int tid = 0;
         if(TOPIC_MODE) tid = Integer.parseInt(TOPIC_ID);
@@ -563,6 +564,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if(IS_PM){
+            super.onCreateOptionsMenu(menu, inflater);
+            return;
+        }
         menu.clear();
         inflater.inflate((TOPIC_MODE) ? R.menu.topic_messages_menu : R.menu.sohbet_menu,menu);
         if(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis())
@@ -627,6 +632,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(IS_PM)
+            return super.onOptionsItemSelected(item);
         int itemid = item.getItemId();
         switch (itemid){
             case R.id.action_silent_notification:
@@ -1524,6 +1531,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 Cursor cursor =
                         (TOPIC_MODE) ? m.getTopicDB().getTopicMessagesOnScroll(lastid, TOPIC_ID) : m.getChatDB().getHistoryOnScroll(lastid);
                 if(cursor == null) return null;
+                if(cursor.getCount()<1) return null;
                 cursor.moveToFirst();
                 while(!cursor.isAfterLast()){
                     String id,nick,post,time;
