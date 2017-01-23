@@ -1547,7 +1547,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                             break;
                         }
                     }
-                    if(exist < 1) sohbetList.add(new Sohbet_Objects(id,nick,post,time));
+                    if(exist < 1)
+                        sohbetList.add(new Sohbet_Objects(id,nick,post,time));
                     cursor.moveToNext();
                 }
                 cursor.close();
