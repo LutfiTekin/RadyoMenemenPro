@@ -75,7 +75,7 @@ public class user_pm extends Fragment {
             nick = bundle.getString(RadyoMenemenPro.NICK, getString(android.R.string.unknownName));
             toolbar.setTitle(nick.toUpperCase());
         }
-        queue.add(getAvatarAndCreate);
+        queue.add(getAvatar);
     return userview;
     }
 
@@ -150,7 +150,7 @@ public class user_pm extends Fragment {
     String pmTopicTitle(){
         return RadyoMenemenPro.PM + m.getUsername() + "+" + nick;
     }
-    StringRequest getAvatarAndCreate = new StringRequest(Request.Method.POST, RadyoMenemenPro.SEARCH_USER_AVATAR,
+    StringRequest getAvatar = new StringRequest(Request.Method.POST, RadyoMenemenPro.SEARCH_USER_AVATAR,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -210,7 +210,7 @@ public class user_pm extends Fragment {
                                     Log.d("USER PM ",response);
                                     JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
                                     FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
-                                    m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID), j.getString(topicDB._TOPICSTR), m.getUsername(), topicDB.JOINED, pmTopicTitle(), RadyoMenemenPro.PM, imageurl,topicDB.PRIVATE_TOPIC ));
+                                    m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID), j.getString(topicDB._TOPICSTR), m.getUsername(), topicDB.JOINED, pmTopicTitle(), RadyoMenemenPro.PM, "default",topicDB.PRIVATE_TOPIC ));
                                     setupPm(j.getString(topicDB._TOPICID));
                                 } catch (Exception e) {
                                     e.printStackTrace();

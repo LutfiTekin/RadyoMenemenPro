@@ -247,4 +247,5 @@
     <string name="topics_curuser_joined">Konuya Katıldınız.</string>
     <string name="topics_error_title_contains_username">Konu ismi kullanıcı adınızı içeremez</string>
     <string name="pm">Özel Mesaj</string>
+    <string name="topics_pm_with_user">%s ile özel mesaj</string>
 </resources>

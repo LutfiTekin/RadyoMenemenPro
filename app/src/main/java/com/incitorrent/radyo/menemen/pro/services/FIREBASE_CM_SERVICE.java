@@ -179,8 +179,9 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                             userjoinedtotopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,topicDB._TOPICID));
                         else if(action.equals(LEAVE))
                             userlefttopic(getDATA(remoteMessage,"user"),getDATA(remoteMessage,topicDB._TOPICID));
-                        else if(action.equals(ADD))
+                        else if(action.equals(ADD)) {
                             topicmsg(remoteMessage);
+                        }
                         else if(action.equals(CLOSE))
                             closetopic(getDATA(remoteMessage,topicDB._TOPICID));
                         else if(action.equals(EDIT))
@@ -332,17 +333,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         String action = getDATA(remoteMessage, "action");
         String topicid = getDATA(remoteMessage,"tid");
         String msgid = getDATA(remoteMessage, "msgid");
-        if(action.equals(DELETE)){
-
-            m.getTopicDB().deleteMSG(msgid);
-            if(m.bool_oku(RadyoMenemenPro.IS_CHAT_FOREGROUND+"tid"+topicid)) {
-                topic.putExtra("action", DELETE);
-                topic.putExtra("msgid", msgid);
-                broadcastManager.sendBroadcast(topic);
-            }else
-                notificationManagerCompat.cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION);
-            return;
-        }
         //CHAT mesajı geldi
         //notify sohbet fragment
         String nick = getDATA(remoteMessage,"nick");
@@ -705,9 +695,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
 
     private void buildChatNotification(String nick, String mesaj, @Nullable String topicid) {
         boolean isTopic = topicid != null;
+        boolean ispm = false;
         if(isTopic) {
             notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
             notification_intent.putExtra(topicDB._TOPICID,topicid);
+            ispm = m.getTopicDB().getTopicInfo(topicid,topicDB._DESCR).equals(RadyoMenemenPro.PM);
         }
         boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
         if(isUser)
@@ -716,8 +708,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         builder.setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat);
         builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
-          if(isTopic)
-              builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE)).setContentText(nick + ": " + m.getSpannedTextWithSmileys(mesaj));
+          if(isTopic) {
+              //Check if pm topic
+              if(ispm){
+                  //extract username from title
+                  String pm_user = m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE)
+                          .substring(2)
+                          .replaceAll(m.getUsername()+"+","")
+                          .replaceAll("+"+m.getUsername(),"");
+                  builder.setContentTitle(String.format(getString(R.string.topics_pm_with_user), pm_user));
+              }else
+                  builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE)).setContentText(nick + ": " + m.getSpannedTextWithSmileys(mesaj));
+          }
         else
               builder.setContentTitle(nick).setContentText(m.getSpannedTextWithSmileys(mesaj));
         if(!mutechatnotification && !m.isPlaying()) {
