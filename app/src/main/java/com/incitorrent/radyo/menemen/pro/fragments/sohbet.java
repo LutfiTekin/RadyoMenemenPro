@@ -352,8 +352,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   }
                               }
                           } catch (Exception e) {
-                              if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_full_error", false))
-                                  Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                              if (isAdded()) {
+                                  if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_full_error", false))
+                                      Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                              }
                               e.printStackTrace();
                           }
                           break;
