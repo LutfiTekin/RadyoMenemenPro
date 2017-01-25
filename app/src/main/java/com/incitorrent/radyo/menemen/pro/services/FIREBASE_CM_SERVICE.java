@@ -696,10 +696,18 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     private void buildChatNotification(String nick, String mesaj, @Nullable String topicid) {
         boolean isTopic = topicid != null;
         boolean ispm = false;
+        String pm_user = null;
         if(isTopic) {
-            notification_intent.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
-            notification_intent.putExtra(topicDB._TOPICID,topicid);
             ispm = m.getTopicDB().getTopicInfo(topicid,topicDB._DESCR).equals(RadyoMenemenPro.PM);
+            notification_intent.setAction(ispm ? RadyoMenemenPro.Action.PRIVATE_MESSAGE : RadyoMenemenPro.Action.TOPIC_MESSAGES);
+            if(ispm){
+                //Extract username from pm topic title
+                pm_user = m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE)
+                        .substring(2)
+                        .replaceAll(m.getUsername(), "")
+                        .replaceAll("\\+", "");
+                notification_intent.putExtra(RadyoMenemenPro.NICK,pm_user);
+            }else notification_intent.putExtra(topicDB._TOPICID,topicid);
         }
         boolean isUser = nick.equals(m.getUsername()); //Mesaj gönderen kişi kullancının kendisi mi? (PCDEN GÖNDERME DURUMUNDA OLABİLİR)
         if(isUser)
@@ -711,12 +719,8 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
           if(isTopic) {
               //Check if pm topic
               if(ispm){
-                  //extract username from title
-                  String pm_user = m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE)
-                          .substring(2)
-                          .replaceAll(m.getUsername()+"+","")
-                          .replaceAll("+"+m.getUsername(),"");
-                  builder.setContentTitle(String.format(getString(R.string.topics_pm_with_user), pm_user));
+                  if(pm_user!=null)
+                      builder.setContentTitle(String.format(getString(R.string.topics_pm_with_user), pm_user));
               }else
                   builder.setContentTitle(m.getTopicDB().getTopicInfo(topicid, topicDB._TITLE)).setContentText(nick + ": " + m.getSpannedTextWithSmileys(mesaj));
           }
@@ -771,7 +775,11 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     largeicon = Glide.with(context).load(R.mipmap.ic_launcher).asBitmap().into(100,100).get();
             } catch (Exception e){e.printStackTrace();}
             //DIRECT REPLY
-            inbox.setConversationTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : getString(R.string.notification_new_messages_text));
+            if(ispm){
+                inbox.setConversationTitle(String.format(getString(R.string.topics_pm_with_user), pm_user));
+            }
+            else inbox.setConversationTitle((isTopic) ? m.getTopicDB().getTopicInfo(topicid,topicDB._TITLE) : getString(R.string.notification_new_messages_text));
+
             SUM_Notification
                     .setAutoCancel(true)
                     .setContentIntent(PendingIntent.getActivity(context, new Random().nextInt(200), notification_intent, PendingIntent.FLAG_UPDATE_CURRENT))
@@ -780,13 +788,15 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                     .setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat)
                     .setStyle(inbox)
                     .setOnlyAlertOnce(true);
+            if(ispm)
+                SUM_Notification.setContentTitle(String.format(getString(R.string.topics_pm_with_user), pm_user));
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 if(!SUM_Notification.mActions.isEmpty())
                     SUM_Notification.mActions.clear();
                 Intent direct_reply_intent = new Intent(context, DirectReplyReceiver.class);
                 direct_reply_intent.setAction((isTopic) ? RadyoMenemenPro.Action.TOPIC_MESSAGES : RadyoMenemenPro.Action.CHAT);
                 if(isTopic) direct_reply_intent.putExtra(topicDB._TOPICID,topicid);
-                SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
+                if(!ispm)SUM_Notification.addAction(m.getDirectReplyAction(direct_reply_intent));
             }
             if(largeicon != null) SUM_Notification.setLargeIcon(largeicon);
             if(!(m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis()) && !isUser) {

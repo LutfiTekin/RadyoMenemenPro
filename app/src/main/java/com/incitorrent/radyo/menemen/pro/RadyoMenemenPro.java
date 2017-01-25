@@ -132,6 +132,7 @@ public final class RadyoMenemenPro {
         public final static String CAPS =  "radyo.menemen.caps";
         public final static String TOPICS =  "radyo.menemen.topics";
         public final static String TOPIC_MESSAGES =  "radyo.menemen.topic.messages";
+        public final static String PRIVATE_MESSAGE =  "radyo.menemen.pm";
         public final static String MP_TRANSACTIONS = "radyo.menemen.mp.transactions";
         public final static String PLAY_NOW = "radyo.menemen.play.now";
     }

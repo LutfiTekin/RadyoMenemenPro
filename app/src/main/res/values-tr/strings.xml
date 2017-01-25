@@ -248,4 +248,6 @@
     <string name="topics_error_title_contains_username">Konu ismi kullanıcı adınızı içeremez</string>
     <string name="pm">Özel Mesaj</string>
     <string name="topics_pm_with_user">%s ile özel mesaj</string>
+    <string name="user_is_online">%s çevirimiçi</string>
+    <string name="user_is_offline">%s çevirimdışı</string>
 </resources>

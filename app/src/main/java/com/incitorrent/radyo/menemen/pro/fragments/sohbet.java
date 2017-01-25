@@ -260,12 +260,14 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         if(getActivity()!=null && toolbar != null) {
                             trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
                             final int count = sql.getOnlineUserCount(null);
-                            if(count > 0 && toolbar !=null) {
-                                if(count == 1)
-                                    toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
-                                else
-                                    toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
-                            }else toolbar.setSubtitle("");
+                            if (!IS_PM) {
+                                if(count > 0 && toolbar !=null) {
+                                    if(count == 1)
+                                        toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
+                                    else
+                                        toolbar.setSubtitle(String.format(context.getString(R.string.toolbar_online_subtitle), count));
+                                }else toolbar.setSubtitle("");
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -366,6 +368,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
                               ETmesaj.requestFocus();
                               }
+                          }else{
+                              trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
+                              //extract username from title
+                              String pm_user = m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE)
+                                      .substring(2)
+                                      .replaceAll(m.getUsername(), "")
+                                      .replaceAll("\\+", "");
+                              m.setToolbarSubtitleMarquee(toolbar, sql.isUserOnline(pm_user) ?
+                                      String.format(getString(R.string.user_is_online), pm_user) :
+                                      String.format(getString(R.string.user_is_offline), pm_user));
                           }
                           break;
                   }
@@ -376,9 +388,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(m.isFirstTime("downloadmessages")) forceSyncMSGs();
         mHandler = new Handler();
         startUpdatingUISilently();
-        setRetainInstance(true);
-        if(!IS_PM)
-            setHasOptionsMenu(true);
+        setRetainInstance(!IS_PM);
+        setHasOptionsMenu(!IS_PM);
         return sohbetView;
     }
 
@@ -1415,7 +1426,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                 JSONArray arr = new JSONObject(response).getJSONArray("mesajlar");
                                 JSONObject c;
                                 for(int i = 0;i<arr.getJSONArray(0).length();i++){
-                                    String tid,id,nick,mesaj,zaman;
+                                    String id,nick,mesaj,zaman;
                                     JSONArray innerJarr = arr.getJSONArray(0);
                                     c = innerJarr.getJSONObject(i);
                                     id = c.getString("id");

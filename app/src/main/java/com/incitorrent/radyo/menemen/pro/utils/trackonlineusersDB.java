@@ -81,4 +81,21 @@ public class trackonlineusersDB extends SQLiteOpenHelper {
         long period = System.currentTimeMillis() - (1000*60*3);
         return db.query(TABLE_NAME,null,_TIME + " >'" + period + "' AND " + _NICK +" != '" + cur_user + "'",null,null,null,_TIME + " DESC");
     }
+
+    public boolean isUserOnline(String user){
+        boolean online = false;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            long period = System.currentTimeMillis() - (1000*60*3);
+            cursor = db.query(TABLE_NAME,null,_TIME + " >'" + period + "' AND " + _NICK +" == '" + user + "'",null,null,null,_TIME + " DESC","1");
+            online = cursor.getCount()>0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(cursor!=null) cursor.close();
+            db.close();
+        }
+        return online;
+    }
 }

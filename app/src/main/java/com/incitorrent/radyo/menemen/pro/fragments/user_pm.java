@@ -230,7 +230,7 @@ public class user_pm extends Fragment {
             dataToSend.put("title", pmTopicTitle());
             dataToSend.put("descr", RadyoMenemenPro.PM);
             dataToSend.put("type", topicDB.PRIVATE_TOPIC);
-            dataToSend.put("image", imageurl);
+            dataToSend.put("image", "default");
             return dataToSend;
         }
 

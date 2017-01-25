@@ -298,4 +298,6 @@
     <string name="topics_error_title_contains_username">Topic title cannot contain your username</string>
     <string name="pm">Private Message</string>
     <string name="topics_pm_with_user">PM with %s</string>
+    <string name="user_is_offline">%s is offline</string>
+    <string name="user_is_online">%s is online</string>
 </resources>

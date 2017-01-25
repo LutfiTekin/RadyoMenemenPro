@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View view) {
                         Fragment userinfo = new user_pm();
                         Bundle bundle = new Bundle();
-                        bundle.putString(RadyoMenemenPro.NICK,m.getUsername().toUpperCase());
+                        bundle.putString(RadyoMenemenPro.NICK,m.getUsername());
                         userinfo.setArguments(bundle);
                         fragmentManager.beginTransaction().replace(R.id.Fcontent,userinfo).commit();
                     }
@@ -338,6 +338,13 @@ public class MainActivity extends AppCompatActivity
                         break;
                     case RadyoMenemenPro.Action.PLAY_NOW:
                         playAndOpenRadio();
+                        break;
+                    case RadyoMenemenPro.Action.PRIVATE_MESSAGE:
+                        Fragment userinfo = new user_pm();
+                        bundle = new Bundle();
+                        bundle.putString(RadyoMenemenPro.NICK,intent.getExtras().getString(RadyoMenemenPro.NICK,getString(android.R.string.unknownName)));
+                        userinfo.setArguments(bundle);
+                        fragmentManager.beginTransaction().replace(R.id.Fcontent,userinfo).commit();
                         break;
                 }
             } catch (Exception e) {
