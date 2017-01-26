@@ -22,7 +22,8 @@ public class Browsable extends AppCompatActivity {
             else if(getIntent().getData().toString().contains(topicDB._TOPICID)) {
                 main.setAction(RadyoMenemenPro.Action.TOPIC_MESSAGES);
                 Menemen m = new Menemen(Browsable.this);
-                String topicid = m.getTopicDB().getTopicId(getIntent().getData().getQueryParameter(topicDB._TOPICID));
+                topicDB.TOPIC topic = new topicDB.TOPIC(null,getIntent().getData().getQueryParameter(topicDB._TOPICID));
+                String topicid = m.getTopicDB().getTopicId(topic);
                 main.putExtra(topicDB._TOPICID,topicid);
             }
         }

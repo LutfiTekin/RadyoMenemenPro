@@ -341,10 +341,17 @@ public class topicDB extends SQLiteOpenHelper {
         return null;
     }
 
-    public String getTopicId(String topicstr){
+    public String getTopicId(TOPIC topıc){
         SQLiteDatabase db = getReadableDatabase();
         try {
-            Cursor c = db.query(TOPICS_TABLE,new String[]{_TOPICID}, _TOPICSTR+ "='" + topicstr + "'",null,null,null,null,"1");
+            Cursor c;
+            String topicstr = topıc.get_TOPICSTR();
+            String title = topıc.get_TITLE();
+            if(topicstr!=null)
+                c = db.query(TOPICS_TABLE,new String[]{_TOPICID}, _TOPICSTR+ "='" + topicstr + "'",null,null,null,null,"1");
+            else if(title != null)
+                c = db.query(TOPICS_TABLE,new String[]{_TOPICID}, _TITLE+ "='" + title + "'",null,null,null,null,"1");
+            else return null;
             c.moveToFirst();
             String s = c.getString(c.getColumnIndex(_TOPICID));
             c.close();
@@ -409,6 +416,33 @@ public class topicDB extends SQLiteOpenHelper {
         long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TOPICID + "='"+ topicid + "'" );
         db.close();
         return rownum > 0;
+    }
+    /**
+     * Check if topic exist with given title
+     * @param title
+     * @return
+     */
+    public boolean isTopicExists(String title,boolean searchbytitle){
+        SQLiteDatabase db = getReadableDatabase();
+        long rownum = DatabaseUtils.queryNumEntries(db, TOPICS_TABLE, _TITLE + "='"+ title + "'" );
+        db.close();
+        return rownum > 0;
+    }
+
+    /**
+     * Check if any pm topics exist between user1 and user2
+     * @param user1
+     * @param user2
+     * @return
+     */
+    public String getPmTopicIdIfExist(String user1, String user2){
+        if (isTopicExists(RadyoMenemenPro.PM + user1 + "+" + user2, true)) {
+            return getTopicId(new TOPIC(RadyoMenemenPro.PM + user1 + "+" + user2,null));
+        }
+        if (isTopicExists(RadyoMenemenPro.PM + user2 + "+" + user1, true)) {
+            return getTopicId(new TOPIC(RadyoMenemenPro.PM + user2 + "+" + user1,null));
+        }
+        return null;
     }
 
     public static class TOPIC_MSGS{
@@ -479,6 +513,10 @@ public class topicDB extends SQLiteOpenHelper {
             this._TYPE = _TYPE;
         }
 
+        public TOPIC (@Nullable String _TITLE,@Nullable String _TOPICSTR){
+            this._TOPICSTR = _TOPICSTR;
+            this._TITLE = _TITLE;
+        }
 
         public String get_TOPICID() {
             return _TOPICID;
