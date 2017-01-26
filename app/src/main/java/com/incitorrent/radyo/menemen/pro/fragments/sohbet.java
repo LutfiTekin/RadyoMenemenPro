@@ -362,6 +362,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                           }
                           break;
                       case FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER:
+                          if(ETmesaj.getText().toString().trim().length()<1)
                           if (!IS_PM) {
                               int count = intent.getExtras().getInt("count", 0);
                               if (count > 0 && toolbar != null) {
@@ -1088,7 +1089,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     caps.setTransitionName("show_image");
                 card.setOnClickListener(this);
                 mesaj.setOnClickListener(this);
-                nick.setOnClickListener(this);
+                if(!IS_PM)
+                    nick.setOnClickListener(this);
             }
 
             @Override
