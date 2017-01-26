@@ -155,8 +155,12 @@ public class user_pm extends Fragment {
                 @Override
                 public void onResponse(String response) {
                     imageurl = response.equals(RESPONSE_ERROR) ? "default" : response;
-                    if(!nick.equals(m.getUsername()))
+                    if(!nick.equals(m.getUsername())) {
+                        String topicid = m.getTopicDB().getPmTopicIdIfExist(m.getUsername(),nick);
+                        if(topicid==null)
                         queue.add(create);
+                        else setupPm(topicid);
+                    }
                     else getFragmentManager().beginTransaction().replace(R.id.Fcontent,new mp_transactions_list()).commit();
                 }
             }, new Response.ErrorListener() {
@@ -188,7 +192,13 @@ public class user_pm extends Fragment {
                 @Override
                 public void retry(VolleyError error) throws VolleyError {
                         if(imageurl == null) imageurl = "default";
-                        queue.add(create);
+                    if(!nick.equals(m.getUsername())) {
+                        String topicid = m.getTopicDB().getPmTopicIdIfExist(m.getUsername(),nick);
+                        if(topicid==null)
+                            queue.add(create);
+                        else setupPm(topicid);
+                    }
+                    else getFragmentManager().beginTransaction().replace(R.id.Fcontent,new mp_transactions_list()).commit();
                     throw new VolleyError("NO RETRY");
                 }
             };
