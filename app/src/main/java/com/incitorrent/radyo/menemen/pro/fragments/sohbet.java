@@ -29,6 +29,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -1167,6 +1168,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 }else if(chatViewHolder.mesaj.getText().toString().contains("youtube.com/watch") || chatViewHolder.mesaj.getText().toString().contains("youtu.be/")){
                     loadCapsinChat(chatViewHolder, getYoutubeThumbnail(getYoutubeId(fromHtmlCompat(chatViewHolder.mesaj.getText().toString()))));
                 }else chatViewHolder.caps.setImageDrawable(null);
+            }
+            if(IS_PM){
+                final int backgroundcolor = (chatViewHolder.nick.getText().toString().equals(m.getUsername())) ? ContextCompat.getColor(context,R.color.cardviewBG) : ContextCompat.getColor(context,R.color.colorBackgroundsoft);
+                chatViewHolder.card.setCardBackgroundColor(backgroundcolor);
             }
             chatViewHolder.zaman.invalidate();
             super.onViewAttachedToWindow(chatViewHolder);
