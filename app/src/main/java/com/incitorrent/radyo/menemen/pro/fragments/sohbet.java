@@ -336,10 +336,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
                                   }
                                   sohbetRV.getAdapter().notifyDataSetChanged();
                                   //Scroll to top if new message added
-                                  if (((LinearLayoutManager) sohbetRV.getLayoutManager()).findLastCompletelyVisibleItemPosition() < 30)
-                                      sohbetRV.smoothScrollToPosition(0);
-                                  else
-                                      sohbetRV.scrollToPosition(0);
+                                  if (((LinearLayoutManager) sohbetRV.getLayoutManager()).findLastCompletelyVisibleItemPosition() > 15)
+                                      scrollTop.show();
                                   m.kaydet((TOPIC_MODE) ? RadyoMenemenPro.LAST_ID_SEEN_ON_TOPIC + TOPIC_ID : RadyoMenemenPro.LAST_ID_SEEN_ON_CHAT, id);
                               } else if (action.equals(FIREBASE_CM_SERVICE.DELETE)) {
                                   if (TOPIC_MODE)
