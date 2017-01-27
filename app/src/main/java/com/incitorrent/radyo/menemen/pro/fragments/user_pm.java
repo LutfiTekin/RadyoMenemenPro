@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,6 @@ public class user_pm extends Fragment {
 
     void setupPm(String topicid){
         TOPIC_ID = topicid;
-        Log.d("USERPM",TOPIC_ID);
         Fragment topic = new sohbet();
         Bundle topicbundle = new Bundle();
         topicbundle.putString(topicDB._TOPICID, TOPIC_ID);
@@ -217,7 +215,6 @@ public class user_pm extends Fragment {
                             break;
                         default:
                                 try {
-                                    Log.d("USER PM ",response);
                                     JSONObject j = new JSONObject(response).getJSONArray("info").getJSONObject(0);
                                     FirebaseMessaging.getInstance().subscribeToTopic(j.getString(topicDB._TOPICSTR));
                                     m.getTopicDB().addtoTopicHistory(new topicDB.TOPIC(j.getString(topicDB._TOPICID), j.getString(topicDB._TOPICSTR), m.getUsername(), topicDB.JOINED, pmTopicTitle(), RadyoMenemenPro.PM, "default",topicDB.PRIVATE_TOPIC ));
