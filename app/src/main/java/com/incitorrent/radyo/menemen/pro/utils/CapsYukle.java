@@ -36,13 +36,14 @@ import java.util.Random;
  */
 //CAPS YUKLE
 public class CapsYukle extends AsyncTask<Void, Void, String> {
-    NotificationCompat.Builder notification;
+    private NotificationCompat.Builder notification;
     private static final String TAG = "CAPSYUKLE";
     private static final int unid = 600613;
     private Menemen m;
     private Bitmap bit;
     private RequestQueue queue;
     private String TOPIC_ID = null;
+//    private String nick = null;
 
     Context context;
     public CapsYukle(Bitmap bit, Context context) {
@@ -55,6 +56,13 @@ public class CapsYukle extends AsyncTask<Void, Void, String> {
         this.context = context;
         this.TOPIC_ID = TOPIC_ID;
     }
+
+    //TODO avatar yükle
+//    public CapsYukle(String nick, Bitmap bit, Context context){
+//        this.bit = bit;
+//        this.context = context;
+//        this.nick = nick;
+//    }
 
     @Override
     protected String doInBackground(Void... params) {
