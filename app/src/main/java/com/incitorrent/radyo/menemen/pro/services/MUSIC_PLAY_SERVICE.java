@@ -282,6 +282,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 stopForeground(false);
                 stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN,1.0f);
                 mediaSessionCompat.setPlaybackState(stateBuilder.build());
+                if (isPodcast) {
+                    if(m.oku(RadyoMenemenPro.PLAYING_PODCAST)!=null)
+                        m.kaydet(m.oku(RadyoMenemenPro.PLAYING_PODCAST),String.valueOf(exoPlayer.getCurrentPosition()));
+                }
             } catch (Exception e){ e.printStackTrace(); }
             return null;
         }
@@ -406,6 +410,16 @@ public class MUSIC_PLAY_SERVICE extends Service {
                 //ONPOST
                 try {
                     exoPlayer.setPlayWhenReady(true);
+                    if(isPodcast){
+                        boolean shouldresume;
+                        //PreferenceManager.getDefaultSharedPreferences(MUSIC_PLAY_SERVICE.this).getBoolean("resume_podcast", false)
+                        final String podcast_title = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
+                        if(PreferenceManager.getDefaultSharedPreferences(MUSIC_PLAY_SERVICE.this).getBoolean("resume_podcast", false))
+                            shouldresume = true;
+                        else shouldresume = m.bool_oku("resume"+podcast_title);
+                        if(m.oku(podcast_title)!=null && shouldresume)
+                            exoPlayer.seekTo(Long.parseLong(m.oku(podcast_title)));
+                    }
                     exoPlayer.addListener(exolistener);
                     m.setPlaying(true);
                     mediaSessionCompat.setActive(true);
@@ -443,6 +457,10 @@ public class MUSIC_PLAY_SERVICE extends Service {
         m.setPlaying(false);
         audioManager.abandonAudioFocus(focusChangeListener);
         try {
+            if (isPodcast) {
+                if(m.oku(RadyoMenemenPro.PLAYING_PODCAST)!=null && exoPlayer!=null)
+                    m.kaydet(m.oku(RadyoMenemenPro.PLAYING_PODCAST),String.valueOf(exoPlayer.getCurrentPosition()));
+            }
             stopForeground(true);
             exoPlayer.stop();
             exoPlayer.removeListener(exolistener);

@@ -1,12 +1,15 @@
 package com.incitorrent.radyo.menemen.pro.fragments;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +20,7 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.TransitionSet;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -295,45 +299,70 @@ public class podcast extends Fragment {
             @Override
             public void onClick(View v) {
                 if(getActivity()!=null) {
-                    Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
-                    getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
-                    m.setPlaying(false);
-                        playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
-                        playservice.putExtra(RadyoMenemenPro.DATA_SOURCE,RList.get(getAdapterPosition()).url);
-                    m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
-                    m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
-                    getActivity().getApplicationContext().startService(playservice);
-                    Fragment podcast_now_playing = new podcast_now_playing();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title",RList.get(getAdapterPosition()).title);
-                    bundle.putString("descr",RList.get(getAdapterPosition()).description);
-                    ArrayList<String> podcasts = new ArrayList<>();
-                    for(int i=0; i<RList.size(); i++){
-                        podcasts.add(i,RList.get(i).url);
-                    }
-                    bundle.putStringArrayList("podcast_list",podcasts);
-                    m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
-                    podcast_now_playing.setArguments(bundle);
+                final String podcasttitle = RList.get(getAdapterPosition()).title;
+                        if(m.oku(podcasttitle)!=null && !PreferenceManager.getDefaultSharedPreferences(context).getBoolean("resume_podcast", false)){
+                            //Should podcast resume? Ask player
+                            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
+                                    .setTitle(R.string.should_podcast_resume)
+                                    .setIcon(R.drawable.podcast).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    m.bool_kaydet("resume"+podcasttitle,true);
+                                    openPodcast();
+                                }
+                            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    m.bool_kaydet("resume"+podcasttitle,false);
+                                    openPodcast();
+                                }
+                            })
+                                    .setCancelable(false)
+                                    .show();
+                        }else openPodcast();
+
+                }
+            }
+
+            void openPodcast() {
+                Intent playservice = new Intent(getActivity().getApplicationContext(), MUSIC_PLAY_SERVICE.class);
+                getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
+                m.setPlaying(false);
+                playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
+                playservice.putExtra(RadyoMenemenPro.DATA_SOURCE,RList.get(getAdapterPosition()).url);
+                m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
+                m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
+                getActivity().getApplicationContext().startService(playservice);
+                Fragment podcast_now_playing = new podcast_now_playing();
+                Bundle bundle = new Bundle();
+                bundle.putString("title",RList.get(getAdapterPosition()).title);
+                bundle.putString("descr",RList.get(getAdapterPosition()).description);
+                ArrayList<String> podcasts = new ArrayList<>();
+                for(int i=0; i<RList.size(); i++){
+                    podcasts.add(i,RList.get(i).url);
+                }
+                bundle.putStringArrayList("podcast_list",podcasts);
+                m.kaydet(RadyoMenemenPro.broadcastinfo.PODCAST_URL,RList.get(getAdapterPosition()).url);
+                podcast_now_playing.setArguments(bundle);
 
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        podcast_now_playing.setSharedElementEnterTransition(new DetailsTransition());
-                        podcast_now_playing.setEnterTransition(new Slide());
-                        setExitTransition(new Fade());
-                        podcast_now_playing.setSharedElementReturnTransition(new DetailsTransition());
-                        getFragmentManager()
-                                .beginTransaction()
-                                .addSharedElement(cv, cv.getTransitionName())
-                                .addToBackStack("podcast")
-                                .replace(R.id.Fcontent, podcast_now_playing)
-                                .commit();
-                    }else {
-                        getFragmentManager()
-                                .beginTransaction()
-                                .addToBackStack("podcast")
-                                .replace(R.id.Fcontent, podcast_now_playing)
-                                .commit();
-                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    podcast_now_playing.setSharedElementEnterTransition(new DetailsTransition());
+                    podcast_now_playing.setEnterTransition(new Slide());
+                    setExitTransition(new Fade());
+                    podcast_now_playing.setSharedElementReturnTransition(new DetailsTransition());
+                    getFragmentManager()
+                            .beginTransaction()
+                            .addSharedElement(cv, cv.getTransitionName())
+                            .addToBackStack("podcast")
+                            .replace(R.id.Fcontent, podcast_now_playing)
+                            .commit();
+                }else {
+                    getFragmentManager()
+                            .beginTransaction()
+                            .addToBackStack("podcast")
+                            .replace(R.id.Fcontent, podcast_now_playing)
+                            .commit();
                 }
             }
 

@@ -300,4 +300,7 @@
     <string name="topics_pm_with_user">PM with %s</string>
     <string name="user_is_offline">%s is offline</string>
     <string name="user_is_online">%s is online</string>
+    <string name="settings_resume_podcast_title">Resume Podcasts</string>
+    <string name="settings_resume_podcast_summary">Always resume podcasts where it was</string>
+    <string name="should_podcast_resume">Should podcast resume where it was from?</string>
 </resources>

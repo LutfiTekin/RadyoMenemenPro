@@ -250,4 +250,7 @@
     <string name="topics_pm_with_user">%s ile özel mesaj</string>
     <string name="user_is_online">%s çevirimiçi</string>
     <string name="user_is_offline">%s çevirimdışı</string>
+    <string name="settings_resume_podcast_title">Podcastlere Devam Et</string>
+    <string name="settings_resume_podcast_summary">Podcaste her zaman kaldığı yerden devam et</string>
+    <string name="should_podcast_resume">Podcaste kaldığı yerden devam edilsin mi?</string>
 </resources>
