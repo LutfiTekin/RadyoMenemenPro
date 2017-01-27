@@ -714,6 +714,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             nick = getString(R.string.me);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon((isTopic) ? R.drawable.ic_topic_discussion : R.mipmap.ic_chat);
+        if(ispm) builder.setSmallIcon(R.drawable.ic_pm);
         builder.setOnlyAlertOnce(true);
         builder.setAutoCancel(true);
           if(isTopic) {
