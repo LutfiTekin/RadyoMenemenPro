@@ -86,10 +86,8 @@ public class track_info extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         final String trackName = track.getText().toString();
-        Bundle bundle = new Bundle();
         try {
             if(view == iv_spotify || view == tv_spotify){
-                bundle.putString("action","spo");
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setAction(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
                 intent.setComponent(new ComponentName(
@@ -99,7 +97,6 @@ public class track_info extends Fragment implements View.OnClickListener{
                 this.startActivity(intent);
 
             }else if(view == iv_youtube || view == tv_youtube){
-                bundle.putString("action","ytb");
                 Intent intent = new Intent(Intent.ACTION_SEARCH);
                 intent.setPackage("com.google.android.youtube");
                 intent.putExtra(SearchManager.QUERY, trackName);
@@ -107,17 +104,13 @@ public class track_info extends Fragment implements View.OnClickListener{
                 startActivity(intent);
 
             }else if(view == iv_lyric || view == tv_lyric){
-                bundle.putString("action","lyric");
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 intent.putExtra(SearchManager.QUERY, trackName + " " + getString(R.string.lyrics)); // query contains search string
                 startActivity(intent);
             }
-            bundle.putString("track",trackName.substring(0,35));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        m.trackEvent("iv_s",bundle);
     }
 
     @Override

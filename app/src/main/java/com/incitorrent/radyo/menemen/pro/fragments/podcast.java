@@ -198,13 +198,7 @@ public class podcast extends Fragment {
     }
 
 
-    @Override
-    public void onResume() {
-        Bundle bundle = new Bundle();
-        bundle.putString("podcast","onresume");
-        m.trackEvent("Podcast",bundle);
-        super.onResume();
-    }
+
 
 
     public class LoadXML extends AsyncTask<Void, Void, Boolean> {
