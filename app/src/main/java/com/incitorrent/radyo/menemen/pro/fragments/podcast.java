@@ -299,7 +299,7 @@ public class podcast extends Fragment {
                     getActivity().getApplicationContext().stopService(playservice); //önce servisi durdur
                     m.setPlaying(false);
                         playservice.putExtra("descr", RList.get(getAdapterPosition()).description);
-                        playservice.putExtra("dataSource",RList.get(getAdapterPosition()).url);
+                        playservice.putExtra(RadyoMenemenPro.DATA_SOURCE,RList.get(getAdapterPosition()).url);
                     m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,true);
                     m.kaydet(RadyoMenemenPro.PLAYING_PODCAST,RList.get(getAdapterPosition()).title);
                     getActivity().getApplicationContext().startService(playservice);

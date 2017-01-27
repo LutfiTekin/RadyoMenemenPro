@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity
         m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,false);
         Intent  radyoservis = new Intent(this, MUSIC_PLAY_SERVICE.class);
         //Oluşturulan servis intentine datasource ekle
-        radyoservis.putExtra("dataSource",m.getRadioDataSource());
+        radyoservis.putExtra(RadyoMenemenPro.DATA_SOURCE,m.getRadioDataSource());
         //data source ile servisi başlat
         startService(radyoservis);
         fragmentManager.beginTransaction().replace(R.id.Fcontent,new radio()).commit();

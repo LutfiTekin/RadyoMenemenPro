@@ -335,7 +335,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String dataSource = null;
         isPodcast = m.bool_oku(RadyoMenemenPro.IS_PODCAST);
-       if(intent.getExtras()!=null)dataSource = intent.getExtras().getString("dataSource");
+       if(intent.getExtras()!=null)dataSource = intent.getExtras().getString(RadyoMenemenPro.DATA_SOURCE);
         if(dataSource!=null && dataSource.equals("stop")) {
             stopService(new Intent(this, MUSIC_PLAY_SERVICE.class)); //DURDUR
             return START_NOT_STICKY;

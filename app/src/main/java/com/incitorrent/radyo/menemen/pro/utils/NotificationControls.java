@@ -31,15 +31,15 @@ public class NotificationControls extends BroadcastReceiver {
         if (intent.getExtras() != null) {
             if (intent.getExtras().getBoolean("stop")) //Stop signal received from now playing notification
                 dataSource = "stop";
-            else if (intent.getExtras().getString("dataSource", null) != null) //dataSource received from on air notification
+            else if (intent.getExtras().getString(RadyoMenemenPro.DATA_SOURCE, null) != null) //dataSource received from on air notification
             {
                 m.bool_kaydet(RadyoMenemenPro.IS_PODCAST, false);
-                dataSource = (intent.getExtras().getString("dataSource"));
+                dataSource = (intent.getExtras().getString(RadyoMenemenPro.DATA_SOURCE));
                 Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
             }
         }
     }
-        i.putExtra("dataSource", dataSource);
+        i.putExtra(RadyoMenemenPro.DATA_SOURCE, dataSource);
         context.startService(i);
     }
 }

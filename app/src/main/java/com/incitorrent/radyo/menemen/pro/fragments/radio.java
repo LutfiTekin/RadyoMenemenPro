@@ -521,7 +521,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
                 m.bool_kaydet(RadyoMenemenPro.IS_PODCAST,false);
                 Intent  radyoservis = new Intent(context, MUSIC_PLAY_SERVICE.class);
                 //Oluşturulan servis intentine datasource ekle
-                radyoservis.putExtra("dataSource",m.getRadioDataSource());
+                radyoservis.putExtra(RadyoMenemenPro.DATA_SOURCE,m.getRadioDataSource());
                 //data source ile servisi başlat
                 context.startService(radyoservis);
             }
