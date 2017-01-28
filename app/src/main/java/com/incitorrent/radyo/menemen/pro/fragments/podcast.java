@@ -300,10 +300,15 @@ public class podcast extends Fragment {
             public void onClick(View v) {
                 if(getActivity()!=null) {
                 final String podcasttitle = RList.get(getAdapterPosition()).title;
+                String duration = RList.get(getAdapterPosition()).duration;
+                    if (duration.length()<6) duration = "00:" + duration;
                         if(m.oku(podcasttitle)!=null && !PreferenceManager.getDefaultSharedPreferences(context).getBoolean("resume_podcast", false)){
                             //Should podcast resume? Ask player
                             new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),R.style.alertDialogTheme))
                                     .setTitle(R.string.should_podcast_resume)
+                                    .setMessage(podcast_now_playing.getFormattedDuration(Long.parseLong(m.oku(podcasttitle))) +
+                                            "/" +
+                                            duration)
                                     .setIcon(R.drawable.podcast).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {

@@ -152,7 +152,7 @@ public class podcast_now_playing extends Fragment implements SeekBar.OnSeekBarCh
         return podcastview;
     }
 
-    String getFormattedDuration(long duration) {
+    public static String getFormattedDuration(long duration) {
         return String.format(Locale.getDefault(), "%02d:%02d:%02d",
                                         TimeUnit.MILLISECONDS.toHours(duration),
                                         TimeUnit.MILLISECONDS.toMinutes(duration) -
