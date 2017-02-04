@@ -19,6 +19,7 @@
         android:contentDescription="@string/cd_artwork"
         android:id="@+id/art" />
    <TextView
+       android:gravity="center_vertical"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:minLines="2"
