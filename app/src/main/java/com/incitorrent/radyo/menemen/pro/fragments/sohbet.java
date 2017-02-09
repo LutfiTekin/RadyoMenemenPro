@@ -1102,11 +1102,13 @@ public class sohbet extends Fragment implements View.OnClickListener{
                         m.openYoutubeLink(getYoutubeId(Menemen.fromHtmlCompat(sohbetList.get(getAdapterPosition()).mesaj)));
                     }
                 }else if(view == nick){
-                    Fragment userinfo = new user_pm();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(RadyoMenemenPro.NICK,sohbetList.get(getAdapterPosition()).nick);
-                    userinfo.setArguments(bundle);
-                    getFragmentManager().beginTransaction().replace(R.id.Fcontent,userinfo).commit();
+                    //Not working as expected
+                    //TODO improve
+//                    Fragment userinfo = new user_pm();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString(RadyoMenemenPro.NICK,sohbetList.get(getAdapterPosition()).nick);
+//                    userinfo.setArguments(bundle);
+//                    getFragmentManager().beginTransaction().replace(R.id.Fcontent,userinfo).commit();
                 }else {
                     String zaman_val = sohbetList.get(getAdapterPosition()).zaman;
                     try {
