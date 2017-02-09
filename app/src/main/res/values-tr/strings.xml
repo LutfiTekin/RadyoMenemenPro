@@ -253,4 +253,5 @@
     <string name="settings_resume_podcast_title">Podcastlere Devam Et</string>
     <string name="settings_resume_podcast_summary">Podcaste her zaman kaldığı yerden devam et</string>
     <string name="should_podcast_resume">Podcaste kaldığı yerden devam edilsin mi?</string>
+    <string name="hint_search_track">Şarkı ara…</string>
 </resources>

@@ -31,7 +31,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -579,22 +578,28 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             @Override
             public void onClick(View view) {
                 if(isUserSearching) {
-                    final RequestQueue queue = Volley.newRequestQueue(context);
-                    final boolean online_result = RList.get(getAdapterPosition()).arturl.equals(RadyoMenemenPro.ARTWORK_ONLINE);
-                    final String track = (online_result)? RList.get(getAdapterPosition()).songhash : RList.get(getAdapterPosition()).song;
-                   if(view == req_queue){
-                       queue.add(requestTrack(false,track));
-                   }else if(view == req_playnow){
-                       queue.add(requestTrack(true,track));
-                   }else{
-                       if(req_queue.getVisibility() == View.VISIBLE){
-                           req_queue.setVisibility(View.GONE);
-                           req_playnow.setVisibility(View.GONE);
-                       }else {
-                           req_queue.setVisibility(View.VISIBLE);
-                           req_playnow.setVisibility(View.VISIBLE);
-                       }
-                   }
+                    try {
+                        final RequestQueue queue = Volley.newRequestQueue(context);
+                        final boolean online_result = RList.get(getAdapterPosition()).arturl.equals(RadyoMenemenPro.ARTWORK_ONLINE);
+                        final String track = (online_result)? RList.get(getAdapterPosition()).songhash : RList.get(getAdapterPosition()).song;
+                        if(view == req_queue || view == req_playnow) RList.remove(getAdapterPosition());
+                        if(view == req_queue){
+                            queue.add(requestTrack(false,track));
+                        }else if(view == req_playnow){
+                            queue.add(requestTrack(true,track));
+                        }else{
+                            if(req_queue.getVisibility() == View.VISIBLE){
+                                req_queue.setVisibility(View.GONE);
+                                req_playnow.setVisibility(View.GONE);
+                            }else {
+                                req_queue.setVisibility(View.VISIBLE);
+                                req_playnow.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(context, R.string.error_occured, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
 
                 }
                 else {
@@ -779,6 +784,7 @@ public class radio extends Fragment implements View.OnClickListener,View.OnLongC
             });
             SearchView search = (SearchView) searchItem.getActionView();
             search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
+            search.setQueryHint(getString(R.string.hint_search_track));
             search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -899,7 +905,7 @@ StringRequest searchTrackOnline(final String searchquery){
      * @param track Tracks id or name
      * @return
      */
-    StringRequest requestTrack(boolean playNow , final String track){
+    StringRequest requestTrack(final boolean playNow , final String track){
         String url = RadyoMenemenPro.REQUEST_TRACK + "&" +
                 ((playNow)? REQUEST_PLAYNOW : "");
         return new StringRequest(Request.Method.POST, url,
@@ -918,7 +924,7 @@ StringRequest searchTrackOnline(final String searchquery){
                             case "3":
                                 //SUCCESS
                                 Toast.makeText(context, R.string.toast_auto_dj_req_success, Toast.LENGTH_SHORT).show();
-                                if(searchItem!=null && searchItem.getActionView()!=null)
+                                if(searchItem!=null && searchItem.getActionView()!=null && playNow)
                                     searchItem.collapseActionView();
                                 break;
                             case "4":
@@ -926,7 +932,13 @@ StringRequest searchTrackOnline(final String searchquery){
                                 Toast.makeText(context, R.string.toast_sc_inscf_mp, Toast.LENGTH_SHORT).show();
                                 break;
                         }
-                        Log.d("VOLLEYRESP",response);
+                        if (!playNow) {
+                            try {
+                                lastplayed.getAdapter().notifyDataSetChanged();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
 
                     }
                 }, new Response.ErrorListener() {
