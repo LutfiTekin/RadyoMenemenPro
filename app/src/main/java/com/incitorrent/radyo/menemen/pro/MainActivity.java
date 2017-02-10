@@ -383,17 +383,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void defaultAction() {
+        Fragment fragment;
         if(!m.isLoggedIn() && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("music_only",false)) {
             //Sadece müzik modu açık ve giriş yapılmamış
-            fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+            fragment = new radio();
         }else if (!m.isLoggedIn()) {
-            fragmentManager.beginTransaction().replace(R.id.Fcontent, new login()).commit();
+            fragment = new login();
         } else {
             if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("onstart_chat",true))
-                fragmentManager.beginTransaction().replace(R.id.Fcontent, new sohbet()).commit();
+                fragment = new sohbet();
             else
-                fragmentManager.beginTransaction().replace(R.id.Fcontent, new radio()).commit();
+                fragment = new radio();
         }
+        fragmentManager.beginTransaction().replace(R.id.Fcontent,fragment).commit();
     }
 
     @Override
