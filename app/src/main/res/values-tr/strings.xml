@@ -254,4 +254,7 @@
     <string name="settings_resume_podcast_summary">Podcaste her zaman kaldığı yerden devam et</string>
     <string name="should_podcast_resume">Podcaste kaldığı yerden devam edilsin mi?</string>
     <string name="hint_search_track">Şarkı ara…</string>
+    <string name="toast_you_must_be_logged_in">Giriş yapmış olmanız gerekiyor</string>
+    <string name="leave_a_note">Bir Not Bırak</string>
+    <string name="leave_note_summary">Radyo Menemene bir not bırak, notu her zaman son gelen değiştirebilir.</string>
 </resources>

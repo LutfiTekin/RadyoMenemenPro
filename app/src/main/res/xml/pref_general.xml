@@ -52,6 +52,10 @@
         android:key="show_intro"
         android:summary="@string/pref_summary_show_intro"/>
     <Preference
+        android:title="@string/leave_a_note"
+        android:key="leave_note"
+        android:summary="@string/leave_note_summary"/>
+    <Preference
         android:title="@string/pref_title_download_all"
         android:key="download_all"
         android:summary="@string/pref_summary_download_all"/>

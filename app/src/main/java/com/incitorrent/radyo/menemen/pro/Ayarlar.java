@@ -212,6 +212,14 @@ public class Ayarlar extends AppCompatPreferenceActivity {
                     return true;
                 }
             });
+            Preference leavenote = findPreference("leave_note");
+            leavenote.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(RMPRO.context, RealtimeWall.class));
+                    return true;
+                }
+            });
             Preference about = findPreference("licence");
                 about.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override

@@ -304,4 +304,7 @@
     <string name="settings_resume_podcast_summary">Always resume podcasts where it was</string>
     <string name="should_podcast_resume">Should podcast resume where it was from?</string>
     <string name="hint_search_track">Search for track…</string>
+    <string name="toast_you_must_be_logged_in">You must be logged in</string>
+    <string name="leave_a_note">Leave a Note</string>
+    <string name="leave_note_summary">Leave a note to Radyo Menemen, note can be overridden by the last person.</string>
 </resources>
