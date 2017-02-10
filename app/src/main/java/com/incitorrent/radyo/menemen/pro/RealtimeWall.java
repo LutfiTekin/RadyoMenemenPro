@@ -9,7 +9,6 @@ import android.text.InputType;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,10 +89,6 @@ public class RealtimeWall extends AppCompatActivity implements View.OnLongClickL
         // Set up the input
         final EditText input = new EditText(this);
         input.setHint(R.string.ET_hint_write_something);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(16, 16, 16, 16);
-        input.setLayoutParams(layoutParams);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
