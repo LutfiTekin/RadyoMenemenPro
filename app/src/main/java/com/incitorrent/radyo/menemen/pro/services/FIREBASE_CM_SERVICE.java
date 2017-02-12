@@ -43,7 +43,6 @@ import com.incitorrent.radyo.menemen.pro.utils.NotificationControls;
 import com.incitorrent.radyo.menemen.pro.utils.capsDB;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.topicDB;
-import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,12 +94,10 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
     Boolean mutechatnotification = m.getSavedTime(RadyoMenemenPro.MUTE_NOTIFICATION) > System.currentTimeMillis();
     public static final  String CHAT_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CHATUPDATE"; //CHAT Güncelle
     public static final  String CAPS_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
-    public static final  String USERS_ONLINE_BROADCAST_FILTER = "com.incitorrent.radyo.menemen.CAPSUPDATE"; //CAPS Güncelle
     LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(context);
     Intent  notification_intent = new Intent(context, MainActivity.class);
     chatDB sql;
     capsDB sql_caps;
-    trackonlineusersDB sql_online;
     @SuppressLint("ServiceCast")
     @Override
     public void onCreate() {
@@ -110,7 +107,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         SUM_Notification = new NotificationCompat.Builder(context);
         sql = new chatDB(context,null,null,1);
         sql_caps = new capsDB(context,null,null,1);
-        sql_online = new trackonlineusersDB(context,null,null,1);
         super.onCreate();
     }
 
@@ -168,10 +164,6 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
                         break;
                     case CATEGORY_CHAT:
                         generalChat(remoteMessage);
-                        break;
-                    case CATEGORY_ONLINE:
-                        String nick = getDATA(remoteMessage, "user");
-                        onlineUser(nick,null);
                         break;
                     case CATEGORY_TOPICS:
                         if(action==null) break;
@@ -352,7 +344,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
             broadcastManager.sendBroadcast(topic);
         }
 
-        onlineUser(nick,topicid);
+
         final boolean isUser = nick.equals(m.getUsername());
         //Notification creation condition
         if (!notify || !notify_new_post || is_topic_foreground || music_only || !logged || isUser) return;
@@ -484,14 +476,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         queue.add(postRequest);
     }
 
-    private void onlineUser(String nick,@Nullable String topicid) {
-        //TODO topic id kullan
-        long now = System.currentTimeMillis();
-        sql_online.addToHistory(nick, null, now);
-        Intent onlineusers = new Intent(USERS_ONLINE_BROADCAST_FILTER);
-        onlineusers.putExtra("count", sql_online.getOnlineUserCount(null));
-        broadcastManager.sendBroadcast(onlineusers);
-    }
+
 
     //TODO use remote message parameter
     private void sync() {
@@ -549,7 +534,7 @@ public class FIREBASE_CM_SERVICE extends FirebaseMessagingService{
         }
         //add to db
         sql.addtoHistory(new chatDB.CHAT(msgid,nick,msg,time));
-        onlineUser(nick,null);
+
         final Boolean isUser = nick.equals(m.getUsername());
         //Notification creation condition
         if (!notify || !notify_new_post || is_chat_foreground || music_only || !logged || isUser) return;

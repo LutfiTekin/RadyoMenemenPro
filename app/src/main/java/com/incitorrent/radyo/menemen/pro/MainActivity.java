@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,13 +32,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.incitorrent.radyo.menemen.pro.fragments.contact;
 import com.incitorrent.radyo.menemen.pro.fragments.galeri;
@@ -51,12 +50,10 @@ import com.incitorrent.radyo.menemen.pro.fragments.sohbet;
 import com.incitorrent.radyo.menemen.pro.fragments.topics;
 import com.incitorrent.radyo.menemen.pro.fragments.track_info;
 import com.incitorrent.radyo.menemen.pro.fragments.user_pm;
-import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_INFO_SERVICE;
 import com.incitorrent.radyo.menemen.pro.services.MUSIC_PLAY_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
 import com.incitorrent.radyo.menemen.pro.utils.topicDB;
-import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.CALAN;
 import static com.incitorrent.radyo.menemen.pro.RadyoMenemenPro.broadcastinfo.DJ;
@@ -95,14 +92,7 @@ public class MainActivity extends AppCompatActivity
                   if (action.equals(MUSIC_INFO_SERVICE.NP_FILTER) || action.equals(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER)) {
                   play = intent.getBooleanExtra(RadyoMenemenPro.PLAY, true);
                       setNP(m.isPlaying() || play);
-              }else if(action.equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)){
-                      int count = intent.getExtras().getInt("count",0);
-                      if(count > 0){
-                          final TextView badge =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                                  findItem(R.id.nav_chat));
-                          m.setBadge(badge,String.valueOf(count));
-                      }
-                  }
+              }
               }
             }
         };
@@ -184,17 +174,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkValidVersion() {
-        if(!m.isInternetAvailable()) m.saveTime("checkvalidversion",0);
-        if(m.getSavedTime("checkvalidversion")<System.currentTimeMillis() && m.bool_oku("valid")) return;
-        m.saveTime("checkvalidversion",(1000*60*60*12));
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest request = new StringRequest(Request.Method.GET, RadyoMenemenPro.VALID_VERSION, new Response.Listener<String>() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference("validversion").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResponse(String response) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
-                    int versionCode = getPackageManager().getPackageInfo(getPackageName(),0).versionCode;
-                    if(Integer.parseInt(response)>versionCode) {
-                        m.bool_kaydet("valid", false);
+                    final int versionCode = getPackageManager().getPackageInfo(getPackageName(),0).versionCode;
+                    if(versionCode<dataSnapshot.getValue(int.class)){
                         new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.alertDialogTheme))
                                 .setTitle(R.string.dialog_app_outdated_title)
                                 .setMessage(R.string.dialog_app_outdated_message)
@@ -211,19 +197,18 @@ public class MainActivity extends AppCompatActivity
                                 .setIcon(R.mipmap.ic_launcher)
                                 .setCancelable(false)
                                 .show();
-                    }else m.bool_kaydet("valid", true);
-                } catch (Exception e) {
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
+
             }
-        },null){
+
             @Override
-            public RetryPolicy getRetryPolicy() {
-                return m.menemenRetryPolicy();
+            public void onCancelled(DatabaseError databaseError) {
+
             }
-        };
-        request.setShouldCache(false);
-        queue.add(request);
+        });
     }
 
 
@@ -403,7 +388,6 @@ public class MainActivity extends AppCompatActivity
         IntentFilter filter = new IntentFilter();
         filter.addAction(MUSIC_PLAY_SERVICE.MUSIC_PLAY_FILTER);
         filter.addAction(MUSIC_INFO_SERVICE.NP_FILTER);
-        filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((receiver),filter);
         super.onStart();
     }
@@ -453,13 +437,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initOnlineUsersCountBadge() {
-        trackonlineusersDB sql = new trackonlineusersDB(MainActivity.this,null,null,1);
-        if(sql.getOnlineUserCount(null) > 0) {
-            final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                    findItem(R.id.nav_chat));
-            m.setBadge(badge, String.valueOf(sql.getOnlineUserCount(null)));
-        }
-        sql.close();
+//        trackonlineusersDB sql = new trackonlineusersDB(MainActivity.this,null,null,1);
+//        if(sql.getOnlineUserCount(null) > 0) {
+//            final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+//                    findItem(R.id.nav_chat));
+//            m.setBadge(badge, String.valueOf(sql.getOnlineUserCount(null)));
+//        }
+//        sql.close();
     }
 
     @Override

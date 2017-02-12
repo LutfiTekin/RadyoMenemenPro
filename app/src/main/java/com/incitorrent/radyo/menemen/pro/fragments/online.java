@@ -2,34 +2,33 @@ package com.incitorrent.radyo.menemen.pro.fragments;
 
 
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.incitorrent.radyo.menemen.pro.R;
-import com.incitorrent.radyo.menemen.pro.services.FIREBASE_CM_SERVICE;
 import com.incitorrent.radyo.menemen.pro.utils.Menemen;
-import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
+import com.incitorrent.radyo.menemen.pro.utils.topicDB;
 
 
 public class online extends Fragment {
-//    private static final String TAG = "Online";
-    trackonlineusersDB sql;
+    private static final String TAG = "Online";
     Context context;
-    BroadcastReceiver receiver;
     TextView textview;
     Toolbar toolbar;
     Menemen m;
+    FirebaseDatabase database;
+    DatabaseReference onlines;
+    String TOPIC_ID = "0";
     public online() {
         // Required empty public constructor
     }
@@ -45,33 +44,23 @@ public class online extends Fragment {
             getActivity().setTitle(context.getString(R.string.online_members));
             toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
         }
-        sql = new trackonlineusersDB(context, null, null, 1);
         textview = (TextView) onlineView.findViewById(R.id.onlineusers);
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent!=null) {
-                    String action = intent.getAction();
-                    if(action.equals(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER)){
-                        int count = intent.getExtras().getInt("count",0);
-                        if(count > 0){
-                            //Online Üyeler
-                            new setOnlineUsers().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-                        }
-                    }
-                }
-            }
-        };
+        database = FirebaseDatabase.getInstance();
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            TOPIC_ID = bundle.getString(topicDB._TOPICID);
+            if(TOPIC_ID == null)
+                TOPIC_ID = "0";
+        }
+        onlines = database.getReference("onlineusers").child("location").child(TOPIC_ID);
+        onlines.orderByValue();
         return onlineView;
     }
 
     @Override
     public void onStart() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
-        LocalBroadcastManager.getInstance(context).registerReceiver((receiver),filter);
-        new setOnlineUsers().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        iAmOnline(true);
+        onlines.addValueEventListener(trackonlineusers);
         super.onStart();
     }
 
@@ -79,56 +68,46 @@ public class online extends Fragment {
 
     @Override
     public void onStop() {
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+        iAmOnline(false);
+        onlines.removeEventListener(trackonlineusers);
         super.onStop();
     }
 
-    class setOnlineUsers extends AsyncTask<Void,Void,String>{
+    ValueEventListener trackonlineusers = new ValueEventListener() {
         @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                Cursor cursor = sql.getOnlineUserList(m.getUsername());
-                if(cursor == null) return null;
-                cursor.moveToFirst();
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if(dataSnapshot.getChildrenCount()<1){
+                toolbar.setSubtitle("");
+                textview.setText(R.string.online_user_none);
+            }else if(dataSnapshot.getChildrenCount() == 1){
+                toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
+                textview.setText(R.string.online_user_none);
+            }else{
                 String users ="";
-                while (!cursor.isAfterLast()){
-                    String nick = cursor.getString(cursor.getColumnIndex(trackonlineusersDB._NICK));
-                    users = users + nick + "\n";
-                    cursor.moveToNext();
+                for (DataSnapshot user : dataSnapshot.getChildren()) {
+                   users = users + user.getKey() + "\n";
                 }
-                cursor.close();
-                return users;
-            } catch (Exception e) {
-                e.printStackTrace();
+                textview.setText(users);
+                toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), dataSnapshot.getChildrenCount()));
+
             }
-            return "";
         }
 
         @Override
-        protected void onPostExecute(String res) {
-            if(res != null && res.length()>0){
-                textview.setText(res);
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    private void iAmOnline(boolean online) {
+        try {
+            if (online) {
+                onlines.child(m.getUsername()).setValue(System.currentTimeMillis());
+            } else {
+                onlines.child(m.getUsername()).setValue(null);
             }
-            try {
-                final int count = sql.getOnlineUserCount(null);
-                if(toolbar!=null) {
-                    if (count > 0) {
-                        if (count == 1) {
-                            toolbar.setSubtitle(R.string.toolbar_online_subtitle_one);
-                            textview.setText(R.string.online_user_none);
-                        }else
-                            toolbar.setSubtitle(String.format(getActivity().getApplicationContext().getString(R.string.toolbar_online_subtitle), count));
-                    } else {
-                        toolbar.setSubtitle("");
-                        textview.setText(R.string.online_user_none);
-                    }
-                }
-                sql.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            super.onPostExecute(res);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 }

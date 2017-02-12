@@ -72,6 +72,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.incitorrent.radyo.menemen.pro.R;
 import com.incitorrent.radyo.menemen.pro.RadyoMenemenPro;
@@ -83,7 +88,6 @@ import com.incitorrent.radyo.menemen.pro.utils.WrapContentLinearLayoutManager;
 import com.incitorrent.radyo.menemen.pro.utils.chatDB;
 import com.incitorrent.radyo.menemen.pro.utils.deletePost;
 import com.incitorrent.radyo.menemen.pro.utils.topicDB;
-import com.incitorrent.radyo.menemen.pro.utils.trackonlineusersDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,6 +137,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
     private Handler mHandler;
     private NavHeader navHeader;
     private boolean isScrolling = false;
+
     /**
      * A boolean value for differentiating Topic messages by given id or General Chat
      * Since they are both using same template and fragment
@@ -146,6 +151,9 @@ public class sohbet extends Fragment implements View.OnClickListener{
 
     MenuItem searchItem;
     boolean isUserSearching = false;
+    FirebaseDatabase database;
+    DatabaseReference onlines;
+    int LAST_ONLINE_COUNT = 0;
     public sohbet() {
         // Required empty public constructor
     }
@@ -161,6 +169,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
         final View sohbetView = inflater.inflate(R.layout.fragment_sohbet, container, false);
         context = getActivity().getApplicationContext();
         m = new Menemen(context);
+        database = FirebaseDatabase.getInstance();
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             TOPIC_ID = bundle.getString(topicDB._TOPICID);
@@ -171,6 +180,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 //Getting topic id is failed set TOPIC_ID to initial value
                 TOPIC_ID = "0";
         }
+        onlines = database.getReference("onlineusers").child("location").child(TOPIC_ID);
         if(getActivity()!=null) {
             if(TOPIC_MODE) {
                 IS_PM = m.getTopicDB().getTopicInfo(TOPIC_ID,topicDB._DESCR).equals(RadyoMenemenPro.PM);
@@ -259,8 +269,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                     else if(LAST_POSITION_COMP_VISIBLE < 20) {
                         if(scrollTop.getVisibility() == View.VISIBLE) scrollTop.hide();
                         if(getActivity()!=null && toolbar != null) {
-                            trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
-                            final int count = sql.getOnlineUserCount(null);
+                            final int count = LAST_ONLINE_COUNT;
                             if (!IS_PM) {
                                 if(count > 0 && toolbar !=null) {
                                     if(count == 1)
@@ -360,26 +369,7 @@ public class sohbet extends Fragment implements View.OnClickListener{
                               e.printStackTrace();
                           }
                           break;
-                      case FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER:
-                          if(ETmesaj.getText().toString().trim().length()<1)
-                          if (!IS_PM) {
-                              int count = intent.getExtras().getInt("count", 0);
-                              if (count > 0 && toolbar != null) {
-                                  m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
-                              ETmesaj.requestFocus();
-                              }
-                          }else{
-                              trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
-                              //extract username from title
-                              String pm_user = m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE)
-                                      .substring(2)
-                                      .replaceAll(m.getUsername(), "")
-                                      .replaceAll("\\+", "");
-                              m.setToolbarSubtitleMarquee(toolbar, sql.isUserOnline(pm_user) ?
-                                      String.format(getString(R.string.user_is_online), pm_user) :
-                                      String.format(getString(R.string.user_is_offline), pm_user));
-                          }
-                          break;
+
                   }
 
               }
@@ -402,8 +392,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(getActivity()!=null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(FIREBASE_CM_SERVICE.CHAT_BROADCAST_FILTER);
-            filter.addAction(FIREBASE_CM_SERVICE.USERS_ONLINE_BROADCAST_FILTER);
             LocalBroadcastManager.getInstance(context).registerReceiver((Chatreceiver),filter);
+            onlines.addValueEventListener(trackonlineusers);
         }
         super.onStart();
     }
@@ -445,9 +435,10 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(TOPIC_MODE) tid = Integer.parseInt(TOPIC_ID);
         NotificationManagerCompat.from(context).cancel(FIREBASE_CM_SERVICE.CHAT_NOTIFICATION + tid);
         m.runEnterAnimation(resimekle,250);
-        iAmOnline();
+        iAmOnline(true);
         super.onResume();
     }
+
 
     private void promptJoinDialog() {
         if(isAdded())
@@ -509,28 +500,16 @@ public class sohbet extends Fragment implements View.OnClickListener{
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void iAmOnline() {
-        if(m.getSavedTime("online_push") > System.currentTimeMillis()) return;
-        m.saveTime("online_push",(1000 * 60 * 2));
-        RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest post = new StringRequest(Request.Method.POST, RadyoMenemenPro.PUSH_ONLINE_SIGNAL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                    }
-                },null){
-            @Override
-            protected Map<String, String> getParams() {
-                return m.getAuthMap();
+    private void iAmOnline(boolean online) {
+        try {
+            if (online) {
+              onlines.child(m.getUsername()).setValue(System.currentTimeMillis());
+            } else {
+               onlines.child(m.getUsername()).setValue(null);
             }
-
-            @Override
-            public Priority getPriority() {
-                return Priority.IMMEDIATE;
-            }
-        };
-        queue.add(post);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -543,6 +522,8 @@ public class sohbet extends Fragment implements View.OnClickListener{
         if(toolbar != null) toolbar.setSubtitle("");
         if(TOPIC_MODE && navHeader != null)
             navHeader.clear();
+        iAmOnline(false);
+        onlines.removeEventListener(trackonlineusers);
         super.onStop();
     }
 
@@ -655,7 +636,11 @@ public class sohbet extends Fragment implements View.OnClickListener{
                 item.setVisible(false);
                 break;
             case R.id.go_to_online_users:
-                getFragmentManager().beginTransaction().replace(R.id.Fcontent, new online(), "online").addToBackStack("online").commit();
+                Fragment online = new online();
+                Bundle bundle = new Bundle();
+                bundle.putString(topicDB._TOPICID, TOPIC_ID);
+                online.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.Fcontent, online, "online").addToBackStack("online").commit();
                 break;
             case R.id.action_leave_topic:
                 Toast.makeText(context, R.string.toast_leaving_topic, Toast.LENGTH_SHORT).show();
@@ -1677,5 +1662,35 @@ ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         }
     }
 
+    ValueEventListener trackonlineusers = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+//            Toast.makeText(context, dataSnapshot.getChildrenCount() +"users", Toast.LENGTH_SHORT).show();
+            if(ETmesaj.getText().toString().trim().length()<1)
+                if (!IS_PM) {
+                    int count = (int)dataSnapshot.getChildrenCount();
+                    LAST_ONLINE_COUNT = count;
+                    if (count > 0 && toolbar != null) {
+                        m.setToolbarSubtitleMarquee(toolbar, count == 1 ? getString(R.string.toolbar_online_subtitle_one) : String.format(context.getString(R.string.toolbar_online_subtitle), count));
+                        ETmesaj.requestFocus();
+                    }
+                }
+//                else{
+//                    trackonlineusersDB sql = new trackonlineusersDB(context,null,null,1);
+//                    //extract username from title
+//                    String pm_user = m.getTopicDB().getTopicInfo(TOPIC_ID, topicDB._TITLE)
+//                            .substring(2)
+//                            .replaceAll(m.getUsername(), "")
+//                            .replaceAll("\\+", "");
+//                    m.setToolbarSubtitleMarquee(toolbar, sql.isUserOnline(pm_user) ?
+//                            String.format(getString(R.string.user_is_online), pm_user) :
+//                            String.format(getString(R.string.user_is_offline), pm_user));
+//                }
+        }
 
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 }
