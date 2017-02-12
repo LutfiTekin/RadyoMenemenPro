@@ -58,7 +58,7 @@ public class RealtimeWall extends AppCompatActivity implements View.OnLongClickL
         public void onDataChange(DataSnapshot dataSnapshot) {
             try {
                 nick.setText(dataSnapshot.child("nick").getValue(String.class));
-               if(dataSnapshot.child("post").getValue(String.class).trim().length()>0 || dataSnapshot.child("post").getValue(String.class).trim().length()<21)
+               if(dataSnapshot.child("post").getValue(String.class).trim().length()>0 || dataSnapshot.child("post").getValue(String.class).trim().length()<51)
                    post.setText(dataSnapshot.child("post").getValue(String.class));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -78,12 +78,12 @@ public class RealtimeWall extends AppCompatActivity implements View.OnLongClickL
                 Toast.makeText(context, R.string.toast_you_must_be_logged_in, Toast.LENGTH_SHORT).show();
                 return false;
             }
-            editText();
+            alertEditText();
         }
         return false;
     }
 
-    private void editText() {
+    private void alertEditText() {
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.alertDialogTheme));
         builder.setTitle(getString(R.string.hint_write_something));
         // Set up the input
@@ -91,15 +91,13 @@ public class RealtimeWall extends AppCompatActivity implements View.OnLongClickL
         input.setHint(R.string.ET_hint_write_something);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
+        builder.setView(input,16,16,16,16);
         // Set up the buttons
         builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(input.getText().toString().trim().length()<1 || input.getText().toString().trim().length()>20)
+                if(input.getText().toString().trim().length()<1 || input.getText().toString().trim().length()>50)
                     return;
-                post.setText(input.getText().toString());
                 dbRef.child("post").setValue(input.getText().toString());
                 dbRef.child("nick").setValue(m.getUsername());
             }
