@@ -264,7 +264,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }
 
 
-    private void pause(final Boolean pausedbyUser) {
+    private void pause(final boolean pausedbyUser) {
     new AsyncTask<Void,Void,Void>(){
         @Override
         protected void onPreExecute() {
@@ -299,7 +299,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void resume(final Boolean resumedbyUser) {
+    private void resume(final boolean resumedbyUser) {
         new AsyncTask<Void,Void,Void>(){
             @Override
             protected void onPreExecute() {
@@ -367,7 +367,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         String title,artist;
         if (!isPodcast) {
             //Normal radyo çalıyor
-            Boolean showartwork = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("download_artwork",true);
+            boolean showartwork = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("download_artwork",true);
             Bitmap defaultbitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_header_background);
             title = m.oku(CALAN);
             artist = m.oku(DJ);
@@ -412,11 +412,8 @@ public class MUSIC_PLAY_SERVICE extends Service {
                     exoPlayer.setPlayWhenReady(true);
                     if(isPodcast){
                         boolean shouldresume;
-                        //PreferenceManager.getDefaultSharedPreferences(MUSIC_PLAY_SERVICE.this).getBoolean("resume_podcast", false)
                         final String podcast_title = m.oku(RadyoMenemenPro.PLAYING_PODCAST);
-                        if(PreferenceManager.getDefaultSharedPreferences(MUSIC_PLAY_SERVICE.this).getBoolean("resume_podcast", false))
-                            shouldresume = true;
-                        else shouldresume = m.bool_oku("resume"+podcast_title);
+                        shouldresume = PreferenceManager.getDefaultSharedPreferences(MUSIC_PLAY_SERVICE.this).getBoolean("resume_podcast", false) || m.bool_oku("resume" + podcast_title);
                         if(m.oku(podcast_title)!=null && shouldresume)
                             exoPlayer.seekTo(Long.parseLong(m.oku(podcast_title)));
                     }
@@ -486,7 +483,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
     void nowPlayingNotification(){
         //Şarkı albüm kapağı
         if(m.oku(CALAN) == null) return; //ilk açılışta boş bildirim atma
-        String contentTitle = (m.oku("dj").equals(RadyoMenemenPro.OTO_DJ)) ? "Radyo Menemen" : m.oku("dj");
+        String contentTitle = (m.oku("dj").equals(RadyoMenemenPro.OTO_DJ)) ? getString(R.string.app_name) : m.oku("dj");
         String calan = m.oku(CALAN);
         Intent intent = new Intent(this, MainActivity.class);
         if(isPodcast){
@@ -515,19 +512,14 @@ public class MUSIC_PLAY_SERVICE extends Service {
         .setLargeIcon((isPodcast) ? BitmapFactory.decodeResource(this.getResources(), R.drawable.podcast) : artwork)
         .setContentIntent(PendingIntent.getActivity(this, new Random().nextInt(200), intent, PendingIntent.FLAG_UPDATE_CURRENT))
         .setStyle(new android.support.v7.app.NotificationCompat.MediaStyle().setMediaSession(mediaSessionCompat.getSessionToken()));
-        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_listeners",false)){
-            if(m.oku(RadyoMenemenPro.LISTENERS_COUNT) != null && !m.oku(RadyoMenemenPro.LISTENERS_COUNT).equals("0"))
-                notification.setSubText(String.format(getString(R.string.notification_listeners_subtext), m.oku(RadyoMenemenPro.LISTENERS_COUNT)));
-        }
-
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_listeners", false) && !isPodcast && m.oku(RadyoMenemenPro.LISTENERS_COUNT) != null && !m.oku(RadyoMenemenPro.LISTENERS_COUNT).equals("0"))
+            notification.setSubText(String.format(getString(R.string.notification_listeners_subtext), m.oku(RadyoMenemenPro.LISTENERS_COUNT)));
         Intent playpause = new Intent(this,NotificationControls.class);
         Intent stop = new Intent(this,NotificationControls.class);
         stop.putExtra("stop",true);
         PendingIntent ppIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), playpause, PendingIntent.FLAG_CANCEL_CURRENT);
         PendingIntent stopIntent = PendingIntent.getBroadcast(this, new Random().nextInt(102), stop, PendingIntent.FLAG_CANCEL_CURRENT);
-       if(!notification.mActions.isEmpty()){
-           notification.mActions.clear();
-       }
+       if(!notification.mActions.isEmpty()) notification.mActions.clear();
         if(m.isPlaying()) notification.addAction(R.drawable.ic_pause_black_24dp,getString(R.string.media_pause),ppIntent);
         else notification.addAction(R.drawable.ic_play_arrow_black_24dp,getString(R.string.media_resume),ppIntent);
         if(!isPodcast && m.oku(DJ).equals(RadyoMenemenPro.OTO_DJ)){
@@ -541,7 +533,7 @@ public class MUSIC_PLAY_SERVICE extends Service {
         nm.notify(RadyoMenemenPro.NOW_PLAYING_NOTIFICATION, notification.build());
     }
     //Activity de şimdi çalıyor butonunu değiştir
-    public void broadcastToUi(Boolean play) {
+    public void broadcastToUi(boolean play) {
         Intent intent = new Intent(MUSIC_PLAY_FILTER);
         intent.putExtra("action",RadyoMenemenPro.PLAY);
         intent.putExtra(RadyoMenemenPro.PLAY,play);
