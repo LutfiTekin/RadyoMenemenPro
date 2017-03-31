@@ -8,7 +8,7 @@ public final class RadyoMenemenPro {
     public final static String LOW_CHANNEL = "Hercules";//64 kbps yayın
     public final static String MID_CHANNEL = "Prometheus";//128 kbps yayın
     public final static String HIGH_CHANNEL = "Zeus"; //320 kbps yayın
-    public final static String FALLBACK_CHANNEL = "https://radyomenemen.com:8443/live"; //320 kbps yayın
+    public final static String FALLBACK_CHANNEL = "http://stream.incitorrent.com:443/live"; //320 kbps yayın
     public final static String ARTWORK_ONLINE = "online_art";
     public final static int MUSIC_INFO_SERVICE_INTERVAL = 240;
     public final static int MENEMEN_TIMEOUT = 30000;
@@ -23,16 +23,16 @@ public final class RadyoMenemenPro {
     public final static int GALLERY_IMAGE_OVERRIDE_HEIGHT = 600;
     public final static int ARTWORK_IMAGE_OVERRIDE_DIM = 300;
 
-    public final static String PODCASTFEED = "https://radyomenemen.com/podcast/feed.xml"; //Ana podcast adresi
-    public final static String PODCASTLINK = "https://radyomenemen.com/podcast/media/"; //Podcast linkleri için prefix
+    public final static String PODCASTFEED = "http://menemen.incitorrent.com/podcast/feed.xml"; //Ana podcast adresi
+    public final static String PODCASTLINK = "http://menemen.incitorrent.com/podcast/media/"; //Podcast linkleri için prefix
     public final static String OLD_PODCASTFEED = "http://podcast.incitorrent.com/feed.xml"; //Eski podcast adresi
     public final static String OLD_PODCASTLINK = "http://podcast.incitorrent.com/media/";
 
     //Api URL Constants
-    private final static String APP_INFO = "https://radyomenemen.com/inc/appinfo.php?"; //base url
-    private final static String API = "https://api.radyomenemen.com/?"; //Yeni API base urls
-    public final static String AUTH = "https://radyomenemen.com/inc/auth.php"; //yetkilendirme adresi
-    public final static String SYNCCHANNEL = "https://app.radyomenemen.com/channels.html";
+    private final static String APP_INFO = "http://menemen.incitorrent.com/inc/appinfo.php?"; //base url
+    private final static String API = "http://menemen.incitorrent.com/api/?"; //Yeni API base urls
+    public final static String AUTH = "http://menemen.incitorrent.com/inc/auth.php"; //yetkilendirme adresi
+    public final static String SYNCCHANNEL = "https://app.menemen.incitorrent.com/channels.html";
     public final static String MESAJLAR =  APP_INFO + "mesajlar";
     public final static String OLAN_BITEN = APP_INFO + "olanbiten";
     public final static String MESAJ_GONDER = APP_INFO + "postmessage";
@@ -62,7 +62,7 @@ public final class RadyoMenemenPro {
     public final static String MENEMEN_TOPICS_ADD_USER = MENEMEN_TOPICS + "&action=adduser";
     public final static String SEARCH_USER = API + "&finduser";
     public final static String SEARCH_USER_AVATAR = API + "findavatar";
-    public final static String VALID_VERSION = "https://app.radyomenemen.com/validversion.html";
+    public final static String VALID_VERSION = "https://app.menemen.incitorrent.com/validversion.html";
 
     //SHARED PREFERENCES CONSTANTS
     public final static String SHAREDPREF = "Menemen";
@@ -141,9 +141,9 @@ public final class RadyoMenemenPro {
     public final static String PLAY = "play";
     public final static String DATA_SOURCE = "dataSource";
 
-    public final static String CAPS_API_URL    =   "https://caps.radyomenemen.com/api/1/upload";
+    public final static String CAPS_API_URL    =   "https://caps.incitorrent.com/api/1/upload";
     public final static String CAPS_API_KEY    =   "capsapi";
-    public final static String CAPS_IMAGES_PATH  =   "https://caps.radyomenemen.com/images/";
+    public final static String CAPS_IMAGES_PATH  =   "https://caps.incitorrent.com/images/";
 
     public static final String CHAT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

@@ -429,22 +429,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        checkValidVersion();
+//        checkValidVersion();
         if(!m.isServiceRunning(MUSIC_PLAY_SERVICE.class)) m.setPlaying(false);
         setNP(m.isPlaying());
-        initOnlineUsersCountBadge();
         super.onResume();
     }
 
-    private void initOnlineUsersCountBadge() {
-//        trackonlineusersDB sql = new trackonlineusersDB(MainActivity.this,null,null,1);
-//        if(sql.getOnlineUserCount(null) > 0) {
-//            final TextView badge = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-//                    findItem(R.id.nav_chat));
-//            m.setBadge(badge, String.valueOf(sql.getOnlineUserCount(null)));
-//        }
-//        sql.close();
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

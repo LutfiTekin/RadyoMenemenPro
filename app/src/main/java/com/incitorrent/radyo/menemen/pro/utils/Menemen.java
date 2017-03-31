@@ -1069,7 +1069,8 @@ public class Menemen {
     }
 
     public String getRadioDataSource(){
-        return oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.FALLBACK_CHANNEL));
+//        return oku(PreferenceManager.getDefaultSharedPreferences(context).getString("radio_channel",RadyoMenemenPro.FALLBACK_CHANNEL));
+        return RadyoMenemenPro.FALLBACK_CHANNEL;
     }
 
     public static ArrayList<podcast_objs> PodcastList = new ArrayList<>();
