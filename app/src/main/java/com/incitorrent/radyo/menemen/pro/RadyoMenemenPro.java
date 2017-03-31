@@ -68,7 +68,6 @@ public final class RadyoMenemenPro {
     public final static String SHAREDPREF = "Menemen";
     public final static String HAYKIRCACHE = "hkcache";
     public final static String PODCASTCACHE = "podcache";
-    public final static String OBCACHE = "olanbitencache";
     public final static String SAVEDOB = "kayitliolabiten";
     public final static String LASTOB = "sonolabiten";
     public final static String LASTURI = "lasturi";
@@ -101,14 +100,7 @@ public final class RadyoMenemenPro {
         public final static String PODCASTCARD = "podcastcard";
     }
 
-    public final static class AnalyticEvents{
-        public final static String LISTENING_RADIO = "listening radio";
-        public final static String LISTENING_PODCAST = "listening podcast";
-        public final static String DOWNLOADING_PODCAST = "downloading podcast";
-        public final static String SEARCH_ON_Y = "searching track on youtube";
-        public final static String SEARCH_ON_S = "searching track on spotify";
-        public final static String SEARCH_L = "searching track lyrics";
-    }
+
 
     public final static class FCMTopics{
         final static String TOPIC = "/topics/";
